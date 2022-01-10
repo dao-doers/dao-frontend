@@ -11,6 +11,7 @@ import DAO_TILE_VARIANTS from 'enums/daoTileVariants';
 
 import formatAddress from 'utils/formatAddress';
 import { formatSeconds } from 'utils/formatDate';
+import { useAccount } from 'components/web3/hooks/useAccount';
 
 const TypographyAgree = styled(Typography)`
   color: ${({ theme }) => theme.palette.colors.col2};
@@ -34,6 +35,9 @@ const VoteTile: FC<any> = ({ vote }) => {
     }
   };
 
+    /* display eth address instead of polyjuice address */
+    const { account } = useAccount();
+
   return (
     <Box my={3}>
       <DAOTile variant={DAO_TILE_VARIANTS.GREY_SHADOW}>
@@ -48,7 +52,7 @@ const VoteTile: FC<any> = ({ vote }) => {
           <Box display="flex" alignItems="center" width="100%">
             <Box width="50%">
               <TypographyBold>User address:</TypographyBold>
-              <Typography>{formatAddress(vote.memberAddress)}</Typography>
+              <Typography>{formatAddress(account)}</Typography>
             </Box>
 
             <Box width="50%">

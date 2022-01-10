@@ -26,6 +26,7 @@ export interface DAOButtonProps extends ButtonProps {
   variant?: ButtonProps['variant'] | Variant;
   fullWidth?: boolean;
   isLoading?: boolean;
+  isLoadingText?: string;
 }
 
 const sizeStyles = ({ size }: DAOButtonProps) => {
@@ -113,7 +114,7 @@ const InnerButton = styled.div<DAOButtonProps>`
 `;
 
 const DAOButton: FC<DAOButtonProps> = forwardRef((props, ref) => {
-  const { children, variant, size, fullWidth, disabled, isLoading, ...rest } = props;
+  const { children, variant, size, fullWidth, disabled, isLoading, isLoadingText = 'Processing...', ...rest } = props;
 
   return (
     <StyledDAOButton variant={variant} size={size} fullWidth={fullWidth} disabled={disabled} {...rest} ref={ref}>
@@ -123,7 +124,7 @@ const DAOButton: FC<DAOButtonProps> = forwardRef((props, ref) => {
             <Box display="flex" alignItems="center" mr={2}>
               <DAOCircleLoader size={20} />
             </Box>
-            Processing...
+            {isLoadingText}
           </Box>
         ) : (
           children

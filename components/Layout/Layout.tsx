@@ -9,6 +9,7 @@ import DesktopMenu from 'components/DesktopMenu/DesktopMenu';
 import Footer from 'components/Footer/Footer';
 import MobileMenu from 'components/MobileMenu/MobileMenu';
 import BlockchainStatus from 'components/BlockchainStatus/BlockchainStatus';
+import { Web3Provider } from 'components/providers';
 
 export type LayoutProps = {
   children: ReactNode;
@@ -27,22 +28,24 @@ const StyledBox = styled(Box)`
 
 const Layout: FC<LayoutProps> = ({ children }) => {
   return (
-    <StyledContainer>
-      <MobileMenu />
+    <Web3Provider>
+      <StyledContainer>
+        <MobileMenu />
 
-      <StyledBox>
-        <Box sx={{ display: { xs: 'none', lg: 'block' } }}>
-          <DesktopMenu />
-        </Box>
+        <StyledBox>
+          <Box sx={{ display: { xs: 'none', lg: 'block' } }}>
+            <DesktopMenu />
+          </Box>
 
-        <Box width="100%">
-          <BlockchainStatus />
-          {children}
-        </Box>
-      </StyledBox>
+          <Box width="100%">
+            <BlockchainStatus />
+            {children}
+          </Box>
+        </StyledBox>
 
-      <Footer />
-    </StyledContainer>
+        <Footer />
+      </StyledContainer>
+    </Web3Provider>
   );
 };
 
