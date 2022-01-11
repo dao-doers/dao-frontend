@@ -2,9 +2,9 @@ name: checks
 
 on:
   push:
-    branches: [ main, test, develop ]
+    branches: [ master, test, develop ]
   pull_request:
-    branches: [ main, test, develop ]
+    branches: [ master, test, develop ]
 
   workflow_dispatch:
 
