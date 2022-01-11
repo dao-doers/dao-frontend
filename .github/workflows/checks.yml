@@ -61,5 +61,16 @@ jobs:
         run: yarn install
 
       - name: Run production build
-        run: yarn run build
+        run: yarn build-export
+      
+      - name: Configure AWS credentials
+        if: github.ref == 'refs/heads/master'
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: eu-central-1
+      - name: Deploy
+        if: github.ref == 'refs/heads/master'
+        run: aws s3 sync ./out s3://nervosdao.community
 
