@@ -72,5 +72,5 @@ jobs:
           aws-region: eu-central-1
       - name: Deploy
         if: github.ref == 'refs/heads/master'
-        run: aws s3 sync ./build s3://nervosdao.community
+        run: aws s3 sync ./out s3://nervosdao.community
 
