@@ -1,3 +1,5 @@
+/* eslint-disable import/no-duplicates */
+/* eslint-disable @typescript-eslint/no-var-requires */
 import { FC, useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import ApolloClient, { InMemoryCache } from 'apollo-boost';

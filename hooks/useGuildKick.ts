@@ -1,8 +1,7 @@
 import Web3 from 'web3';
 import PolyjuiceHttpProvider from '@polyjuice-provider/web3';
 
-// TODO: convert to ts?
-import { abiLibrary } from 'lib/abi.js';
+import abiLibrary from 'lib/abi';
 
 const providerConfig = {
   web3Url: 'https://godwoken-testnet-web3-rpc.ckbapp.dev',
@@ -31,8 +30,8 @@ const useGuildKick = async (
   /* Wallet information */
   user: string,
   /* Contract information */
-  library,
-  version,
+  library: any,
+  version: any,
   address: string,
   /* Proposal information */
   memberToKick: number,

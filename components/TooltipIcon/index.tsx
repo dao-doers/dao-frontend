@@ -6,6 +6,7 @@ import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined';
 import Tooltip, { TooltipProps } from '@mui/material/Tooltip';
 
 export type TooltipIconProps = Omit<TooltipProps, 'title'> & {
+  helpIcon?: boolean;
   children: ReactElement;
 };
 

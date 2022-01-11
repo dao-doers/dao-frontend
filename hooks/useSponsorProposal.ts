@@ -3,7 +3,7 @@ import BigNumber from 'bignumber.js/bignumber';
 import PolyjuiceHttpProvider from '@polyjuice-provider/web3';
 import { AddressTranslator } from 'nervos-godwoken-integration';
 
-import { abiLibrary } from 'lib/abi.js';
+import abiLibrary from 'lib/abi';
 
 const providerConfig = {
   web3Url: 'https://godwoken-testnet-web3-rpc.ckbapp.dev',

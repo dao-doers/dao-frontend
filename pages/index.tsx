@@ -27,17 +27,17 @@ const Swap: FC<NextPage> = () => {
   const votesArray = useSelector(selectVotesArray);
 
   return (
-    <ApolloProvider client={client}>
+    <ApolloProvider client={client as any}>
       <Layout>
         <Box display="flex" justifyContent="space-between" width="100%">
           <FetchDataComponent />
           <Box sx={{ width: { xs: '100%', md: '63%' } }}>
-            {proposalsArray.map((proposal, id) => {
+            {proposalsArray.map((proposal: any, id: any) => {
               return <ProposalTile id={`proposal-${id}`} proposal={proposal} />;
             })}
           </Box>
           <Box width="35%" sx={{ display: { xs: 'none', md: 'block' } }}>
-            {votesArray.map((vote, id) => {
+            {votesArray.map((vote: any, id: any) => {
               return <VoteTile id={`poll-${id}`} vote={vote} />;
             })}
           </Box>

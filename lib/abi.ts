@@ -1,4 +1,4 @@
-export const abiLibrary = {
+export default {
   moloch: [
     {
       constant: true,
@@ -2126,4 +2126,4 @@ export const abiLibrary = {
       type: 'event',
     },
   ],
-};
+} as any;

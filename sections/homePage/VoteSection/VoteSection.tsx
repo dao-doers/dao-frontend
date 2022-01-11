@@ -97,7 +97,7 @@ const VoteSection: FC<any> = ({ proposal }) => {
   const handleVote = async (vote: number) => {
     // TODO: useNotVotedYetCheck should run just right after page render, not just after clicking
     setVoteStatus(FETCH_STATUSES.LOADING);
-    await useNotVotedYetCheck(userAddress, proposal.proposalIndex, process.env.DAO_ADDRESS).then(response => {
+    await useNotVotedYetCheck(userAddress, proposal.proposalIndex, process.env.DAO_ADDRESS as any).then(response => {
       if (response === true) {
         setNotVotedYet(1);
       } else {

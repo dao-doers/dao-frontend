@@ -122,7 +122,7 @@ const buttons: CommonButtonsColors = {
       border: 'transparent',
     },
   },
-};
+} as any;
 
 const common: CommonPalette = {
   colors,

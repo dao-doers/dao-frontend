@@ -18,7 +18,7 @@ import useGuildKick from 'hooks/useGuildKick';
 
 import guildKickSchema from 'validators/guildKickSchema';
 
-import { abiLibrary } from 'lib/abi.js';
+import abiLibrary from 'lib/abi';
 
 const StyledBox = styled(Box)`
   width: 100%;
@@ -57,7 +57,7 @@ const GuildKickForm: FC = () => {
       version,
       daoAddress,
       /*Proposal information*/ values.memberToKick,
-      /* Details JSON */ { title: values.title, description: values.description, link: values.link },
+      /* Details JSON */ { title: values.title, description: values.description, link: values.link } as any,
     );
 
     setTimeout(() => dispatch(setProposalStatus(FETCH_STATUSES.SUCCESS)), 1000);
