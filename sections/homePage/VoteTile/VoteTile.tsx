@@ -28,11 +28,13 @@ const TypographyBold = styled(Typography)`
 `;
 
 const VoteTile: FC<any> = ({ vote }) => {
-  const formatTitle = textObject => {
+  const formatTitle = (textObject: any): any => {
     // TODO: clean DB bacause returned objects are not same
     if (textObject.includes('title', 2)) {
       return JSON.parse(textObject).title;
     }
+
+    return undefined;
   };
 
     /* display eth address instead of polyjuice address */

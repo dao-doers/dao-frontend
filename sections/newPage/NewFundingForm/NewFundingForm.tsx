@@ -23,7 +23,7 @@ import useProposal from 'hooks/useProposal';
 
 import newFundingSchema from 'validators/newFundingSchema';
 
-import { abiLibrary } from 'lib/abi.js';
+import abiLibrary from 'lib/abi';
 
 const StyledBox = styled(Box)`
   width: 100%;
@@ -61,7 +61,7 @@ const NewProposalForm: FC = () => {
         userAddress,
         abiLibrary,
         version,
-        daoAddress,
+        daoAddress as any,
         userAddress,
         values.tributeOffered,
         lootRequested,

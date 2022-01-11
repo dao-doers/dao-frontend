@@ -27,7 +27,7 @@ const client = new ApolloClient({
 const NewProposal: FC<NextPage> = () => {
   const newProposalType = useSelector(selectNewProposalType);
   return (
-    <ApolloProvider client={client}>
+    <ApolloProvider client={client as any}>
       <Layout>
         <Box
           sx={{

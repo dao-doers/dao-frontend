@@ -38,7 +38,7 @@ const Swap: FC<NextPage> = () => {
   }, [proposalsArray]);
 
   return (
-    <ApolloProvider client={client}>
+    <ApolloProvider client={client as any}>
       <Layout>
         <Box display="flex" justifyContent="space-between" width="100%">
           <FetchDataComponent />
@@ -46,7 +46,7 @@ const Swap: FC<NextPage> = () => {
             {Object.keys(chosenProposal).length > 0 && <ProposalTile proposal={chosenProposal} />}
           </Box>
           <Box width="35%" sx={{ display: { xs: 'none', md: 'block' } }}>
-            {votesArray.map((vote, id) => {
+            {votesArray.map((vote: any, id: any) => {
               return <VoteTile id={`poll-${id}`} vote={vote} />;
             })}
           </Box>

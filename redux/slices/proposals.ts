@@ -26,7 +26,7 @@ const proposalsSlice = createSlice({
   reducers: {
     setProposals: (state, action) => {
       // eslint-disable-next-line func-names
-      state.proposalsArray = action.payload.sort(function (a: any, b: any) {
+      state.proposalsArray = action.payload.slice().sort(function (a: any, b: any) {
         return -(a.createdAt - b.createdAt);
       });
     },

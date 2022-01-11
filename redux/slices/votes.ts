@@ -22,7 +22,7 @@ const votesSlice = createSlice({
   reducers: {
     setVotes: (state, action) => {
       // eslint-disable-next-line func-names
-      state.votesArray = action.payload.sort(function (a: any, b: any) {
+      state.votesArray = action.payload.slice().sort(function (a: any, b: any) {
         return -(a.createdAt - b.createdAt);
       });
     },
