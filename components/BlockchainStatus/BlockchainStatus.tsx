@@ -20,10 +20,10 @@ import { config } from 'config/config';
 import DAO_TILE_VARIANTS from 'enums/daoTileVariants';
 
 import formatAddress from 'utils/formatAddress';
+import Web3 from 'web3';
 
 // TODO: refactor whole component, move function to useCheckIndexerStatus
 // TODO: change to import "" from ""
-const Web3 = require('web3');
 const { PolyjuiceAccounts, PolyjuiceHttpProvider } = require('@polyjuice-provider/web3');
 
 const providerConfig = {
@@ -31,14 +31,19 @@ const providerConfig = {
 };
 
 const provider = new PolyjuiceHttpProvider(providerConfig.web3Url, providerConfig);
+let polyjuiceAccounts;
+let web3: Web3;
 
-const polyjuiceAccounts = new PolyjuiceAccounts(providerConfig);
+if (typeof window !== 'undefined') {
+  polyjuiceAccounts = new PolyjuiceAccounts(providerConfig);
 
-const web3 = new Web3(provider);
-web3.eth.accounts = polyjuiceAccounts;
-web3.eth.Contract.setProvider(provider, web3.eth.accounts);
+  web3 = new Web3(provider);
 
-export const getBlockNumber = web3.eth.getBlockNumber();
+  web3.eth.accounts = polyjuiceAccounts;
+  (web3.eth.Contract as any).setProvider(provider, web3.eth.accounts);
+}
+
+export const getBlockNumber = () => web3.eth.getBlockNumber();
 
 const molochClient = new ApolloClient({
   uri: config.graph.moloch,
@@ -76,7 +81,7 @@ const BlockchainStatus: FC = () => {
   };
 
   const setLatestBlockFromLayer2 = () => {
-    return getBlockNumber
+    return getBlockNumber()
       .then((res: any) => setLayer2Block(res))
       .catch((err: any) => console.error('Nervos Layer 2 not available: ', err));
   };
@@ -99,7 +104,17 @@ const BlockchainStatus: FC = () => {
         ) : (
           <Box>
             <DAOTile variant={DAO_TILE_VARIANTS.RED_OUTLINE}>
-              <Typography px={2}>offline</Typography>
+              <Typography px={2}>
+                offline{' '}
+                {typeof layer2Block === 'number' &&
+                typeof molochBlock === 'number' &&
+                !Number.isNaN(layer2Block) &&
+                !Number.isNaN(molochBlock) ? (
+                  <>({layer2Block - molochBlock} blocks behind)</>
+                ) : (
+                  ''
+                )}{' '}
+              </Typography>
             </DAOTile>
           </Box>
         )}

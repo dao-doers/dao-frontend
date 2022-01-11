@@ -1,4 +1,5 @@
 /** @type {import('next').NextConfig} */
+
 module.exports = {
   reactStrictMode: true,
   env: {
@@ -7,4 +8,8 @@ module.exports = {
     TRIBUTE_TOKEN_ADDRESS: process.env.NEXT_PUBLIC_TRIBUTE_TOKEN_ADDRESS,
     PROVIDER_CONFIG_WEB3_URL: process.env.NEXT_PUBLIC_PROVIDER_CONFIG_WEB3_URL,
   },
-};
+  images: {
+    loader: 'akamai',
+    path: '/',
+  },
+}
