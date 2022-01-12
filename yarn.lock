@@ -14730,7 +14730,7 @@
     "prop-types" "^15.6.2"
     "react-lifecycles-compat" "^3.0.4"
 
-"react@*", "react@^0.14.8 || ^15.0.1 || ^16.0.0 || ^17.0.1", "react@^15.0.0 || ^16.0.0 || ^17.0.0", "react@^15.3.0 || ^16.0.0 || ^17.0.0", "react@^16.0.0 || ^17.0.0", "react@^16.13.1 || ^17.0.0", "react@^16.6.0 || ^17.0.0", "react@^16.8.0", "react@^16.8.0 || ^17", "react@^16.8.0 || ^17.0.0", "react@^16.8.3 || ^17", "react@^16.8.4 || ^17.0.0", "react@^16.9.0 || ^17.0.0 || 18.0.0-beta", "react@^17.0.2", "react@^17.0.2 || ^18.0.0", "react@>= 0.14.0", "react@>= 16.3.0", "react@>= 16.8.0 || 17.x.x || 18.x.x", "react@>=15.0.0", "react@>=16.12.0", "react@>=16.3.0", "react@>=16.6.0", "react@>=16.8", "react@>=16.8.0", "react@17.0.2":
+"react@*", "react@^0.14.8 || ^15.0.1 || ^16.0.0 || ^17.0.1", "react@^15.0.0 || ^16.0.0 || ^17.0.0", "react@^15.3.0 || ^16.0.0 || ^17.0.0", "react@^16.0.0 || ^17.0.0", "react@^16.11.0 || ^17.0.0 || ^18.0.0", "react@^16.13.1 || ^17.0.0", "react@^16.6.0 || ^17.0.0", "react@^16.8.0", "react@^16.8.0 || ^17", "react@^16.8.0 || ^17.0.0", "react@^16.8.3 || ^17", "react@^16.8.4 || ^17.0.0", "react@^16.9.0 || ^17.0.0 || 18.0.0-beta", "react@^17.0.2", "react@^17.0.2 || ^18.0.0", "react@>= 0.14.0", "react@>= 16.3.0", "react@>= 16.8.0 || 17.x.x || 18.x.x", "react@>=15.0.0", "react@>=16.12.0", "react@>=16.3.0", "react@>=16.6.0", "react@>=16.8", "react@>=16.8.0", "react@17.0.2":
   "integrity" "sha512-gnhPt75i/dq/z3/6q/0asP78D0u592D5L1pd7M8P+dck6Fu/jJeL6iVVK23fptSUZj8Vjf++7wXA8UNclGQcbA=="
   "resolved" "https://registry.npmjs.org/react/-/react-17.0.2.tgz"
   "version" "17.0.2"
@@ -16373,6 +16373,11 @@
   dependencies:
     "dom7" "^4.0.2"
     "ssr-window" "^4.0.2"
+
+"swr@^1.1.2":
+  "integrity" "sha512-UsM0eo5T+kRPyWFZtWRx2XR5qzohs/LS4lDC0GCyLpCYFmsfTk28UCVDbOE9+KtoXY4FnwHYiF+ZYEU3hnJ1lQ=="
+  "resolved" "https://registry.npmjs.org/swr/-/swr-1.1.2.tgz"
+  "version" "1.1.2"
 
 "symbol-observable@^1.0.2", "symbol-observable@^1.1.0":
   "integrity" "sha512-e900nM8RRtGhlV36KGEU9k65K3mPb1WV70OdjfxlG2EAuM1noi/E/BaW/uMhL7bPEssK8QV57vN3esixjUvcXQ=="

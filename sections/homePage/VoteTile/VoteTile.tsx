@@ -37,8 +37,8 @@ const VoteTile: FC<any> = ({ vote }) => {
     return undefined;
   };
 
-    /* display eth address instead of polyjuice address */
-    const { account } = useAccount();
+  /* display eth address instead of polyjuice address */
+  const { account } = useAccount();
 
   return (
     <Box my={3}>
@@ -54,7 +54,7 @@ const VoteTile: FC<any> = ({ vote }) => {
           <Box display="flex" alignItems="center" width="100%">
             <Box width="50%">
               <TypographyBold>User address:</TypographyBold>
-              <Typography>{formatAddress(account)}</Typography>
+              <Typography>{formatAddress(account.data)}</Typography>
             </Box>
 
             <Box width="50%">

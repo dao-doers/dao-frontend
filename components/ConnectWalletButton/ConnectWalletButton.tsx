@@ -38,7 +38,7 @@ const ConnectWalletButton: FC = () => {
       {isWeb3Loaded ? (
         <Box display="flex" alignItems="center">
           <Image src="/logos/metamask.png" alt="header-logo" height="20" width="20" />
-          {account ? 'Hi there' : 'Connect Wallet'}
+          {account.data ? 'Hi there' : 'Connect Wallet'}
         </Box>
       ) : (
         <Box display="flex" alignItems="center" onClick={() => window.open('https://metamask.io/', '_blank')}>
