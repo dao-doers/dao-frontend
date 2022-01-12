@@ -60,7 +60,11 @@ const BlockchainStatus: FC = () => {
   const { block } = useBlock();
   console.log('block', block);
   const [molochBlock, setMolochBlock] = useState();
+  console.log('molochBlock', molochBlock);
 
+  /*
+  TODO maybe here instead apollo 'graphql-request' https://swr.vercel.app/docs/data-fetching
+  */
   const setLatestBlock = () => {
     return (
       molochClient

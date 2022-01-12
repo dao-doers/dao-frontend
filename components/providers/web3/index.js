@@ -6,6 +6,10 @@ import Web3 from "web3";
 import { setupHooks } from "./hooks/setupHooks";
 
 const Web3Context = createContext(null)
+/*
+TODO 
+need refactor filer, or structure because polyjuiceHttpProvider is not working from here
+*/
 
 export default function Web3Provider({children}) {
   const [web3Api, setWeb3Api] = useState({
@@ -46,10 +50,10 @@ export default function Web3Provider({children}) {
   }, [])
 
   const _web3Api = useMemo(() => {
-    const { web3, provider } = web3Api
+    const { web3, provider, isLoading } = web3Api
     return {
       ...web3Api,
-      isWeb3Loaded: web3 != null,
+      requireInstall: !isLoading && !web3,
       getHooks: () => setupHooks(web3),
       connect: provider ?
         async () => {

@@ -39,7 +39,7 @@ const VoteTile: FC<any> = ({ vote }) => {
 
   /* display eth address instead of polyjuice address */
   const { account } = useAccount();
-  console.log('account', account)
+  console.log('account', account);
   return (
     <Box my={3}>
       <DAOTile variant={DAO_TILE_VARIANTS.GREY_SHADOW}>

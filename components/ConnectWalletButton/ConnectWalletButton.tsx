@@ -14,7 +14,7 @@ import { useAccount } from 'components/hooks/web3';
 
 const ConnectWalletButton: FC = () => {
   // TODO: different way, to check if it will be fixed
-  const { connect, isLoading, isWeb3Loaded } = useWeb3();
+  const { connect, isLoading, requireInstall } = useWeb3();
   const { account } = useAccount();
 
   const dispatch = useDispatch();
@@ -35,7 +35,7 @@ const ConnectWalletButton: FC = () => {
       isLoadingText="Loading..."
       disabled={isLoading}
     >
-      {isWeb3Loaded ? (
+      {!requireInstall ? (
         <Box display="flex" alignItems="center">
           <Image src="/logos/metamask.png" alt="header-logo" height="20" width="20" />
           {account.data ? 'Hi there' : 'Connect Wallet'}
