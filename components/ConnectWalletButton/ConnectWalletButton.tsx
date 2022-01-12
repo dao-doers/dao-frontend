@@ -10,7 +10,7 @@ import { setUserAddress } from 'redux/slices/user';
 
 import { loadWeb3, getMetamaskAddress } from 'utils/login';
 import { useWeb3 } from 'components/providers/';
-import { useAccount } from 'components/web3/hooks/useAccount';
+import { useAccount } from 'components/hooks/web3';
 
 const ConnectWalletButton: FC = () => {
   // TODO: different way, to check if it will be fixed

@@ -21,6 +21,7 @@ import DAO_TILE_VARIANTS from 'enums/daoTileVariants';
 
 import formatAddress from 'utils/formatAddress';
 import Web3 from 'web3';
+import { useBlock } from 'components/hooks/web3';
 
 // TODO: refactor whole component, move function to useCheckIndexerStatus
 // TODO: change to import "" from ""
@@ -56,9 +57,9 @@ const TypographyBold = styled(Typography)`
 
 const BlockchainStatus: FC = () => {
   const userAddress = useSelector(selectUserAddress);
-
+  const { block } = useBlock();
+  console.log('block', block);
   const [molochBlock, setMolochBlock] = useState();
-  const [layer2Block, setLayer2Block] = useState();
 
   const setLatestBlock = () => {
     return (
@@ -80,22 +81,15 @@ const BlockchainStatus: FC = () => {
     );
   };
 
-  const setLatestBlockFromLayer2 = () => {
-    return getBlockNumber()
-      .then((res: any) => setLayer2Block(res))
-      .catch((err: any) => console.error('Nervos Layer 2 not available: ', err));
-  };
-
   useEffect(() => {
-    setLatestBlock();
-    setLatestBlockFromLayer2();
-  }, [molochBlock, layer2Block]);
+    setLatestBlock()
+  }, [molochBlock]);
 
   return (
     <Box display="flex" justifyContent="flex-end" py={4} width="100%">
       <Box display="flex" alignItems="center" mr={4}>
         <Typography px={2}>Indexer status:</Typography>
-        {molochBlock === layer2Block ? (
+        {molochBlock === block.data ? (
           <Box>
             <DAOTile variant={DAO_TILE_VARIANTS.GREEN_OUTLINE}>
               <Typography px={2}>online</Typography>
@@ -106,11 +100,13 @@ const BlockchainStatus: FC = () => {
             <DAOTile variant={DAO_TILE_VARIANTS.RED_OUTLINE}>
               <Typography px={2}>
                 offline{' '}
-                {typeof layer2Block === 'number' &&
+                {molochBlock !== undefined &&
+                block.data !== undefined &&
+                typeof block.data === 'number' &&
                 typeof molochBlock === 'number' &&
-                !Number.isNaN(layer2Block) &&
+                !Number.isNaN(block.data) &&
                 !Number.isNaN(molochBlock) ? (
-                  <>({layer2Block - molochBlock} blocks behind)</>
+                  <>({block.data - molochBlock} blocks behind)</>
                 ) : (
                   ''
                 )}{' '}

@@ -2,7 +2,7 @@ import { useEffect } from "react"
 import useSWR from "swr"
 
 export const handler = web3 => () => {
-const {mutate, ...rest } = useSWR(() => {
+const {data, mutate, ...rest } = useSWR(() => {
   return web3 ? "web3/accounts" : null },
   async () => {
     const accounts = await web3.eth.getAccounts()
@@ -17,8 +17,9 @@ const {mutate, ...rest } = useSWR(() => {
     )
   }, [])
 
-  return { account: {
+  return {
+    data,
     mutate,
     ...rest
-  } }
+  }
 }
