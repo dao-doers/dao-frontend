@@ -54,8 +54,10 @@ const NewProposalForm: FC = () => {
     try {
       dispatch(setProposalStatus(FETCH_STATUSES.LOADING));
 
+      const modifiedLink = values.link.replace(/(^\w+:|^)\/\//, '');
+
       // TODO: check if applicant address is validated
-      // TODO: trim http:// from values.link
+
       // eslint-disable-next-line react-hooks/rules-of-hooks
       const receipt = await useProposal(
         userAddress,
@@ -72,7 +74,7 @@ const NewProposalForm: FC = () => {
         /* Details JSON */ {
           title: values.title,
           description: values.description,
-          link: values.link,
+          link: modifiedLink,
         },
       );
 
