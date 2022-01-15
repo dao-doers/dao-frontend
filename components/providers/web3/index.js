@@ -1,5 +1,4 @@
 const { createContext, useContext, useEffect, useState, useMemo } = require("react");
-const { PolyjuiceAccounts, PolyjuiceHttpProvider } = require('@polyjuice-provider/web3');
 import Web3 from "web3";
 
 import detectEthereumProvider from "@metamask/detect-provider";
@@ -7,7 +6,7 @@ import { setupHooks } from "./hooks/setupHooks";
 
 const Web3Context = createContext(null)
 /* 
-TODO -think obout it, here can be providerCKB, and web3CKB
+TODO -think about it, here can be providerCKB, and web3CKB
 */
 export default function Web3Provider({children}) {
   const [web3Api, setWeb3Api] = useState({

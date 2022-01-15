@@ -1,7 +1,6 @@
 import { AddressTranslator } from "nervos-godwoken-integration";
 import { useEffect, useState } from "react"
 
-
 export const handler = web3 => () => {
   let polyjuiceAccount;
   let ethAccount;
