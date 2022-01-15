@@ -1,27 +1,16 @@
 import { FC } from 'react';
 import Image from 'next/image';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 
 import styled from '@emotion/styled';
 
 import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
 
 import Link from 'components/Link';
-import DAOButton from 'components/DAOButton/DAOButton';
-import ThemeModeSwitch from 'components/ThemeModeSwitch/ThemeModeSwitch';
-import DAOPlainButton from 'components/DAOPlainButton/DAOPlainButton';
 
-import { APP_ROUTES } from 'utils/routes';
+import MenuContent from 'components/MenuContent/MenuContent';
 
 import { selectTheme } from 'redux/slices/theme';
-import {
-  setCollectingFundsProposals,
-  setVotingProposals,
-  setGracePeriodProposals,
-  setProceedingProposals,
-  clearSorted,
-} from 'redux/slices/proposals';
 
 import THEME_MODES from 'enums/themeModes';
 
@@ -32,29 +21,7 @@ const MainBox = styled(Box)`
 `;
 
 const DesktopMenu: FC = () => {
-  const dispatch = useDispatch();
-
   const themeMode = useSelector(selectTheme);
-
-  const handleDisplayAll = () => {
-    dispatch(clearSorted());
-  };
-
-  const handleSortCollectingFunds = () => {
-    dispatch(setCollectingFundsProposals());
-  };
-
-  const handleSortVoting = () => {
-    dispatch(setVotingProposals());
-  };
-
-  const handleSortGracePeriod = () => {
-    dispatch(setGracePeriodProposals());
-  };
-
-  const handleSortProceeding = () => {
-    dispatch(setProceedingProposals());
-  };
 
   return (
     <MainBox>
@@ -69,35 +36,7 @@ const DesktopMenu: FC = () => {
           </Link>
         </Box>
 
-        <Link internal href="/">
-          <DAOPlainButton onClick={handleDisplayAll}>All Proposals</DAOPlainButton>
-        </Link>
-
-        <Link internal href="/">
-          <DAOPlainButton onClick={handleSortCollectingFunds}>Collecting Funds</DAOPlainButton>
-        </Link>
-
-        <Link internal href="/">
-          <DAOPlainButton onClick={handleSortVoting}>Voting</DAOPlainButton>
-        </Link>
-
-        <Link internal href="/">
-          <DAOPlainButton onClick={handleSortGracePeriod}>Grace Period</DAOPlainButton>
-        </Link>
-
-        <Link internal href="/">
-          <DAOPlainButton onClick={handleSortProceeding}>Proceeding</DAOPlainButton>
-        </Link>
-
-        <Box my={8}>
-          <Link internal href={APP_ROUTES.NEW}>
-            <DAOButton variant="gradientOutline">
-              <Typography>Make a proposal</Typography>
-            </DAOButton>
-          </Link>
-        </Box>
-
-        <ThemeModeSwitch />
+        <MenuContent />
       </Box>
     </MainBox>
   );
