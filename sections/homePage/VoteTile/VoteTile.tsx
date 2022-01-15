@@ -37,9 +37,7 @@ const VoteTile: FC<any> = ({ vote }) => {
     return undefined;
   };
 
-  /* display eth address instead of polyjuice address */
-  const { account } = useAccount();
-  console.log('account', account);
+  const { ethAddress } = useAccount();
   return (
     <Box my={3}>
       <DAOTile variant={DAO_TILE_VARIANTS.GREY_SHADOW}>
@@ -54,7 +52,7 @@ const VoteTile: FC<any> = ({ vote }) => {
           <Box display="flex" alignItems="center" width="100%">
             <Box width="50%">
               <TypographyBold>User address:</TypographyBold>
-              <Typography>{formatAddress(account.data)}</Typography>
+              <Typography>{formatAddress(ethAddress)}</Typography>
             </Box>
 
             <Box width="50%">

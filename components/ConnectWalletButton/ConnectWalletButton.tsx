@@ -15,7 +15,7 @@ import { useAccount } from 'components/hooks/web3';
 const ConnectWalletButton: FC = () => {
   // TODO: different way, to check if it will be fixed
   const { connect, isLoading, requireInstall } = useWeb3();
-  const { account } = useAccount();
+  const { polyjuiceAddress } = useAccount();
 
   const dispatch = useDispatch();
 
@@ -37,8 +37,8 @@ const ConnectWalletButton: FC = () => {
     >
       {!requireInstall ? (
         <Box display="flex" alignItems="center">
-          <Image src="/logos/metamask.png" alt="header-logo" height="20" width="20" />
-          {account.data ? 'Hi there' : 'Connect Wallet'}
+          {polyjuiceAddress ? null : <Image src="/logos/metamask.png" alt="header-logo" height="20" width="20" />}
+          {polyjuiceAddress ? 'Hi there' : 'Connect Wallet'}
         </Box>
       ) : (
         <Box display="flex" alignItems="center" onClick={() => window.open('https://metamask.io/', '_blank')}>

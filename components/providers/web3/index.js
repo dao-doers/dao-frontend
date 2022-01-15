@@ -2,14 +2,29 @@ const { createContext, useContext, useEffect, useState, useMemo } = require("rea
 const { PolyjuiceAccounts, PolyjuiceHttpProvider } = require('@polyjuice-provider/web3');
 
 import detectEthereumProvider from "@metamask/detect-provider";
+import { config } from '/config/config.ts';
 import Web3 from "web3";
 import { setupHooks } from "./hooks/setupHooks";
 
+// const godwokenRpcUrl = config.WEB3_PROVIDER_URL;
+
+// const providerConfig = {
+//   web3Url: godwokenRpcUrl
+//   };
+//   const provider = new PolyjuiceHttpProvider(godwokenRpcUrl, providerConfig);
+
+// let web3;
+
+if (typeof window !== 'undefined') {
+  // polyjuiceAccounts = new PolyjuiceAccounts(providerConfig);
+
+  // web3 = new Web3(provider);
+
+  // web3.eth.accounts = polyjuiceAccounts;
+  // (web3.eth.Contract).setProvider(provider, web3.eth.accounts);
+}
+
 const Web3Context = createContext(null)
-/*
-TODO 
-need refactor filer, or structure because polyjuiceHttpProvider is not working from here
-*/
 
 export default function Web3Provider({children}) {
   const [web3Api, setWeb3Api] = useState({
@@ -19,18 +34,9 @@ export default function Web3Provider({children}) {
     isLoading: true
   })
 
-  const polyjuiceConfig = {
-    web3Url: process.env.WEB3_PROVIDER_URL
-  }
-
-  const polyjuiceHttpProvider = new PolyjuiceHttpProvider(
-    process.env.WEB3_PROVIDER_URL,
-    polyjuiceConfig
-  )
-
   useEffect(() => {
     const loadProvider = async () => {
-
+      // const provider = polyjuiceHttpProvider
       const provider = await detectEthereumProvider()
       if (provider) {
         const web3 = new Web3(provider)
@@ -60,7 +66,7 @@ export default function Web3Provider({children}) {
           try {
             await provider.request({method: "eth_requestAccounts"})
           } catch {
-            location.reload()
+            window.location.reload()
           }
         } :
         () => console.error("Cannot connect to Metamask, try to reload your browser please.")
