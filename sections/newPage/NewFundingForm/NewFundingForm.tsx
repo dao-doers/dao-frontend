@@ -94,7 +94,7 @@ const NewProposalForm: FC = () => {
   return (
     <StyledBox>
       <Box maxWidth="500px" mx="auto">
-        <TypographyBold variant="h4" mb={3}>
+        <TypographyBold variant="h4" mb={3} sx={{ display: { xs: 'none', md: 'block' } }}>
           Create new proposal with funding
         </TypographyBold>
         <Formik validationSchema={newFundingSchema} initialValues={initialValues} validateOnChange onSubmit={onSubmit}>

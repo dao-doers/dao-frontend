@@ -37,7 +37,7 @@ const VoteTile: FC<any> = ({ vote }) => {
   };
 
   return (
-    <Box my={3}>
+    <Box mb={3}>
       <DAOTile variant={DAO_TILE_VARIANTS.GREY_SHADOW}>
         <Box width="100%" height="100%" px={3} pb={3} pt={1.5}>
           <Typography variant="body2" align="right">

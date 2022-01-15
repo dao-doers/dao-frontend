@@ -31,7 +31,7 @@ const BlockchainStatus: FC = () => {
       display="flex"
       justifyContent="flex-end"
       width="100%"
-      sx={{ flexDirection: { xs: 'column', md: 'row' }, pb: { xs: 2, md: 3 }, pt: { xs: 1, md: 4 } }}
+      sx={{ flexDirection: { xs: 'column', md: 'row' }, pb: { xs: 4, md: 3 }, pt: { xs: 1, md: 4 } }}
     >
       <Box
         display="flex"
@@ -77,14 +77,14 @@ const BlockchainStatus: FC = () => {
         {userAddress === '' ? (
           <ConnectWalletButton />
         ) : (
-          <>
+          <Box display="flex" justifyContent="flex-end" alignItems="center" height="40px" width="100%">
             <Typography noWrap>User address: </Typography>
-            <Box ml={2}>
+            <Box height="40px" ml={2}>
               <DAOTile variant={DAO_TILE_VARIANTS.GRADIENT_OUTLINE}>
                 <TypographyBold px={2}>{formatAddress(userAddress)}</TypographyBold>
               </DAOTile>
             </Box>
-          </>
+          </Box>
         )}
       </Box>
     </Box>

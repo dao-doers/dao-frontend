@@ -78,12 +78,12 @@ const MobileMenu: FC = () => {
 
       <StyledDrawer variant="temporary" anchor="left" open={isDrawerOpen} onClose={handleDrawerToggle}>
         <Box px={2} py={4}>
-          <Link href="/">
+          <Link internal href="/">
             <StyledTypography align="center" paragraph>
               All Proposals
             </StyledTypography>
           </Link>
-          <Link href={APP_ROUTES.NEW}>
+          <Link internal href={APP_ROUTES.NEW}>
             <StyledTypography align="center">Make a proposal</StyledTypography>
           </Link>
         </Box>

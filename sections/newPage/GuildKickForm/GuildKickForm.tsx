@@ -70,7 +70,7 @@ const GuildKickForm: FC = () => {
   return (
     <StyledBox>
       <Box maxWidth="500px" mx="auto">
-        <TypographyBold variant="h4" paragraph>
+        <TypographyBold variant="h4" paragraph sx={{ display: { xs: 'none', md: 'block' } }}>
           Create new proposal
         </TypographyBold>
         <Formik validationSchema={guildKickSchema} initialValues={initialValues} validateOnChange onSubmit={onSubmit}>
