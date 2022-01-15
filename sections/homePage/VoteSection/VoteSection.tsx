@@ -24,6 +24,7 @@ import VoteChart from 'sections/homePage/VoteChart/VoteChart';
 import useSponsorProposal from 'hooks/useSponsorProposal';
 import useVote from 'hooks/useVote';
 import useNotVotedYetCheck from 'hooks/useNotVotedYetCheck';
+import useProcessProposal from 'hooks/useProcessProposal';
 
 import FETCH_STATUSES from 'enums/fetchStatuses';
 import DAO_TILE_VARIANTS from 'enums/daoTileVariants';
@@ -80,6 +81,9 @@ const VoteSection: FC<any> = ({ proposal }) => {
   const [voteStatus, setVoteStatus] = useState(FETCH_STATUSES.IDLE);
   // 0 means idle state, 1 means user can vote, 2 means user already voted
   const [notVotedYet, setNotVotedYet] = useState(0);
+  const [processProposalStatus, setProcessProposalStatus] = useState(FETCH_STATUSES.IDLE);
+
+  const currentTime = new Date().getTime() / 1000;
 
   const handleSponsorProposal = async () => {
     const daoAddress = process.env.DAO_ADDRESS;
@@ -120,7 +124,18 @@ const VoteSection: FC<any> = ({ proposal }) => {
     }
   };
 
-  const currentTime = new Date().getTime() / 1000;
+  const handleProcessProposal = async () => {
+    const daoAddress = process.env.DAO_ADDRESS;
+    const { proposalIndex } = proposal;
+    setProcessProposalStatus(FETCH_STATUSES.LOADING);
+
+    try {
+      await useProcessProposal(userAddress, daoAddress, proposalIndex);
+      setProcessProposalStatus(FETCH_STATUSES.SUCCESS);
+    } catch (error) {
+      setProcessProposalStatus(FETCH_STATUSES.ERROR);
+    }
+  };
 
   return (
     <StyledAccordion>
@@ -224,11 +239,18 @@ const VoteSection: FC<any> = ({ proposal }) => {
                 )}
 
                 {currentTime > proposal.votingPeriodEnds && currentTime > proposal.gracePeriodEnds && (
-                  <DAOTile variant={DAO_TILE_VARIANTS.GRADIENT_OUTLINE}>
+                  <>
                     <Typography align="center" p={1}>
                       Proposal is ready to proceed.
                     </Typography>
-                  </DAOTile>
+                    <DAOButton
+                      variant="gradientOutline"
+                      isLoading={processProposalStatus === FETCH_STATUSES.LOADING}
+                      onClick={handleProcessProposal}
+                    >
+                      Process Proposal
+                    </DAOButton>
+                  </>
                 )}
               </Box>
 
