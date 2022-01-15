@@ -65,6 +65,15 @@ const useCheckIndexerStatus = () => {
   useEffect(() => {
     setLatestBlock();
     setLatestBlockFromLayer2();
+  }, []);
+
+  useEffect(() => {
+    // we have to copy that functions to trigger them also on first page render, not only after 30 seconds
+    // // it may be done in much elegance way but i'm not sure if that is necessary
+    setInterval(() => {
+      setLatestBlock();
+      setLatestBlockFromLayer2();
+    }, 30000);
   }, [molochBlock, layer2Block]);
 
   return { molochBlock, layer2Block };
