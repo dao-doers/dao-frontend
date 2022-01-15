@@ -29,7 +29,6 @@ const TypographyBold = styled(Typography)`
 const BlockchainStatus: FC = () => {
   const userAddress = useSelector(selectUserAddress);
   const { block } = useBlock();
-
   const { error, data: molochBlock, refetch: isRefetchingMolochBlock } = useQuery(GET_BLOCK);
 
   useInterval(() => {
