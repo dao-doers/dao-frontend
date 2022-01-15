@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import Web3 from 'web3';
 import ApolloClient, { InMemoryCache, gql } from 'apollo-boost';
 
-import { config } from 'config/config';
+import config from 'config/config';
 
 // TODO: change to import "" from ""
 // eslint-disable-next-line @typescript-eslint/no-var-requires

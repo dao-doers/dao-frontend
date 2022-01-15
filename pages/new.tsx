@@ -16,7 +16,7 @@ import NewProposalForm from 'sections/newPage/NewProposalForm/NewProposalForm';
 import NewFundingForm from 'sections/newPage/NewFundingForm/NewFundingForm';
 import GuildKickForm from 'sections/newPage/GuildKickForm/GuildKickForm';
 
-import { config } from 'config/config';
+import config from 'config/config';
 
 import { selectNewProposalType } from 'redux/slices/newProposal';
 
