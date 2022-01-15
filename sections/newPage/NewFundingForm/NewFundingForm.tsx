@@ -225,7 +225,7 @@ const NewProposalForm: FC = () => {
 
                 {sendProposalStatus === FETCH_STATUSES.SUCCESS && (
                   <Box mt={2}>
-                    <DAOTile variant={DAO_TILE_VARIANTS.GREEN_OUTLINE}>
+                    <DAOTile variant={DAO_TILE_VARIANTS.GREEN_BACKGROUND}>
                       <Typography p={2}>Congratulations! Your proposal has been submitted.</Typography>
                     </DAOTile>
                   </Box>

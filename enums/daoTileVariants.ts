@@ -4,8 +4,10 @@ enum DAO_TILE_VARIANTS {
   GREY_OUTLINE = 'greyOutline',
   RED_OUTLINE = 'redOutline',
   GREY_SHADOW = 'greyShadow',
-  BLUE_OUTLINE = 'blueOutline',
-  GREEN_OUTLINE = 'greenOutline',
+  BLUE_BACKGROUND = 'blueBackground',
+  GREEN_BACKGROUND = 'greenBackground',
+  RED_BACKGROUND = 'redBackground',
+  YELLOW_BACKGROUND = 'yellowBackground',
 }
 
 export default DAO_TILE_VARIANTS;
