@@ -1,5 +1,5 @@
 import type { NextPage } from 'next';
-import React, { FC, useEffect } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import ApolloClient, { InMemoryCache } from 'apollo-boost';
 import { ApolloProvider } from '@apollo/react-hooks';
 import { useSelector } from 'react-redux';
@@ -27,21 +27,31 @@ const client = new ApolloClient({
 });
 
 const Swap: FC<NextPage> = () => {
+  const [polyjuiceAddress, setPolyjuiceAddress] = useState<string | undefined>();
+  const [balance, setBalance] = useState<string | undefined>();
   const proposalsArray = useSelector(selectProposalsArray);
   const votesArray = useSelector(selectVotesArray);
   const userAddress = useSelector(selectUserAddress);
-  const addressTranslator = new AddressTranslator();
-  const polyjuiceAddress = addressTranslator.ethAddressToGodwokenShortAddress(userAddress);
+  const { SUDT_PROXY_CONTRACT_ADDRESS } = config;
 
-  console.log('userAddress', userAddress);
+  useEffect(() => {
+    if (userAddress) {
+      const addressTranslator = new AddressTranslator();
+      setPolyjuiceAddress(addressTranslator.ethAddressToGodwokenShortAddress(userAddress));
+    } else {
+      setPolyjuiceAddress(undefined);
+    }
+  }, [userAddress]);
 
-  const SUDT_PROXY_CONTRACT_ADDRESS = '0xc03da4356b4030f0ec2494c18dcfa426574e10d5';
   const erc20 = useERC20Contract(SUDT_PROXY_CONTRACT_ADDRESS);
-
+  console.log('polyjuiceAddress', polyjuiceAddress);
   useEffect(async () => {
-    const balance = await erc20?.methods.balanceOf(polyjuiceAddress).call({ from: userAddress });
+    if (polyjuiceAddress !== undefined) {
+    setBalance(await erc20?.methods.balanceOf(polyjuiceAddress).call({ from: userAddress }));
     console.log('balance', balance);
-  }, [erc20]);
+    }
+  }, [erc20, balance]);
+
 
   return (
     <ApolloProvider client={client as any}>
