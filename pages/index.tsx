@@ -11,13 +11,15 @@ import Layout from 'components/Layout/Layout';
 import ProposalTile from 'sections/homePage/ProposalTile/ProposalTile';
 import VoteTile from 'sections/homePage/VoteTile/VoteTile';
 import FetchDataComponent from 'sections/homePage/FetchDataComponent/FetchDataComponent';
-
 import { config } from 'config/config';
 
 import { selectProposalsArray } from 'redux/slices/proposals';
 import { selectVotesArray } from 'redux/slices/votes';
 
 import useERC20Contract from 'hooks/useERC20Contract';
+import { selectUserAddress } from 'redux/slices/user';
+
+const { AddressTranslator } = require('nervos-godwoken-integration');
 
 const client = new ApolloClient({
   uri: config.graph.moloch,
@@ -27,11 +29,17 @@ const client = new ApolloClient({
 const Swap: FC<NextPage> = () => {
   const proposalsArray = useSelector(selectProposalsArray);
   const votesArray = useSelector(selectVotesArray);
+  const userAddress = useSelector(selectUserAddress);
+  const addressTranslator = new AddressTranslator();
+  const polyjuiceAddress = addressTranslator.ethAddressToGodwokenShortAddress(userAddress);
 
-  const erc20 = useERC20Contract('0xc03da4356b4030f0ec2494c18dcfa426574e10d5');
+  console.log('userAddress', userAddress);
+
+  const SUDT_PROXY_CONTRACT_ADDRESS = '0xc03da4356b4030f0ec2494c18dcfa426574e10d5';
+  const erc20 = useERC20Contract(SUDT_PROXY_CONTRACT_ADDRESS);
 
   useEffect(async () => {
-    const balance = await erc20?.methods.balanceOf('0xD173313A51f8fc37BcF67569b463abd89d81844f').call();
+    const balance = await erc20?.methods.balanceOf(polyjuiceAddress).call({ from: userAddress });
     console.log('balance', balance);
   }, [erc20]);
 

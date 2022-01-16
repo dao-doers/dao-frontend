@@ -20,6 +20,10 @@ const useERC20Contract = (erc20Address: string) => {
 
   useEffect(() => {
     if (web3) {
+      /* 
+      TODO
+      maybe we can use abiLibrary.eth
+      */
       const erc20 = new web3.eth.Contract(ERC20_JSON.abi as AbiItem[], erc20Address);
 
       setERC20(erc20);
