@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 import { FC } from 'react';
 import { Formik, Form } from 'formik';
 import { useSelector, useDispatch } from 'react-redux';
@@ -52,11 +53,11 @@ const GuildKickForm: FC = () => {
     // if (!memberToKick.validated) return;
 
     await useGuildKick(
-      /*Wallet information*/ user,
-      /*Contract information*/ abiLibrary,
+      /* Wallet information */ user,
+      /* Contract information */ abiLibrary,
       version,
       daoAddress,
-      /*Proposal information*/ values.memberToKick,
+      /* Proposal information */ values.memberToKick,
       /* Details JSON */ { title: values.title, description: values.description, link: values.link } as any,
     );
 

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-shadow */
 import ERC20_JSON from 'abi/ERC20.json';
 
 import { useEffect, useState } from 'react';
