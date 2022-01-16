@@ -1,5 +1,5 @@
 import type { NextPage } from 'next';
-import React, { FC, useEffect } from 'react';
+import React, { FC } from 'react';
 import ApolloClient, { InMemoryCache } from 'apollo-boost';
 import { ApolloProvider } from '@apollo/react-hooks';
 import { useSelector } from 'react-redux';
@@ -16,11 +16,6 @@ import { config } from 'config/config';
 import { selectProposalsArray } from 'redux/slices/proposals';
 import { selectVotesArray } from 'redux/slices/votes';
 
-import useERC20Contract from 'hooks/useERC20Contract';
-import { selectUserAddress } from 'redux/slices/user';
-
-const { AddressTranslator } = require('nervos-godwoken-integration');
-
 const client = new ApolloClient({
   uri: config.graph.moloch,
   cache: new InMemoryCache(),
@@ -29,19 +24,6 @@ const client = new ApolloClient({
 const Swap: FC<NextPage> = () => {
   const proposalsArray = useSelector(selectProposalsArray);
   const votesArray = useSelector(selectVotesArray);
-  const userAddress = useSelector(selectUserAddress);
-  const addressTranslator = new AddressTranslator();
-  const polyjuiceAddress = addressTranslator.ethAddressToGodwokenShortAddress(userAddress);
-
-  console.log('userAddress', userAddress);
-
-  const SUDT_PROXY_CONTRACT_ADDRESS = '0xc03da4356b4030f0ec2494c18dcfa426574e10d5';
-  const erc20 = useERC20Contract(SUDT_PROXY_CONTRACT_ADDRESS);
-
-  useEffect(async () => {
-    const balance = await erc20?.methods.balanceOf(polyjuiceAddress).call({ from: userAddress });
-    console.log('balance', balance);
-  }, [erc20]);
 
   return (
     <ApolloProvider client={client as any}>

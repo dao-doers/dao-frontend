@@ -22,6 +22,9 @@ import DAO_TILE_VARIANTS from 'enums/daoTileVariants';
 import formatAddress from 'utils/formatAddress';
 import Web3 from 'web3';
 
+import useCheckBalance from 'hooks/useCheckBalance';
+import { shannonsToCkb } from 'utils/formatShannons';
+
 // TODO: refactor whole component, move function to useCheckIndexerStatus
 // TODO: change to import "" from ""
 const { PolyjuiceAccounts, PolyjuiceHttpProvider } = require('@polyjuice-provider/web3');
@@ -91,6 +94,8 @@ const BlockchainStatus: FC = () => {
     setLatestBlockFromLayer2();
   }, [molochBlock, layer2Block]);
 
+  const balance = useCheckBalance();
+
   return (
     <Box display="flex" justifyContent="flex-end" py={4} width="100%">
       <Box display="flex" alignItems="center" mr={4}>
@@ -130,6 +135,9 @@ const BlockchainStatus: FC = () => {
                 <TypographyBold px={2}>{formatAddress(userAddress)}</TypographyBold>
               </DAOTile>
             </Box>
+            <Typography ml={1} noWrap>
+              {shannonsToCkb(balance).toFixed(4)} dCKB
+            </Typography>
           </>
         )}
       </Box>
