@@ -1,15 +1,15 @@
 import Web3 from 'web3';
 import BigNumber from 'bignumber.js/bignumber';
 import PolyjuiceHttpProvider from '@polyjuice-provider/web3';
-import { AddressTranslator } from 'nervos-godwoken-integration';
 
 import abiLibrary from 'lib/abi';
 
 const providerConfig = {
   web3Url: 'https://godwoken-testnet-web3-rpc.ckbapp.dev',
 };
-const addressTranslator = new AddressTranslator();
+
 const provider = new PolyjuiceHttpProvider(providerConfig.web3Url, providerConfig);
+provider.setMultiAbi([abiLibrary.moloch2, abiLibrary.erc20]);
 const web3 = new Web3(provider);
 
 const getDao = async (address: string) => {
@@ -55,11 +55,8 @@ const useProposal = async (
   const dao = await getDao(daoAddress);
   const token = new web3.eth.Contract(abiLibrary.erc20, await dao.methods.depositToken().call());
 
-  const userPolyAddress = addressTranslator.ethAddressToGodwokenShortAddress(user);
-  const applicantPolyAddress = addressTranslator.ethAddressToGodwokenShortAddress(applicantAddress);
-
-  const userBalance = new BigNumber(await token.methods.balanceOf(userPolyAddress).call());
-  const allowance = new BigNumber(await token.methods.allowance(userPolyAddress, daoAddress).call());
+  const userBalance = new BigNumber(await token.methods.balanceOf(user).call());
+  const allowance = new BigNumber(await token.methods.allowance(user, daoAddress).call());
   const tributeOfferedBN = new BigNumber(tributeOfferedToExponential);
   const requiredAllowance = tributeOfferedBN;
 
@@ -74,7 +71,7 @@ const useProposal = async (
   }
 
   const proposal = await dao.methods.submitProposal(
-    applicantPolyAddress,
+    applicantAddress,
     sharesRequestedToExponential,
     lootRequested,
     tributeOfferedToExponential,
