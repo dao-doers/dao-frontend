@@ -62,10 +62,14 @@ const BlockchainStatus: FC = () => {
               <DAOTile variant={DAO_TILE_VARIANTS.YELLOW_BACKGROUND}>
                 <>
                   {layer2Block - molochBlock === 1 && (
-                    <Typography px={2}>{layer2Block - molochBlock} block behind</Typography>
+                    <Typography px={2}>
+                      lagging {'>>'} {layer2Block - molochBlock} block behind
+                    </Typography>
                   )}
                   {layer2Block - molochBlock > 1 && (
-                    <Typography px={2}>{layer2Block - molochBlock} blocks behind</Typography>
+                    <Typography px={2}>
+                      lagging {'>>'} {layer2Block - molochBlock} blocks behind
+                    </Typography>
                   )}
                 </>
               </DAOTile>
