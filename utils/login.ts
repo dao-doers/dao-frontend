@@ -29,4 +29,5 @@ export const getMetamaskAddress = async () => {
   } catch (err) {
     throw err;
   }
+  return null;
 };

@@ -5,13 +5,10 @@ import { useSelector } from 'react-redux';
 import styled from '@emotion/styled';
 
 import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
 
 import Link from 'components/Link';
-import DAOButton from 'components/DAOButton/DAOButton';
-import ThemeModeSwitch from 'components/ThemeModeSwitch/ThemeModeSwitch';
 
-import { APP_ROUTES } from 'utils/routes';
+import MenuContent from 'components/MenuContent/MenuContent';
 
 import { selectTheme } from 'redux/slices/theme';
 
@@ -28,7 +25,7 @@ const DesktopMenu: FC = () => {
 
   return (
     <MainBox>
-      <Box sx={{ display: { xs: 'none', md: 'block' } }}>
+      <Box sx={{ display: { xs: 'none', md: 'block' }, position: 'sticky', top: '24px' }}>
         <Box minWidth="160px" width="20%" my={3}>
           <Link internal href="/">
             {themeMode === THEME_MODES.DARK ? (
@@ -38,21 +35,8 @@ const DesktopMenu: FC = () => {
             )}
           </Link>
         </Box>
-        <Link internal href="/">
-          <Typography variant="subtitle2" paragraph>
-            All Proposals
-          </Typography>
-        </Link>
 
-        <Box my={8}>
-          <Link internal href={APP_ROUTES.NEW}>
-            <DAOButton variant="gradientOutline">
-              <Typography>Make a proposal</Typography>
-            </DAOButton>
-          </Link>
-        </Box>
-
-        <ThemeModeSwitch />
+        <MenuContent />
       </Box>
     </MainBox>
   );
