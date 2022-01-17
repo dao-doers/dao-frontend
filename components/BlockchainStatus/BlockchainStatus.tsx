@@ -14,8 +14,10 @@ import { selectUserAddress } from 'redux/slices/user';
 import DAO_TILE_VARIANTS from 'enums/daoTileVariants';
 
 import formatAddress from 'utils/formatAddress';
+import { shannonsToCkb } from 'utils/formatShannons';
 
 import useCheckIndexerStatus from 'hooks/useCheckIndexerStatus';
+import useCheckBalance from 'hooks/useCheckBalance';
 
 const TypographyBold = styled(Typography)`
   font-weight: 600;
@@ -93,7 +95,7 @@ const BlockchainStatus: FC = () => {
             <Typography ml={1} noWrap>
               {shannonsToCkb(balance).toFixed(4)} dCKB
             </Typography>
-          </>
+          </Box>
         )}
       </Box>
     </Box>

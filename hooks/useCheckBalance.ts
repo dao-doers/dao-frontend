@@ -23,7 +23,6 @@ const useCheckBalance = () => {
         const polyjuiceAddress = addressTranslator.ethAddressToGodwokenShortAddress(userAddress);
         const tokenBalance = await erc20?.methods.balanceOf(polyjuiceAddress).call({ from: userAddress });
         setBalance(tokenBalance);
-        console.log('balance', tokenBalance);
       }
     };
     checkBalance();
