@@ -8,14 +8,17 @@ import Typography from '@mui/material/Typography';
 
 import DAOTile from 'components/DAOTile/DAOTile';
 import ConnectWalletButton from 'components/ConnectWalletButton/ConnectWalletButton';
+import DAOCircleLoader from 'components/DAOCircleLoader/DAOCircleLoader';
 
 import { selectUserAddress } from 'redux/slices/user';
 
 import DAO_TILE_VARIANTS from 'enums/daoTileVariants';
 
 import formatAddress from 'utils/formatAddress';
+import { shannonsToCkb } from 'utils/formatShannons';
 
 import useCheckIndexerStatus from 'hooks/useCheckIndexerStatus';
+import useCheckBalance from 'hooks/useCheckBalance';
 
 const TypographyBold = styled(Typography)`
   font-weight: 600;
@@ -25,6 +28,8 @@ const BlockchainStatus: FC = () => {
   const userAddress = useSelector(selectUserAddress);
 
   const { molochBlock, layer2Block } = useCheckIndexerStatus();
+
+  const { balance, isChecked } = useCheckBalance();
 
   return (
     <Box
@@ -88,6 +93,20 @@ const BlockchainStatus: FC = () => {
                 <TypographyBold px={2}>{formatAddress(userAddress)}</TypographyBold>
               </DAOTile>
             </Box>
+            <Typography ml={3} noWrap>
+              {isChecked ? (
+                <>
+                  <b>{shannonsToCkb(balance).toFixed(2)}</b> dCKB
+                </>
+              ) : (
+                <Box display="flex" alignItems="center">
+                  <Box display="flex" alignItems="center" mr={2}>
+                    <DAOCircleLoader size={20} />
+                  </Box>
+                  Checking balance
+                </Box>
+              )}
+            </Typography>
           </Box>
         )}
       </Box>

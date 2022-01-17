@@ -53,7 +53,7 @@ const proposalsSlice = createSlice({
         ) {
           proposals.proposalStatus = PROPOSAL_STATUS.PROCEEDING;
         } else {
-          null;
+          return null;
         }
         return proposals;
       });

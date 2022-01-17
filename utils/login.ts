@@ -1,3 +1,4 @@
+/* eslint-disable consistent-return */
 import Web3 from 'web3';
 
 export const loadWeb3 = async () => {
