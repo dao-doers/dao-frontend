@@ -13,6 +13,7 @@ const providerConfig = {
   web3Url: 'https://godwoken-testnet-web3-rpc.ckbapp.dev',
 };
 
+// TODO: PolyjuiceHttpProvider and Web3 should be a singleton in whole application. It should be constructed once and passed across the application either in Redux or some shared file.
 const provider = new PolyjuiceHttpProvider(providerConfig.web3Url, providerConfig);
 const web3 = new Web3(provider);
 
@@ -21,15 +22,9 @@ const useERC20Contract = (erc20Address: string) => {
 
   useEffect(() => {
     if (web3) {
-      /* 
-      TODO
-      maybe we can use abiLibrary.eth
-      */
       const erc20 = new web3.eth.Contract(ERC20_JSON.abi as AbiItem[], erc20Address);
 
       setERC20(erc20);
-
-      console.log('erc20 connected', erc20);
     }
   }, [erc20Address, web3]);
 

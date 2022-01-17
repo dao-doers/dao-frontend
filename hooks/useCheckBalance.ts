@@ -11,6 +11,7 @@ const useCheckBalance = () => {
   const addressTranslator = new AddressTranslator();
 
   const [balance, setBalance] = useState(0);
+  const [isChecked, setChecked] = useState(false);
 
   // TODO: solve problem with string | undefined
   // const SUDT_PROXY_CONTRACT_ADDRESS = process.env.SUDT_PROXY_CONTRACT_ADDRESS;
@@ -23,12 +24,13 @@ const useCheckBalance = () => {
         const polyjuiceAddress = addressTranslator.ethAddressToGodwokenShortAddress(userAddress);
         const tokenBalance = await erc20?.methods.balanceOf(polyjuiceAddress).call({ from: userAddress });
         setBalance(tokenBalance);
+        setChecked(true);
       }
     };
     checkBalance();
   }, [erc20, userAddress]);
 
-  return balance;
+  return { balance, isChecked };
 };
 
 export default useCheckBalance;

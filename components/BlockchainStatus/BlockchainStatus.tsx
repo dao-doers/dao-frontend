@@ -8,6 +8,7 @@ import Typography from '@mui/material/Typography';
 
 import DAOTile from 'components/DAOTile/DAOTile';
 import ConnectWalletButton from 'components/ConnectWalletButton/ConnectWalletButton';
+import DAOCircleLoader from 'components/DAOCircleLoader/DAOCircleLoader';
 
 import { selectUserAddress } from 'redux/slices/user';
 
@@ -28,7 +29,7 @@ const BlockchainStatus: FC = () => {
 
   const { molochBlock, layer2Block } = useCheckIndexerStatus();
 
-  const balance = useCheckBalance();
+  const { balance, isChecked } = useCheckBalance();
 
   return (
     <Box
@@ -92,8 +93,19 @@ const BlockchainStatus: FC = () => {
                 <TypographyBold px={2}>{formatAddress(userAddress)}</TypographyBold>
               </DAOTile>
             </Box>
-            <Typography ml={1} noWrap>
-              {shannonsToCkb(balance).toFixed(4)} dCKB
+            <Typography ml={3} noWrap>
+              {isChecked ? (
+                <>
+                  <b>{shannonsToCkb(balance).toFixed(2)}</b> dCKB
+                </>
+              ) : (
+                <Box display="flex" alignItems="center">
+                  <Box display="flex" alignItems="center" mr={2}>
+                    <DAOCircleLoader size={20} />
+                  </Box>
+                  Checking balance
+                </Box>
+              )}
             </Typography>
           </Box>
         )}
