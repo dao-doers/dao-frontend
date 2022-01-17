@@ -1,3 +1,4 @@
+/* eslint-disable react/no-invalid-html-attribute */
 import * as React from 'react';
 import Document, { Html, Head, Main, NextScript } from 'next/document';
 
@@ -9,14 +10,17 @@ export default class MyDocument extends Document {
     return (
       <Html lang="en">
         <Head>
-          {/* PWA primary color */}
+          <title>Nervos DAO</title>
+
+          <meta name="viewport" content="initial-scale=1.0, width=device-width" />
           <meta name="theme-color" />
           <meta charSet="utf-8" />
-          {/* <meta property="og:url" content="https://www.nervos.org/" /> */}
+
+          <meta property="og:url" content="https://www.nervosdao.community/" />
           <meta property="og:type" content="website" />
           <meta property="og:title" content="Nervos DAO" />
-          <meta property="og:description" content="Nervos DAO" />
           <meta property="og:description" content="Nervos foundation DAO" />
+          <link rel="shortcut icon" href="/favicon.png" />
           <link
             rel="stylesheet"
             href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700&display=swap"

@@ -22,17 +22,26 @@ import { formatSeconds } from 'utils/formatDate';
 const StyledReadMoreIcon = styled(ReadMoreIcon)`
   cursor: pointer;
   margin-right: 10px;
+  ${({ theme }) => theme.breakpoints.down('sm')} {
+    font-size: 20px;
+  }
 `;
 
 const StyledTwitterIcon = styled(TwitterIcon)`
   color: ${({ theme }) => theme.palette.colors.col1};
   margin-right: 10px;
   cursor: pointer;
+  ${({ theme }) => theme.breakpoints.down('sm')} {
+    font-size: 20px;
+  }
 `;
 
 const StyledLanguageIcon = styled(LanguageIcon)`
   color: ${({ theme }) => theme.palette.colors.col5};
   cursor: pointer;
+  ${({ theme }) => theme.breakpoints.down('sm')} {
+    font-size: 20px;
+  }
 `;
 
 const ProposalTile: FC<any> = ({ proposal }) => {
@@ -70,7 +79,7 @@ const ProposalTile: FC<any> = ({ proposal }) => {
   }
 
   return (
-    <Box my={3}>
+    <Box mb={3}>
       <DAOTile variant={DAO_TILE_VARIANTS.GREY_SHADOW}>
         <Box width="100%" height="100%" p={3}>
           <Typography align="right" paragraph>

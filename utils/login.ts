@@ -1,3 +1,4 @@
+/* eslint-disable consistent-return */
 import Web3 from 'web3';
 
 export const loadWeb3 = async () => {
@@ -15,6 +16,7 @@ export const loadWeb3 = async () => {
 };
 
 export const getMetamaskAddress = async () => {
+  // eslint-disable-next-line no-useless-catch
   try {
     if ((window as any).ethereum) {
       (window as any).web3 = new Web3((window as any).ethereum);
@@ -27,4 +29,5 @@ export const getMetamaskAddress = async () => {
   } catch (err) {
     throw err;
   }
+  return null;
 };
