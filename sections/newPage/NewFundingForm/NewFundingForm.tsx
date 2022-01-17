@@ -96,7 +96,7 @@ const NewProposalForm: FC = () => {
   return (
     <StyledBox>
       <Box maxWidth="500px" mx="auto">
-        <TypographyBold variant="h4" mb={3}>
+        <TypographyBold variant="h4" mb={3} sx={{ display: { xs: 'none', md: 'block' } }}>
           Create new proposal with funding
         </TypographyBold>
         <Formik validationSchema={newFundingSchema} initialValues={initialValues} validateOnChange onSubmit={onSubmit}>
@@ -227,7 +227,7 @@ const NewProposalForm: FC = () => {
 
                 {sendProposalStatus === FETCH_STATUSES.SUCCESS && (
                   <Box mt={2}>
-                    <DAOTile variant={DAO_TILE_VARIANTS.GREEN_OUTLINE}>
+                    <DAOTile variant={DAO_TILE_VARIANTS.GREEN_BACKGROUND}>
                       <Typography p={2}>Congratulations! Your proposal has been submitted.</Typography>
                     </DAOTile>
                   </Box>

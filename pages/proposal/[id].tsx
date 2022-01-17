@@ -13,7 +13,7 @@ import ProposalTile from 'sections/homePage/ProposalTile/ProposalTile';
 import VoteTile from 'sections/homePage/VoteTile/VoteTile';
 import FetchDataComponent from 'sections/homePage/FetchDataComponent/FetchDataComponent';
 
-import { config } from 'config/config';
+import config from 'config/config';
 
 import { selectProposalsArray } from 'redux/slices/proposals';
 import { selectVotesArray } from 'redux/slices/votes';

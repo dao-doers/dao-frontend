@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-shadow */
 import Web3 from 'web3';
 import PolyjuiceHttpProvider from '@polyjuice-provider/web3';
 
