@@ -9,11 +9,10 @@ import Close from '@mui/icons-material/Close';
 import Drawer from '@mui/material/Drawer';
 import IconButton from '@mui/material/IconButton';
 import Menu from '@mui/icons-material/Menu';
-import Typography from '@mui/material/Typography';
 
 import Link from 'components/Link';
 
-import { APP_ROUTES } from 'utils/routes';
+import MenuContent from 'components/MenuContent/MenuContent';
 
 import { selectTheme } from 'redux/slices/theme';
 
@@ -27,20 +26,16 @@ const StyledCloseIcon = styled(Close)`
   color: ${({ theme }) => theme.palette.text.primary};
 `;
 
-const StyledTypography = styled(Typography)`
-  color: ${({ theme }) => theme.palette.text.primary};
-  font-size: 14px !important;
-`;
-
 const StyledDrawer = styled(Drawer)`
   & .MuiDrawer-paper {
     width: 100%;
   }
   & .MuiPaper-root {
     width: 100%;
-    height: auto;
+    height: 100%;
     margin-top: 60px;
-    background-color: ${({ theme }) => theme.palette.colors.main5};
+    background-color: ${({ theme }) => theme.palette.background.default};
+    box-shadow: 0px 0px 24px 0px ${({ theme }) => theme.palette.colors.main8};
   }
 `;
 
@@ -77,16 +72,7 @@ const MobileMenu: FC = () => {
       </Box>
 
       <StyledDrawer variant="temporary" anchor="left" open={isDrawerOpen} onClose={handleDrawerToggle}>
-        <Box px={2} py={4}>
-          <Link internal href="/">
-            <StyledTypography align="center" paragraph>
-              All Proposals
-            </StyledTypography>
-          </Link>
-          <Link internal href={APP_ROUTES.NEW}>
-            <StyledTypography align="center">Make a proposal</StyledTypography>
-          </Link>
-        </Box>
+        <MenuContent />
       </StyledDrawer>
     </Box>
   );

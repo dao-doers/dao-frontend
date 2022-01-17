@@ -40,9 +40,9 @@ const GuildKickForm: FC = () => {
     dispatch(setProposalStatus(FETCH_STATUSES.LOADING));
 
     // MOCKED -----------------------------
-    const user = '0xD173313A51f8fc37BcF67569b463abd89d81844f';
+    const user = '0xD173313A51f8fc37BcF67569b463abd89d81844f'; // @TODO replace to user connected with wallet
     const version = 2;
-    const daoAddress = '0xb252c90a042b2e698791b9bcab26fc5a1e8a241a';
+    const daoAddress = process.env.NEXT_PUBLIC_DAO_ADDRESS as string;
     // MOCKED -----------------------------
 
     /* send link without http or https */

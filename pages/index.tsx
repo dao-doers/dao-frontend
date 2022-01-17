@@ -14,7 +14,7 @@ import FetchDataComponent from 'sections/homePage/FetchDataComponent/FetchDataCo
 
 import config from 'config/config';
 
-import { selectProposalsArray } from 'redux/slices/proposals';
+import { selectProposalsArray, selectSortedProposalsArray } from 'redux/slices/proposals';
 import { selectVotesArray } from 'redux/slices/votes';
 
 const client = new ApolloClient({
@@ -24,7 +24,10 @@ const client = new ApolloClient({
 
 const Swap: FC<NextPage> = () => {
   const proposalsArray = useSelector(selectProposalsArray);
+  const sortedProposalsArray = useSelector(selectSortedProposalsArray);
   const votesArray = useSelector(selectVotesArray);
+
+  console.log(sortedProposalsArray.length);
 
   return (
     <ApolloProvider client={client as any}>
@@ -32,8 +35,15 @@ const Swap: FC<NextPage> = () => {
         <Box display="flex" justifyContent="space-between" width="100%">
           <FetchDataComponent />
           <Box sx={{ width: { xs: '100%', md: '63%' } }}>
-            {proposalsArray.map((proposal: any, id: any) => {
-              return <ProposalTile id={`proposal-${id}`} proposal={proposal} />;
+            {/* {sortedProposalsArray.length > 0
+              ? sortedProposalsArray.map((proposal: any, id: any) => {
+                  return <ProposalTile id={`proposal-${id}`} proposal={proposal} />;
+                })
+              : proposalsArray.map((proposal: any, id: any) => {
+                  return <ProposalTile id={`proposal-${id}`} proposal={proposal} />;
+                })} */}
+            {sortedProposalsArray.map((proposal: any) => {
+              return <ProposalTile id={`proposal-${proposal.proposalId}`} proposal={proposal} />;
             })}
           </Box>
           <Box width="35%" sx={{ display: { xs: 'none', md: 'block' } }}>
