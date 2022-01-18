@@ -10,6 +10,7 @@ import ModalsContainer from 'components/ModalsContainer/ModalsContainer';
 
 import { GlobalThemeProvider } from 'theme';
 
+import { MetamaskProvider } from 'context/MetamaskProvider';
 import createEmotionCache from '../createEmotionCache';
 
 const MyApp = ({ Component, pageProps }: AppProps) => {
@@ -20,7 +21,9 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
       <Provider store={store}>
         <GlobalThemeProvider>
           <CssBaseline />
-          <Component {...pageProps} />
+          <MetamaskProvider>
+            <Component {...pageProps} />
+          </MetamaskProvider>
           <ModalsContainer />
         </GlobalThemeProvider>
       </Provider>
