@@ -96,6 +96,11 @@ const proposalsSlice = createSlice({
         return a.proposalStatus === PROPOSAL_STATUS.PROCEEDING;
       });
     },
+    setFinishedProposals: state => {
+      state.sortedProposalsArray = state.proposalsArray.slice().filter((a: any) => {
+        return a.proposalStatus === PROPOSAL_STATUS.FINISHED;
+      });
+    },
     clearSorted: state => {
       state.sortedProposalsArray = state.proposalsArray;
     },
@@ -116,6 +121,7 @@ export const {
   setVotingProposals,
   setGracePeriodProposals,
   setProceedingProposals,
+  setFinishedProposals,
   clearSorted,
 } = proposalsSlice.actions;
 

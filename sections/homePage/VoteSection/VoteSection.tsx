@@ -131,8 +131,12 @@ const VoteSection: FC<any> = ({ proposal }) => {
     setProcessProposalStatus(FETCH_STATUSES.LOADING);
 
     try {
-      await useProcessProposal(userAddress, daoAddress, proposalIndex);
-      setProcessProposalStatus(FETCH_STATUSES.SUCCESS);
+      const receipt = await useProcessProposal(userAddress, daoAddress, proposalIndex);
+      if (receipt.transactionHash) {
+        setProcessProposalStatus(FETCH_STATUSES.SUCCESS);
+      } else {
+        setProcessProposalStatus(FETCH_STATUSES.ERROR);
+      }
     } catch (error) {
       setProcessProposalStatus(FETCH_STATUSES.ERROR);
     }
@@ -154,8 +158,50 @@ const VoteSection: FC<any> = ({ proposal }) => {
           {proposal.proposalStatus === PROPOSAL_STATUS.FINISHED && <TypographyViolet>Finished</TypographyViolet>}
         </Box>
       </AccordionSummary>
+
       <AccordionDetails>
-        {proposal.sponsored === true && (
+        {proposal.proposalStatus === PROPOSAL_STATUS.COLLECTING_FUNDS && (
+          <DAOTile>
+            <Box width="100%" p={2}>
+              {sponsorProposalStatus !== FETCH_STATUSES.SUCCESS && (
+                <Typography align="center" mb={2}>
+                  This proposal has not been sponsored yet.
+                </Typography>
+              )}
+
+              {userAddress === '' && (
+                <Box maxWidth="200px" mx="auto">
+                  <ConnectWalletButton />
+                </Box>
+              )}
+
+              {userAddress !== '' && sponsorProposalStatus !== FETCH_STATUSES.SUCCESS && (
+                <Box maxWidth="200px" mx="auto">
+                  <DAOButton
+                    variant="gradientOutline"
+                    isLoading={sponsorProposalStatus === FETCH_STATUSES.LOADING}
+                    onClick={handleSponsorProposal}
+                    disabled={sponsorProposalStatus === FETCH_STATUSES.LOADING}
+                  >
+                    Sponsor Proposal
+                  </DAOButton>
+                </Box>
+              )}
+
+              {sponsorProposalStatus === FETCH_STATUSES.SUCCESS && (
+                <DAOTile variant={DAO_TILE_VARIANTS.GRADIENT_OUTLINE}>
+                  <Typography align="center" p={1}>
+                    You have successfully sponsored this proposal!
+                  </Typography>
+                </DAOTile>
+              )}
+            </Box>
+          </DAOTile>
+        )}
+
+        {(proposal.proposalStatus === PROPOSAL_STATUS.VOTING ||
+          proposal.proposalStatus === PROPOSAL_STATUS.GRACE_PERIOD ||
+          proposal.proposalStatus === PROPOSAL_STATUS.PROCEEDING) && (
           <VoteSectionWrapper>
             <Box sx={{ width: { xs: '100%', md: '70%' } }} p={2}>
               <Box>
@@ -239,16 +285,41 @@ const VoteSection: FC<any> = ({ proposal }) => {
 
                 {currentTime > proposal.votingPeriodEnds && currentTime > proposal.gracePeriodEnds && (
                   <>
-                    <Typography align="center" p={1}>
-                      Proposal is ready to proceed.
-                    </Typography>
-                    <DAOButton
-                      variant="gradientOutline"
-                      isLoading={processProposalStatus === FETCH_STATUSES.LOADING}
-                      onClick={handleProcessProposal}
-                    >
-                      Process Proposal
-                    </DAOButton>
+                    <Typography mb={1}>To finish the whole process proposal needs to be proceed.</Typography>
+
+                    {userAddress === '' && (
+                      <Box maxWidth="200px" mx="auto" mb={3}>
+                        <ConnectWalletButton />
+                      </Box>
+                    )}
+
+                    {userAddress !== '' && processProposalStatus !== FETCH_STATUSES.SUCCESS && (
+                      <DAOButton
+                        variant="gradientOutline"
+                        isLoading={processProposalStatus === FETCH_STATUSES.LOADING}
+                        onClick={handleProcessProposal}
+                      >
+                        Process Proposal
+                      </DAOButton>
+                    )}
+
+                    {processProposalStatus === FETCH_STATUSES.ERROR && (
+                      <Box mt={1}>
+                        <DAOTile variant={DAO_TILE_VARIANTS.RED_OUTLINE}>
+                          <Typography align="center" p={1}>
+                            Proposal is not ready to be processed by blockchain network.
+                          </Typography>
+                        </DAOTile>
+                      </Box>
+                    )}
+
+                    {processProposalStatus === FETCH_STATUSES.SUCCESS && (
+                      <DAOTile variant={DAO_TILE_VARIANTS.GRADIENT_OUTLINE}>
+                        <Typography align="center" p={1}>
+                          Proposal is beeing processed by blockchain network.
+                        </Typography>
+                      </DAOTile>
+                    )}
                   </>
                 )}
               </Box>
@@ -282,43 +353,33 @@ const VoteSection: FC<any> = ({ proposal }) => {
           </VoteSectionWrapper>
         )}
 
-        {proposal.sponsored === false && (
-          <DAOTile>
-            <Box width="100%" p={2}>
-              {sponsorProposalStatus !== FETCH_STATUSES.SUCCESS && (
-                <Typography align="center" mb={2}>
-                  This proposal has not been sponsored yet.
-                </Typography>
-              )}
-
-              {userAddress === '' && (
-                <Box maxWidth="200px" mx="auto">
-                  <ConnectWalletButton />
+        {proposal.proposalStatus === PROPOSAL_STATUS.FINISHED && (
+          <>
+            <DAOTile variant={DAO_TILE_VARIANTS.GRADIENT_OUTLINE}>
+              <Typography align="center" p={1}>
+                Proposal has been processed.
+              </Typography>
+            </DAOTile>
+            <Box
+              display="flex"
+              alignItems="center"
+              sx={{ flexDirection: { xs: 'column', md: 'row' }, mt: { xs: 4, md: 0 } }}
+            >
+              <Box sx={{ width: { xs: '100%', md: '70%' } }}>
+                <Box display="flex" justifyContent="space-between" width="100%" pb={2}>
+                  <Typography>Voters Agreed</Typography>
+                  <TypographyRose>{proposal.yesShares}</TypographyRose>
                 </Box>
-              )}
-
-              {userAddress !== '' && sponsorProposalStatus !== FETCH_STATUSES.SUCCESS && (
-                <Box maxWidth="200px" mx="auto">
-                  <DAOButton
-                    variant="gradientOutline"
-                    isLoading={sponsorProposalStatus === FETCH_STATUSES.LOADING}
-                    onClick={handleSponsorProposal}
-                    disabled={sponsorProposalStatus === FETCH_STATUSES.LOADING}
-                  >
-                    Sponsor Proposal
-                  </DAOButton>
+                <Box display="flex" justifyContent="space-between" width="100%" pb={2}>
+                  <Typography>Voters Disagreed</Typography>
+                  <TypographyBlue>{proposal.noShares}</TypographyBlue>
                 </Box>
-              )}
-
-              {sponsorProposalStatus === FETCH_STATUSES.SUCCESS && (
-                <DAOTile variant={DAO_TILE_VARIANTS.GRADIENT_OUTLINE}>
-                  <Typography align="center" p={1}>
-                    You have successfully sponsored this proposal!
-                  </Typography>
-                </DAOTile>
-              )}
+              </Box>
+              <Box sx={{ width: { xs: '150px', md: '30%' } }} px={2} pb={2}>
+                <VoteChart agreed={proposal.yesShares} disagreed={proposal.noShares} />
+              </Box>
             </Box>
-          </DAOTile>
+          </>
         )}
       </AccordionDetails>
     </StyledAccordion>

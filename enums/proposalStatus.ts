@@ -3,7 +3,7 @@ enum PROPOSAL_STATUS {
   COLLECTING_FUNDS = 'Collecting Funds',
   VOTING = 'Voting',
   GRACE_PERIOD = 'Grace Period',
-  PROCEEDING = 'Proceeding',
+  PROCEEDING = 'Processing',
   FINISHED = 'Finished',
 }
 
