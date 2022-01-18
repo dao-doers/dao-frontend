@@ -1,5 +1,4 @@
 import Web3 from 'web3';
-
 import { createContext, useContext, useEffect, useState, useMemo } from 'react';
 
 interface IWeb3Context {
@@ -13,7 +12,7 @@ interface IWeb3ExtendedContext {
   web3: any;
   isLoading: boolean;
   connect: () => any;
-  isWeb3Loaded: boolean;
+  requireInstall: boolean;
 }
 
 const Web3Context = createContext<IWeb3Context | null>(null);
@@ -59,7 +58,7 @@ export const MetamaskProvider: React.FC = ({ children }) => {
               const accounts = await web3Api.provider.request({
                 method: 'eth_requestAccounts',
               });
-              console.log('accounts', accounts);
+              return accounts[0];
             } catch (error) {
               window.location.reload();
             }
