@@ -28,6 +28,7 @@ import useProcessProposal from 'hooks/useProcessProposal';
 
 import FETCH_STATUSES from 'enums/fetchStatuses';
 import DAO_TILE_VARIANTS from 'enums/daoTileVariants';
+import PROPOSAL_STATUS from 'enums/proposalStatus';
 
 import { selectUserAddress } from 'redux/slices/user';
 
@@ -142,17 +143,15 @@ const VoteSection: FC<any> = ({ proposal }) => {
       <AccordionSummary expandIcon={<StyledExpandMoreIcon />} aria-controls="panel1a-content" id="panel1a-header">
         <Box display="flex" justifyContent="space-between" alignItems="center" width="100%">
           <TypographyBold variant="h6">Vote Section</TypographyBold>
-          {/* TODO: refactor that */}
-          {proposal.sponsored === false && <TypographyViolet>Collecting Funds</TypographyViolet>}
-          {proposal.sponsored === true &&
-            currentTime < proposal.votingPeriodEnds &&
-            currentTime < proposal.gracePeriodEnds && <TypographyViolet>Voting</TypographyViolet>}
-          {proposal.sponsored === true &&
-            currentTime > proposal.votingPeriodEnds &&
-            currentTime < proposal.gracePeriodEnds && <TypographyViolet>Grace Period</TypographyViolet>}
-          {proposal.sponsored === true &&
-            currentTime > proposal.votingPeriodEnds &&
-            currentTime > proposal.gracePeriodEnds && <TypographyViolet>Proceeding</TypographyViolet>}
+          {proposal.proposalStatus === PROPOSAL_STATUS.COLLECTING_FUNDS && (
+            <TypographyViolet>Collecting Funds</TypographyViolet>
+          )}
+          {proposal.proposalStatus === PROPOSAL_STATUS.VOTING && <TypographyViolet>Voting</TypographyViolet>}
+          {proposal.proposalStatus === PROPOSAL_STATUS.GRACE_PERIOD && (
+            <TypographyViolet>Grace Period</TypographyViolet>
+          )}
+          {proposal.proposalStatus === PROPOSAL_STATUS.PROCEEDING && <TypographyViolet>Proceeding</TypographyViolet>}
+          {proposal.proposalStatus === PROPOSAL_STATUS.FINISHED && <TypographyViolet>Finished</TypographyViolet>}
         </Box>
       </AccordionSummary>
       <AccordionDetails>

@@ -4,6 +4,7 @@ enum PROPOSAL_STATUS {
   VOTING = 'Voting',
   GRACE_PERIOD = 'Grace Period',
   PROCEEDING = 'Proceeding',
+  FINISHED = 'Finished',
 }
 
 export default PROPOSAL_STATUS;
