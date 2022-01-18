@@ -55,10 +55,9 @@ export const MetamaskProvider: React.FC = ({ children }) => {
       connect: web3Api.provider
         ? async () => {
             try {
-              const accounts = await web3Api.provider.request({
+              await web3Api.provider.request({
                 method: 'eth_requestAccounts',
               });
-              return accounts[0];
             } catch (error) {
               window.location.reload();
             }
