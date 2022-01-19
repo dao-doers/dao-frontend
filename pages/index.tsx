@@ -33,7 +33,13 @@ const Swap: FC<NextPage> = () => {
           <FetchDataComponent />
           <Box sx={{ width: { xs: '100%', md: '63%' } }}>
             {sortedProposalsArray.map((proposal: any) => {
-              return <ProposalTile id={`proposal-${proposal.proposalId}`} proposal={proposal} />;
+              return (
+                <ProposalTile
+                  key={`proposal-${proposal.proposalId}`}
+                  id={`proposal-${proposal.proposalId}`}
+                  proposal={proposal}
+                />
+              );
             })}
           </Box>
           <Box width="35%" sx={{ display: { xs: 'none', md: 'block' } }}>
