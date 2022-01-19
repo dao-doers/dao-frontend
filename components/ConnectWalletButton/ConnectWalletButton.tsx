@@ -52,7 +52,7 @@ const ConnectWalletButton: FC = () => {
     <DAOButton variant="gradientOutline" onClick={connect} isLoading={isLoading} disabled={isLoading}>
       {requireInstall ? (
         <Box display="flex" alignItems="center">
-          {formatAddress(String(address)) || 'Connect Wallet'}
+          {address ? formatAddress(String(address)) : 'Connect Wallet'}
         </Box>
       ) : (
         <Box display="flex" alignItems="center" onClick={() => window.open('https://metamask.io/', '_blank')}>
