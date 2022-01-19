@@ -43,9 +43,10 @@ const ConnectWalletButton: FC = () => {
     };
     getAccount();
 
+    // eslint-disable-next-line react-hooks/rules-of-hooks
     useEffect(() => {
       // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-      ethereum && ethereum.on('accountsChanged', accounts => setAddress(accounts[0] ?? null));
+      ethereum && ethereum.on('accountsChanged', (accounts: any[]) => setAddress(accounts[0] ?? null));
     }, []);
   }
   return (
