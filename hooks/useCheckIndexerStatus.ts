@@ -42,8 +42,7 @@ const useCheckIndexerStatus = () => {
   const [molochBlock, setMolochBlock] = useState();
   const [layer2Block, setLayer2Block] = useState();
   const [loadingLayer2Block, setLoadingLayer2Block] = useState(false);
-  console.log('indexer', molochBlock);
-  console.log('layer2Block', layer2Block);
+
   const { loading: molochLoading, error: molochError, data: molochBlockData } = useQuery(GET_BLOCK, {
     fetchPolicy: 'cache-and-network',
     pollInterval: 10 * 3000,
