@@ -41,8 +41,10 @@ export const GET_BLOCK = gql`
 const useCheckIndexerStatus = () => {
   const [molochBlock, setMolochBlock] = useState();
   const [layer2Block, setLayer2Block] = useState();
-
-  const { error: molochError, data: molochBlockData } = useQuery(GET_BLOCK, {
+  const [loadingLayer2Block, setLoadingLayer2Block] = useState(false);
+  console.log('indexer', molochBlock);
+  console.log('layer2Block', layer2Block);
+  const { loading: molochLoading, error: molochError, data: molochBlockData } = useQuery(GET_BLOCK, {
     fetchPolicy: 'cache-and-network',
     pollInterval: 10 * 3000,
   });
@@ -56,7 +58,10 @@ const useCheckIndexerStatus = () => {
 
   const setLatestBlockFromLayer2 = () => {
     return getBlockNumber()
-      .then((res: any) => setLayer2Block(res))
+      .then((res: any) => {
+        setLayer2Block(res);
+        setLoadingLayer2Block(true);
+      })
       .catch((err: any) => new Error(err));
   };
 
@@ -68,7 +73,7 @@ const useCheckIndexerStatus = () => {
     setLatestBlockFromLayer2();
   }, 10 * 3000);
 
-  return { molochBlock, layer2Block, molochError };
+  return { molochBlock, layer2Block, molochError, molochLoading, loadingLayer2Block };
 };
 
 export default useCheckIndexerStatus;

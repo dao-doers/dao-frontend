@@ -27,7 +27,7 @@ const TypographyBold = styled(Typography)`
 const BlockchainStatus: FC = () => {
   const userAddress = useSelector(selectUserAddress);
 
-  const { molochBlock, layer2Block, molochError } = useCheckIndexerStatus();
+  const { molochBlock, layer2Block, molochError, molochLoading, loadingLayer2Block } = useCheckIndexerStatus();
 
   const { balance, isChecked } = useCheckBalance();
 
@@ -53,11 +53,16 @@ const BlockchainStatus: FC = () => {
             </DAOTile>
           )}
 
-          {(typeof layer2Block !== 'number' || typeof molochBlock !== 'number') && (
-            <DAOTile variant={DAO_TILE_VARIANTS.RED_BACKGROUND}>
-              <Typography px={2}>offline</Typography>
-            </DAOTile>
-          )}
+          {(typeof layer2Block !== 'number' || typeof molochBlock !== 'number') &&
+            (loadingLayer2Block && molochLoading ? (
+              <DAOTile variant={DAO_TILE_VARIANTS.RED_BACKGROUND}>
+                <Typography px={2}>offline</Typography>
+              </DAOTile>
+            ) : (
+              <DAOTile variant={DAO_TILE_VARIANTS.GREY_SHADOW}>
+                <Typography px={2}>Processing</Typography>
+              </DAOTile>
+            ))}
 
           {!molochError ? (
             molochBlock !== layer2Block &&
