@@ -14,6 +14,7 @@ import DAOTile from 'components/DAOTile/DAOTile';
 import DAO_TILE_VARIANTS from 'enums/daoTileVariants';
 
 import formatAddress from 'utils/formatAddress';
+import { shannonsToCkb } from 'utils/formatShannons';
 
 const StyledAccordion = styled(Accordion)`
   margin-top: 10px;
@@ -90,7 +91,7 @@ const Details: FC<any> = ({ proposal }) => {
                     Tribute to DAO
                   </Typography>
                   <TypographyBold align="center">
-                    {proposal.tributeOffered / 100000000} {proposal.tributeTokenSymbol}
+                    {shannonsToCkb(proposal.tributeOffered)} {proposal.tributeTokenSymbol}
                   </TypographyBold>
                 </Box>
               </DAOTile>
@@ -105,7 +106,7 @@ const Details: FC<any> = ({ proposal }) => {
                     Payment Requested
                   </Typography>
                   <TypographyBold align="center">
-                    {proposal.paymentRequested / 100000000} {proposal.paymentTokenSymbol}
+                    {shannonsToCkb(proposal.paymentRequested)} {proposal.paymentTokenSymbol}
                   </TypographyBold>
                 </Box>
               </DAOTile>
