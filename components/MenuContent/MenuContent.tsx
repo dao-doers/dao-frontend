@@ -16,6 +16,7 @@ import {
   setVotingProposals,
   setGracePeriodProposals,
   setProceedingProposals,
+  setFinishedProposals,
   clearSorted,
 } from 'redux/slices/proposals';
 
@@ -40,6 +41,10 @@ const MenuContent: FC = () => {
 
   const handleSortProceeding = () => {
     dispatch(setProceedingProposals());
+  };
+
+  const handleSortFinished = () => {
+    dispatch(setFinishedProposals());
   };
 
   return (
@@ -71,6 +76,12 @@ const MenuContent: FC = () => {
       <Box sx={{ py: { xs: 2, md: 0.5 } }}>
         <Link internal href="/">
           <DAOPlainButton onClick={handleSortProceeding}>Proceeding</DAOPlainButton>
+        </Link>
+      </Box>
+
+      <Box sx={{ py: { xs: 2, md: 0.5 } }}>
+        <Link internal href="/">
+          <DAOPlainButton onClick={handleSortFinished}>Finished</DAOPlainButton>
         </Link>
       </Box>
 

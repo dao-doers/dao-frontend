@@ -45,7 +45,7 @@ const BlockchainStatus: FC = () => {
         mr={4}
         sx={{ width: { xs: '100%', md: 'auto' }, mb: { xs: 2, md: 0 } }}
       >
-        <Typography px={2}>Indexer status:</Typography>
+        <Typography px={2}>Indexer connection status:</Typography>
         <Box height="40px">
           {molochBlock === layer2Block && typeof layer2Block === 'number' && typeof molochBlock === 'number' && (
             <DAOTile variant={DAO_TILE_VARIANTS.GREEN_BACKGROUND}>
