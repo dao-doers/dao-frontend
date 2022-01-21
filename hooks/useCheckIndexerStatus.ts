@@ -3,6 +3,7 @@ import Web3 from 'web3';
 import { gql } from 'apollo-boost';
 
 import { useQuery } from '@apollo/react-hooks';
+import { useInterval } from './useInterval';
 
 // TODO: change to import "" from ""
 // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -40,8 +41,9 @@ export const GET_BLOCK = gql`
 const useCheckIndexerStatus = () => {
   const [molochBlock, setMolochBlock] = useState();
   const [layer2Block, setLayer2Block] = useState();
+  const [loadingLayer2Block, setLoadingLayer2Block] = useState(false);
 
-  const { error, data: molochBlockData } = useQuery(GET_BLOCK, {
+  const { loading: molochLoading, error: molochError, data: molochBlockData } = useQuery(GET_BLOCK, {
     fetchPolicy: 'cache-and-network',
     pollInterval: 10 * 3000,
   });
@@ -55,23 +57,22 @@ const useCheckIndexerStatus = () => {
 
   const setLatestBlockFromLayer2 = () => {
     return getBlockNumber()
-      .then((res: any) => setLayer2Block(res))
-      .catch((err: any) => console.error('Nervos Layer 2 not available: ', err));
+      .then((res: any) => {
+        setLayer2Block(res);
+        setLoadingLayer2Block(true);
+      })
+      .catch((err: any) => new Error(err));
   };
 
   useEffect(() => {
     setLatestBlockFromLayer2();
   }, []);
 
-  useEffect(() => {
-    // we have to copy that functions to trigger them also on first page render, not only after 30 seconds
-    // it may be done in much elegance way but i'm not sure if that is necessary
-    setInterval(() => {
-      setLatestBlockFromLayer2();
-    }, 10 * 3000);
-  }, [molochBlock, layer2Block]);
+  useInterval(() => {
+    setLatestBlockFromLayer2();
+  }, 10 * 3000);
 
-  return { molochBlock, layer2Block };
+  return { molochBlock, layer2Block, molochError, molochLoading, loadingLayer2Block };
 };
 
 export default useCheckIndexerStatus;
