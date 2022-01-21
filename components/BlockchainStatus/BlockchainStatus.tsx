@@ -106,9 +106,11 @@ const BlockchainStatus: FC = () => {
             </Box>
             <Typography ml={3} noWrap>
               {isChecked ? (
-                <>
-                  <b>{shannonsToCkb(balance).toFixed(2)}</b> dCKB
-                </>
+                balance && (
+                  <>
+                    <b>{shannonsToCkb(balance)}</b> dCKB
+                  </>
+                )
               ) : (
                 <Box display="flex" alignItems="center">
                   <Box display="flex" alignItems="center" mr={2}>
