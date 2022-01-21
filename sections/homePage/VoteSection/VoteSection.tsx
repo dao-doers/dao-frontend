@@ -355,11 +355,21 @@ const VoteSection: FC<any> = ({ proposal }) => {
 
         {proposal.proposalStatus === PROPOSAL_STATUS.FINISHED && (
           <>
-            <DAOTile variant={DAO_TILE_VARIANTS.GRADIENT_OUTLINE}>
-              <Typography align="center" p={1}>
-                Proposal has been processed.
-              </Typography>
-            </DAOTile>
+            {proposal.didPass === true && (
+              <DAOTile variant={DAO_TILE_VARIANTS.GREEN_BACKGROUND}>
+                <Typography align="center" p={1}>
+                  Proposal has been approved.
+                </Typography>
+              </DAOTile>
+            )}
+            {proposal.didPass === false && (
+              <DAOTile variant={DAO_TILE_VARIANTS.RED_BACKGROUND}>
+                <Typography align="center" p={1}>
+                  Proposal has been rejected.
+                </Typography>
+              </DAOTile>
+            )}
+
             <Box
               display="flex"
               alignItems="center"
