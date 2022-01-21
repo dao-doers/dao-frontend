@@ -24,9 +24,11 @@ import VoteChart from 'sections/homePage/VoteChart/VoteChart';
 import useSponsorProposal from 'hooks/useSponsorProposal';
 import useVote from 'hooks/useVote';
 import useNotVotedYetCheck from 'hooks/useNotVotedYetCheck';
+import useProcessProposal from 'hooks/useProcessProposal';
 
 import FETCH_STATUSES from 'enums/fetchStatuses';
 import DAO_TILE_VARIANTS from 'enums/daoTileVariants';
+import PROPOSAL_STATUS from 'enums/proposalStatus';
 
 import { selectUserAddress } from 'redux/slices/user';
 
@@ -80,6 +82,9 @@ const VoteSection: FC<any> = ({ proposal }) => {
   const [voteStatus, setVoteStatus] = useState(FETCH_STATUSES.IDLE);
   // 0 means idle state, 1 means user can vote, 2 means user already voted
   const [notVotedYet, setNotVotedYet] = useState(0);
+  const [processProposalStatus, setProcessProposalStatus] = useState(FETCH_STATUSES.IDLE);
+
+  const currentTime = new Date().getTime() / 1000;
 
   const handleSponsorProposal = async () => {
     const daoAddress = process.env.DAO_ADDRESS;
@@ -120,28 +125,83 @@ const VoteSection: FC<any> = ({ proposal }) => {
     }
   };
 
-  const currentTime = new Date().getTime() / 1000;
+  const handleProcessProposal = async () => {
+    const daoAddress = process.env.DAO_ADDRESS;
+    const { proposalIndex } = proposal;
+    setProcessProposalStatus(FETCH_STATUSES.LOADING);
+
+    try {
+      const receipt = await useProcessProposal(userAddress, daoAddress, proposalIndex);
+      if (receipt.transactionHash) {
+        setProcessProposalStatus(FETCH_STATUSES.SUCCESS);
+      } else {
+        setProcessProposalStatus(FETCH_STATUSES.ERROR);
+      }
+    } catch (error) {
+      setProcessProposalStatus(FETCH_STATUSES.ERROR);
+    }
+  };
 
   return (
     <StyledAccordion>
       <AccordionSummary expandIcon={<StyledExpandMoreIcon />} aria-controls="panel1a-content" id="panel1a-header">
         <Box display="flex" justifyContent="space-between" alignItems="center" width="100%">
           <TypographyBold variant="h6">Vote Section</TypographyBold>
-          {/* TODO: refactor that */}
-          {proposal.sponsored === false && <TypographyViolet>Collecting Funds</TypographyViolet>}
-          {proposal.sponsored === true &&
-            currentTime < proposal.votingPeriodEnds &&
-            currentTime < proposal.gracePeriodEnds && <TypographyViolet>Voting</TypographyViolet>}
-          {proposal.sponsored === true &&
-            currentTime > proposal.votingPeriodEnds &&
-            currentTime < proposal.gracePeriodEnds && <TypographyViolet>Grace Period</TypographyViolet>}
-          {proposal.sponsored === true &&
-            currentTime > proposal.votingPeriodEnds &&
-            currentTime > proposal.gracePeriodEnds && <TypographyViolet>Proceeding</TypographyViolet>}
+          {proposal.proposalStatus === PROPOSAL_STATUS.COLLECTING_FUNDS && (
+            <TypographyViolet>Collecting Funds</TypographyViolet>
+          )}
+          {proposal.proposalStatus === PROPOSAL_STATUS.VOTING && <TypographyViolet>Voting</TypographyViolet>}
+          {proposal.proposalStatus === PROPOSAL_STATUS.GRACE_PERIOD && (
+            <TypographyViolet>Grace Period</TypographyViolet>
+          )}
+          {proposal.proposalStatus === PROPOSAL_STATUS.PROCEEDING && <TypographyViolet>Proceeding</TypographyViolet>}
+          {proposal.proposalStatus === PROPOSAL_STATUS.FINISHED && <TypographyViolet>Finished</TypographyViolet>}
         </Box>
       </AccordionSummary>
+
       <AccordionDetails>
-        {proposal.sponsored === true && (
+        {proposal.proposalStatus === PROPOSAL_STATUS.COLLECTING_FUNDS && (
+          <DAOTile>
+            <Box width="100%" p={2}>
+              {sponsorProposalStatus !== FETCH_STATUSES.SUCCESS && (
+                <Typography align="center" mb={2}>
+                  This proposal has not been sponsored yet.
+                </Typography>
+              )}
+
+              {userAddress === '' && (
+                <Box maxWidth="200px" mx="auto">
+                  <ConnectWalletButton />
+                </Box>
+              )}
+
+              {userAddress !== '' && sponsorProposalStatus !== FETCH_STATUSES.SUCCESS && (
+                <Box maxWidth="200px" mx="auto">
+                  <DAOButton
+                    variant="gradientOutline"
+                    isLoading={sponsorProposalStatus === FETCH_STATUSES.LOADING}
+                    onClick={handleSponsorProposal}
+                    disabled={sponsorProposalStatus === FETCH_STATUSES.LOADING}
+                  >
+                    Sponsor Proposal
+                  </DAOButton>
+                </Box>
+              )}
+
+              {sponsorProposalStatus === FETCH_STATUSES.SUCCESS && (
+                <DAOTile variant={DAO_TILE_VARIANTS.GRADIENT_OUTLINE}>
+                  <Typography align="center" p={1}>
+                    You have successfully sponsored this proposal!
+                  </Typography>
+                </DAOTile>
+              )}
+            </Box>
+          </DAOTile>
+        )}
+
+        {(proposal.proposalStatus === PROPOSAL_STATUS.VOTING ||
+          proposal.proposalStatus === PROPOSAL_STATUS.GRACE_PERIOD ||
+          proposal.proposalStatus === PROPOSAL_STATUS.PROCEEDING) && (
           <VoteSectionWrapper>
             <Box sx={{ width: { xs: '100%', md: '70%' } }} p={2}>
               <Box>
@@ -224,11 +284,43 @@ const VoteSection: FC<any> = ({ proposal }) => {
                 )}
 
                 {currentTime > proposal.votingPeriodEnds && currentTime > proposal.gracePeriodEnds && (
-                  <DAOTile variant={DAO_TILE_VARIANTS.GRADIENT_OUTLINE}>
-                    <Typography align="center" p={1}>
-                      Proposal is ready to proceed.
-                    </Typography>
-                  </DAOTile>
+                  <>
+                    <Typography mb={1}>To finish the whole process proposal needs to be proceed.</Typography>
+
+                    {userAddress === '' && (
+                      <Box maxWidth="200px" mx="auto" mb={3}>
+                        <ConnectWalletButton />
+                      </Box>
+                    )}
+
+                    {userAddress !== '' && processProposalStatus !== FETCH_STATUSES.SUCCESS && (
+                      <DAOButton
+                        variant="gradientOutline"
+                        isLoading={processProposalStatus === FETCH_STATUSES.LOADING}
+                        onClick={handleProcessProposal}
+                      >
+                        Process Proposal
+                      </DAOButton>
+                    )}
+
+                    {processProposalStatus === FETCH_STATUSES.ERROR && (
+                      <Box mt={1}>
+                        <DAOTile variant={DAO_TILE_VARIANTS.RED_OUTLINE}>
+                          <Typography align="center" p={1}>
+                            Proposal is not ready to be processed by blockchain network.
+                          </Typography>
+                        </DAOTile>
+                      </Box>
+                    )}
+
+                    {processProposalStatus === FETCH_STATUSES.SUCCESS && (
+                      <DAOTile variant={DAO_TILE_VARIANTS.GRADIENT_OUTLINE}>
+                        <Typography align="center" p={1}>
+                          Proposal is beeing processed by blockchain network.
+                        </Typography>
+                      </DAOTile>
+                    )}
+                  </>
                 )}
               </Box>
 
@@ -261,43 +353,33 @@ const VoteSection: FC<any> = ({ proposal }) => {
           </VoteSectionWrapper>
         )}
 
-        {proposal.sponsored === false && (
-          <DAOTile>
-            <Box width="100%" p={2}>
-              {sponsorProposalStatus !== FETCH_STATUSES.SUCCESS && (
-                <Typography align="center" mb={2}>
-                  This proposal has not been sponsored yet.
-                </Typography>
-              )}
-
-              {userAddress === '' && (
-                <Box maxWidth="200px" mx="auto">
-                  <ConnectWalletButton />
+        {proposal.proposalStatus === PROPOSAL_STATUS.FINISHED && (
+          <>
+            <DAOTile variant={DAO_TILE_VARIANTS.GRADIENT_OUTLINE}>
+              <Typography align="center" p={1}>
+                Proposal has been processed.
+              </Typography>
+            </DAOTile>
+            <Box
+              display="flex"
+              alignItems="center"
+              sx={{ flexDirection: { xs: 'column', md: 'row' }, mt: { xs: 4, md: 0 } }}
+            >
+              <Box sx={{ width: { xs: '100%', md: '70%' } }}>
+                <Box display="flex" justifyContent="space-between" width="100%" pb={2}>
+                  <Typography>Voters Agreed</Typography>
+                  <TypographyRose>{proposal.yesShares}</TypographyRose>
                 </Box>
-              )}
-
-              {userAddress !== '' && sponsorProposalStatus !== FETCH_STATUSES.SUCCESS && (
-                <Box maxWidth="200px" mx="auto">
-                  <DAOButton
-                    variant="gradientOutline"
-                    isLoading={sponsorProposalStatus === FETCH_STATUSES.LOADING}
-                    onClick={handleSponsorProposal}
-                    disabled={sponsorProposalStatus === FETCH_STATUSES.LOADING}
-                  >
-                    Sponsor Proposal
-                  </DAOButton>
+                <Box display="flex" justifyContent="space-between" width="100%" pb={2}>
+                  <Typography>Voters Disagreed</Typography>
+                  <TypographyBlue>{proposal.noShares}</TypographyBlue>
                 </Box>
-              )}
-
-              {sponsorProposalStatus === FETCH_STATUSES.SUCCESS && (
-                <DAOTile variant={DAO_TILE_VARIANTS.GRADIENT_OUTLINE}>
-                  <Typography align="center" p={1}>
-                    You have successfully sponsored this proposal!
-                  </Typography>
-                </DAOTile>
-              )}
+              </Box>
+              <Box sx={{ width: { xs: '150px', md: '30%' } }} px={2} pb={2}>
+                <VoteChart agreed={proposal.yesShares} disagreed={proposal.noShares} />
+              </Box>
             </Box>
-          </DAOTile>
+          </>
         )}
       </AccordionDetails>
     </StyledAccordion>

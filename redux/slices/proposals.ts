@@ -32,26 +32,31 @@ const proposalsSlice = createSlice({
     setProposals: (state, action) => {
       const result = action.payload.map((proposal: any) => {
         const proposals = { ...proposal };
-        if (proposal.sponsored === false) {
+        if (proposal.sponsored === false && proposal.processed === false) {
           proposals.proposalStatus = PROPOSAL_STATUS.COLLECTING_FUNDS;
         } else if (
           proposal.sponsored === true &&
           currentTime < proposal.votingPeriodEnds &&
-          currentTime < proposal.gracePeriodEnds
+          currentTime < proposal.gracePeriodEnds &&
+          proposal.processed === false
         ) {
           proposals.proposalStatus = PROPOSAL_STATUS.VOTING;
         } else if (
           proposal.sponsored === true &&
           currentTime > proposal.votingPeriodEnds &&
-          currentTime < proposal.gracePeriodEnds
+          currentTime < proposal.gracePeriodEnds &&
+          proposal.processed === false
         ) {
           proposals.proposalStatus = PROPOSAL_STATUS.GRACE_PERIOD;
         } else if (
           proposal.sponsored === true &&
           currentTime > proposal.votingPeriodEnds &&
-          currentTime > proposal.gracePeriodEnds
+          currentTime > proposal.gracePeriodEnds &&
+          proposal.processed === false
         ) {
           proposals.proposalStatus = PROPOSAL_STATUS.PROCEEDING;
+        } else if (proposal.processed === true) {
+          proposals.proposalStatus = PROPOSAL_STATUS.FINISHED;
         } else {
           return null;
         }
@@ -91,6 +96,11 @@ const proposalsSlice = createSlice({
         return a.proposalStatus === PROPOSAL_STATUS.PROCEEDING;
       });
     },
+    setFinishedProposals: state => {
+      state.sortedProposalsArray = state.proposalsArray.slice().filter((a: any) => {
+        return a.proposalStatus === PROPOSAL_STATUS.FINISHED;
+      });
+    },
     clearSorted: state => {
       state.sortedProposalsArray = state.proposalsArray;
     },
@@ -111,6 +121,7 @@ export const {
   setVotingProposals,
   setGracePeriodProposals,
   setProceedingProposals,
+  setFinishedProposals,
   clearSorted,
 } = proposalsSlice.actions;
 
