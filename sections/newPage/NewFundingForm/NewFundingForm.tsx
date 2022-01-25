@@ -35,6 +35,7 @@ const initialValues = {
   link: '',
   tributeOffered: 0,
   paymentRequested: 0,
+  applicant: '0x0',
 };
 
 const NewProposalForm: FC = () => {
@@ -185,6 +186,17 @@ const NewProposalForm: FC = () => {
                     }}
                     error={formik.errors.paymentRequested}
                   />
+                </Box>
+
+                <Box display="flex" width="100%" mb={2}>
+                  <Typography variant="subtitle2">Aplicant:</Typography>
+                  isAddress
+                  <TypographyBold variant="subtitle2" mx={1}>
+                    validated or no
+                  </TypographyBold>
+                  <TooltipIcon>
+                    <Typography variant="body2">Type of coin offered</Typography>
+                  </TooltipIcon>
                 </Box>
 
                 <Box display="flex" width="100%" mb={2}>
