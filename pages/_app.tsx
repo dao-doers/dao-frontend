@@ -1,4 +1,5 @@
 import type { AppProps } from 'next/app';
+import Web3 from 'web3';
 
 import CssBaseline from '@mui/material/CssBaseline';
 import { CacheProvider } from '@emotion/react';
@@ -11,6 +12,12 @@ import ModalsContainer from 'components/ModalsContainer/ModalsContainer';
 import { GlobalThemeProvider } from 'theme';
 
 import createEmotionCache from '../createEmotionCache';
+
+declare global {
+  interface Window {
+    web3: Web3;
+  }
+}
 
 const MyApp = ({ Component, pageProps }: AppProps) => {
   const cache = createEmotionCache();

@@ -104,22 +104,20 @@ const BlockchainStatus: FC = () => {
                 <TypographyBold px={2}>{formatAddress(userAddress)}</TypographyBold>
               </DAOTile>
             </Box>
-            <Typography ml={3} noWrap>
-              {isChecked ? (
-                balance && (
-                  <>
-                    <b>{shannonsToCkb(balance)}</b> dCKB
-                  </>
-                )
-              ) : (
-                <Box display="flex" alignItems="center">
-                  <Box display="flex" alignItems="center" mr={2}>
-                    <DAOCircleLoader size={20} />
-                  </Box>
-                  Checking balance
+            {isChecked ? (
+              balance && (
+                <Typography ml={3} noWrap>
+                  <b>{shannonsToCkb(balance)}</b> dCKB
+                </Typography>
+              )
+            ) : (
+              <Box display="flex" alignItems="center" ml={3}>
+                <Box display="flex" alignItems="center" mr={2}>
+                  <DAOCircleLoader size={20} />
                 </Box>
-              )}
-            </Typography>
+                Checking balance
+              </Box>
+            )}
           </Box>
         )}
       </Box>
