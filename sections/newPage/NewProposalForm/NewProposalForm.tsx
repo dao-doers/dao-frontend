@@ -111,6 +111,7 @@ const NewProposalForm: FC = () => {
                       id: 'title',
                       value: formik.values.title,
                       onChange: formik.handleChange,
+                      inputProps: { min: 0, step: 1 },
                     }}
                     formControlProps={{
                       fullWidth: true,
