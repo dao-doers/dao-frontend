@@ -121,11 +121,13 @@ const NewProposalForm: FC = () => {
                 <Box width="100%" mb={2}>
                   <DAOInput
                     label="Description"
+                    tootltip="Please provide a brief detailed description"
                     inputProps={{
                       id: 'description',
                       value: formik.values.description,
                       onChange: formik.handleChange,
                       multiline: true,
+                      rows: 3,
                     }}
                     formControlProps={{
                       fullWidth: true,
@@ -142,6 +144,7 @@ const NewProposalForm: FC = () => {
                       value: formik.values.link,
                       onChange: formik.handleChange,
                       multiline: true,
+                      placeholder: 'https://',
                     }}
                     formControlProps={{
                       fullWidth: true,
