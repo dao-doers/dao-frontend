@@ -31,6 +31,7 @@ import DAO_TILE_VARIANTS from 'enums/daoTileVariants';
 import PROPOSAL_STATUS from 'enums/proposalStatus';
 
 import { selectUserAddress } from 'redux/slices/user';
+import getBalanceLabel from 'hooks/getBalanceLabel';
 
 const StyledAccordion = styled(Accordion)`
   margin-top: 10px;
@@ -378,15 +379,18 @@ const VoteSection: FC<any> = ({ proposal }) => {
               <Box sx={{ width: { xs: '100%', md: '70%' } }}>
                 <Box display="flex" justifyContent="space-between" width="100%" pb={2}>
                   <Typography>Voters Agreed</Typography>
-                  <TypographyRose>{proposal.yesShares}</TypographyRose>
+                  <TypographyRose>{getBalanceLabel(proposal.yesShares, proposal.tributeTokenDecimals)}</TypographyRose>
                 </Box>
                 <Box display="flex" justifyContent="space-between" width="100%" pb={2}>
                   <Typography>Voters Disagreed</Typography>
-                  <TypographyBlue>{proposal.noShares}</TypographyBlue>
+                  <TypographyBlue>{getBalanceLabel(proposal.noShares, proposal.tributeTokenDecimals)}</TypographyBlue>
                 </Box>
               </Box>
               <Box sx={{ width: { xs: '150px', md: '30%' } }} px={2} pb={2}>
-                <VoteChart agreed={proposal.yesShares} disagreed={proposal.noShares} />
+                <VoteChart
+                  agreed={getBalanceLabel(proposal.yesShares, proposal.tributeTokenDecimals)}
+                  disagreed={getBalanceLabel(proposal.noShares, proposal.tributeTokenDecimals)}
+                />
               </Box>
             </Box>
           </>

@@ -10,8 +10,8 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 
 interface VoteChartProps {
-  agreed: number;
-  disagreed: number;
+  agreed: string;
+  disagreed: string;
 }
 
 const CircleBox = styled(Box)`
@@ -42,7 +42,7 @@ const VoteChart: FC<VoteChartProps> = ({ agreed, disagreed }) => {
 
   return (
     <Box>
-      {agreed == 0 && disagreed == 0 ? (
+      {agreed == String(0) && disagreed == String(0) ? (
         <CircleBox>
           <Typography align="center" width="100%">
             No votes yet
