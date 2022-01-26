@@ -188,16 +188,16 @@ const NewProposalForm: FC = () => {
                   />
                 </Box>
 
-                <Box display="flex" width="100%" mb={2}>
+                {/* <Box display="flex" width="100%" mb={2}>
                   <Typography variant="subtitle2">Aplicant:</Typography>
-                  isAddress
+                  isAddress(value)
                   <TypographyBold variant="subtitle2" mx={1}>
                     validated or no
                   </TypographyBold>
                   <TooltipIcon>
                     <Typography variant="body2">Type of coin offered</Typography>
                   </TooltipIcon>
-                </Box>
+                </Box> */}
 
                 <Box display="flex" width="100%" mb={2}>
                   <Typography variant="subtitle2">Tribute Token:</Typography>
