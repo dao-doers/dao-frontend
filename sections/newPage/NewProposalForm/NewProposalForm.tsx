@@ -184,7 +184,7 @@ const NewProposalForm: FC = () => {
                   <TypographyBold variant="subtitle2" mx={1}>
                     {new Intl.NumberFormat('en-US').format(
                       // eslint-disable-next-line no-restricted-globals
-                      isNaN(formik.values.tributeOffered) ? 0 : formik.values.tributeOffered * 10 ** 8,
+                      isNaN(formik.values.tributeOffered) ? 0 : formik.values.tributeOffered,
                     )}
                   </TypographyBold>
                   <TooltipIcon>

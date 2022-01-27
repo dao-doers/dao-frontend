@@ -39,7 +39,7 @@ const useProposal = async (
   daoAddress: string,
   /* Proposal information */
   applicantAddress: string,
-  sharesRequested: BigNumber.Value,
+  sharesRequested: number,
   lootRequested: number,
   tributeOffered: BigNumber.Value,
   tributeToken: string | undefined,
@@ -50,7 +50,6 @@ const useProposal = async (
   const exponentialValue = new BigNumber(10 ** 8);
   const tributeOfferedToExponential = new BigNumber(tributeOffered).multipliedBy(exponentialValue);
   const paymentRequestedToExponential = new BigNumber(paymentRequested).multipliedBy(exponentialValue);
-  const sharesRequestedToExponential = new BigNumber(sharesRequested).multipliedBy(exponentialValue);
 
   const dao = await getDao(daoAddress);
   const token = new web3.eth.Contract(abiLibrary.erc20, await dao.methods.depositToken().call());
@@ -72,7 +71,7 @@ const useProposal = async (
 
   const proposal = await dao.methods.submitProposal(
     applicantAddress,
-    sharesRequestedToExponential,
+    sharesRequested,
     lootRequested,
     tributeOfferedToExponential,
     tributeToken,
