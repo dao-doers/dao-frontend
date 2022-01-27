@@ -17,7 +17,10 @@ const useMaintainSession = async () => {
       dispatch(setUserAddress(metamaskUserAddress));
     }
   };
-  checkAddresses();
+
+  if (typeof window !== 'undefined') {
+    checkAddresses();
+  }
 };
 
 export default useMaintainSession;
