@@ -112,6 +112,7 @@ const NewProposalForm: FC = () => {
                       id: 'title',
                       value: formik.values.title,
                       onChange: formik.handleChange,
+                      inputProps: { min: 0, step: 1 },
                     }}
                     formControlProps={{
                       fullWidth: true,
@@ -185,7 +186,10 @@ const NewProposalForm: FC = () => {
                 <Box display="flex" width="100%" mb={2}>
                   <Typography variant="subtitle2">Shares Requested: </Typography>
                   <TypographyBold variant="subtitle2" mx={1}>
-                    {new Intl.NumberFormat('en-US').format(formik.values.tributeOffered * 10 ** 8)}
+                    {new Intl.NumberFormat('en-US').format(
+                      // eslint-disable-next-line no-restricted-globals
+                      isNaN(formik.values.tributeOffered) ? 0 : formik.values.tributeOffered,
+                    )}
                   </TypographyBold>
                   <TooltipIcon>
                     <Typography variant="body2">Amount of shares</Typography>
