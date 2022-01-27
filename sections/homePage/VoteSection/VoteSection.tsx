@@ -100,29 +100,27 @@ const VoteSection: FC<any> = ({ proposal }) => {
   };
 
   const handleVote = async (vote: number) => {
-    // TODO: useNotVotedYetCheck should run just right after page render, not just after clicking
+    // TODO: improvement - useNotVotedYetCheck should run just right after page render, not just after clicking
     setVoteStatus(FETCH_STATUSES.LOADING);
-    await useNotVotedYetCheck(userAddress, proposal.proposalIndex, process.env.DAO_ADDRESS as any).then(response => {
-      if (response === true) {
-        setNotVotedYet(1);
-      } else {
-        setNotVotedYet(2);
-      }
-    });
+    await useNotVotedYetCheck(userAddress, proposal.proposalIndex, process.env.DAO_ADDRESS as any).then(
+      async response => {
+        if (response === true) {
+          setNotVotedYet(1);
+          const daoAddress = process.env.DAO_ADDRESS;
+          const { proposalIndex } = proposal;
 
-    if (notVotedYet === 1) {
-      const daoAddress = process.env.DAO_ADDRESS;
-      const { proposalIndex } = proposal;
-
-      try {
-        await useVote(proposalIndex, vote, userAddress, daoAddress);
-        setVoteStatus(FETCH_STATUSES.SUCCESS);
-      } catch (error) {
-        setVoteStatus(FETCH_STATUSES.ERROR);
-      }
-    } else {
-      setVoteStatus(FETCH_STATUSES.IDLE);
-    }
+          try {
+            await useVote(proposalIndex, vote, userAddress, daoAddress);
+            setVoteStatus(FETCH_STATUSES.SUCCESS);
+          } catch (error) {
+            setVoteStatus(FETCH_STATUSES.ERROR);
+          }
+        } else {
+          setNotVotedYet(2);
+          setVoteStatus(FETCH_STATUSES.IDLE);
+        }
+      },
+    );
   };
 
   const handleProcessProposal = async () => {
