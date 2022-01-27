@@ -43,8 +43,8 @@ const Swap: FC<NextPage> = () => {
             })}
           </Box>
           <Box width="35%" sx={{ display: { xs: 'none', md: 'block' } }}>
-            {votesArray.map((vote: any, id: any) => {
-              return <VoteTile id={`poll-${id}`} vote={vote} />;
+            {votesArray.map((vote: any) => {
+              return <VoteTile key={`vote-${vote.id}`} vote={vote} />;
             })}
           </Box>
         </Box>

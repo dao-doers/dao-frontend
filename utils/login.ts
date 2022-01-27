@@ -1,14 +1,19 @@
 /* eslint-disable consistent-return */
 import Web3 from 'web3';
+import store from 'redux/store';
+
+import { setUserAddress } from 'redux/slices/user';
 
 export const loadWeb3 = async () => {
-  if ((window as any).web3) {
-    (window as any).web3 = new Web3((window as any).ethereum);
-    (window as any).ethereum.on('chainChanged', () => {
-      window.location.href = '/';
+  if (window.web3) {
+    window.web3 = new Web3(window.ethereum);
+    window.ethereum.on('chainChanged', () => {
+      console.log('chainChanged');
     });
-    (window as any).ethereum.on('accountsChanged', () => {
-      window.location.href = '/';
+    window.ethereum.on('accountsChanged', () => {
+      console.log('accountChanged');
+      store.dispatch(setUserAddress(''));
+      sessionStorage.removeItem('dao-user-address');
     });
   } else {
     console.log('Non-Ethereum browser detected. You should consider trying MetaMask!');
@@ -18,9 +23,9 @@ export const loadWeb3 = async () => {
 export const getMetamaskAddress = async () => {
   // eslint-disable-next-line no-useless-catch
   try {
-    if ((window as any).ethereum) {
-      (window as any).web3 = new Web3((window as any).ethereum);
-      const accounts = await (window as any).ethereum.request({
+    if (window.ethereum) {
+      window.web3 = new Web3(window.ethereum);
+      const accounts = await window.ethereum.request({
         method: 'eth_requestAccounts',
       });
 

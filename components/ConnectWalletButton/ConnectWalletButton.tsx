@@ -13,11 +13,12 @@ import { loadWeb3, getMetamaskAddress } from 'utils/login';
 const ConnectWalletButton: FC = () => {
   const dispatch = useDispatch();
 
-  // TODO: avoid having to log in after refreshing the page
   const handleConnectWallet = async () => {
     await loadWeb3();
 
     const address = await getMetamaskAddress();
+    sessionStorage.setItem('dao-user-address', address);
+
     dispatch(setUserAddress(address));
   };
 
