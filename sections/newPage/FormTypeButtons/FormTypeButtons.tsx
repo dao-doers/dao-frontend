@@ -6,7 +6,6 @@ import Typography from '@mui/material/Typography';
 
 import DAOTile from 'components/DAOTile/DAOTile';
 
-import DAO_TILE_VARIANTS from 'enums/daoTileVariants';
 import NEW_PROPOSAL_TYPE from 'enums/newProposalType';
 
 import { selectNewProposalType, setNewProposalType } from 'redux/slices/newProposal';
@@ -22,13 +21,7 @@ const FormTypeButtons: FC<any> = () => {
 
   return (
     <Box my={3}>
-      <DAOTile
-        variant={
-          newProposalType === NEW_PROPOSAL_TYPE.NORMAL
-            ? DAO_TILE_VARIANTS.GRADIENT_OUTLINE
-            : DAO_TILE_VARIANTS.GREY_OUTLINE
-        }
-      >
+      <DAOTile variant={newProposalType === NEW_PROPOSAL_TYPE.NORMAL ? gradientOutline : 'greyOutline'}>
         <Box
           width="100%"
           height="100%"
@@ -44,13 +37,7 @@ const FormTypeButtons: FC<any> = () => {
       </DAOTile>
 
       <Box my={3}>
-        <DAOTile
-          variant={
-            newProposalType === NEW_PROPOSAL_TYPE.WITH_FUNDING
-              ? DAO_TILE_VARIANTS.GRADIENT_OUTLINE
-              : DAO_TILE_VARIANTS.GREY_OUTLINE
-          }
-        >
+        <DAOTile variant={newProposalType === NEW_PROPOSAL_TYPE.WITH_FUNDING ? gradientOutline : 'greyOutline'}>
           <Box
             width="100%"
             height="100%"
@@ -66,7 +53,7 @@ const FormTypeButtons: FC<any> = () => {
         </DAOTile>
       </Box>
 
-      <DAOTile variant={DAO_TILE_VARIANTS.GREY_SHADOW}>
+      <DAOTile variant="greyShadow">
         <Box width="100%" height="100%" p={3} sx={{ cursor: 'pointer' }}>
           <Typography variant="h6" align="center" paragraph>
             Guild kick

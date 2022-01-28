@@ -35,6 +35,7 @@ declare module '@mui/material/styles' {
     main6: string;
     main7: string;
     main8: string;
+    main9: string;
   }
 
   interface ButtonColors {

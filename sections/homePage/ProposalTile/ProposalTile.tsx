@@ -15,8 +15,6 @@ import Link from 'components/Link';
 import Details from 'sections/homePage/Details/Details';
 import VoteSection from 'sections/homePage/VoteSection/VoteSection';
 
-import DAO_TILE_VARIANTS from 'enums/daoTileVariants';
-
 import { formatSeconds } from 'utils/formatDate';
 
 const StyledReadMoreIcon = styled(ReadMoreIcon)`
@@ -80,7 +78,7 @@ const ProposalTile: FC<any> = ({ proposal }) => {
 
   return (
     <Box mb={3}>
-      <DAOTile variant={DAO_TILE_VARIANTS.GREY_SHADOW}>
+      <DAOTile variant="greyShadow">
         <Box width="100%" height="100%" p={3}>
           <Typography align="right" paragraph>
             {formatSeconds(proposal.createdAt)}

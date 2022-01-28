@@ -5,18 +5,16 @@ import { css } from '@emotion/react';
 
 import { Theme } from '@mui/system';
 
-import DAO_TILE_VARIANTS from 'enums/daoTileVariants';
-
 interface TileVariantProps {
   variant?:
-    | DAO_TILE_VARIANTS.GRADIENT_OUTLINE
-    | DAO_TILE_VARIANTS.GREY_OUTLINE
-    | DAO_TILE_VARIANTS.RED_OUTLINE
-    | DAO_TILE_VARIANTS.GREY_SHADOW
-    | DAO_TILE_VARIANTS.BLUE_BACKGROUND
-    | DAO_TILE_VARIANTS.GREEN_BACKGROUND
-    | DAO_TILE_VARIANTS.RED_BACKGROUND
-    | DAO_TILE_VARIANTS.YELLOW_BACKGROUND
+    | 'gradientOutline'
+    | 'greyOutline'
+    | 'redOutline'
+    | 'greyShadow'
+    | 'blueBackground'
+    | 'greenBackground'
+    | 'redBackground'
+    | 'yellowBackground'
     | null;
   theme: Theme;
 }
@@ -24,14 +22,14 @@ interface TileVariantProps {
 export type DAOTileProps = {
   children: ReactElement;
   variant?:
-    | DAO_TILE_VARIANTS.GRADIENT_OUTLINE
-    | DAO_TILE_VARIANTS.GREY_OUTLINE
-    | DAO_TILE_VARIANTS.RED_OUTLINE
-    | DAO_TILE_VARIANTS.GREY_SHADOW
-    | DAO_TILE_VARIANTS.BLUE_BACKGROUND
-    | DAO_TILE_VARIANTS.GREEN_BACKGROUND
-    | DAO_TILE_VARIANTS.RED_BACKGROUND
-    | DAO_TILE_VARIANTS.YELLOW_BACKGROUND
+    | 'gradientOutline'
+    | 'greyOutline'
+    | 'redOutline'
+    | 'greyShadow'
+    | 'blueBackground'
+    | 'greenBackground'
+    | 'redBackground'
+    | 'yellowBackground'
     | null;
   width?: string;
   height?: string;
@@ -39,41 +37,41 @@ export type DAOTileProps = {
 
 const tileVariant = ({ theme, variant }: TileVariantProps & { theme: Theme }) => {
   switch (variant) {
-    case DAO_TILE_VARIANTS.GRADIENT_OUTLINE:
+    case 'gradientOutline':
       return css`
         background: ${theme.palette.gradients.grad2};
         padding: 2px;
       `;
-    case DAO_TILE_VARIANTS.GREY_OUTLINE:
+    case 'greyOutline':
       return css`
         background: ${theme.palette.colors.main6};
         padding: 2px;
       `;
-    case DAO_TILE_VARIANTS.RED_OUTLINE:
+    case 'redOutline':
       return css`
         background: ${theme.palette.colors.col6};
         padding: 1px;
       `;
-    case DAO_TILE_VARIANTS.GREY_SHADOW:
+    case 'greyShadow':
       return css`
         box-shadow: 0px 0px 24px 0px ${theme.palette.colors.main8};
       `;
-    case DAO_TILE_VARIANTS.BLUE_BACKGROUND:
+    case 'blueBackground':
       return css`
         background: ${theme.palette.colors.col1};
         padding: 2px;
       `;
-    case DAO_TILE_VARIANTS.GREEN_BACKGROUND:
+    case 'greenBackground':
       return css`
         background: ${theme.palette.colors.col2};
         padding: 2px;
       `;
-    case DAO_TILE_VARIANTS.RED_BACKGROUND:
+    case 'redBackground':
       return css`
         background: ${theme.palette.colors.col6};
         padding: 2px;
       `;
-    case DAO_TILE_VARIANTS.YELLOW_BACKGROUND:
+    case 'yellowBackground':
       return css`
         background: ${theme.palette.colors.col4};
         padding: 2px;
@@ -88,38 +86,38 @@ const tileVariant = ({ theme, variant }: TileVariantProps & { theme: Theme }) =>
 
 const innerTileVariant = ({ theme, variant }: TileVariantProps & { theme: Theme }) => {
   switch (variant) {
-    case DAO_TILE_VARIANTS.GRADIENT_OUTLINE:
+    case 'gradientOutline':
       return css`
         background-color: ${theme.palette.colors.main1};
       `;
-    case DAO_TILE_VARIANTS.GREY_OUTLINE:
+    case 'greyOutline':
       return css`
         background-color: ${theme.palette.colors.main2};
       `;
-    case DAO_TILE_VARIANTS.RED_OUTLINE:
+    case 'redOutline':
       return css`
         background-color: ${theme.palette.colors.main1};
       `;
-    case DAO_TILE_VARIANTS.GREY_SHADOW:
+    case 'greyShadow':
       return css`
         background-color: 'transparent';
       `;
-    case DAO_TILE_VARIANTS.BLUE_BACKGROUND:
+    case 'blueBackground':
       return css`
         background: ${theme.palette.colors.col1};
         color: ${theme.palette.colors.main1};
       `;
-    case DAO_TILE_VARIANTS.GREEN_BACKGROUND:
+    case 'greenBackground':
       return css`
         background: ${theme.palette.colors.col2};
         color: ${theme.palette.colors.main1};
       `;
-    case DAO_TILE_VARIANTS.RED_BACKGROUND:
+    case 'redBackground':
       return css`
         background: ${theme.palette.colors.col6};
         color: ${theme.palette.colors.main1};
       `;
-    case DAO_TILE_VARIANTS.YELLOW_BACKGROUND:
+    case 'yellowBackground':
       return css`
         background: ${theme.palette.colors.col4};
         color: ${theme.palette.colors.main1};
