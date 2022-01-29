@@ -10,6 +10,8 @@ import Footer from 'components/Footer/Footer';
 import MobileMenu from 'components/MobileMenu/MobileMenu';
 import BlockchainStatus from 'components/BlockchainStatus/BlockchainStatus';
 
+import useMaintainSession from 'hooks/useMaintainSession';
+
 export type LayoutProps = {
   children: ReactNode;
 };
@@ -26,6 +28,8 @@ const StyledBox = styled(Box)`
 `;
 
 const Layout: FC<LayoutProps> = ({ children }) => {
+  useMaintainSession();
+
   return (
     <StyledContainer>
       <MobileMenu />

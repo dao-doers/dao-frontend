@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-shadow */
 import Web3 from 'web3';
 import PolyjuiceHttpProvider from '@polyjuice-provider/web3';
 
@@ -18,6 +17,7 @@ const getDao = async (address: string) => {
 const getReceipt = async (proposal: any, user: string, estimatedGas: number) => {
   let receipt;
   try {
+    // eslint-disable-next-line @typescript-eslint/no-shadow
     receipt = await proposal.send({ from: user, gas: estimatedGas }).on('receipt', (receipt: any) => {
       return receipt;
     });
@@ -27,25 +27,14 @@ const getReceipt = async (proposal: any, user: string, estimatedGas: number) => 
   return receipt;
 };
 
-const useGuildKick = async (
-  /* Wallet information */
-  user: string,
-  /* Contract information */
-  library: any,
-  version: any,
-  address: string,
-  /* Proposal information */
-  memberToKick: number,
-  details: string,
-) => {
-  const dao = await getDao(address);
-
-  const proposal = await dao.methods.submitGuildKickProposal(memberToKick, details);
-
+const useProcessProposal = async (user: string, daoAddress: any, proposalIndex: number) => {
+  const dao = await getDao(daoAddress);
+  const proposal = await dao.methods.processProposal(proposalIndex);
   const estimatedGas = 6000000;
   const receipt = await getReceipt(proposal, user, estimatedGas);
+  console.log(receipt);
 
   return receipt;
 };
 
-export default useGuildKick;
+export default useProcessProposal;

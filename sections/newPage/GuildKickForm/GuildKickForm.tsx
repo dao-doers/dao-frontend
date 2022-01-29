@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 import { FC } from 'react';
 import { Formik, Form } from 'formik';
 import { useSelector, useDispatch } from 'react-redux';
@@ -39,9 +40,9 @@ const GuildKickForm: FC = () => {
     dispatch(setProposalStatus(FETCH_STATUSES.LOADING));
 
     // MOCKED -----------------------------
-    const user = '0xD173313A51f8fc37BcF67569b463abd89d81844f';
+    const user = '0xD173313A51f8fc37BcF67569b463abd89d81844f'; // @TODO replace to user connected with wallet
     const version = 2;
-    const daoAddress = '0xb252c90a042b2e698791b9bcab26fc5a1e8a241a';
+    const daoAddress = process.env.NEXT_PUBLIC_DAO_ADDRESS as string;
     // MOCKED -----------------------------
 
     /* send link without http or https */
@@ -52,11 +53,11 @@ const GuildKickForm: FC = () => {
     // if (!memberToKick.validated) return;
 
     await useGuildKick(
-      /*Wallet information*/ user,
-      /*Contract information*/ abiLibrary,
+      /* Wallet information */ user,
+      /* Contract information */ abiLibrary,
       version,
       daoAddress,
-      /*Proposal information*/ values.memberToKick,
+      /* Proposal information */ values.memberToKick,
       /* Details JSON */ { title: values.title, description: values.description, link: values.link } as any,
     );
 
@@ -70,7 +71,7 @@ const GuildKickForm: FC = () => {
   return (
     <StyledBox>
       <Box maxWidth="500px" mx="auto">
-        <TypographyBold variant="h4" paragraph>
+        <TypographyBold variant="h4" paragraph sx={{ display: { xs: 'none', md: 'block' } }}>
           Create new proposal
         </TypographyBold>
         <Formik validationSchema={guildKickSchema} initialValues={initialValues} validateOnChange onSubmit={onSubmit}>
@@ -95,11 +96,13 @@ const GuildKickForm: FC = () => {
                 <Box width="100%" mb={2}>
                   <DAOInput
                     label="Description"
+                    tootltip="Please provide a brief detailed description"
                     inputProps={{
                       id: 'description',
                       value: formik.values.description,
                       onChange: formik.handleChange,
                       multiline: true,
+                      rows: 3,
                     }}
                     formControlProps={{
                       fullWidth: true,

@@ -43,6 +43,9 @@ const theme = (mode: typeof THEME_MODES.DARK | typeof THEME_MODES.LIGHT): MuiThe
         fontFamily: 'Commissioner',
         fontWeight: 600,
         lineHeight: 1.125,
+        '@media (max-width: 400px)': {
+          fontSize: 28,
+        },
       },
       h4: {
         fontSize: 28,
@@ -71,7 +74,7 @@ const theme = (mode: typeof THEME_MODES.DARK | typeof THEME_MODES.LIGHT): MuiThe
         fontFamily: 'Poppins',
         lineHeight: 1.5,
         '@media (max-width: 400px)': {
-          fontSize: 11,
+          fontSize: 14,
         },
       },
       body1: {
@@ -80,7 +83,7 @@ const theme = (mode: typeof THEME_MODES.DARK | typeof THEME_MODES.LIGHT): MuiThe
         fontFamily: 'Poppins',
         lineHeight: 1.5,
         '@media (max-width: 400px)': {
-          fontSize: 11,
+          fontSize: 12,
         },
       },
       body2: {

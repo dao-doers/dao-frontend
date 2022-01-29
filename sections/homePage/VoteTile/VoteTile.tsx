@@ -7,8 +7,6 @@ import Typography from '@mui/material/Typography';
 
 import DAOTile from 'components/DAOTile/DAOTile';
 
-import DAO_TILE_VARIANTS from 'enums/daoTileVariants';
-
 import formatAddress from 'utils/formatAddress';
 import { formatSeconds } from 'utils/formatDate';
 
@@ -26,6 +24,10 @@ const TypographyBold = styled(Typography)`
   font-weight: 600;
 `;
 
+const TypographySmall = styled(Typography)`
+  font-size: 12px;
+`;
+
 const VoteTile: FC<any> = ({ vote }) => {
   const formatTitle = (textObject: any): any => {
     // TODO: clean DB bacause returned objects are not same
@@ -37,12 +39,10 @@ const VoteTile: FC<any> = ({ vote }) => {
   };
 
   return (
-    <Box my={3}>
-      <DAOTile variant={DAO_TILE_VARIANTS.GREY_SHADOW}>
+    <Box mb={3}>
+      <DAOTile variant="greyShadow">
         <Box width="100%" height="100%" px={3} pb={3} pt={1.5}>
-          <Typography variant="body2" align="right">
-            {formatSeconds(vote.createdAt)}
-          </Typography>
+          <TypographySmall align="right">{formatSeconds(vote.createdAt)}</TypographySmall>
 
           <Typography component="h6" variant="h6" paragraph>
             {formatTitle(vote.proposal.details)}

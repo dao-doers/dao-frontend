@@ -1,6 +1,9 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 import FETCH_STATUSES from 'enums/fetchStatuses';
+import PROPOSAL_STATUS from 'enums/proposalStatus';
+
+const currentTime = new Date().getTime() / 1000;
 
 type FetchingStatusProps = FETCH_STATUSES.ERROR | FETCH_STATUSES.LOADING | FETCH_STATUSES.SUCCESS | FETCH_STATUSES.IDLE;
 
@@ -9,6 +12,7 @@ interface ProposalProps {
   proposalsArray: any;
   sendProposalStatus: FetchingStatusProps;
   sponsorProposalStatus: FetchingStatusProps;
+  sortedProposalsArray: any;
 }
 
 interface StateProps {
@@ -22,11 +26,47 @@ const proposalsSlice = createSlice({
     proposalsArray: [],
     sendProposalStatus: FETCH_STATUSES.IDLE,
     sponsorProposalStatus: FETCH_STATUSES.IDLE,
+    sortedProposalsArray: [],
   },
   reducers: {
     setProposals: (state, action) => {
-      // eslint-disable-next-line func-names
-      state.proposalsArray = action.payload.slice().sort(function (a: any, b: any) {
+      const result = action.payload.map((proposal: any) => {
+        const proposals = { ...proposal };
+        if (proposal.sponsored === false && proposal.processed === false) {
+          proposals.proposalStatus = PROPOSAL_STATUS.COLLECTING_FUNDS;
+        } else if (
+          proposal.sponsored === true &&
+          currentTime < proposal.votingPeriodEnds &&
+          currentTime < proposal.gracePeriodEnds &&
+          proposal.processed === false
+        ) {
+          proposals.proposalStatus = PROPOSAL_STATUS.VOTING;
+        } else if (
+          proposal.sponsored === true &&
+          currentTime > proposal.votingPeriodEnds &&
+          currentTime < proposal.gracePeriodEnds &&
+          proposal.processed === false
+        ) {
+          proposals.proposalStatus = PROPOSAL_STATUS.GRACE_PERIOD;
+        } else if (
+          proposal.sponsored === true &&
+          currentTime > proposal.votingPeriodEnds &&
+          currentTime > proposal.gracePeriodEnds &&
+          proposal.processed === false
+        ) {
+          proposals.proposalStatus = PROPOSAL_STATUS.PROCEEDING;
+        } else if (proposal.processed === true) {
+          proposals.proposalStatus = PROPOSAL_STATUS.FINISHED;
+        } else {
+          return null;
+        }
+        return proposals;
+      });
+
+      state.proposalsArray = result.slice().sort((a: any, b: any) => {
+        return -(a.createdAt - b.createdAt);
+      });
+      state.sortedProposalsArray = result.slice().sort((a: any, b: any) => {
         return -(a.createdAt - b.createdAt);
       });
     },
@@ -36,6 +76,34 @@ const proposalsSlice = createSlice({
     setSponsorProposalStatus: (state, action) => {
       state.sponsorProposalStatus = action.payload;
     },
+    setCollectingFundsProposals: state => {
+      state.sortedProposalsArray = state.proposalsArray.slice().filter((a: any) => {
+        return a.proposalStatus === PROPOSAL_STATUS.COLLECTING_FUNDS;
+      });
+    },
+    setVotingProposals: state => {
+      state.sortedProposalsArray = state.proposalsArray.slice().filter((a: any) => {
+        return a.proposalStatus === PROPOSAL_STATUS.VOTING;
+      });
+    },
+    setGracePeriodProposals: state => {
+      state.sortedProposalsArray = state.proposalsArray.slice().filter((a: any) => {
+        return a.proposalStatus === PROPOSAL_STATUS.GRACE_PERIOD;
+      });
+    },
+    setProceedingProposals: state => {
+      state.sortedProposalsArray = state.proposalsArray.slice().filter((a: any) => {
+        return a.proposalStatus === PROPOSAL_STATUS.PROCEEDING;
+      });
+    },
+    setFinishedProposals: state => {
+      state.sortedProposalsArray = state.proposalsArray.slice().filter((a: any) => {
+        return a.proposalStatus === PROPOSAL_STATUS.FINISHED;
+      });
+    },
+    clearSorted: state => {
+      state.sortedProposalsArray = state.proposalsArray;
+    },
   },
 });
 
@@ -43,7 +111,18 @@ export const selectFetchStatus = (state: StateProps) => state.proposals.fetchSta
 export const selectProposalsArray = (state: StateProps) => state.proposals.proposalsArray;
 export const selectProposalStatus = (state: StateProps) => state.proposals.sendProposalStatus;
 export const selectSponsorProposalStatus = (state: StateProps) => state.proposals.sponsorProposalStatus;
+export const selectSortedProposalsArray = (state: StateProps) => state.proposals.sortedProposalsArray;
 
-export const { setProposals, setProposalStatus, setSponsorProposalStatus } = proposalsSlice.actions;
+export const {
+  setProposals,
+  setProposalStatus,
+  setSponsorProposalStatus,
+  setCollectingFundsProposals,
+  setVotingProposals,
+  setGracePeriodProposals,
+  setProceedingProposals,
+  setFinishedProposals,
+  clearSorted,
+} = proposalsSlice.actions;
 
 export default proposalsSlice.reducer;

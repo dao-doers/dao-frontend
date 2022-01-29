@@ -18,7 +18,6 @@ import { setTransactionRecipe } from 'redux/slices/newProposal';
 import { selectUserAddress } from 'redux/slices/user';
 
 import FETCH_STATUSES from 'enums/fetchStatuses';
-import DAO_TILE_VARIANTS from 'enums/daoTileVariants';
 
 import useProposal from 'hooks/useProposal';
 
@@ -55,8 +54,9 @@ const NewProposalForm: FC = () => {
     try {
       dispatch(setProposalStatus(FETCH_STATUSES.LOADING));
 
+      const modifiedLink = values.link.replace(/(^\w+:|^)\/\//, '');
+
       // TODO: check if applicant address is validated
-      // TODO: trim http:// from values.link
 
       // eslint-disable-next-line react-hooks/rules-of-hooks
       const receipt = await useProposal(
@@ -74,7 +74,7 @@ const NewProposalForm: FC = () => {
         /* Details JSON */ {
           title: values.title,
           description: values.description,
-          link: values.link,
+          link: modifiedLink,
         },
       );
 
@@ -96,7 +96,7 @@ const NewProposalForm: FC = () => {
   return (
     <StyledBox>
       <Box maxWidth="500px" mx="auto">
-        <TypographyBold variant="h4" mb={3}>
+        <TypographyBold variant="h4" mb={3} sx={{ display: { xs: 'none', md: 'block' } }}>
           Create new proposal
         </TypographyBold>
         <Formik validationSchema={newProposalSchema} initialValues={initialValues} validateOnChange onSubmit={onSubmit}>
@@ -110,6 +110,7 @@ const NewProposalForm: FC = () => {
                       id: 'title',
                       value: formik.values.title,
                       onChange: formik.handleChange,
+                      inputProps: { min: 0, step: 1 },
                     }}
                     formControlProps={{
                       fullWidth: true,
@@ -121,11 +122,13 @@ const NewProposalForm: FC = () => {
                 <Box width="100%" mb={2}>
                   <DAOInput
                     label="Description"
+                    tootltip="Please provide a brief detailed description"
                     inputProps={{
                       id: 'description',
                       value: formik.values.description,
                       onChange: formik.handleChange,
                       multiline: true,
+                      rows: 3,
                     }}
                     formControlProps={{
                       fullWidth: true,
@@ -142,6 +145,7 @@ const NewProposalForm: FC = () => {
                       value: formik.values.link,
                       onChange: formik.handleChange,
                       multiline: true,
+                      placeholder: 'https://',
                     }}
                     formControlProps={{
                       fullWidth: true,
@@ -180,7 +184,10 @@ const NewProposalForm: FC = () => {
                 <Box display="flex" width="100%" mb={2}>
                   <Typography variant="subtitle2">Shares Requested: </Typography>
                   <TypographyBold variant="subtitle2" mx={1}>
-                    {new Intl.NumberFormat('en-US').format(formik.values.tributeOffered * 10 ** 8)}
+                    {new Intl.NumberFormat('en-US').format(
+                      // eslint-disable-next-line no-restricted-globals
+                      isNaN(formik.values.tributeOffered) ? 0 : formik.values.tributeOffered,
+                    )}
                   </TypographyBold>
                   <TooltipIcon>
                     <Typography variant="body2">Amount of shares</Typography>
@@ -204,7 +211,7 @@ const NewProposalForm: FC = () => {
 
                 {sendProposalStatus === FETCH_STATUSES.SUCCESS && (
                   <Box mt={2}>
-                    <DAOTile variant={DAO_TILE_VARIANTS.GREEN_OUTLINE}>
+                    <DAOTile variant="greenBackground">
                       <Typography p={2}>Congratulations! Your proposal has been submitted.</Typography>
                     </DAOTile>
                   </Box>
@@ -212,7 +219,7 @@ const NewProposalForm: FC = () => {
 
                 {sendProposalStatus === FETCH_STATUSES.ERROR && (
                   <Box mt={2}>
-                    <DAOTile variant={DAO_TILE_VARIANTS.RED_OUTLINE}>
+                    <DAOTile variant="redOutline">
                       <Typography p={2}>Something went wrong. Please try again.</Typography>
                     </DAOTile>
                   </Box>
