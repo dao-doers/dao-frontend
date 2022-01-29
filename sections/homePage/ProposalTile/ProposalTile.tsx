@@ -42,6 +42,10 @@ const StyledLanguageIcon = styled(LanguageIcon)`
   }
 `;
 
+const TypographySmall = styled(Typography)`
+  font-size: 12px;
+`;
+
 const ProposalTile: FC<any> = ({ proposal }) => {
   const [nullObject, setNullObject] = useState(true);
   const [formattedTitle, setFormattedTitle] = useState('');
@@ -80,9 +84,9 @@ const ProposalTile: FC<any> = ({ proposal }) => {
     <Box mb={3}>
       <DAOTile variant="greyShadow">
         <Box width="100%" height="100%" p={3}>
-          <Typography align="right" paragraph>
+          <TypographySmall align="right" paragraph>
             {formatSeconds(proposal.createdAt)}
-          </Typography>
+          </TypographySmall>
 
           <Box display="flex" justifyContent="space-between" alignItems="center" pb={4}>
             <Typography component="h3" variant="h3">
