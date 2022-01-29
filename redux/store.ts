@@ -6,8 +6,6 @@ import proposalsReducer from 'redux/slices/proposals';
 import votesReducer from 'redux/slices/votes';
 import newProposalReducer from 'redux/slices/newProposal';
 
-import modalExampleReducer from 'redux/slices/modalExample';
-
 export default configureStore({
   reducer: {
     user: userReducer,
@@ -15,7 +13,5 @@ export default configureStore({
     proposals: proposalsReducer,
     votes: votesReducer,
     newProposal: newProposalReducer,
-
-    modalExample: modalExampleReducer,
   },
 });

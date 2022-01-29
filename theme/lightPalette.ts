@@ -11,6 +11,7 @@ const colors: Colors = {
   main6: '#5C5B63',
   main7: '#212030',
   main8: 'rgba(66, 68, 90, 0.3)',
+  main9: 'rgba(4, 4, 5, 0.15)',
 };
 
 const palette: RecursivePartial<Palette> = {

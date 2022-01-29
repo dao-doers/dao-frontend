@@ -11,8 +11,6 @@ import Typography from '@mui/material/Typography';
 
 import DAOTile from 'components/DAOTile/DAOTile';
 
-import DAO_TILE_VARIANTS from 'enums/daoTileVariants';
-
 import formatAddress from 'utils/formatAddress';
 import { shannonsToCkb } from 'utils/formatShannons';
 
@@ -44,7 +42,7 @@ const Details: FC<any> = ({ proposal }) => {
         <Box display="flex" justifyContent="flex-start" flexWrap="wrap">
           {proposal.sponsored && (
             <Box sx={{ width: { xs: '48%', xl: '30%' } }} mb={2} mx="1%">
-              <DAOTile variant={DAO_TILE_VARIANTS.GRADIENT_OUTLINE} width="100%" height="100px">
+              <DAOTile variant="gradientOutline" width="100%" height="100px">
                 <Box>
                   <Typography align="center" gutterBottom>
                     Sponsored by
@@ -57,7 +55,7 @@ const Details: FC<any> = ({ proposal }) => {
 
           {proposal.applicant && (
             <Box sx={{ width: { xs: '48%', xl: '30%' } }} mb={2} mx="1%">
-              <DAOTile variant={DAO_TILE_VARIANTS.GRADIENT_OUTLINE} width="100%" height="100px">
+              <DAOTile variant="gradientOutline" width="100%" height="100px">
                 <Box>
                   <Typography align="center" gutterBottom>
                     Applicant Address
@@ -70,7 +68,7 @@ const Details: FC<any> = ({ proposal }) => {
 
           {proposal.sharesRequested && (
             <Box sx={{ width: { xs: '48%', xl: '30%' } }} mb={2} mx="1%">
-              <DAOTile variant={DAO_TILE_VARIANTS.GRADIENT_OUTLINE} width="100%" height="100px">
+              <DAOTile variant="gradientOutline" width="100%" height="100px">
                 <Box>
                   <Typography align="center" gutterBottom>
                     Shares Requested
@@ -85,7 +83,7 @@ const Details: FC<any> = ({ proposal }) => {
 
           {proposal.tributeOffered && (
             <Box sx={{ width: { xs: '48%', xl: '30%' } }} mb={2} mx="1%">
-              <DAOTile variant={DAO_TILE_VARIANTS.GRADIENT_OUTLINE} width="100%" height="100px">
+              <DAOTile variant="gradientOutline" width="100%" height="100px">
                 <Box>
                   <Typography align="center" gutterBottom>
                     Tribute to DAO
@@ -100,7 +98,7 @@ const Details: FC<any> = ({ proposal }) => {
 
           {Number(proposal.paymentRequested) > 0 && (
             <Box sx={{ width: { xs: '48%', xl: '30%' } }} mb={2} mx="1%">
-              <DAOTile variant={DAO_TILE_VARIANTS.GRADIENT_OUTLINE} width="100%" height="100px">
+              <DAOTile variant="gradientOutline" width="100%" height="100px">
                 <Box>
                   <Typography align="center" gutterBottom>
                     Payment Requested

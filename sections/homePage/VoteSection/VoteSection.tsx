@@ -27,7 +27,6 @@ import useNotVotedYetCheck from 'hooks/useNotVotedYetCheck';
 import useProcessProposal from 'hooks/useProcessProposal';
 
 import FETCH_STATUSES from 'enums/fetchStatuses';
-import DAO_TILE_VARIANTS from 'enums/daoTileVariants';
 import PROPOSAL_STATUS from 'enums/proposalStatus';
 
 import { selectUserAddress } from 'redux/slices/user';
@@ -187,7 +186,7 @@ const VoteSection: FC<any> = ({ proposal }) => {
               )}
 
               {sponsorProposalStatus === FETCH_STATUSES.SUCCESS && (
-                <DAOTile variant={DAO_TILE_VARIANTS.GRADIENT_OUTLINE}>
+                <DAOTile variant="gradientOutline">
                   <Typography align="center" p={1}>
                     You have successfully sponsored this proposal!
                   </Typography>
@@ -234,7 +233,7 @@ const VoteSection: FC<any> = ({ proposal }) => {
                       )}
 
                     {voteStatus === FETCH_STATUSES.LOADING && (
-                      <DAOTile variant={DAO_TILE_VARIANTS.GRADIENT_OUTLINE}>
+                      <DAOTile variant="gradientOutline">
                         <Box display="flex" alignItems="center" py={1}>
                           <Box display="flex" alignItems="center" mr={2}>
                             <DAOCircleLoader size={20} />
@@ -245,7 +244,7 @@ const VoteSection: FC<any> = ({ proposal }) => {
                     )}
 
                     {voteStatus === FETCH_STATUSES.ERROR && (
-                      <DAOTile variant={DAO_TILE_VARIANTS.RED_OUTLINE}>
+                      <DAOTile variant="redOutline">
                         <Box display="flex" alignItems="center" py={1}>
                           Something went wrong, please try again.
                         </Box>
@@ -253,7 +252,7 @@ const VoteSection: FC<any> = ({ proposal }) => {
                     )}
 
                     {voteStatus === FETCH_STATUSES.SUCCESS && (
-                      <DAOTile variant={DAO_TILE_VARIANTS.GRADIENT_OUTLINE}>
+                      <DAOTile variant="gradientOutline">
                         <Typography align="center" p={1}>
                           You have successfully voted!
                         </Typography>
@@ -261,7 +260,7 @@ const VoteSection: FC<any> = ({ proposal }) => {
                     )}
 
                     {notVotedYet === 2 && (
-                      <DAOTile variant={DAO_TILE_VARIANTS.RED_OUTLINE}>
+                      <DAOTile variant="redOutline">
                         <Typography align="center" p={1}>
                           You have already voted!
                         </Typography>
@@ -271,7 +270,7 @@ const VoteSection: FC<any> = ({ proposal }) => {
                 )}
 
                 {currentTime > proposal.votingPeriodEnds && currentTime < proposal.gracePeriodEnds && (
-                  <DAOTile variant={DAO_TILE_VARIANTS.GRADIENT_OUTLINE}>
+                  <DAOTile variant="gradientOutline">
                     <Typography align="center" p={1}>
                       Proposal is in Grace Period.
                       <TooltipIcon>
@@ -303,7 +302,7 @@ const VoteSection: FC<any> = ({ proposal }) => {
 
                     {processProposalStatus === FETCH_STATUSES.ERROR && (
                       <Box mt={1}>
-                        <DAOTile variant={DAO_TILE_VARIANTS.RED_OUTLINE}>
+                        <DAOTile variant="redOutline">
                           <Typography align="center" p={1}>
                             Proposal is not ready to be processed by blockchain network.
                           </Typography>
@@ -312,7 +311,7 @@ const VoteSection: FC<any> = ({ proposal }) => {
                     )}
 
                     {processProposalStatus === FETCH_STATUSES.SUCCESS && (
-                      <DAOTile variant={DAO_TILE_VARIANTS.GRADIENT_OUTLINE}>
+                      <DAOTile variant="gradientOutline">
                         <Typography align="center" p={1}>
                           Proposal is beeing processed by blockchain network.
                         </Typography>
@@ -354,14 +353,14 @@ const VoteSection: FC<any> = ({ proposal }) => {
         {proposal.proposalStatus === PROPOSAL_STATUS.FINISHED && (
           <>
             {proposal.didPass === true && (
-              <DAOTile variant={DAO_TILE_VARIANTS.GREEN_BACKGROUND}>
+              <DAOTile variant="greenBackground">
                 <Typography align="center" p={1}>
                   Proposal has been approved.
                 </Typography>
               </DAOTile>
             )}
             {proposal.didPass === false && (
-              <DAOTile variant={DAO_TILE_VARIANTS.RED_BACKGROUND}>
+              <DAOTile variant="redBackground">
                 <Typography align="center" p={1}>
                   Proposal has been rejected.
                 </Typography>

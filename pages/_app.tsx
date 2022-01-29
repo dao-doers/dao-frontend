@@ -7,8 +7,6 @@ import { CacheProvider } from '@emotion/react';
 import store from 'redux/store';
 import { Provider } from 'react-redux';
 
-import ModalsContainer from 'components/ModalsContainer/ModalsContainer';
-
 import { GlobalThemeProvider } from 'theme';
 
 import createEmotionCache from '../createEmotionCache';
@@ -28,7 +26,6 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
         <GlobalThemeProvider>
           <CssBaseline />
           <Component {...pageProps} />
-          <ModalsContainer />
         </GlobalThemeProvider>
       </Provider>
     </CacheProvider>

@@ -6,13 +6,11 @@ import styled from '@emotion/styled';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 
-import DAOTile from 'components/DAOTile/DAOTile';
 import ConnectWalletButton from 'components/ConnectWalletButton/ConnectWalletButton';
 import DAOCircleLoader from 'components/DAOCircleLoader/DAOCircleLoader';
+import StatusChip from 'components/StatusChip/StatusChip';
 
 import { selectUserAddress } from 'redux/slices/user';
-
-import DAO_TILE_VARIANTS from 'enums/daoTileVariants';
 
 import formatAddress from 'utils/formatAddress';
 import { shannonsToCkb } from 'utils/formatShannons';
@@ -20,48 +18,76 @@ import { shannonsToCkb } from 'utils/formatShannons';
 import useCheckIndexerStatus from 'hooks/useCheckIndexerStatus';
 import useCheckBalance from 'hooks/useCheckBalance';
 
+const MainWrapper = styled(Box)`
+  display: flex;
+  justify-content: flex-end;
+  width: 100%;
+  margin-top: 20px;
+  margin-bottom: 30px;
+  ${({ theme }) => theme.breakpoints.down('sm')} {
+    flex-direction: column;
+  }
+`;
+
+const StatusWrapper = styled(Box)`
+  margin-left: 16px;
+  ${({ theme }) => theme.breakpoints.down('sm')} {
+    margin-bottom: 8px;
+    margin-left: 0px;
+  }
+`;
+
 const TypographyBold = styled(Typography)`
+  font-weight: 600;
+`;
+
+const TypographyGreen = styled(Typography)`
+  color: ${({ theme }) => theme.palette.colors.col2};
+  font-weight: 600;
+`;
+
+const TypographyRed = styled(Typography)`
+  color: ${({ theme }) => theme.palette.colors.col6};
+  font-weight: 600;
+`;
+
+const TypographyYellow = styled(Typography)`
+  color: ${({ theme }) => theme.palette.colors.col3};
   font-weight: 600;
 `;
 
 const BlockchainStatus: FC = () => {
   const userAddress = useSelector(selectUserAddress);
 
-  const { molochBlock, layer2Block, molochError, molochLoading, loadingLayer2Block } = useCheckIndexerStatus();
+  const { molochBlock, layer2Block, molochError, molochLoading, layer2BlockLoading } = useCheckIndexerStatus();
 
   const { balance, isChecked } = useCheckBalance();
 
+  // TODO: need that console logs to check one specific SVGAnimatedEnumeration, will remove later
+  console.log(molochBlock, 'molochBlock');
+  console.log(layer2Block, 'layer2Block');
+  console.log(molochError, 'molochError');
+  console.log(molochLoading, 'molochLoading');
+  console.log(layer2BlockLoading, 'layer2BlockLoading');
+
   return (
-    <Box
-      display="flex"
-      justifyContent="flex-end"
-      width="100%"
-      sx={{ flexDirection: { xs: 'column', md: 'row' }, pb: { xs: 4, md: 3 }, pt: { xs: 1, md: 4 } }}
-    >
-      <Box
-        display="flex"
-        justifyContent="flex-end"
-        alignItems="center"
-        mr={4}
-        sx={{ width: { xs: '100%', md: 'auto' }, mb: { xs: 2, md: 0 } }}
-      >
-        <Typography px={2}>Indexer connection status:</Typography>
-        <Box height="40px">
+    <MainWrapper>
+      <StatusWrapper>
+        <StatusChip title="Indexer status:">
           {molochBlock === layer2Block && typeof layer2Block === 'number' && typeof molochBlock === 'number' && (
-            <DAOTile variant={DAO_TILE_VARIANTS.GREEN_BACKGROUND}>
-              <Typography px={2}>online</Typography>
-            </DAOTile>
+            <TypographyGreen>Online</TypographyGreen>
           )}
 
           {(typeof layer2Block !== 'number' || typeof molochBlock !== 'number') &&
-            (loadingLayer2Block && molochLoading ? (
-              <DAOTile variant={DAO_TILE_VARIANTS.RED_BACKGROUND}>
-                <Typography px={2}>offline</Typography>
-              </DAOTile>
+            (layer2BlockLoading && molochLoading ? (
+              <TypographyRed>Offline</TypographyRed>
             ) : (
-              <DAOTile variant={DAO_TILE_VARIANTS.GREY_SHADOW}>
-                <Typography px={2}>Processing</Typography>
-              </DAOTile>
+              <Box display="flex" alignItems="center">
+                <Box display="flex" alignItems="center" mr={1}>
+                  <DAOCircleLoader size={20} />
+                </Box>
+                <Typography variant="body2">Checking</Typography>
+              </Box>
             ))}
 
           {!molochError ? (
@@ -70,58 +96,60 @@ const BlockchainStatus: FC = () => {
             typeof molochBlock === 'number' &&
             !Number.isNaN(layer2Block) &&
             !Number.isNaN(molochBlock) && (
-              <DAOTile variant={DAO_TILE_VARIANTS.YELLOW_BACKGROUND}>
-                <>
-                  {layer2Block - molochBlock === 1 && (
-                    <Typography px={2}>
-                      lagging {'>>'} {layer2Block - molochBlock} block behind
-                    </Typography>
-                  )}
-                  {layer2Block - molochBlock > 1 && (
-                    <Typography px={2}>
-                      lagging {'>>'} {layer2Block - molochBlock} blocks behind
-                    </Typography>
-                  )}
-                </>
-              </DAOTile>
+              <>
+                {layer2Block - molochBlock === 1 && (
+                  <TypographyYellow>
+                    lagging {'>>'} {layer2Block - molochBlock} block behind
+                  </TypographyYellow>
+                )}
+                {layer2Block - molochBlock > 1 && (
+                  <TypographyYellow>
+                    lagging {'>>'} {layer2Block - molochBlock} blocks behind
+                  </TypographyYellow>
+                )}
+              </>
             )
           ) : (
-            <DAOTile variant={DAO_TILE_VARIANTS.RED_BACKGROUND}>
-              <Typography px={2}>INDEXER ERROR</Typography>
-            </DAOTile>
+            <TypographyRed>INDEXER ERROR</TypographyRed>
           )}
-        </Box>
-      </Box>
+        </StatusChip>
+      </StatusWrapper>
 
-      <Box display="flex" alignItems="center" sx={{ width: { xs: '100%', md: 'auto' } }}>
-        {userAddress === '' ? (
+      {userAddress === '' && (
+        <StatusWrapper>
           <ConnectWalletButton />
-        ) : (
-          <Box display="flex" justifyContent="flex-end" alignItems="center" height="40px" width="100%">
-            <Typography noWrap>User address: </Typography>
-            <Box height="40px" ml={2}>
-              <DAOTile variant={DAO_TILE_VARIANTS.GRADIENT_OUTLINE}>
-                <TypographyBold px={2}>{formatAddress(userAddress)}</TypographyBold>
-              </DAOTile>
-            </Box>
-            {isChecked ? (
-              balance && (
-                <Typography ml={3} noWrap>
-                  <b>{shannonsToCkb(balance)}</b> dCKB
-                </Typography>
-              )
-            ) : (
-              <Box display="flex" alignItems="center" ml={3}>
-                <Box display="flex" alignItems="center" mr={2}>
-                  <DAOCircleLoader size={20} />
-                </Box>
-                Checking balance
+        </StatusWrapper>
+      )}
+
+      {userAddress !== '' && (
+        <StatusWrapper>
+          <StatusChip title="User address:">
+            <TypographyBold>{formatAddress(userAddress)}</TypographyBold>
+          </StatusChip>
+        </StatusWrapper>
+      )}
+
+      {userAddress !== '' && isChecked && (
+        <StatusWrapper>
+          <StatusChip title="dCKB balance:">
+            <TypographyBold>{shannonsToCkb(balance)}</TypographyBold>
+          </StatusChip>
+        </StatusWrapper>
+      )}
+
+      {userAddress !== '' && !isChecked && (
+        <StatusWrapper>
+          <StatusChip title="dCKB balance:">
+            <Box display="flex" alignItems="center">
+              <Box display="flex" alignItems="center" mr={1}>
+                <DAOCircleLoader size={20} />
               </Box>
-            )}
-          </Box>
-        )}
-      </Box>
-    </Box>
+              <Typography variant="body2">Checking</Typography>
+            </Box>
+          </StatusChip>
+        </StatusWrapper>
+      )}
+    </MainWrapper>
   );
 };
 

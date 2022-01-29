@@ -18,14 +18,12 @@ import { setTransactionRecipe } from 'redux/slices/newProposal';
 import { selectUserAddress } from 'redux/slices/user';
 
 import FETCH_STATUSES from 'enums/fetchStatuses';
-import DAO_TILE_VARIANTS from 'enums/daoTileVariants';
 
 import useProposal from 'hooks/useProposal';
 
 import newProposalSchema from 'validators/newProposalSchema';
 
 import abiLibrary from 'lib/abi';
-import { InputAdornment } from '@mui/material';
 
 const StyledBox = styled(Box)`
   width: 100%;
@@ -213,7 +211,7 @@ const NewProposalForm: FC = () => {
 
                 {sendProposalStatus === FETCH_STATUSES.SUCCESS && (
                   <Box mt={2}>
-                    <DAOTile variant={DAO_TILE_VARIANTS.GREEN_BACKGROUND}>
+                    <DAOTile variant="greenBackground">
                       <Typography p={2}>Congratulations! Your proposal has been submitted.</Typography>
                     </DAOTile>
                   </Box>
@@ -221,7 +219,7 @@ const NewProposalForm: FC = () => {
 
                 {sendProposalStatus === FETCH_STATUSES.ERROR && (
                   <Box mt={2}>
-                    <DAOTile variant={DAO_TILE_VARIANTS.RED_OUTLINE}>
+                    <DAOTile variant="redOutline">
                       <Typography p={2}>Something went wrong. Please try again.</Typography>
                     </DAOTile>
                   </Box>

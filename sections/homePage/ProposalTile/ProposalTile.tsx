@@ -15,8 +15,6 @@ import Link from 'components/Link';
 import Details from 'sections/homePage/Details/Details';
 import VoteSection from 'sections/homePage/VoteSection/VoteSection';
 
-import DAO_TILE_VARIANTS from 'enums/daoTileVariants';
-
 import { formatSeconds } from 'utils/formatDate';
 
 const StyledReadMoreIcon = styled(ReadMoreIcon)`
@@ -42,6 +40,10 @@ const StyledLanguageIcon = styled(LanguageIcon)`
   ${({ theme }) => theme.breakpoints.down('sm')} {
     font-size: 20px;
   }
+`;
+
+const TypographySmall = styled(Typography)`
+  font-size: 12px;
 `;
 
 const ProposalTile: FC<any> = ({ proposal }) => {
@@ -80,11 +82,11 @@ const ProposalTile: FC<any> = ({ proposal }) => {
 
   return (
     <Box mb={3}>
-      <DAOTile variant={DAO_TILE_VARIANTS.GREY_SHADOW}>
+      <DAOTile variant="greyShadow">
         <Box width="100%" height="100%" p={3}>
-          <Typography align="right" paragraph>
+          <TypographySmall align="right" paragraph>
             {formatSeconds(proposal.createdAt)}
-          </Typography>
+          </TypographySmall>
 
           <Box display="flex" justifyContent="space-between" alignItems="center" pb={4}>
             <Typography component="h3" variant="h3">
