@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC, useState, useEffect } from 'react';
 import { Formik, Form } from 'formik';
 import { useSelector, useDispatch } from 'react-redux';
 
@@ -23,6 +23,8 @@ import useProposal from 'hooks/useProposal';
 import newFundingSchema from 'validators/newFundingSchema';
 
 import abiLibrary from 'lib/abi';
+import { Chip } from '@mui/material';
+import isAddress from '../../../validators/isAddress';
 
 const StyledBox = styled(Box)`
   width: 100%;
@@ -41,6 +43,19 @@ const NewProposalForm: FC = () => {
   const dispatch = useDispatch();
   const sendProposalStatus = useSelector(selectProposalStatus);
   const userAddress = useSelector(selectUserAddress);
+  const [applicant, setApplicant] = useState(initialValues.applicant);
+  const [validated, setValidated] = useState(false);
+
+  useEffect(() => {
+    setApplicant(userAddress);
+  }, [userAddress]);
+
+  useEffect(() => {
+    const isApplicantValid = async () => {
+      setValidated(await isAddress(userAddress));
+    };
+    isApplicantValid();
+  }, [userAddress]);
 
   // MOCKED -----------------------------
   const version = 2;
@@ -55,8 +70,6 @@ const NewProposalForm: FC = () => {
       dispatch(setProposalStatus(FETCH_STATUSES.LOADING));
 
       const modifiedLink = values.link.replace(/(^\w+:|^)\/\//, '');
-
-      // TODO: check if applicant address is validated
 
       // eslint-disable-next-line react-hooks/rules-of-hooks
       const receipt = await useProposal(
@@ -160,8 +173,8 @@ const NewProposalForm: FC = () => {
                     inputProps={{
                       id: 'tributeOffered',
                       value: formik.values.tributeOffered,
+                      placeholder: 'e.g. 10',
                       onChange: formik.handleChange,
-                      multiline: true,
                     }}
                     formControlProps={{
                       fullWidth: true,
@@ -177,6 +190,7 @@ const NewProposalForm: FC = () => {
                     inputProps={{
                       id: 'paymentRequested',
                       value: formik.values.paymentRequested,
+                      placeholder: 'e.g. 10',
                       onChange: formik.handleChange,
                       multiline: true,
                     }}
@@ -187,16 +201,22 @@ const NewProposalForm: FC = () => {
                   />
                 </Box>
 
-                {/* <Box display="flex" width="100%" mb={2}>
-                  <Typography variant="subtitle2">Aplicant:</Typography>
-                  isAddress(value)
-                  <TypographyBold variant="subtitle2" mx={1}>
-                    validated or no
-                  </TypographyBold>
-                  <TooltipIcon>
-                    <Typography variant="body2">Type of coin offered</Typography>
-                  </TooltipIcon>
-                </Box> */}
+                <Typography variant="subtitle2" gutterBottom>
+                  Applicant:{' '}
+                  {applicant ? (
+                    <Chip
+                      label={validated ? applicant : `${applicant} - address not valid`}
+                      variant="outlined"
+                      color={validated ? 'success' : 'info'}
+                    />
+                  ) : (
+                    <Chip
+                      label="You must specify an account that will receive the funding."
+                      variant="outlined"
+                      color="warning"
+                    />
+                  )}
+                </Typography>
 
                 <Box display="flex" width="100%" mb={2}>
                   <Typography variant="subtitle2">Tribute Token:</Typography>
