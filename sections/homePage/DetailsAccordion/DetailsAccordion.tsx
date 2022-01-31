@@ -24,6 +24,10 @@ const StyledAccordion = styled(Accordion)`
   }
 `;
 
+const StyledAccordionSummary = styled(AccordionSummary)`
+  padding: 0;
+`;
+
 const TypographyBold = styled(Typography)`
   font-weight: 600;
 `;
@@ -32,12 +36,12 @@ const StyledExpandMoreIcon = styled(ExpandMoreIcon)`
   color: ${({ theme }) => theme.palette.text.primary};
 `;
 
-const Details: FC<any> = ({ proposal }) => {
+const DetailsAccordion: FC<any> = ({ proposal }) => {
   return (
     <StyledAccordion>
-      <AccordionSummary expandIcon={<StyledExpandMoreIcon />} aria-controls="panel1a-content" id="panel1a-header">
+      <StyledAccordionSummary expandIcon={<StyledExpandMoreIcon />} aria-controls="panel1a-content" id="panel1a-header">
         <TypographyBold variant="h6">Poll Details</TypographyBold>
-      </AccordionSummary>
+      </StyledAccordionSummary>
       <AccordionDetails>
         <Box display="flex" justifyContent="flex-start" flexWrap="wrap">
           {proposal.sponsored && (
@@ -116,4 +120,4 @@ const Details: FC<any> = ({ proposal }) => {
   );
 };
 
-export default Details;
+export default DetailsAccordion;

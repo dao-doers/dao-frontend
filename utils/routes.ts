@@ -1,5 +1,5 @@
 export const APP_ROUTES = {
-  NEW: '/new',
+  CREATE: '/create',
 };
 
 export const API_ROUTES = {};

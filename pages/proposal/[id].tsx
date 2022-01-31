@@ -11,7 +11,6 @@ import Layout from 'components/Layout/Layout';
 
 import ProposalTile from 'sections/homePage/ProposalTile/ProposalTile';
 import VoteTile from 'sections/homePage/VoteTile/VoteTile';
-import FetchDataComponent from 'sections/homePage/FetchDataComponent/FetchDataComponent';
 
 import config from 'config/config';
 
@@ -41,7 +40,6 @@ const Swap: FC<NextPage> = () => {
     <ApolloProvider client={client as any}>
       <Layout>
         <Box display="flex" justifyContent="space-between" width="100%">
-          <FetchDataComponent />
           <Box sx={{ width: { xs: '100%', md: '63%' } }}>
             {Object.keys(chosenProposal).length > 0 && <ProposalTile proposal={chosenProposal} />}
           </Box>

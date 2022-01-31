@@ -11,17 +11,16 @@ import DAOButton from 'components/DAOButton/DAOButton';
 import DAOInput from 'components/DAOInput/DAOInput';
 import DAOTile from 'components/DAOTile/DAOTile';
 import TooltipIcon from 'components/TooltipIcon';
-import ConnectWalletButton from 'components/ConnectWalletButton/ConnectWalletButton';
 
 import { selectProposalStatus, setProposalStatus } from 'redux/slices/proposals';
-import { setTransactionRecipe } from 'redux/slices/newProposal';
+import { setTransactionRecipe } from 'redux/slices/createProposal';
 import { selectUserAddress } from 'redux/slices/user';
 
 import FETCH_STATUSES from 'enums/fetchStatuses';
 
-import useProposal from 'hooks/useProposal';
+import useCreateProposal from 'hooks/useCreateProposal';
 
-import newProposalSchema from 'validators/newProposalSchema';
+import newFundingSchema from 'validators/newFundingSchema';
 
 import abiLibrary from 'lib/abi';
 
@@ -34,9 +33,11 @@ const initialValues = {
   description: '',
   link: '',
   tributeOffered: 0,
+  paymentRequested: 0,
+  applicant: '0x0',
 };
 
-const NewProposalForm: FC = () => {
+const CreateFundingForm: FC = () => {
   const dispatch = useDispatch();
   const sendProposalStatus = useSelector(selectProposalStatus);
   const userAddress = useSelector(selectUserAddress);
@@ -46,7 +47,6 @@ const NewProposalForm: FC = () => {
   const daoAddress = process.env.DAO_ADDRESS;
   const lootRequested = 0;
   const tributeToken = process.env.TRIBUTE_TOKEN_ADDRESS;
-  const paymentRequested = 0;
   const paymentToken = process.env.TRIBUTE_TOKEN_ADDRESS;
   // MOCKED -----------------------------
 
@@ -59,7 +59,7 @@ const NewProposalForm: FC = () => {
       // TODO: check if applicant address is validated
 
       // eslint-disable-next-line react-hooks/rules-of-hooks
-      const receipt = await useProposal(
+      const receipt = await useCreateProposal(
         userAddress,
         abiLibrary,
         version,
@@ -69,7 +69,7 @@ const NewProposalForm: FC = () => {
         lootRequested,
         values.tributeOffered,
         tributeToken,
-        paymentRequested,
+        values.tributeOffered,
         paymentToken,
         /* Details JSON */ {
           title: values.title,
@@ -97,9 +97,9 @@ const NewProposalForm: FC = () => {
     <StyledBox>
       <Box maxWidth="500px" mx="auto">
         <TypographyBold variant="h4" mb={3} sx={{ display: { xs: 'none', md: 'block' } }}>
-          Create new proposal
+          Create new proposal with funding
         </TypographyBold>
-        <Formik validationSchema={newProposalSchema} initialValues={initialValues} validateOnChange onSubmit={onSubmit}>
+        <Formik validationSchema={newFundingSchema} initialValues={initialValues} validateOnChange onSubmit={onSubmit}>
           {formik => (
             <Form>
               <Box width="100%">
@@ -110,7 +110,6 @@ const NewProposalForm: FC = () => {
                       id: 'title',
                       value: formik.values.title,
                       onChange: formik.handleChange,
-                      inputProps: { min: 0, step: 1 },
                     }}
                     formControlProps={{
                       fullWidth: true,
@@ -171,8 +170,46 @@ const NewProposalForm: FC = () => {
                   />
                 </Box>
 
+                <Box width="100%" mb={2}>
+                  <DAOInput
+                    label="Payment Requested"
+                    tootltip="TODO: add tooltip text"
+                    inputProps={{
+                      id: 'paymentRequested',
+                      value: formik.values.paymentRequested,
+                      onChange: formik.handleChange,
+                      multiline: true,
+                    }}
+                    formControlProps={{
+                      fullWidth: true,
+                    }}
+                    error={formik.errors.paymentRequested}
+                  />
+                </Box>
+
+                {/* <Box display="flex" width="100%" mb={2}>
+                  <Typography variant="subtitle2">Aplicant:</Typography>
+                  isAddress(value)
+                  <TypographyBold variant="subtitle2" mx={1}>
+                    validated or no
+                  </TypographyBold>
+                  <TooltipIcon>
+                    <Typography variant="body2">Type of coin offered</Typography>
+                  </TooltipIcon>
+                </Box> */}
+
                 <Box display="flex" width="100%" mb={2}>
                   <Typography variant="subtitle2">Tribute Token:</Typography>
+                  <TypographyBold variant="subtitle2" mx={1}>
+                    dCKB
+                  </TypographyBold>
+                  <TooltipIcon>
+                    <Typography variant="body2">Type of coin offered</Typography>
+                  </TooltipIcon>
+                </Box>
+
+                <Box display="flex" width="100%" mb={2}>
+                  <Typography variant="subtitle2">Payment token: </Typography>
                   <TypographyBold variant="subtitle2" mx={1}>
                     dCKB
                   </TypographyBold>
@@ -195,18 +232,14 @@ const NewProposalForm: FC = () => {
                 </Box>
 
                 <Box>
-                  {userAddress === '' ? (
-                    <ConnectWalletButton />
-                  ) : (
-                    <DAOButton
-                      variant="gradientOutline"
-                      type="submit"
-                      isLoading={sendProposalStatus === FETCH_STATUSES.LOADING}
-                      disabled={sendProposalStatus === FETCH_STATUSES.LOADING}
-                    >
-                      Submit proposal
-                    </DAOButton>
-                  )}
+                  <DAOButton
+                    variant="gradientOutline"
+                    type="submit"
+                    isLoading={sendProposalStatus === FETCH_STATUSES.LOADING}
+                    disabled={sendProposalStatus === FETCH_STATUSES.LOADING}
+                  >
+                    Submit proposal
+                  </DAOButton>
                 </Box>
 
                 {sendProposalStatus === FETCH_STATUSES.SUCCESS && (
@@ -233,4 +266,4 @@ const NewProposalForm: FC = () => {
   );
 };
 
-export default NewProposalForm;
+export default CreateFundingForm;

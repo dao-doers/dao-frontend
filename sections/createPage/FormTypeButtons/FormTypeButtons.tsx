@@ -6,28 +6,28 @@ import Typography from '@mui/material/Typography';
 
 import DAOTile from 'components/DAOTile/DAOTile';
 
-import NEW_PROPOSAL_TYPE from 'enums/newProposalType';
+import CREATE_PROPOSAL_TYPE from 'enums/createProposalType';
 
-import { selectNewProposalType, setNewProposalType } from 'redux/slices/newProposal';
+import { selectProposalType, setProposalType } from 'redux/slices/createProposal';
 
 const FormTypeButtons: FC<any> = () => {
   const dispatch = useDispatch();
 
-  const newProposalType = useSelector(selectNewProposalType);
+  const proposalType = useSelector(selectProposalType);
 
   const handleSetProposalType = (type: string) => {
-    dispatch(setNewProposalType(type));
+    dispatch(setProposalType(type));
   };
 
   return (
     <Box my={3}>
-      <DAOTile variant={newProposalType === NEW_PROPOSAL_TYPE.NORMAL ? 'gradientOutline' : 'greyOutline'}>
+      <DAOTile variant={proposalType === CREATE_PROPOSAL_TYPE.NORMAL ? 'gradientOutline' : 'greyOutline'}>
         <Box
           width="100%"
           height="100%"
           p={3}
           sx={{ cursor: 'pointer' }}
-          onClick={() => handleSetProposalType(NEW_PROPOSAL_TYPE.NORMAL)}
+          onClick={() => handleSetProposalType(CREATE_PROPOSAL_TYPE.NORMAL)}
         >
           <Typography variant="h6" align="center" paragraph>
             New proposal
@@ -37,13 +37,13 @@ const FormTypeButtons: FC<any> = () => {
       </DAOTile>
 
       <Box my={3}>
-        <DAOTile variant={newProposalType === NEW_PROPOSAL_TYPE.WITH_FUNDING ? 'gradientOutline' : 'greyOutline'}>
+        <DAOTile variant={proposalType === CREATE_PROPOSAL_TYPE.WITH_FUNDING ? 'gradientOutline' : 'greyOutline'}>
           <Box
             width="100%"
             height="100%"
             p={3}
             sx={{ cursor: 'pointer' }}
-            onClick={() => handleSetProposalType(NEW_PROPOSAL_TYPE.WITH_FUNDING)}
+            onClick={() => handleSetProposalType(CREATE_PROPOSAL_TYPE.WITH_FUNDING)}
           >
             <Typography variant="h6" align="center" paragraph>
               New proposal with funding
