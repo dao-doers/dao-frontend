@@ -1,4 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+
 import THEME_MODES from 'enums/themeModes';
 
 interface ThemeSlice {

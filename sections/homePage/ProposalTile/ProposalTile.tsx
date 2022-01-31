@@ -129,7 +129,7 @@ const ProposalTile: FC<any> = ({ proposal }) => {
             </Box>
           </Box>
 
-          {router.pathname.includes('proposal') ? (
+          {router.pathname.includes('create') ? (
             <Typography variant="subtitle2" paragraph>
               {formattedDescr}
             </Typography>

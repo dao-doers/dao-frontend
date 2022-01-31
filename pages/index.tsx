@@ -30,7 +30,7 @@ const TypographyBlue = styled(Typography)`
   font-weight: 600;
 `;
 
-const Swap: FC<NextPage> = () => {
+const HomePage: FC<NextPage> = () => {
   const sortedProposalsArray = useSelector(selectSortedProposalsArray);
   const votesArray = useSelector(selectVotesArray);
 
@@ -79,4 +79,4 @@ const Swap: FC<NextPage> = () => {
   );
 };
 
-export default Swap;
+export default HomePage;

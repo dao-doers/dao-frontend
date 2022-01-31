@@ -63,13 +63,6 @@ const BlockchainStatus: FC = () => {
 
   const { balance, isChecked } = useCheckBalance();
 
-  // TODO: need that console logs to check one specific SVGAnimatedEnumeration, will remove later
-  console.log(molochBlock, 'molochBlock');
-  console.log(layer2Block, 'layer2Block');
-  console.log(molochError, 'molochError');
-  console.log(molochLoading, 'molochLoading');
-  console.log(layer2BlockLoading, 'layer2BlockLoading');
-
   return (
     <MainWrapper>
       <StatusWrapper>
