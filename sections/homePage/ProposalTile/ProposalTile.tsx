@@ -106,7 +106,7 @@ const ProposalTile: FC<any> = ({ proposal }) => {
                   <StyledTwitterIcon />
                 </Link>
               </Tooltip>
-              <Tooltip title="Go to projekt website" placement="top">
+              <Tooltip title="Go to project website" placement="top">
                 <Link href={`https://${formattedWebsite}`} target="_blank">
                   <StyledLanguageIcon />
                 </Link>

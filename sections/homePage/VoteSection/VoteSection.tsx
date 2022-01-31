@@ -162,7 +162,7 @@ const VoteSection: FC<any> = ({ proposal }) => {
             <Box width="100%" p={2}>
               {sponsorProposalStatus !== FETCH_STATUSES.SUCCESS && (
                 <Typography align="center" mb={2}>
-                  This proposal has not been sponsored yet.
+                  This proposal has not been sponsored yet. It can be sponsored by DAO member.
                 </Typography>
               )}
 
@@ -274,7 +274,11 @@ const VoteSection: FC<any> = ({ proposal }) => {
                     <Typography align="center" p={1}>
                       Proposal is in Grace Period.
                       <TooltipIcon>
-                        <Typography variant="body2">What is Grace Period?</Typography>
+                        <Typography variant="body2">
+                          Voting is over, and the Proposal is set to pass or fail depending on the votes cast during
+                          Voting. Members who voted No, and have no other pending Yes votes, can ragequit during this
+                          period
+                        </Typography>
                       </TooltipIcon>
                     </Typography>
                   </DAOTile>
