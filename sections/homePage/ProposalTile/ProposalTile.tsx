@@ -1,9 +1,10 @@
 import { FC, useState, useEffect } from 'react';
+import { useRouter } from 'next/router';
 
 import styled from '@emotion/styled';
 
 import Box from '@mui/material/Box';
-import ReadMoreIcon from '@mui/icons-material/ReadMore';
+import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 import LanguageIcon from '@mui/icons-material/Language';
 import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
@@ -12,12 +13,12 @@ import TwitterIcon from '@mui/icons-material/Twitter';
 import DAOTile from 'components/DAOTile/DAOTile';
 import Link from 'components/Link';
 
-import Details from 'sections/homePage/Details/Details';
-import VoteSection from 'sections/homePage/VoteSection/VoteSection';
+import DetailsAccordion from 'sections/homePage/DetailsAccordion/DetailsAccordion';
+import VoteAccordion from 'sections/homePage/VoteAccordion/VoteAccordion';
 
 import { formatSeconds } from 'utils/formatDate';
 
-const StyledReadMoreIcon = styled(ReadMoreIcon)`
+const StyledExitToAppIcon = styled(ExitToAppIcon)`
   cursor: pointer;
   margin-right: 10px;
   ${({ theme }) => theme.breakpoints.down('sm')} {
@@ -42,11 +43,24 @@ const StyledLanguageIcon = styled(LanguageIcon)`
   }
 `;
 
+const TypographyTitle = styled(Typography)`
+  color: ${({ theme }) => theme.palette.colors.main7};
+`;
+
 const TypographySmall = styled(Typography)`
   font-size: 12px;
 `;
 
+const TypographyDescription = styled(Typography)`
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  overflow: hidden;
+`;
+
 const ProposalTile: FC<any> = ({ proposal }) => {
+  const router = useRouter();
+
   const [nullObject, setNullObject] = useState(true);
   const [formattedTitle, setFormattedTitle] = useState('');
   const [formattedDescr, setFormattedDescr] = useState('');
@@ -89,13 +103,14 @@ const ProposalTile: FC<any> = ({ proposal }) => {
           </TypographySmall>
 
           <Box display="flex" justifyContent="space-between" alignItems="center" pb={4}>
-            <Typography component="h3" variant="h3">
-              {formattedTitle}
-            </Typography>
+            <Link internal href={`${process.env.APP_URL}proposal/${proposal.id}`}>
+              <TypographyTitle variant="h3">{formattedTitle}</TypographyTitle>
+            </Link>
+
             <Box display="flex">
               <Tooltip title="Go to proposal page" placement="top">
                 <Link internal href={`${process.env.APP_URL}proposal/${proposal.id}`}>
-                  <StyledReadMoreIcon />
+                  <StyledExitToAppIcon />
                 </Link>
               </Tooltip>
               <Tooltip title="Share this proposal on Twitter" placement="top">
@@ -114,12 +129,18 @@ const ProposalTile: FC<any> = ({ proposal }) => {
             </Box>
           </Box>
 
-          <Typography variant="subtitle2" paragraph>
-            {formattedDescr}
-          </Typography>
+          {router.pathname.includes('proposal') ? (
+            <Typography variant="subtitle2" paragraph>
+              {formattedDescr}
+            </Typography>
+          ) : (
+            <TypographyDescription variant="subtitle2" paragraph>
+              {formattedDescr}
+            </TypographyDescription>
+          )}
 
-          <Details proposal={proposal} />
-          <VoteSection proposal={proposal} />
+          <DetailsAccordion proposal={proposal} />
+          <VoteAccordion proposal={proposal} />
         </Box>
       </DAOTile>
     </Box>

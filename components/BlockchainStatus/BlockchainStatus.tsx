@@ -52,7 +52,7 @@ const TypographyRed = styled(Typography)`
 `;
 
 const TypographyYellow = styled(Typography)`
-  color: ${({ theme }) => theme.palette.colors.col3};
+  color: ${({ theme }) => theme.palette.colors.col4};
   font-weight: 600;
 `;
 
