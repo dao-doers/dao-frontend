@@ -24,7 +24,7 @@ import newFundingSchema from 'validators/newFundingSchema';
 
 import abiLibrary from 'lib/abi';
 import { Chip } from '@mui/material';
-import isAddress from '../../../validators/isAddress';
+import isAddress from 'validators/isAddress';
 
 const StyledBox = styled(Box)`
   width: 100%;
