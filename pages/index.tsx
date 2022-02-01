@@ -19,6 +19,9 @@ import { selectVotesArray } from 'redux/slices/votes';
 
 import useFetchProposals from 'hooks/useFetchProposals';
 import useFetchVotes from 'hooks/useFetchVotes';
+import DAOButton from 'components/DAOButton/DAOButton';
+
+import SyncIcon from '@mui/icons-material/Sync';
 
 const StyledPlaylistRemoveIcon = styled(PlaylistRemoveIcon)`
   color: ${({ theme }) => theme.palette.colors.col1};
@@ -40,7 +43,13 @@ const HomePage: FC<NextPage> = () => {
   return (
     <Layout>
       {(loadingProposals.loading || loadingVotes.loading) && <LoadingPage />}
-
+      <Box display="flex" alignSelf="flex-end" justifyContent="flex-end" pb={2}>
+        <Box display="flex" width="50px">
+          <DAOButton variant="gradientOutline">
+            <SyncIcon />
+          </DAOButton>
+        </Box>
+      </Box>
       {sortedProposalsArray.length > 0 && votesArray.length > 0 && (
         <Box display="flex" justifyContent="space-between" width="100%">
           <Box sx={{ width: { xs: '100%', md: '63%' } }}>
