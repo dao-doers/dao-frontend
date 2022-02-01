@@ -43,7 +43,7 @@ const useFetchVotes = () => {
     }
   }, [loading, error, data]);
 
-  return null;
+  return { loading };
 };
 
 export default useFetchVotes;

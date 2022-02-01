@@ -86,7 +86,7 @@ const MenuContent: FC = () => {
       </Box>
 
       <Box mx="auto" my={4} sx={{ width: { xs: '60%', md: '100%' } }}>
-        <Link internal href={APP_ROUTES.NEW}>
+        <Link internal href={APP_ROUTES.CREATE}>
           <DAOButton variant="gradientOutline">
             <Typography>Make a proposal</Typography>
           </DAOButton>

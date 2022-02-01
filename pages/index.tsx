@@ -1,7 +1,5 @@
 import type { NextPage } from 'next';
 import React, { FC } from 'react';
-import ApolloClient, { InMemoryCache } from 'apollo-boost';
-import { ApolloProvider } from '@apollo/react-hooks';
 import { useSelector } from 'react-redux';
 
 import styled from '@emotion/styled';
@@ -11,20 +9,16 @@ import Typography from '@mui/material/Typography';
 import PlaylistRemoveIcon from '@mui/icons-material/PlaylistRemove';
 
 import Layout from 'components/Layout/Layout';
+import LoadingPage from 'components/LoadingPage/LoadingPage';
 
 import ProposalTile from 'sections/homePage/ProposalTile/ProposalTile';
 import VoteTile from 'sections/homePage/VoteTile/VoteTile';
-import FetchDataComponent from 'sections/homePage/FetchDataComponent/FetchDataComponent';
-
-import config from 'config/config';
 
 import { selectSortedProposalsArray } from 'redux/slices/proposals';
 import { selectVotesArray } from 'redux/slices/votes';
 
-const client = new ApolloClient({
-  uri: config.graph.moloch,
-  cache: new InMemoryCache(),
-});
+import useFetchProposals from 'hooks/useFetchProposals';
+import useFetchVotes from 'hooks/useFetchVotes';
 
 const StyledPlaylistRemoveIcon = styled(PlaylistRemoveIcon)`
   color: ${({ theme }) => theme.palette.colors.col1};
@@ -36,15 +30,19 @@ const TypographyBlue = styled(Typography)`
   font-weight: 600;
 `;
 
-const Swap: FC<NextPage> = () => {
+const HomePage: FC<NextPage> = () => {
   const sortedProposalsArray = useSelector(selectSortedProposalsArray);
   const votesArray = useSelector(selectVotesArray);
 
+  const loadingProposals = useFetchProposals();
+  const loadingVotes = useFetchVotes();
+
   return (
-    <ApolloProvider client={client as any}>
-      <Layout>
+    <Layout>
+      {(loadingProposals.loading || loadingVotes.loading) && <LoadingPage />}
+
+      {sortedProposalsArray.length > 0 && votesArray.length > 0 && (
         <Box display="flex" justifyContent="space-between" width="100%">
-          <FetchDataComponent />
           <Box sx={{ width: { xs: '100%', md: '63%' } }}>
             {sortedProposalsArray.length === 0 && (
               <Box display="flex" flexDirection="column" alignItems="center">
@@ -76,9 +74,9 @@ const Swap: FC<NextPage> = () => {
             })}
           </Box>
         </Box>
-      </Layout>
-    </ApolloProvider>
+      )}
+    </Layout>
   );
 };
 
-export default Swap;
+export default HomePage;
