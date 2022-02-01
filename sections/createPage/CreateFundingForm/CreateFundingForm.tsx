@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC, useState, useEffect } from 'react';
 import { Formik, Form } from 'formik';
 import { useSelector, useDispatch } from 'react-redux';
 
@@ -11,19 +11,20 @@ import DAOButton from 'components/DAOButton/DAOButton';
 import DAOInput from 'components/DAOInput/DAOInput';
 import DAOTile from 'components/DAOTile/DAOTile';
 import TooltipIcon from 'components/TooltipIcon';
-import ConnectWalletButton from 'components/ConnectWalletButton/ConnectWalletButton';
 
 import { selectProposalStatus, setProposalStatus } from 'redux/slices/proposals';
-import { setTransactionRecipe } from 'redux/slices/newProposal';
+import { setTransactionRecipe } from 'redux/slices/createProposal';
 import { selectUserAddress } from 'redux/slices/user';
 
 import FETCH_STATUSES from 'enums/fetchStatuses';
 
-import useProposal from 'hooks/useProposal';
+import useCreateProposal from 'hooks/useCreateProposal';
 
-import newProposalSchema from 'validators/newProposalSchema';
+import newFundingSchema from 'validators/newFundingSchema';
 
 import abiLibrary from 'lib/abi';
+import { Chip } from '@mui/material';
+import isAddress from '../../../validators/isAddress';
 
 const StyledBox = styled(Box)`
   width: 100%;
@@ -34,19 +35,33 @@ const initialValues = {
   description: '',
   link: '',
   tributeOffered: 0,
+  paymentRequested: 0,
+  applicant: '0x0',
 };
 
-const NewProposalForm: FC = () => {
+const CreateFundingForm: FC = () => {
   const dispatch = useDispatch();
   const sendProposalStatus = useSelector(selectProposalStatus);
   const userAddress = useSelector(selectUserAddress);
+  const [applicant, setApplicant] = useState(initialValues.applicant);
+  const [validated, setValidated] = useState(false);
+
+  useEffect(() => {
+    setApplicant(userAddress);
+  }, [userAddress]);
+
+  useEffect(() => {
+    const isApplicantValid = async () => {
+      setValidated(await isAddress(userAddress));
+    };
+    isApplicantValid();
+  }, [userAddress]);
 
   // MOCKED -----------------------------
   const version = 2;
   const daoAddress = process.env.DAO_ADDRESS;
   const lootRequested = 0;
   const tributeToken = process.env.TRIBUTE_TOKEN_ADDRESS;
-  const paymentRequested = 0;
   const paymentToken = process.env.TRIBUTE_TOKEN_ADDRESS;
   // MOCKED -----------------------------
 
@@ -57,7 +72,7 @@ const NewProposalForm: FC = () => {
       const modifiedLink = values.link.replace(/(^\w+:|^)\/\//, '');
 
       // eslint-disable-next-line react-hooks/rules-of-hooks
-      const receipt = await useProposal(
+      const receipt = await useCreateProposal(
         userAddress,
         abiLibrary,
         version,
@@ -67,7 +82,7 @@ const NewProposalForm: FC = () => {
         lootRequested,
         values.tributeOffered,
         tributeToken,
-        paymentRequested,
+        values.tributeOffered,
         paymentToken,
         /* Details JSON */ {
           title: values.title,
@@ -95,9 +110,9 @@ const NewProposalForm: FC = () => {
     <StyledBox>
       <Box maxWidth="500px" mx="auto">
         <TypographyBold variant="h4" mb={3} sx={{ display: { xs: 'none', md: 'block' } }}>
-          Create new proposal with funding
+          Create new proposal
         </TypographyBold>
-        <Formik validationSchema={newProposalSchema} initialValues={initialValues} validateOnChange onSubmit={onSubmit}>
+        <Formik validationSchema={newFundingSchema} initialValues={initialValues} validateOnChange onSubmit={onSubmit}>
           {formik => (
             <Form>
               <Box width="100%">
@@ -157,8 +172,8 @@ const NewProposalForm: FC = () => {
                     tootltip="The amount of capital you are committing to deposit to the DAO bank. "
                     inputProps={{
                       id: 'tributeOffered',
-                      placeholder: 'e.g. 10',
                       value: formik.values.tributeOffered,
+                      placeholder: 'e.g. 10',
                       onChange: formik.handleChange,
                     }}
                     formControlProps={{
@@ -168,6 +183,40 @@ const NewProposalForm: FC = () => {
                   />
                 </Box>
 
+                <Box width="100%" mb={2}>
+                  <DAOInput
+                    label="Payment Requested"
+                    tootltip="The number amount of payment requested. Payment can be requested in CKB token held by the DAO"
+                    inputProps={{
+                      id: 'paymentRequested',
+                      value: formik.values.paymentRequested,
+                      placeholder: 'e.g. 10',
+                      onChange: formik.handleChange,
+                    }}
+                    formControlProps={{
+                      fullWidth: true,
+                    }}
+                    error={formik.errors.paymentRequested}
+                  />
+                </Box>
+
+                <Typography variant="subtitle2" gutterBottom>
+                  Applicant:{' '}
+                  {applicant ? (
+                    <Chip
+                      label={validated ? applicant : `${applicant} - address not valid`}
+                      variant="outlined"
+                      color={validated ? 'success' : 'info'}
+                    />
+                  ) : (
+                    <Chip
+                      label="You must specify an account that will receive the funding."
+                      variant="outlined"
+                      color="warning"
+                    />
+                  )}
+                </Typography>
+
                 <Box display="flex" width="100%" mb={2}>
                   <Typography variant="subtitle2">Tribute Token:</Typography>
                   <TypographyBold variant="subtitle2" mx={1}>
@@ -175,6 +224,16 @@ const NewProposalForm: FC = () => {
                   </TypographyBold>
                   <TooltipIcon>
                     <Typography variant="body2">CKB token to use for your tribute.</Typography>
+                  </TooltipIcon>
+                </Box>
+
+                <Box display="flex" width="100%" mb={2}>
+                  <Typography variant="subtitle2">Payment token: </Typography>
+                  <TypographyBold variant="subtitle2" mx={1}>
+                    dCKB
+                  </TypographyBold>
+                  <TooltipIcon>
+                    <Typography variant="body2">CKB token to use for your payment</Typography>
                   </TooltipIcon>
                 </Box>
 
@@ -188,26 +247,21 @@ const NewProposalForm: FC = () => {
                   </TypographyBold>
                   <TooltipIcon>
                     <Typography variant="body2">
-                      Voting shares in the DAO. Shares are granted to members in order to allow them to vote on
-                      proposals in the DAO. Shares also represent a claim on the tokens held in the DAO. Shares can
-                      neither be exchanged or sold to other members of the DAO.
+                      Voting shares in the DAO. Members can request payment be made in shares up to x% of the total
+                      amount requested.
                     </Typography>
                   </TooltipIcon>
                 </Box>
 
                 <Box>
-                  {userAddress === '' ? (
-                    <ConnectWalletButton />
-                  ) : (
-                    <DAOButton
-                      variant="gradientOutline"
-                      type="submit"
-                      isLoading={sendProposalStatus === FETCH_STATUSES.LOADING}
-                      disabled={sendProposalStatus === FETCH_STATUSES.LOADING}
-                    >
-                      Submit proposal
-                    </DAOButton>
-                  )}
+                  <DAOButton
+                    variant="gradientOutline"
+                    type="submit"
+                    isLoading={sendProposalStatus === FETCH_STATUSES.LOADING}
+                    disabled={sendProposalStatus === FETCH_STATUSES.LOADING}
+                  >
+                    Submit proposal
+                  </DAOButton>
                 </Box>
 
                 {sendProposalStatus === FETCH_STATUSES.SUCCESS && (
@@ -234,4 +288,4 @@ const NewProposalForm: FC = () => {
   );
 };
 
-export default NewProposalForm;
+export default CreateFundingForm;

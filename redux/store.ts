@@ -4,7 +4,7 @@ import userReducer from 'redux/slices/user';
 import themeReducer from 'redux/slices/theme';
 import proposalsReducer from 'redux/slices/proposals';
 import votesReducer from 'redux/slices/votes';
-import newProposalReducer from 'redux/slices/newProposal';
+import createProposalReducer from 'redux/slices/createProposal';
 
 export default configureStore({
   reducer: {
@@ -12,6 +12,6 @@ export default configureStore({
     theme: themeReducer,
     proposals: proposalsReducer,
     votes: votesReducer,
-    newProposal: newProposalReducer,
+    createProposal: createProposalReducer,
   },
 });

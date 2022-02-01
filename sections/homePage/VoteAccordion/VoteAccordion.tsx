@@ -19,7 +19,7 @@ import DAOCircleLoader from 'components/DAOCircleLoader/DAOCircleLoader';
 import Counter from 'components/Counter/Counter';
 import TooltipIcon from 'components/TooltipIcon';
 
-import VoteChart from 'sections/homePage/VoteChart/VoteChart';
+import Chart from 'sections/homePage/VoteAccordion/Chart/Chart';
 
 import useSponsorProposal from 'hooks/useSponsorProposal';
 import useVote from 'hooks/useVote';
@@ -41,7 +41,11 @@ const StyledAccordion = styled(Accordion)`
   }
 `;
 
-const VoteSectionWrapper = styled(Box)`
+const StyledAccordionSummary = styled(AccordionSummary)`
+  padding: 0;
+`;
+
+const VoteAccordionWrapper = styled(Box)`
   display: flex;
   align-items: center;
   ${({ theme }) => `${theme.breakpoints.down('md')} {
@@ -74,7 +78,7 @@ const StyledExpandMoreIcon = styled(ExpandMoreIcon)`
 `;
 
 // TODO: component is too big, we should fragment it
-const VoteSection: FC<any> = ({ proposal }) => {
+const VoteAccordion: FC<any> = ({ proposal }) => {
   const userAddress = useSelector(selectUserAddress);
 
   const [sponsorProposalStatus, setSponsorProposalStatus] = useState(FETCH_STATUSES.IDLE);
@@ -141,7 +145,7 @@ const VoteSection: FC<any> = ({ proposal }) => {
 
   return (
     <StyledAccordion>
-      <AccordionSummary expandIcon={<StyledExpandMoreIcon />} aria-controls="panel1a-content" id="panel1a-header">
+      <StyledAccordionSummary expandIcon={<StyledExpandMoreIcon />} aria-controls="panel1a-content" id="panel1a-header">
         <Box display="flex" justifyContent="space-between" alignItems="center" width="100%">
           <TypographyBold variant="h6">Vote Section</TypographyBold>
           {proposal.proposalStatus === PROPOSAL_STATUS.COLLECTING_FUNDS && (
@@ -154,7 +158,7 @@ const VoteSection: FC<any> = ({ proposal }) => {
           {proposal.proposalStatus === PROPOSAL_STATUS.PROCEEDING && <TypographyViolet>Proceeding</TypographyViolet>}
           {proposal.proposalStatus === PROPOSAL_STATUS.FINISHED && <TypographyViolet>Finished</TypographyViolet>}
         </Box>
-      </AccordionSummary>
+      </StyledAccordionSummary>
 
       <AccordionDetails>
         {proposal.proposalStatus === PROPOSAL_STATUS.COLLECTING_FUNDS && (
@@ -199,7 +203,7 @@ const VoteSection: FC<any> = ({ proposal }) => {
         {(proposal.proposalStatus === PROPOSAL_STATUS.VOTING ||
           proposal.proposalStatus === PROPOSAL_STATUS.GRACE_PERIOD ||
           proposal.proposalStatus === PROPOSAL_STATUS.PROCEEDING) && (
-          <VoteSectionWrapper>
+          <VoteAccordionWrapper>
             <Box sx={{ width: { xs: '100%', md: '70%' } }} p={2}>
               <Box>
                 {currentTime <= proposal.votingPeriodEnds && (
@@ -349,9 +353,9 @@ const VoteSection: FC<any> = ({ proposal }) => {
               </Box>
             </Box>
             <Box sx={{ width: { xs: '200px', md: '30%' } }} px={2} pb={2}>
-              <VoteChart agreed={proposal.yesShares} disagreed={proposal.noShares} />
+              <Chart agreed={proposal.yesShares} disagreed={proposal.noShares} />
             </Box>
-          </VoteSectionWrapper>
+          </VoteAccordionWrapper>
         )}
 
         {proposal.proposalStatus === PROPOSAL_STATUS.FINISHED && (
@@ -387,7 +391,7 @@ const VoteSection: FC<any> = ({ proposal }) => {
                 </Box>
               </Box>
               <Box sx={{ width: { xs: '150px', md: '30%' } }} px={2} pb={2}>
-                <VoteChart agreed={proposal.yesShares} disagreed={proposal.noShares} />
+                <Chart agreed={proposal.yesShares} disagreed={proposal.noShares} />
               </Box>
             </Box>
           </>
@@ -397,4 +401,4 @@ const VoteSection: FC<any> = ({ proposal }) => {
   );
 };
 
-export default VoteSection;
+export default VoteAccordion;

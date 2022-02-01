@@ -1,4 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+
 import THEME_MODES from 'enums/themeModes';
 
 interface ThemeSlice {
@@ -17,6 +18,7 @@ const themeSlice = createSlice({
   reducers: {
     toggleTheme: state => {
       state.mode = state.mode === THEME_MODES.DARK ? THEME_MODES.LIGHT : THEME_MODES.DARK;
+      sessionStorage.setItem('dao-theme', state.mode === THEME_MODES.LIGHT ? THEME_MODES.LIGHT : THEME_MODES.DARK);
     },
     setTheme: (state, action: PayloadAction<THEME_MODES>) => {
       state.mode = action.payload;

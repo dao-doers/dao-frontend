@@ -52,7 +52,7 @@ const TypographyRed = styled(Typography)`
 `;
 
 const TypographyYellow = styled(Typography)`
-  color: ${({ theme }) => theme.palette.colors.col3};
+  color: ${({ theme }) => theme.palette.colors.col4};
   font-weight: 600;
 `;
 
@@ -62,13 +62,6 @@ const BlockchainStatus: FC = () => {
   const { molochBlock, layer2Block, molochError, molochLoading, layer2BlockLoading } = useCheckIndexerStatus();
 
   const { balance, isChecked } = useCheckBalance();
-
-  // TODO: need that console logs to check one specific SVGAnimatedEnumeration, will remove later
-  console.log(molochBlock, 'molochBlock');
-  console.log(layer2Block, 'layer2Block');
-  console.log(molochError, 'molochError');
-  console.log(molochLoading, 'molochLoading');
-  console.log(layer2BlockLoading, 'layer2BlockLoading');
 
   return (
     <MainWrapper>

@@ -9,7 +9,7 @@ import { useTheme } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 
-interface VoteChartProps {
+interface ChartProps {
   agreed: number;
   disagreed: number;
 }
@@ -24,7 +24,7 @@ const CircleBox = styled(Box)`
   margin: auto;
 `;
 
-const VoteChart: FC<VoteChartProps> = ({ agreed, disagreed }) => {
+const Chart: FC<ChartProps> = ({ agreed, disagreed }) => {
   const theme = useTheme();
   ChartJS.register(ArcElement, Tooltip, Legend);
 
@@ -55,4 +55,4 @@ const VoteChart: FC<VoteChartProps> = ({ agreed, disagreed }) => {
   );
 };
 
-export default VoteChart;
+export default Chart;

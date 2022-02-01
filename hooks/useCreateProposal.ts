@@ -30,7 +30,7 @@ const getReceipt = async (proposal: any, user: string, estimatedGas: number) => 
   return receipt;
 };
 
-const useProposal = async (
+const useCreateProposal = async (
   /* Wallet information */
   user: string,
   /* Contract information */
@@ -86,4 +86,4 @@ const useProposal = async (
   return receipt;
 };
 
-export default useProposal;
+export default useCreateProposal;

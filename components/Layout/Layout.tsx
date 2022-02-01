@@ -1,4 +1,5 @@
-import { FC, ReactNode } from 'react';
+import { FC, ReactNode, useEffect } from 'react';
+import { useDispatch } from 'react-redux';
 
 import styled from '@emotion/styled';
 
@@ -11,6 +12,10 @@ import MobileMenu from 'components/MobileMenu/MobileMenu';
 import BlockchainStatus from 'components/BlockchainStatus/BlockchainStatus';
 
 import useMaintainSession from 'hooks/useMaintainSession';
+
+import { setTheme } from 'redux/slices/theme';
+
+import THEME_MODES from 'enums/themeModes';
 
 export type LayoutProps = {
   children: ReactNode;
@@ -28,7 +33,15 @@ const StyledBox = styled(Box)`
 `;
 
 const Layout: FC<LayoutProps> = ({ children }) => {
+  const dispatch = useDispatch();
+
   useMaintainSession();
+
+  useEffect(() => {
+    const theme = sessionStorage.getItem('dao-theme');
+
+    dispatch(setTheme(theme === THEME_MODES.DARK ? THEME_MODES.DARK : THEME_MODES.LIGHT));
+  }, [dispatch]);
 
   return (
     <StyledContainer>
