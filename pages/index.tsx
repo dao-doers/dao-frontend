@@ -57,7 +57,7 @@ const HomePage: FC<NextPage> = () => {
           <Box>{timer}</Box>
         </Box>
         <Box display="flex" width="50px">
-          <DAOButton variant="gradientOutline" onClick={() => refetchProposal.refetch}>
+          <DAOButton borderRadius="50%" variant="gradientOutline" onClick={() => refetchProposal.refetch}>
             <Tooltip arrow title="Refresh data" placement="top">
               <SyncIcon />
             </Tooltip>

@@ -26,6 +26,7 @@ export interface DAOButtonProps extends ButtonProps {
   variant?: ButtonProps['variant'] | Variant;
   fullWidth?: boolean;
   isLoading?: boolean;
+  borderRadius?: string;
 }
 
 const sizeStyles = ({ size }: DAOButtonProps) => {
@@ -86,29 +87,36 @@ const innerVariantStyles = ({ theme, variant }: DAOButtonProps & { theme: Theme 
     }
   `;
 };
+const roundButtonStyles = ({ borderRadius }: DAOButtonProps) => {
+  return css`
+    border-radius: ${borderRadius};
+  `;
+};
 
 const StyledDAOButton = styled(Button)<DAOButtonProps>`
   ${borderVariantStyles};
+  ${roundButtonStyles};
   width: 100%;
   height: 100%;
   min-width: 0;
   font-weight: 600;
   text-transform: none;
   padding: 2px;
-  border-radius: 9px;
+  border-radius: ${roundButtonStyles || '9px'};
   transition: background 250ms ease-in-out;
 `;
 
 const InnerButton = styled.div<DAOButtonProps>`
   ${innerVariantStyles};
   ${sizeStyles};
+  ${roundButtonStyles};
   width: 100%;
   height: 100%;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  border-radius: 7px;
+  border-radius: ${roundButtonStyles || '7px'};
   transition: background 250ms ease-in-out;
 `;
 
