@@ -39,13 +39,14 @@ const HomePage: FC<NextPage> = () => {
 
   const loadingProposals = useFetchProposals();
   const loadingVotes = useFetchVotes();
+  const refetchProposal = useFetchProposals();
 
   return (
     <Layout>
       {(loadingProposals.loading || loadingVotes.loading) && <LoadingPage />}
       <Box display="flex" alignSelf="flex-end" justifyContent="flex-end" pb={2}>
         <Box display="flex" width="50px">
-          <DAOButton variant="gradientOutline">
+          <DAOButton variant="gradientOutline" onClick={() => refetchProposal.refetch}>
             <SyncIcon />
           </DAOButton>
         </Box>

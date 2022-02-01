@@ -77,7 +77,7 @@ molochVersion
     `,
   };
 
-  const { loading, error, data } = useQuery(gql(expression.QUERY_PROPOSALS));
+  const { loading, error, data, refetch } = useQuery(gql(expression.QUERY_PROPOSALS));
 
   useEffect(() => {
     if (!loading && !error) {
@@ -85,7 +85,7 @@ molochVersion
     }
   }, [loading, error, data]);
 
-  return { loading };
+  return { loading, refetch };
 };
 
 export default useFetchProposals;
