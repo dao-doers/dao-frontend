@@ -96,7 +96,7 @@ const GuildKickForm: FC = () => {
                 <Box width="100%" mb={2}>
                   <DAOInput
                     label="Description"
-                    tootltip="Please provide a brief detailed description"
+                    tootltip="Anything you believe is relevant to your proposal. The shorter the description the better, and the important piece here is the WHAT you are asking for and WHY."
                     inputProps={{
                       id: 'description',
                       value: formik.values.description,
@@ -114,11 +114,11 @@ const GuildKickForm: FC = () => {
                 <Box width="100%" mb={2}>
                   <DAOInput
                     label="Link"
+                    tootltip="Whatever information gives us the best context to review your proposal and make an informed decision."
                     inputProps={{
                       id: 'link',
                       value: formik.values.link,
                       onChange: formik.handleChange,
-                      multiline: true,
                     }}
                     formControlProps={{
                       fullWidth: true,
@@ -130,7 +130,7 @@ const GuildKickForm: FC = () => {
                 <Box width="100%" mb={2}>
                   <DAOInput
                     label="Member"
-                    tootltip="TODO: add tooltip text"
+                    tootltip="A proposal to kick out a member of the DAO. Converts any Shares they may have into Loot, thereby removing voting power. Warning once a member is guildkicked, they become jailed and cannot be added as a member ever again."
                     inputProps={{
                       id: 'memberToKick',
                       value: formik.values.memberToKick,

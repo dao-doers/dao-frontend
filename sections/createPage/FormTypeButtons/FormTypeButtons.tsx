@@ -32,7 +32,7 @@ const FormTypeButtons: FC<any> = () => {
           <Typography variant="h6" align="center" paragraph>
             New proposal
           </Typography>
-          <Typography align="center">New member proposal description</Typography>
+          <Typography align="center">Tributing capital and Requesting new shares to join the DAO</Typography>
         </Box>
       </DAOTile>
 
@@ -48,7 +48,9 @@ const FormTypeButtons: FC<any> = () => {
             <Typography variant="h6" align="center" paragraph>
               New proposal with funding
             </Typography>
-            <Typography align="center">New member proposal with funding description</Typography>
+            <Typography align="center">
+              Tributing Spoils or Requesting funds from the DAO to work on internal projects and improvements
+            </Typography>
           </Box>
         </DAOTile>
       </Box>
@@ -58,7 +60,9 @@ const FormTypeButtons: FC<any> = () => {
           <Typography variant="h6" align="center" paragraph>
             Guild kick
           </Typography>
-          <Typography align="center">(Available soon!)</Typography>
+          <Typography align="center">
+            (Available soon!) Request to forcibly remove a malicious member through a vote
+          </Typography>
         </Box>
       </DAOTile>
     </Box>

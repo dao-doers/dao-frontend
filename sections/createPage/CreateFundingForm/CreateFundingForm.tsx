@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC, useState, useEffect } from 'react';
 import { Formik, Form } from 'formik';
 import { useSelector, useDispatch } from 'react-redux';
 
@@ -23,6 +23,8 @@ import useCreateProposal from 'hooks/useCreateProposal';
 import newFundingSchema from 'validators/newFundingSchema';
 
 import abiLibrary from 'lib/abi';
+import { Chip } from '@mui/material';
+import isAddress from 'validators/isAddress';
 
 const StyledBox = styled(Box)`
   width: 100%;
@@ -41,6 +43,19 @@ const CreateFundingForm: FC = () => {
   const dispatch = useDispatch();
   const sendProposalStatus = useSelector(selectProposalStatus);
   const userAddress = useSelector(selectUserAddress);
+  const [applicant, setApplicant] = useState(initialValues.applicant);
+  const [validated, setValidated] = useState(false);
+
+  useEffect(() => {
+    setApplicant(userAddress);
+  }, [userAddress]);
+
+  useEffect(() => {
+    const isApplicantValid = async () => {
+      setValidated(await isAddress(userAddress));
+    };
+    isApplicantValid();
+  }, [userAddress]);
 
   // MOCKED -----------------------------
   const version = 2;
@@ -55,8 +70,6 @@ const CreateFundingForm: FC = () => {
       dispatch(setProposalStatus(FETCH_STATUSES.LOADING));
 
       const modifiedLink = values.link.replace(/(^\w+:|^)\/\//, '');
-
-      // TODO: check if applicant address is validated
 
       // eslint-disable-next-line react-hooks/rules-of-hooks
       const receipt = await useCreateProposal(
@@ -121,7 +134,7 @@ const CreateFundingForm: FC = () => {
                 <Box width="100%" mb={2}>
                   <DAOInput
                     label="Description"
-                    tootltip="Please provide a brief detailed description"
+                    tootltip="Anything you believe is relevant to your proposal. The shorter the description the better, and the important piece here is the WHAT you are asking for and WHY."
                     inputProps={{
                       id: 'description',
                       value: formik.values.description,
@@ -139,11 +152,11 @@ const CreateFundingForm: FC = () => {
                 <Box width="100%" mb={2}>
                   <DAOInput
                     label="Link"
+                    tootltip="Whatever information gives us the best context to review your proposal and make an informed decision."
                     inputProps={{
                       id: 'link',
                       value: formik.values.link,
                       onChange: formik.handleChange,
-                      multiline: true,
                       placeholder: 'https://',
                     }}
                     formControlProps={{
@@ -156,12 +169,12 @@ const CreateFundingForm: FC = () => {
                 <Box width="100%" mb={2}>
                   <DAOInput
                     label="Tribute Offered"
-                    tootltip="TODO: add tooltip text"
+                    tootltip="The amount of capital you are committing to deposit to the DAO bank. "
                     inputProps={{
                       id: 'tributeOffered',
                       value: formik.values.tributeOffered,
+                      placeholder: 'e.g. 10',
                       onChange: formik.handleChange,
-                      multiline: true,
                     }}
                     formControlProps={{
                       fullWidth: true,
@@ -173,12 +186,12 @@ const CreateFundingForm: FC = () => {
                 <Box width="100%" mb={2}>
                   <DAOInput
                     label="Payment Requested"
-                    tootltip="TODO: add tooltip text"
+                    tootltip="The number amount of payment requested. Payment can be requested in CKB token held by the DAO"
                     inputProps={{
                       id: 'paymentRequested',
                       value: formik.values.paymentRequested,
+                      placeholder: 'e.g. 10',
                       onChange: formik.handleChange,
-                      multiline: true,
                     }}
                     formControlProps={{
                       fullWidth: true,
@@ -187,16 +200,22 @@ const CreateFundingForm: FC = () => {
                   />
                 </Box>
 
-                {/* <Box display="flex" width="100%" mb={2}>
-                  <Typography variant="subtitle2">Aplicant:</Typography>
-                  isAddress(value)
-                  <TypographyBold variant="subtitle2" mx={1}>
-                    validated or no
-                  </TypographyBold>
-                  <TooltipIcon>
-                    <Typography variant="body2">Type of coin offered</Typography>
-                  </TooltipIcon>
-                </Box> */}
+                <Typography variant="subtitle2" gutterBottom>
+                  Applicant:{' '}
+                  {applicant ? (
+                    <Chip
+                      label={validated ? applicant : `${applicant} - address not valid`}
+                      variant="outlined"
+                      color={validated ? 'success' : 'info'}
+                    />
+                  ) : (
+                    <Chip
+                      label="You must specify an account that will receive the funding."
+                      variant="outlined"
+                      color="warning"
+                    />
+                  )}
+                </Typography>
 
                 <Box display="flex" width="100%" mb={2}>
                   <Typography variant="subtitle2">Tribute Token:</Typography>
@@ -204,7 +223,7 @@ const CreateFundingForm: FC = () => {
                     dCKB
                   </TypographyBold>
                   <TooltipIcon>
-                    <Typography variant="body2">Type of coin offered</Typography>
+                    <Typography variant="body2">CKB token to use for your tribute.</Typography>
                   </TooltipIcon>
                 </Box>
 
@@ -214,7 +233,7 @@ const CreateFundingForm: FC = () => {
                     dCKB
                   </TypographyBold>
                   <TooltipIcon>
-                    <Typography variant="body2">Type of coin offered</Typography>
+                    <Typography variant="body2">CKB token to use for your payment</Typography>
                   </TooltipIcon>
                 </Box>
 
@@ -227,7 +246,10 @@ const CreateFundingForm: FC = () => {
                     )}
                   </TypographyBold>
                   <TooltipIcon>
-                    <Typography variant="body2">Amount of shares</Typography>
+                    <Typography variant="body2">
+                      Voting shares in the DAO. Members can request payment be made in shares up to x% of the total
+                      amount requested.
+                    </Typography>
                   </TooltipIcon>
                 </Box>
 
