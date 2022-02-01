@@ -22,6 +22,8 @@ import useFetchVotes from 'hooks/useFetchVotes';
 import DAOButton from 'components/DAOButton/DAOButton';
 
 import SyncIcon from '@mui/icons-material/Sync';
+import Timer from 'components/Timer/Timer';
+import Tooltip from '@mui/material/Tooltip';
 
 const StyledPlaylistRemoveIcon = styled(PlaylistRemoveIcon)`
   color: ${({ theme }) => theme.palette.colors.col1};
@@ -33,6 +35,10 @@ const TypographyBlue = styled(Typography)`
   font-weight: 600;
 `;
 
+const TypographyBold = styled(Typography)`
+  font-weight: 600;
+`;
+
 const HomePage: FC<NextPage> = () => {
   const sortedProposalsArray = useSelector(selectSortedProposalsArray);
   const votesArray = useSelector(selectVotesArray);
@@ -40,14 +46,21 @@ const HomePage: FC<NextPage> = () => {
   const loadingProposals = useFetchProposals();
   const loadingVotes = useFetchVotes();
   const refetchProposal = useFetchProposals();
+  const timer = <Timer reset={loadingProposals.loading} />;
 
   return (
     <Layout>
       {(loadingProposals.loading || loadingVotes.loading) && <LoadingPage />}
       <Box display="flex" alignSelf="flex-end" justifyContent="flex-end" pb={2}>
+        <Box display="flex" flexDirection="column" pr={2}>
+          <TypographyBold variant="h5">Recent Activity </TypographyBold>
+          <Box>{timer}</Box>
+        </Box>
         <Box display="flex" width="50px">
           <DAOButton variant="gradientOutline" onClick={() => refetchProposal.refetch}>
-            <SyncIcon />
+            <Tooltip arrow title="Refresh data" placement="top">
+              <SyncIcon />
+            </Tooltip>
           </DAOButton>
         </Box>
       </Box>
