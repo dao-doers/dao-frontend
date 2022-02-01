@@ -24,6 +24,7 @@ import DAOButton from 'components/DAOButton/DAOButton';
 import SyncIcon from '@mui/icons-material/Sync';
 import Timer from 'components/Timer/Timer';
 import Tooltip from '@mui/material/Tooltip';
+import DAOPlainButton from 'components/DAOPlainButton/DAOPlainButton';
 
 const StyledPlaylistRemoveIcon = styled(PlaylistRemoveIcon)`
   color: ${({ theme }) => theme.palette.colors.col1};
@@ -57,11 +58,11 @@ const HomePage: FC<NextPage> = () => {
           <Box>{timer}</Box>
         </Box>
         <Box display="flex" width="50px">
-          <DAOButton borderRadius="50%" variant="gradientOutline" onClick={() => refetchProposal.refetch}>
+          <DAOPlainButton variant="gradientOutline" onClick={() => refetchProposal.refetch}>
             <Tooltip arrow title="Refresh data" placement="top">
               <SyncIcon />
             </Tooltip>
-          </DAOButton>
+          </DAOPlainButton>
         </Box>
       </Box>
       {sortedProposalsArray.length > 0 && votesArray.length > 0 && (
