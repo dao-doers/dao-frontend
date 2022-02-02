@@ -77,7 +77,12 @@ molochVersion
     `,
   };
 
-  const { loading, error, data, refetch } = useQuery(gql(expression.QUERY_PROPOSALS));
+  const { loading, error, data, refetch } = useQuery(gql(expression.QUERY_PROPOSALS), {
+    notifyOnNetworkStatusChange: true,
+    fetchPolicy: 'cache-and-network',
+    nextFetchPolicy: 'cache-first',
+    errorPolicy: 'ignore',
+  });
 
   useEffect(() => {
     if (!loading && !error) {
@@ -85,7 +90,7 @@ molochVersion
     }
   }, [loading, error, data]);
 
-  return { loading, refetch };
+  return { data, loading, refetch };
 };
 
 export default useFetchProposals;
