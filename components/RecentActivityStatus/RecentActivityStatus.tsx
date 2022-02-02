@@ -18,7 +18,7 @@ interface IRecentActivityStatus {
 
 const RecentActivityStatus = ({ refetch, timer }: IRecentActivityStatus) => {
   return (
-    <Box display="flex" alignSelf="flex-end" justifyContent="flex-end">
+    <Box display="flex" alignSelf="flex-start" justifyContent="flex-start">
       <Box display="flex" flexDirection="column" pr={2}>
         <TypographyBold variant="h6">Recent Activity </TypographyBold>
         <Box>{timer}</Box>
