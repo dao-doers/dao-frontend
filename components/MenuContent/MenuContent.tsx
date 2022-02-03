@@ -1,5 +1,6 @@
 import { FC } from 'react';
 import { useDispatch } from 'react-redux';
+import { useRouter } from 'next/router';
 
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
@@ -22,67 +23,74 @@ import {
 
 const MenuContent: FC = () => {
   const dispatch = useDispatch();
+  const router = useRouter();
 
   const handleDisplayAll = () => {
+    if (router.pathname !== '/') {
+      router.push('/');
+    }
     dispatch(clearSorted());
   };
 
   const handleSortCollectingFunds = () => {
+    if (router.pathname !== '/') {
+      router.push('/');
+    }
     dispatch(setCollectingFundsProposals());
   };
 
   const handleSortVoting = () => {
+    if (router.pathname !== '/') {
+      router.push('/');
+    }
     dispatch(setVotingProposals());
   };
 
   const handleSortGracePeriod = () => {
+    if (router.pathname !== '/') {
+      router.push('/');
+    }
     dispatch(setGracePeriodProposals());
   };
 
   const handleSortProceeding = () => {
+    if (router.pathname !== '/') {
+      router.push('/');
+    }
     dispatch(setProceedingProposals());
   };
 
   const handleSortFinished = () => {
+    if (router.pathname !== '/') {
+      router.push('/');
+    }
     dispatch(setFinishedProposals());
   };
 
   return (
     <Box>
       <Box sx={{ py: { xs: 2, md: 0.5 } }} mt={2}>
-        <Link internal href="/">
-          <DAOPlainButton onClick={handleDisplayAll}>All Proposals</DAOPlainButton>
-        </Link>
+        <DAOPlainButton onClick={handleDisplayAll}>All Proposals</DAOPlainButton>
       </Box>
 
       <Box sx={{ py: { xs: 2, md: 0.5 } }}>
-        <Link internal href="/">
-          <DAOPlainButton onClick={handleSortCollectingFunds}>Collecting Funds</DAOPlainButton>
-        </Link>
+        <DAOPlainButton onClick={handleSortCollectingFunds}>Collecting Funds</DAOPlainButton>
       </Box>
 
       <Box sx={{ py: { xs: 2, md: 0.5 } }}>
-        <Link internal href="/">
-          <DAOPlainButton onClick={handleSortVoting}>Voting</DAOPlainButton>
-        </Link>
+        <DAOPlainButton onClick={handleSortVoting}>Voting</DAOPlainButton>
       </Box>
 
       <Box sx={{ py: { xs: 2, md: 0.5 } }}>
-        <Link internal href="/">
-          <DAOPlainButton onClick={handleSortGracePeriod}>Grace Period</DAOPlainButton>
-        </Link>
+        <DAOPlainButton onClick={handleSortGracePeriod}>Grace Period</DAOPlainButton>
       </Box>
 
       <Box sx={{ py: { xs: 2, md: 0.5 } }}>
-        <Link internal href="/">
-          <DAOPlainButton onClick={handleSortProceeding}>Proceeding</DAOPlainButton>
-        </Link>
+        <DAOPlainButton onClick={handleSortProceeding}>Proceeding</DAOPlainButton>
       </Box>
 
       <Box sx={{ py: { xs: 2, md: 0.5 } }}>
-        <Link internal href="/">
-          <DAOPlainButton onClick={handleSortFinished}>Finished</DAOPlainButton>
-        </Link>
+        <DAOPlainButton onClick={handleSortFinished}>Finished</DAOPlainButton>
       </Box>
 
       <Box mx="auto" my={4} sx={{ width: { xs: '60%', md: '100%' } }}>
