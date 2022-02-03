@@ -40,7 +40,8 @@ const HomePage: FC<NextPage> = () => {
   return (
     <Layout>
       {(loadingProposals.loading || loadingVotes.loading) && <LoadingPage />}
-      {sortedProposalsArray.length > 0 && votesArray.length > 0 && (
+
+      {!loadingProposals.loading && !loadingVotes.loading && (
         <Box display="flex" justifyContent="space-between" width="100%">
           <Box sx={{ width: { xs: '100%', md: '63%' } }}>
             {sortedProposalsArray.length === 0 && (
@@ -50,16 +51,21 @@ const HomePage: FC<NextPage> = () => {
               </Box>
             )}
 
-            {sortedProposalsArray.map((proposal: any) => {
-              return (
-                <ProposalTile
-                  key={`proposal-${proposal.proposalId}`}
-                  id={`proposal-${proposal.proposalId}`}
-                  proposal={proposal}
-                />
-              );
-            })}
+            {sortedProposalsArray.length > 0 && (
+              <>
+                {sortedProposalsArray.map((proposal: any) => {
+                  return (
+                    <ProposalTile
+                      key={`proposal-${proposal.proposalId}`}
+                      id={`proposal-${proposal.proposalId}`}
+                      proposal={proposal}
+                    />
+                  );
+                })}
+              </>
+            )}
           </Box>
+
           <Box width="35%" sx={{ display: { xs: 'none', md: 'block' } }}>
             {votesArray.length === 0 && (
               <Box display="flex" flexDirection="column" alignItems="center">
@@ -67,10 +73,13 @@ const HomePage: FC<NextPage> = () => {
                 <TypographyBlue>There are no votes yet</TypographyBlue>
               </Box>
             )}
-
-            {votesArray.map((vote: any) => {
-              return <VoteTile key={`vote-${vote.id}`} vote={vote} />;
-            })}
+            {votesArray.length > 0 && (
+              <>
+                {votesArray.map((vote: any) => {
+                  return <VoteTile key={`vote-${vote.id}`} vote={vote} />;
+                })}
+              </>
+            )}
           </Box>
         </Box>
       )}

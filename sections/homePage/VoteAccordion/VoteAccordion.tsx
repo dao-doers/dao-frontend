@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/rules-of-hooks */
-import { FC, useState } from 'react';
+import { FC, useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
 import styled from '@emotion/styled';
@@ -90,6 +90,18 @@ const VoteAccordion: FC<any> = ({ proposal }) => {
   const [processProposalStatus, setProcessProposalStatus] = useState(FETCH_STATUSES.IDLE);
 
   const currentTime = new Date().getTime() / 1000;
+
+  useEffect(() => {
+    if (userAddress !== '' && proposal.proposalIndex !== null) {
+      useNotVotedYetCheck(userAddress, proposal.proposalIndex, process.env.DAO_ADDRESS as any).then(async response => {
+        if (response === true) {
+          setNotVotedYet(1);
+        } else {
+          setNotVotedYet(2);
+        }
+      });
+    }
+  }, [userAddress, proposal, process.env.DAO_ADDRESS]);
 
   const handleSponsorProposal = async () => {
     const daoAddress = process.env.DAO_ADDRESS;
