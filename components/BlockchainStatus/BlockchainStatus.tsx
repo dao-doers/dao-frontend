@@ -155,13 +155,11 @@ const BlockchainStatus: FC = () => {
         </StatusWrapper>
       )}
 
-      {userAddress !== '' && (
-        <StatusWrapper>
-          <StatusChip>
-            <RecentActivityStatus refetch={refetch} timer={timer} />
-          </StatusChip>
-        </StatusWrapper>
-      )}
+      <StatusWrapper>
+        <StatusChip title="Last page update:">
+          <RecentActivityStatus refetch={refetch} timer={timer} />
+        </StatusChip>
+      </StatusWrapper>
     </MainWrapper>
   );
 };

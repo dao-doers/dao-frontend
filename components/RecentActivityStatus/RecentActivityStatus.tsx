@@ -2,13 +2,13 @@ import { Box } from '@mui/system';
 import React from 'react';
 import Tooltip from '@mui/material/Tooltip';
 import DAOPlainButton from 'components/DAOPlainButton/DAOPlainButton';
-import Typography from '@mui/material/Typography';
 
 import SyncIcon from '@mui/icons-material/Sync';
 import styled from '@emotion/styled';
 
-const TypographyBold = styled(Typography)`
-  font-weight: 600;
+const StyledSyncIcon = styled(SyncIcon)`
+  font-size: 17px;
+  color: ${({ theme }) => theme.palette.colors.col1};
 `;
 
 interface IRecentActivityStatus {
@@ -19,14 +19,13 @@ interface IRecentActivityStatus {
 const RecentActivityStatus = ({ refetch, timer }: IRecentActivityStatus) => {
   return (
     <Box display="flex" alignSelf="flex-start" justifyContent="flex-start">
-      <Box display="flex" flexDirection="column" pr={2}>
-        <TypographyBold variant="h6">Recent Activity </TypographyBold>
+      <Box>
         <Box>{timer}</Box>
       </Box>
-      <Box display="flex" width="50px">
+      <Box ml={2}>
         <DAOPlainButton variant="gradientOutline" onClick={refetch}>
           <Tooltip arrow title="Refresh data" placement="bottom">
-            <SyncIcon />
+            <StyledSyncIcon />
           </Tooltip>
         </DAOPlainButton>
       </Box>
