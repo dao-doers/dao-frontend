@@ -40,7 +40,6 @@ const HomePage: FC<NextPage> = () => {
   return (
     <Layout>
       {(loadingProposals.loading || loadingVotes.loading) && <LoadingPage />}
-
       {sortedProposalsArray.length > 0 && votesArray.length > 0 && (
         <Box display="flex" justifyContent="space-between" width="100%">
           <Box sx={{ width: { xs: '100%', md: '63%' } }}>

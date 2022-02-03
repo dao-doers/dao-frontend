@@ -58,8 +58,6 @@ const CreateProposalForm: FC = () => {
 
       const modifiedLink = values.link.replace(/(^\w+:|^)\/\//, '');
 
-      // TODO: check if applicant address is validated
-
       // eslint-disable-next-line react-hooks/rules-of-hooks
       const receipt = await useCreateProposal(
         userAddress,
@@ -109,7 +107,6 @@ const CreateProposalForm: FC = () => {
                       id: 'title',
                       value: formik.values.title,
                       onChange: formik.handleChange,
-                      inputProps: { min: 0, step: 1 },
                     }}
                     formControlProps={{
                       fullWidth: true,
@@ -121,7 +118,7 @@ const CreateProposalForm: FC = () => {
                 <Box width="100%" mb={2}>
                   <DAOInput
                     label="Description"
-                    tootltip="Please provide a brief detailed description"
+                    tootltip="Anything you believe is relevant to your proposal. The shorter the description the better, and the important piece here is the WHAT you are asking for and WHY."
                     inputProps={{
                       id: 'description',
                       value: formik.values.description,
@@ -139,11 +136,11 @@ const CreateProposalForm: FC = () => {
                 <Box width="100%" mb={2}>
                   <DAOInput
                     label="Link"
+                    tootltip="Whatever information gives us the best context to review your proposal and make an informed decision."
                     inputProps={{
                       id: 'link',
                       value: formik.values.link,
                       onChange: formik.handleChange,
-                      multiline: true,
                       placeholder: 'https://',
                     }}
                     formControlProps={{
@@ -156,12 +153,12 @@ const CreateProposalForm: FC = () => {
                 <Box width="100%" mb={2}>
                   <DAOInput
                     label="Tribute Offered"
-                    tootltip="TODO: add tooltip text"
+                    tootltip="The amount of capital you are committing to deposit to the DAO bank. "
                     inputProps={{
                       id: 'tributeOffered',
+                      placeholder: 'e.g. 10',
                       value: formik.values.tributeOffered,
                       onChange: formik.handleChange,
-                      multiline: true,
                     }}
                     formControlProps={{
                       fullWidth: true,
@@ -176,7 +173,7 @@ const CreateProposalForm: FC = () => {
                     dCKB
                   </TypographyBold>
                   <TooltipIcon>
-                    <Typography variant="body2">Type of coin offered</Typography>
+                    <Typography variant="body2">CKB token to use for your tribute.</Typography>
                   </TooltipIcon>
                 </Box>
 
@@ -189,7 +186,11 @@ const CreateProposalForm: FC = () => {
                     )}
                   </TypographyBold>
                   <TooltipIcon>
-                    <Typography variant="body2">Amount of shares</Typography>
+                    <Typography variant="body2">
+                      Voting shares in the DAO. Shares are granted to members in order to allow them to vote on
+                      proposals in the DAO. Shares also represent a claim on the tokens held in the DAO. Shares can
+                      neither be exchanged or sold to other members of the DAO.
+                    </Typography>
                   </TooltipIcon>
                 </Box>
 
