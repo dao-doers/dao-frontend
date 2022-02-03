@@ -92,7 +92,7 @@ const VoteAccordion: FC<any> = ({ proposal }) => {
   const currentTime = new Date().getTime() / 1000;
 
   useEffect(() => {
-    if (proposal.proposalIndex !== null) {
+    if (userAddress !== '' && proposal.proposalIndex !== null) {
       useNotVotedYetCheck(userAddress, proposal.proposalIndex, process.env.DAO_ADDRESS as any).then(async response => {
         if (response === true) {
           setNotVotedYet(1);

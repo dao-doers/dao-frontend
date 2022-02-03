@@ -21,76 +21,68 @@ import {
   clearSorted,
 } from 'redux/slices/proposals';
 
-const MenuContent: FC = () => {
+interface MenuContentProps {
+  setDrawerOpen: (arg0: false) => void;
+}
+
+const MenuContent: FC<MenuContentProps> = ({ setDrawerOpen }) => {
   const dispatch = useDispatch();
   const router = useRouter();
 
-  const handleDisplayAll = () => {
+  const handleClick = (value: number) => {
     if (router.pathname !== '/') {
       router.push('/');
     }
-    dispatch(clearSorted());
-  };
+    setDrawerOpen(false);
 
-  const handleSortCollectingFunds = () => {
-    if (router.pathname !== '/') {
-      router.push('/');
+    switch (value) {
+      case 1:
+        dispatch(clearSorted());
+        break;
+      case 2:
+        dispatch(setCollectingFundsProposals());
+        break;
+      case 3:
+        dispatch(setVotingProposals());
+        break;
+      case 4:
+        dispatch(setGracePeriodProposals());
+        break;
+      case 5:
+        dispatch(setProceedingProposals());
+        break;
+      case 6:
+        dispatch(setFinishedProposals());
+        break;
+      default:
+        dispatch(clearSorted());
     }
-    dispatch(setCollectingFundsProposals());
-  };
-
-  const handleSortVoting = () => {
-    if (router.pathname !== '/') {
-      router.push('/');
-    }
-    dispatch(setVotingProposals());
-  };
-
-  const handleSortGracePeriod = () => {
-    if (router.pathname !== '/') {
-      router.push('/');
-    }
-    dispatch(setGracePeriodProposals());
-  };
-
-  const handleSortProceeding = () => {
-    if (router.pathname !== '/') {
-      router.push('/');
-    }
-    dispatch(setProceedingProposals());
-  };
-
-  const handleSortFinished = () => {
-    if (router.pathname !== '/') {
-      router.push('/');
-    }
-    dispatch(setFinishedProposals());
   };
 
   return (
     <Box>
       <Box sx={{ py: { xs: 2, md: 0.5 } }} mt={2}>
-        <DAOPlainButton onClick={handleDisplayAll}>All Proposals</DAOPlainButton>
+        <DAOPlainButton onClick={() => handleClick(1)}>All Proposals</DAOPlainButton>
       </Box>
 
       <Box sx={{ py: { xs: 2, md: 0.5 } }}>
-        <DAOPlainButton onClick={handleSortCollectingFunds}>Collecting Funds</DAOPlainButton>
+        <DAOPlainButton onClick={() => handleClick(2)}>Collecting Funds</DAOPlainButton>
       </Box>
 
       <Box sx={{ py: { xs: 2, md: 0.5 } }}>
-        <DAOPlainButton onClick={handleSortVoting}>Voting</DAOPlainButton>
+        <DAOPlainButton onClick={() => handleClick(3)}>Voting</DAOPlainButton>
       </Box>
 
       <Box sx={{ py: { xs: 2, md: 0.5 } }}>
-        <DAOPlainButton onClick={handleSortGracePeriod}>Grace Period</DAOPlainButton>
+        <DAOPlainButton onClick={() => handleClick(4)}>Grace Period</DAOPlainButton>
       </Box>
 
       <Box sx={{ py: { xs: 2, md: 0.5 } }}>
-        <DAOPlainButton onClick={handleSortProceeding}>Proceeding</DAOPlainButton>
+        <DAOPlainButton onClick={() => handleClick(5)}>Proceeding</DAOPlainButton>
       </Box>
 
       <Box sx={{ py: { xs: 2, md: 0.5 } }}>
-        <DAOPlainButton onClick={handleSortFinished}>Finished</DAOPlainButton>
+        <DAOPlainButton onClick={() => handleClick(6)}>Finished</DAOPlainButton>
       </Box>
 
       <Box mx="auto" my={4} sx={{ width: { xs: '60%', md: '100%' } }}>

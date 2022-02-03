@@ -66,7 +66,7 @@ const HomePage: FC<NextPage> = () => {
             )}
           </Box>
 
-          <Box width="35%">
+          <Box width="35%" sx={{ display: { xs: 'none', md: 'block' } }}>
             {votesArray.length === 0 && (
               <Box display="flex" flexDirection="column" alignItems="center">
                 <StyledPlaylistRemoveIcon />
