@@ -10,7 +10,7 @@ import Modal from 'components/Modal/Modal';
 import DAOCircleLoader from 'components/DAOCircleLoader/DAOCircleLoader';
 import DAOButton from 'components/DAOButton/DAOButton';
 
-import { selectOpen, selectStatus, setClose } from 'redux/slices/modalTransaction';
+import { selectOpen, selectStatus, selectMessage, setClose } from 'redux/slices/modalTransaction';
 
 import PROCESSING_STATUSES, { mapToLoader } from 'enums/processingStatuses';
 
@@ -33,6 +33,7 @@ const TransactionModal: FC = () => {
 
   const isModalOpen = useSelector(selectOpen);
   const status = useSelector(selectStatus);
+  const message = useSelector(selectMessage);
 
   const handleTransactionModal = () => {
     if (status !== PROCESSING_STATUSES.PROCESSING) {
@@ -77,10 +78,10 @@ const TransactionModal: FC = () => {
         {status === PROCESSING_STATUSES.ERROR && (
           <>
             <Typography component="h5" variant="h5" align="center" paragraph>
-              Something went wrong
+              {message.length > 0 ? message : 'Something went wrong'}
             </Typography>
             <TypographyGrey variant="subtitle2" align="center">
-              Please try again
+              {message.length === 0 ? 'Please try again' : ''}
             </TypographyGrey>
             <Box width="210px" mx="auto" my={2}>
               <DAOButton variant="gradientOutline" onClick={handleTransactionModal}>
