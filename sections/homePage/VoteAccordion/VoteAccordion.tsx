@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import { FC, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 
 import styled from '@emotion/styled';
 
@@ -15,11 +15,13 @@ import DividerLine from 'components/DividerLine/DividerLine';
 import DAOButton from 'components/DAOButton/DAOButton';
 import DAOTile from 'components/DAOTile/DAOTile';
 import ConnectWalletButton from 'components/ConnectWalletButton/ConnectWalletButton';
-import DAOCircleLoader from 'components/DAOCircleLoader/DAOCircleLoader';
 import Counter from 'components/Counter/Counter';
 import TooltipIcon from 'components/TooltipIcon';
 
 import Chart from 'sections/homePage/VoteAccordion/Chart/Chart';
+
+import { selectUserAddress } from 'redux/slices/user';
+import { setOpen, setStatus, setMessage } from 'redux/slices/modalTransaction';
 
 import useSponsorProposal from 'hooks/useSponsorProposal';
 import useVote from 'hooks/useVote';
@@ -28,8 +30,7 @@ import useProcessProposal from 'hooks/useProcessProposal';
 
 import FETCH_STATUSES from 'enums/fetchStatuses';
 import PROPOSAL_STATUS from 'enums/proposalStatus';
-
-import { selectUserAddress } from 'redux/slices/user';
+import PROCESSING_STATUSES from 'enums/processingStatuses';
 
 const StyledAccordion = styled(Accordion)`
   margin-top: 10px;
@@ -77,12 +78,13 @@ const StyledExpandMoreIcon = styled(ExpandMoreIcon)`
   color: ${({ theme }) => theme.palette.text.primary};
 `;
 
-// TODO: component is too big, we should fragment it
+// TODO: component is waaaay too big, we should fragment it
 const VoteAccordion: FC<any> = ({ proposal }) => {
+  const dispatch = useDispatch();
+
   const userAddress = useSelector(selectUserAddress);
 
-  const [sponsorProposalStatus, setSponsorProposalStatus] = useState(FETCH_STATUSES.IDLE);
-  const [voteStatus, setVoteStatus] = useState(FETCH_STATUSES.IDLE);
+  const [sponsorProposalStatus, setSponsorProposalStatus] = useState(PROCESSING_STATUSES.IDLE);
   // 0 means idle state, 1 means user can vote, 2 means user already voted
   const [notVotedYet, setNotVotedYet] = useState(0);
   const [processProposalStatus, setProcessProposalStatus] = useState(FETCH_STATUSES.IDLE);
@@ -94,17 +96,23 @@ const VoteAccordion: FC<any> = ({ proposal }) => {
     const { proposalId } = proposal;
 
     try {
-      setSponsorProposalStatus(FETCH_STATUSES.LOADING);
+      dispatch(setStatus(PROCESSING_STATUSES.PROCESSING));
+      dispatch(setOpen(true));
+
       await useSponsorProposal(userAddress, daoAddress, proposalId);
-      setSponsorProposalStatus(FETCH_STATUSES.SUCCESS);
+      dispatch(setStatus(PROCESSING_STATUSES.SUCCESS));
+      setSponsorProposalStatus(PROCESSING_STATUSES.SUCCESS);
     } catch (error) {
-      setSponsorProposalStatus(FETCH_STATUSES.ERROR);
+      dispatch(setStatus(PROCESSING_STATUSES.ERROR));
     }
   };
 
   const handleVote = async (vote: number) => {
     // TODO: improvement - useNotVotedYetCheck should run just right after page render, not just after clicking
-    setVoteStatus(FETCH_STATUSES.LOADING);
+
+    dispatch(setStatus(PROCESSING_STATUSES.PROCESSING));
+    dispatch(setOpen(true));
+
     await useNotVotedYetCheck(userAddress, proposal.proposalIndex, process.env.DAO_ADDRESS as any).then(
       async response => {
         if (response === true) {
@@ -114,13 +122,14 @@ const VoteAccordion: FC<any> = ({ proposal }) => {
 
           try {
             await useVote(proposalIndex, vote, userAddress, daoAddress);
-            setVoteStatus(FETCH_STATUSES.SUCCESS);
+            dispatch(setStatus(PROCESSING_STATUSES.SUCCESS));
           } catch (error) {
-            setVoteStatus(FETCH_STATUSES.ERROR);
+            dispatch(setStatus(PROCESSING_STATUSES.ERROR));
           }
         } else {
           setNotVotedYet(2);
-          setVoteStatus(FETCH_STATUSES.IDLE);
+          dispatch(setMessage('You have already voted!'));
+          dispatch(setStatus(PROCESSING_STATUSES.ERROR));
         }
       },
     );
@@ -129,17 +138,21 @@ const VoteAccordion: FC<any> = ({ proposal }) => {
   const handleProcessProposal = async () => {
     const daoAddress = process.env.DAO_ADDRESS;
     const { proposalIndex } = proposal;
-    setProcessProposalStatus(FETCH_STATUSES.LOADING);
+    dispatch(setStatus(PROCESSING_STATUSES.PROCESSING));
+    dispatch(setOpen(true));
 
     try {
       const receipt = await useProcessProposal(userAddress, daoAddress, proposalIndex);
       if (receipt.transactionHash) {
         setProcessProposalStatus(FETCH_STATUSES.SUCCESS);
+        dispatch(setStatus(PROCESSING_STATUSES.SUCCESS));
       } else {
         setProcessProposalStatus(FETCH_STATUSES.ERROR);
+        dispatch(setStatus(PROCESSING_STATUSES.ERROR));
       }
     } catch (error) {
       setProcessProposalStatus(FETCH_STATUSES.ERROR);
+      dispatch(setStatus(PROCESSING_STATUSES.ERROR));
     }
   };
 
@@ -164,37 +177,34 @@ const VoteAccordion: FC<any> = ({ proposal }) => {
         {proposal.proposalStatus === PROPOSAL_STATUS.COLLECTING_FUNDS && (
           <DAOTile>
             <Box width="100%" p={2}>
-              {sponsorProposalStatus !== FETCH_STATUSES.SUCCESS && (
-                <Typography align="center" mb={2}>
-                  This proposal has not been sponsored yet. It can be sponsored by DAO member.
-                </Typography>
+              {sponsorProposalStatus !== PROCESSING_STATUSES.SUCCESS && (
+                <DAOTile variant="greyOutline">
+                  <Typography align="center" p={1}>
+                    This proposal has not been sponsored yet. It can be sponsored by DAO member.
+                  </Typography>
+                </DAOTile>
               )}
 
-              {userAddress === '' && (
-                <Box maxWidth="200px" mx="auto">
-                  <ConnectWalletButton />
-                </Box>
-              )}
-
-              {userAddress !== '' && sponsorProposalStatus !== FETCH_STATUSES.SUCCESS && (
-                <Box maxWidth="200px" mx="auto">
-                  <DAOButton
-                    variant="gradientOutline"
-                    isLoading={sponsorProposalStatus === FETCH_STATUSES.LOADING}
-                    onClick={handleSponsorProposal}
-                    disabled={sponsorProposalStatus === FETCH_STATUSES.LOADING}
-                  >
-                    Sponsor Proposal
-                  </DAOButton>
-                </Box>
-              )}
-
-              {sponsorProposalStatus === FETCH_STATUSES.SUCCESS && (
+              {sponsorProposalStatus === PROCESSING_STATUSES.SUCCESS && (
                 <DAOTile variant="gradientOutline">
                   <Typography align="center" p={1}>
                     You have successfully sponsored this proposal!
                   </Typography>
                 </DAOTile>
+              )}
+
+              {userAddress === '' && (
+                <Box maxWidth="200px" mx="auto" mt={2}>
+                  <ConnectWalletButton />
+                </Box>
+              )}
+
+              {userAddress !== '' && sponsorProposalStatus !== PROCESSING_STATUSES.SUCCESS && (
+                <Box maxWidth="200px" mx="auto" mt={2}>
+                  <DAOButton variant="gradientOutline" onClick={handleSponsorProposal}>
+                    Sponsor Proposal
+                  </DAOButton>
+                </Box>
               )}
             </Box>
           </DAOTile>
@@ -218,49 +228,19 @@ const VoteAccordion: FC<any> = ({ proposal }) => {
                       </Box>
                     )}
 
-                    {userAddress !== '' &&
-                      voteStatus !== FETCH_STATUSES.LOADING &&
-                      voteStatus !== FETCH_STATUSES.SUCCESS &&
-                      notVotedYet !== 2 && (
-                        <Box display="flex" justifyContent="space-between" mb={3}>
-                          <Box width="48%">
-                            <DAOButton variant="agreeVariant" onClick={() => handleVote(1)}>
-                              Yes
-                            </DAOButton>
-                          </Box>
-                          <Box width="48%">
-                            <DAOButton variant="disagreeVariant" onClick={() => handleVote(2)}>
-                              No
-                            </DAOButton>
-                          </Box>
+                    {userAddress !== '' && notVotedYet !== 2 && (
+                      <Box display="flex" justifyContent="space-between" mb={3}>
+                        <Box width="48%">
+                          <DAOButton variant="agreeVariant" onClick={() => handleVote(1)}>
+                            Yes
+                          </DAOButton>
                         </Box>
-                      )}
-
-                    {voteStatus === FETCH_STATUSES.LOADING && (
-                      <DAOTile variant="gradientOutline">
-                        <Box display="flex" alignItems="center" py={1}>
-                          <Box display="flex" alignItems="center" mr={2}>
-                            <DAOCircleLoader size={20} />
-                          </Box>
-                          Processing...
+                        <Box width="48%">
+                          <DAOButton variant="disagreeVariant" onClick={() => handleVote(2)}>
+                            No
+                          </DAOButton>
                         </Box>
-                      </DAOTile>
-                    )}
-
-                    {voteStatus === FETCH_STATUSES.ERROR && (
-                      <DAOTile variant="redOutline">
-                        <Box display="flex" alignItems="center" py={1}>
-                          Something went wrong, please try again.
-                        </Box>
-                      </DAOTile>
-                    )}
-
-                    {voteStatus === FETCH_STATUSES.SUCCESS && (
-                      <DAOTile variant="gradientOutline">
-                        <Typography align="center" p={1}>
-                          You have successfully voted!
-                        </Typography>
-                      </DAOTile>
+                      </Box>
                     )}
 
                     {notVotedYet === 2 && (
@@ -290,23 +270,11 @@ const VoteAccordion: FC<any> = ({ proposal }) => {
 
                 {currentTime > proposal.votingPeriodEnds && currentTime > proposal.gracePeriodEnds && (
                   <>
-                    <Typography mb={1}>To finish the whole process proposal needs to be proceed.</Typography>
-
-                    {userAddress === '' && (
-                      <Box maxWidth="200px" mx="auto" mb={3}>
-                        <ConnectWalletButton />
-                      </Box>
-                    )}
-
-                    {userAddress !== '' && processProposalStatus !== FETCH_STATUSES.SUCCESS && (
-                      <DAOButton
-                        variant="gradientOutline"
-                        isLoading={processProposalStatus === FETCH_STATUSES.LOADING}
-                        onClick={handleProcessProposal}
-                      >
-                        Process Proposal
-                      </DAOButton>
-                    )}
+                    <DAOTile variant="greyOutline">
+                      <Typography align="center" p={1}>
+                        To finish the whole process proposal needs to be proceed.
+                      </Typography>
+                    </DAOTile>
 
                     {processProposalStatus === FETCH_STATUSES.ERROR && (
                       <Box mt={1}>
@@ -321,9 +289,23 @@ const VoteAccordion: FC<any> = ({ proposal }) => {
                     {processProposalStatus === FETCH_STATUSES.SUCCESS && (
                       <DAOTile variant="gradientOutline">
                         <Typography align="center" p={1}>
-                          Proposal is beeing processed by blockchain network.
+                          Proposal has been processed by blockchain network.
                         </Typography>
                       </DAOTile>
+                    )}
+
+                    {userAddress === '' && (
+                      <Box maxWidth="200px" mx="auto" mt={2}>
+                        <ConnectWalletButton />
+                      </Box>
+                    )}
+
+                    {userAddress !== '' && processProposalStatus !== FETCH_STATUSES.SUCCESS && (
+                      <Box maxWidth="200px" mx="auto" mt={2}>
+                        <DAOButton variant="gradientOutline" onClick={handleProcessProposal}>
+                          Process Proposal
+                        </DAOButton>
+                      </Box>
                     )}
                   </>
                 )}
