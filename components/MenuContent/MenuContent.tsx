@@ -22,7 +22,7 @@ import {
 } from 'redux/slices/proposals';
 
 interface MenuContentProps {
-  setDrawerOpen: (arg0: false) => void;
+  setDrawerOpen?: (arg0: false) => void;
 }
 
 const MenuContent: FC<MenuContentProps> = ({ setDrawerOpen }) => {
@@ -33,7 +33,9 @@ const MenuContent: FC<MenuContentProps> = ({ setDrawerOpen }) => {
     if (router.pathname !== '/') {
       router.push('/');
     }
-    setDrawerOpen(false);
+    if (setDrawerOpen) {
+      setDrawerOpen(false);
+    }
 
     switch (value) {
       case 1:
