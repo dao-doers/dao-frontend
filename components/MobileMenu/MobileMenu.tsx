@@ -72,7 +72,7 @@ const MobileMenu: FC = () => {
       </Box>
 
       <StyledDrawer variant="temporary" anchor="left" open={isDrawerOpen} onClose={handleDrawerToggle}>
-        <MenuContent />
+        <MenuContent setDrawerOpen={setDrawerOpen} />
       </StyledDrawer>
     </Box>
   );

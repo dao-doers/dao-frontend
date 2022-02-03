@@ -7,6 +7,8 @@ import { Provider } from 'react-redux';
 import CssBaseline from '@mui/material/CssBaseline';
 import { CacheProvider } from '@emotion/react';
 
+import ModalsContainer from 'components/ModalsContainer/ModalsContainer';
+
 import store from 'redux/store';
 
 import { GlobalThemeProvider } from 'theme';
@@ -35,6 +37,7 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
         <GlobalThemeProvider>
           <CssBaseline />
           <ApolloProvider client={client as any}>
+            <ModalsContainer />
             <Component {...pageProps} />
           </ApolloProvider>
         </GlobalThemeProvider>

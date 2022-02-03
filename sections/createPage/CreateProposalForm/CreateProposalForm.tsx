@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 import { FC } from 'react';
 import { Formik, Form } from 'formik';
 import { useSelector, useDispatch } from 'react-redux';
@@ -9,27 +10,19 @@ import Typography from '@mui/material/Typography';
 
 import DAOButton from 'components/DAOButton/DAOButton';
 import DAOInput from 'components/DAOInput/DAOInput';
-import DAOTile from 'components/DAOTile/DAOTile';
 import TooltipIcon from 'components/TooltipIcon';
 import ConnectWalletButton from 'components/ConnectWalletButton/ConnectWalletButton';
 
-import { selectProposalStatus, setProposalStatus } from 'redux/slices/proposals';
-import { setTransactionRecipe } from 'redux/slices/createProposal';
+import { setOpen, setStatus } from 'redux/slices/modalTransaction';
 import { selectUserAddress } from 'redux/slices/user';
 
-import FETCH_STATUSES from 'enums/fetchStatuses';
+import PROCESSING_STATUSES from 'enums/processingStatuses';
 
 import useCreateProposal from 'hooks/useCreateProposal';
 
 import newProposalSchema from 'validators/newProposalSchema';
 
 import abiLibrary from 'lib/abi';
-
-import displayBlockchainError from 'utils/displayBlockchainError';
-
-const StyledBox = styled(Box)`
-  width: 100%;
-`;
 
 const initialValues = {
   title: '',
@@ -38,27 +31,28 @@ const initialValues = {
   tributeOffered: 0,
 };
 
+const version = 2;
+const daoAddress = process.env.DAO_ADDRESS;
+const lootRequested = 0;
+const tributeToken = process.env.TRIBUTE_TOKEN_ADDRESS;
+const paymentRequested = 0;
+const paymentToken = process.env.TRIBUTE_TOKEN_ADDRESS;
+
+const TypographyBold = styled(Typography)`
+  font-weight: 600;
+`;
+
 const CreateProposalForm: FC = () => {
   const dispatch = useDispatch();
-  const sendProposalStatus = useSelector(selectProposalStatus);
   const userAddress = useSelector(selectUserAddress);
-
-  // MOCKED -----------------------------
-  const version = 2;
-  const daoAddress = process.env.DAO_ADDRESS;
-  const lootRequested = 0;
-  const tributeToken = process.env.TRIBUTE_TOKEN_ADDRESS;
-  const paymentRequested = 0;
-  const paymentToken = process.env.TRIBUTE_TOKEN_ADDRESS;
-  // MOCKED -----------------------------
 
   const onSubmit = async (values: any) => {
     try {
-      dispatch(setProposalStatus(FETCH_STATUSES.LOADING));
+      dispatch(setStatus(PROCESSING_STATUSES.PROCESSING));
+      dispatch(setOpen(true));
 
       const modifiedLink = values.link.replace(/(^\w+:|^)\/\//, '');
 
-      // eslint-disable-next-line react-hooks/rules-of-hooks
       const receipt = await useCreateProposal(
         userAddress,
         abiLibrary,
@@ -78,20 +72,14 @@ const CreateProposalForm: FC = () => {
         },
       );
 
-      dispatch(setTransactionRecipe(receipt));
-      dispatch(setProposalStatus(FETCH_STATUSES.SUCCESS));
+      dispatch(setStatus(PROCESSING_STATUSES.SUCCESS));
     } catch (error) {
-      // console.log(displayBlockchainError(error.code));
-      dispatch(setProposalStatus(FETCH_STATUSES.ERROR));
+      dispatch(setStatus(PROCESSING_STATUSES.ERROR));
     }
   };
 
-  const TypographyBold = styled(Typography)`
-    font-weight: 600;
-  `;
-
   return (
-    <StyledBox>
+    <Box width="100%">
       <Box maxWidth="500px" mx="auto">
         <TypographyBold variant="h4" mb={3} sx={{ display: { xs: 'none', md: 'block' } }}>
           Create new proposal
@@ -198,38 +186,17 @@ const CreateProposalForm: FC = () => {
                   {userAddress === '' ? (
                     <ConnectWalletButton />
                   ) : (
-                    <DAOButton
-                      variant="gradientOutline"
-                      type="submit"
-                      isLoading={sendProposalStatus === FETCH_STATUSES.LOADING}
-                      disabled={sendProposalStatus === FETCH_STATUSES.LOADING}
-                    >
+                    <DAOButton variant="gradientOutline" type="submit">
                       Submit proposal
                     </DAOButton>
                   )}
                 </Box>
-
-                {sendProposalStatus === FETCH_STATUSES.SUCCESS && (
-                  <Box mt={2}>
-                    <DAOTile variant="greenBackground">
-                      <Typography p={2}>Congratulations! Your proposal has been submitted.</Typography>
-                    </DAOTile>
-                  </Box>
-                )}
-
-                {sendProposalStatus === FETCH_STATUSES.ERROR && (
-                  <Box mt={2}>
-                    <DAOTile variant="redOutline">
-                      <Typography p={2}>Something went wrong. Please try again.</Typography>
-                    </DAOTile>
-                  </Box>
-                )}
               </Box>
             </Form>
           )}
         </Formik>
       </Box>
-    </StyledBox>
+    </Box>
   );
 };
 
