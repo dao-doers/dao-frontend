@@ -12,9 +12,5 @@ module.exports = {
   images: {
     loader: 'akamai',
     path: '/',
-  },
-  react: {
-    useSuspense: false,
-    wait: true
   }
 };
