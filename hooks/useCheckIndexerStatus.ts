@@ -72,7 +72,7 @@ const useCheckIndexerStatus = () => {
     setLatestBlockFromLayer2();
   }, 10 * 3000);
 
-  return { molochBlock, layer2Block, molochError, molochLoading, layer2BlockLoading };
+  return { molochBlock, layer2Block, molochError, molochLoading, layer2BlockLoading, provider };
 };
 
 export default useCheckIndexerStatus;

@@ -13,4 +13,8 @@ module.exports = {
     loader: 'akamai',
     path: '/',
   },
+  react: {
+    useSuspense: false,
+    wait: true
+  }
 };
