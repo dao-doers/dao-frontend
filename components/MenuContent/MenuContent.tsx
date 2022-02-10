@@ -62,28 +62,30 @@ const MenuContent: FC<MenuContentProps> = ({ setDrawerOpen }) => {
   };
 
   return (
-    <Box>
-      <Box sx={{ py: { xs: 2, md: 0.5 } }} mt={2}>
-        <DAOPlainButton onClick={() => handleClick(1)}>All Proposals</DAOPlainButton>
+    <Box display="flex" flexDirection="column" sx={{ alignItems: { xs: 'center', md: 'flex-start' } }}>
+      <Box sx={{ py: { xs: 1, md: 0.5 } }} mt={2}>
+        <DAOPlainButton onClick={() => handleClick(1)}>
+          <b>Proposals</b>
+        </DAOPlainButton>
       </Box>
 
-      <Box sx={{ py: { xs: 2, md: 0.5 } }}>
+      <Box sx={{ py: { xs: 1, md: 0.5 }, pl: { xs: 0, md: 2 } }}>
         <DAOPlainButton onClick={() => handleClick(2)}>Collecting Funds</DAOPlainButton>
       </Box>
 
-      <Box sx={{ py: { xs: 2, md: 0.5 } }}>
+      <Box sx={{ py: { xs: 1, md: 0.5 }, pl: { xs: 0, md: 2 } }}>
         <DAOPlainButton onClick={() => handleClick(3)}>Voting</DAOPlainButton>
       </Box>
 
-      <Box sx={{ py: { xs: 2, md: 0.5 } }}>
+      <Box sx={{ py: { xs: 1, md: 0.5 }, pl: { xs: 0, md: 2 } }}>
         <DAOPlainButton onClick={() => handleClick(4)}>Grace Period</DAOPlainButton>
       </Box>
 
-      <Box sx={{ py: { xs: 2, md: 0.5 } }}>
+      <Box sx={{ py: { xs: 1, md: 0.5 }, pl: { xs: 0, md: 2 } }}>
         <DAOPlainButton onClick={() => handleClick(5)}>Proceeding</DAOPlainButton>
       </Box>
 
-      <Box sx={{ py: { xs: 2, md: 0.5 } }}>
+      <Box sx={{ py: { xs: 1, md: 0.5 }, pl: { xs: 0, md: 2 } }}>
         <DAOPlainButton onClick={() => handleClick(6)}>Finished</DAOPlainButton>
       </Box>
 
@@ -95,7 +97,7 @@ const MenuContent: FC<MenuContentProps> = ({ setDrawerOpen }) => {
         </Link>
       </Box>
 
-      <Box mx="auto" my={4} sx={{ width: { xs: '60%', md: '100%' } }}>
+      <Box mx="auto" my={2} sx={{ width: { xs: '60%', md: '100%' } }}>
         <ThemeModeSwitch />
       </Box>
     </Box>
