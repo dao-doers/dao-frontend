@@ -98,6 +98,9 @@ const palette: RecursivePartial<Palette> = {
   error: {
     main: colors.col6,
   },
+  success: {
+    main: colors.col2,
+  },
   colors,
 };
 
