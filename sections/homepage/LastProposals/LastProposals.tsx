@@ -7,6 +7,7 @@ import styled from '@emotion/styled';
 
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
+import PlaylistRemoveIcon from '@mui/icons-material/PlaylistRemove';
 
 import ProposalTile from 'sections/proposalsPage/ProposalTile/ProposalTile';
 
@@ -36,6 +37,16 @@ const TypographyBold = styled(Typography)`
   font-weight: 600;
 `;
 
+const StyledPlaylistRemoveIcon = styled(PlaylistRemoveIcon)`
+  color: ${({ theme }) => theme.palette.colors.col1};
+  font-size: 60px;
+`;
+
+const TypographyBlue = styled(Typography)`
+  color: ${({ theme }) => theme.palette.colors.col1};
+  font-weight: 600;
+`;
+
 const LastProposals: FC = () => {
   const isMobile = useIsMobile('md');
 
@@ -47,74 +58,85 @@ const LastProposals: FC = () => {
         Last Proposals
       </TypographyBold>
 
-      {!isMobile && (
-        <>
-          <Box display="flex" justifyContent="space-between" width="100%">
-            <Box width="49%">
-              <ProposalTile
-                key={`proposal-${sortedProposalsArray[0].proposalId}`}
-                id={`proposal-${sortedProposalsArray[0].proposalId}`}
-                proposal={sortedProposalsArray[0]}
-              />
-            </Box>
-            <Box width="49%">
-              <ProposalTile
-                key={`proposal-${sortedProposalsArray[1].proposalId}`}
-                id={`proposal-${sortedProposalsArray[1].proposalId}`}
-                proposal={sortedProposalsArray[1]}
-              />
-            </Box>
-          </Box>
-
-          <Box display="flex" justifyContent="space-between" width="100%">
-            <Box width="49%">
-              <ProposalTile
-                key={`proposal-${sortedProposalsArray[2].proposalId}`}
-                id={`proposal-${sortedProposalsArray[2].proposalId}`}
-                proposal={sortedProposalsArray[2]}
-              />
-            </Box>
-            <Box width="49%">
-              <ProposalTile
-                key={`proposal-${sortedProposalsArray[3].proposalId}`}
-                id={`proposal-${sortedProposalsArray[3].proposalId}`}
-                proposal={sortedProposalsArray[3]}
-              />
-            </Box>
-          </Box>
-        </>
+      {sortedProposalsArray.length === 0 && (
+        <Box display="flex" flexDirection="column" alignItems="center">
+          <StyledPlaylistRemoveIcon />
+          <TypographyBlue>There are no proposals of selected type</TypographyBlue>
+        </Box>
       )}
 
-      {isMobile && (
-        <StyledSwiper modules={[Pagination]} pagination={{ type: 'progressbar' }} {...params}>
-          <SwiperSlide>
-            <Box width="90%" mx="auto">
-              <ProposalTile
-                key={`proposal-${sortedProposalsArray[0].proposalId}`}
-                id={`proposal-${sortedProposalsArray[0].proposalId}`}
-                proposal={sortedProposalsArray[0]}
-              />
-            </Box>
-          </SwiperSlide>
-          <SwiperSlide>
-            <Box width="90%" mx="auto">
-              <ProposalTile
-                key={`proposal-${sortedProposalsArray[1].proposalId}`}
-                id={`proposal-${sortedProposalsArray[1].proposalId}`}
-                proposal={sortedProposalsArray[1]}
-              />
-            </Box>
-          </SwiperSlide>
-          <SwiperSlide>
-            <Box width="90%" mx="auto">
-              <ProposalTile
-                key={`proposal-${sortedProposalsArray[2].proposalId}`}
-                id={`proposal-${sortedProposalsArray[2].proposalId}`}
-                proposal={sortedProposalsArray[2]}
-              />
-            </Box>
-          </SwiperSlide>
-        </StyledSwiper>
+      {sortedProposalsArray.length > 0 && (
+        <>
+          {!isMobile && (
+            <>
+              <Box display="flex" justifyContent="space-between" width="100%">
+                <Box width="49%">
+                  <ProposalTile
+                    key={`proposal-${sortedProposalsArray[0].proposalId}`}
+                    id={`proposal-${sortedProposalsArray[0].proposalId}`}
+                    proposal={sortedProposalsArray[0]}
+                  />
+                </Box>
+                <Box width="49%">
+                  <ProposalTile
+                    key={`proposal-${sortedProposalsArray[1].proposalId}`}
+                    id={`proposal-${sortedProposalsArray[1].proposalId}`}
+                    proposal={sortedProposalsArray[1]}
+                  />
+                </Box>
+              </Box>
+
+              <Box display="flex" justifyContent="space-between" width="100%">
+                <Box width="49%">
+                  <ProposalTile
+                    key={`proposal-${sortedProposalsArray[2].proposalId}`}
+                    id={`proposal-${sortedProposalsArray[2].proposalId}`}
+                    proposal={sortedProposalsArray[2]}
+                  />
+                </Box>
+                <Box width="49%">
+                  <ProposalTile
+                    key={`proposal-${sortedProposalsArray[3].proposalId}`}
+                    id={`proposal-${sortedProposalsArray[3].proposalId}`}
+                    proposal={sortedProposalsArray[3]}
+                  />
+                </Box>
+              </Box>
+            </>
+          )}
+
+          {isMobile && (
+            <StyledSwiper modules={[Pagination]} pagination={{ type: 'progressbar' }} {...params}>
+              <SwiperSlide>
+                <Box width="90%" mx="auto">
+                  <ProposalTile
+                    key={`proposal-${sortedProposalsArray[0].proposalId}`}
+                    id={`proposal-${sortedProposalsArray[0].proposalId}`}
+                    proposal={sortedProposalsArray[0]}
+                  />
+                </Box>
+              </SwiperSlide>
+              <SwiperSlide>
+                <Box width="90%" mx="auto">
+                  <ProposalTile
+                    key={`proposal-${sortedProposalsArray[1].proposalId}`}
+                    id={`proposal-${sortedProposalsArray[1].proposalId}`}
+                    proposal={sortedProposalsArray[1]}
+                  />
+                </Box>
+              </SwiperSlide>
+              <SwiperSlide>
+                <Box width="90%" mx="auto">
+                  <ProposalTile
+                    key={`proposal-${sortedProposalsArray[2].proposalId}`}
+                    id={`proposal-${sortedProposalsArray[2].proposalId}`}
+                    proposal={sortedProposalsArray[2]}
+                  />
+                </Box>
+              </SwiperSlide>
+            </StyledSwiper>
+          )}
+        </>
       )}
     </Box>
   );

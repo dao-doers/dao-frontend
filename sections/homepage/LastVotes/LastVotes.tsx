@@ -7,6 +7,7 @@ import styled from '@emotion/styled';
 
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
+import PlaylistRemoveIcon from '@mui/icons-material/PlaylistRemove';
 
 import VoteTile from 'sections/proposalsPage/VoteTile/VoteTile';
 
@@ -36,6 +37,16 @@ const TypographyBold = styled(Typography)`
   font-weight: 600;
 `;
 
+const StyledPlaylistRemoveIcon = styled(PlaylistRemoveIcon)`
+  color: ${({ theme }) => theme.palette.colors.col1};
+  font-size: 60px;
+`;
+
+const TypographyBlue = styled(Typography)`
+  color: ${({ theme }) => theme.palette.colors.col1};
+  font-weight: 600;
+`;
+
 const LastVotes: FC = () => {
   const isMobile = useIsMobile('md');
 
@@ -47,38 +58,49 @@ const LastVotes: FC = () => {
         Last Votes
       </TypographyBold>
 
-      {!isMobile && (
-        <Box display="flex" justifyContent="space-between" width="100%">
-          <Box width="32%">
-            <VoteTile key={`vote-${votesArray[0].id}`} vote={votesArray[0]} />
-          </Box>
-          <Box width="32%">
-            <VoteTile key={`vote-${votesArray[1].id}`} vote={votesArray[1]} />
-          </Box>
-          <Box width="32%">
-            <VoteTile key={`vote-${votesArray[2].id}`} vote={votesArray[2]} />
-          </Box>
+      {votesArray.length === 0 && (
+        <Box display="flex" flexDirection="column" alignItems="center">
+          <StyledPlaylistRemoveIcon />
+          <TypographyBlue>There are no votes yet</TypographyBlue>
         </Box>
       )}
 
-      {isMobile && (
-        <StyledSwiper modules={[Pagination]} pagination={{ type: 'progressbar' }} {...params}>
-          <SwiperSlide>
-            <Box width="90%" mx="auto">
-              <VoteTile key={`vote-${votesArray[0].id}`} vote={votesArray[0]} />
+      {votesArray.length > 0 && (
+        <>
+          {!isMobile && (
+            <Box display="flex" justifyContent="space-between" width="100%">
+              <Box width="32%">
+                <VoteTile key={`vote-${votesArray[0].id}`} vote={votesArray[0]} />
+              </Box>
+              <Box width="32%">
+                <VoteTile key={`vote-${votesArray[1].id}`} vote={votesArray[1]} />
+              </Box>
+              <Box width="32%">
+                <VoteTile key={`vote-${votesArray[2].id}`} vote={votesArray[2]} />
+              </Box>
             </Box>
-          </SwiperSlide>
-          <SwiperSlide>
-            <Box width="90%" mx="auto">
-              <VoteTile key={`vote-${votesArray[1].id}`} vote={votesArray[1]} />
-            </Box>
-          </SwiperSlide>
-          <SwiperSlide>
-            <Box width="90%" mx="auto">
-              <VoteTile key={`vote-${votesArray[2].id}`} vote={votesArray[2]} />
-            </Box>
-          </SwiperSlide>
-        </StyledSwiper>
+          )}
+
+          {isMobile && (
+            <StyledSwiper modules={[Pagination]} pagination={{ type: 'progressbar' }} {...params}>
+              <SwiperSlide>
+                <Box width="90%" mx="auto">
+                  <VoteTile key={`vote-${votesArray[0].id}`} vote={votesArray[0]} />
+                </Box>
+              </SwiperSlide>
+              <SwiperSlide>
+                <Box width="90%" mx="auto">
+                  <VoteTile key={`vote-${votesArray[1].id}`} vote={votesArray[1]} />
+                </Box>
+              </SwiperSlide>
+              <SwiperSlide>
+                <Box width="90%" mx="auto">
+                  <VoteTile key={`vote-${votesArray[2].id}`} vote={votesArray[2]} />
+                </Box>
+              </SwiperSlide>
+            </StyledSwiper>
+          )}
+        </>
       )}
     </Box>
   );
