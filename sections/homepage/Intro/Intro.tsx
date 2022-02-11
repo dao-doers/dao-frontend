@@ -15,6 +15,14 @@ const heroStyles = () => ({
 
 const useStyles = makeStyles(heroStyles);
 
+const Title = styled(Typography)`
+  font-weight: 600;
+  margin-top: 75px;
+  ${({ theme }) => theme.breakpoints.down('sm')} {
+    margin-top: 0;
+  }
+`;
+
 const TypographyBold = styled(Typography)`
   font-weight: 600;
 `;
@@ -24,22 +32,24 @@ const Intro: FC = () => {
 
   return (
     <Box>
-      <TypographyBold variant="h3" paragraph mt={8}>
+      <Title variant="h2" paragraph>
         Welcome to Nervos DAO
-      </TypographyBold>
-      <Box display="flex">
-        <Typography component="span" variant="h6">
+      </Title>
+      <Box>
+        <Typography variant="h6">
           Decentralized Autonomous Organization introduced to the World by Nervos Foundation. Our mission is to spread
-          true democracy
+          true democracy.
+        </Typography>
+        <TypographyBold variant="h3" align="center" mt={4}>
           <Typewriter
             onInit={typewriter => {
               typewriter
-                .typeString('all over the world.')
+                .typeString('ALL OVER THE WORLD')
                 .pauseFor(1100)
-                .deleteChars(19)
-                .typeString('on blockchain network.')
+                .deleteChars(18)
+                .typeString('ON BLOCKCHAIN NETWORK')
                 .pauseFor(1100)
-                .deleteChars(22)
+                .deleteChars(21)
                 .start();
             }}
             options={{
@@ -48,7 +58,7 @@ const Intro: FC = () => {
               wrapperClassName: classes.typing,
             }}
           />
-        </Typography>
+        </TypographyBold>
       </Box>
     </Box>
   );
