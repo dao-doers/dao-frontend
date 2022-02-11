@@ -9,7 +9,7 @@ const colors: Colors = {
   main4: '#E9E9E9',
   main5: '#CACACA',
   main6: '#5C5B63',
-  main7: '#212030',
+  main7: '#383838',
   main8: 'rgba(66, 68, 90, 0.3)',
   main9: 'rgba(4, 4, 5, 0.15)',
 };
@@ -97,6 +97,9 @@ const palette: RecursivePartial<Palette> = {
   },
   error: {
     main: colors.col6,
+  },
+  success: {
+    main: colors.col2,
   },
   colors,
 };

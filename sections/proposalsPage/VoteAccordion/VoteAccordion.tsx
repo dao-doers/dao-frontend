@@ -18,7 +18,7 @@ import ConnectWalletButton from 'components/ConnectWalletButton/ConnectWalletBut
 import Counter from 'components/Counter/Counter';
 import TooltipIcon from 'components/TooltipIcon';
 
-import Chart from 'sections/homePage/VoteAccordion/Chart/Chart';
+import Chart from 'sections/proposalsPage/VoteAccordion/Chart/Chart';
 
 import { selectUserAddress } from 'redux/slices/user';
 import { setOpen, setStatus, setMessage } from 'redux/slices/modalTransaction';
@@ -273,7 +273,7 @@ const VoteAccordion: FC<any> = ({ proposal }) => {
                         <Typography variant="body2">
                           Voting is over, and the Proposal is set to pass or fail depending on the votes cast during
                           Voting. Members who voted No, and have no other pending Yes votes, can ragequit during this
-                          period
+                          period.
                         </Typography>
                       </TooltipIcon>
                     </Typography>
@@ -339,15 +339,15 @@ const VoteAccordion: FC<any> = ({ proposal }) => {
               )}
               <Box display="flex" justifyContent="space-between" width="100%" pb={2}>
                 <Typography>Voters Agreed</Typography>
-                <TypographyRose>{proposal.yesShares}</TypographyRose>
+                <TypographyRose>{proposal.yesVotes}</TypographyRose>
               </Box>
               <Box display="flex" justifyContent="space-between" width="100%" pb={2}>
                 <Typography>Voters Disagreed</Typography>
-                <TypographyBlue>{proposal.noShares}</TypographyBlue>
+                <TypographyBlue>{proposal.noVotes}</TypographyBlue>
               </Box>
             </Box>
             <Box sx={{ width: { xs: '200px', md: '30%' } }} px={2} pb={2}>
-              <Chart agreed={proposal.yesShares} disagreed={proposal.noShares} />
+              <Chart agreed={proposal.yesVotes} disagreed={proposal.noVotes} />
             </Box>
           </VoteAccordionWrapper>
         )}

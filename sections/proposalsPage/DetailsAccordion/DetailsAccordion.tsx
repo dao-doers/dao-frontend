@@ -1,4 +1,5 @@
-import { FC } from 'react';
+import React, { FC, useState } from 'react';
+import { CopyToClipboard } from 'react-copy-to-clipboard';
 
 import styled from '@emotion/styled';
 
@@ -8,11 +9,19 @@ import AccordionDetails from '@mui/material/AccordionDetails';
 import Box from '@mui/material/Box';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import Typography from '@mui/material/Typography';
+import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 
 import DAOTile from 'components/DAOTile/DAOTile';
 
 import formatAddress from 'utils/formatAddress';
 import { shannonsToCkb } from 'utils/formatShannons';
+
+import Snackbar from '@mui/material/Snackbar';
+import MuiAlert, { AlertProps } from '@mui/material/Alert';
+
+const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(props, ref) {
+  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+});
 
 const StyledAccordion = styled(Accordion)`
   margin-top: 10px;
@@ -28,8 +37,27 @@ const StyledAccordionSummary = styled(AccordionSummary)`
   padding: 0;
 `;
 
+const StyledAccordionDetails = styled(AccordionDetails)`
+  ${({ theme }) => theme.breakpoints.down('sm')} {
+    padding: 0;
+  }
+`;
+
 const TypographyBold = styled(Typography)`
   font-weight: 600;
+`;
+
+const TypographyCursor = styled(Typography)`
+  font-weight: 600;
+  cursor: pointer;
+`;
+
+const StyledCopyIcon = styled(ContentCopyIcon)`
+  cursor: pointer;
+  font-size: 14px;
+  position: relative;
+  top: 4px;
+  margin-left: 4px;
 `;
 
 const StyledExpandMoreIcon = styled(ExpandMoreIcon)`
@@ -37,12 +65,29 @@ const StyledExpandMoreIcon = styled(ExpandMoreIcon)`
 `;
 
 const DetailsAccordion: FC<any> = ({ proposal }) => {
+  const [copiedSponsoredAddress, setCopiedSponsoredAddress] = useState(false);
+  const [copiedApplicantAddress, setCopiedApplicantAddress] = useState(false);
+
+  const handleCopySponsoredAddress = () => {
+    setCopiedSponsoredAddress(true);
+    setTimeout(() => {
+      setCopiedSponsoredAddress(false);
+    }, 1000);
+  };
+
+  const handleCopyApplicantAddress = () => {
+    setCopiedApplicantAddress(true);
+    setTimeout(() => {
+      setCopiedApplicantAddress(false);
+    }, 2000);
+  };
+
   return (
     <StyledAccordion>
       <StyledAccordionSummary expandIcon={<StyledExpandMoreIcon />} aria-controls="panel1a-content" id="panel1a-header">
         <TypographyBold variant="h6">Poll Details</TypographyBold>
       </StyledAccordionSummary>
-      <AccordionDetails>
+      <StyledAccordionDetails>
         <Box display="flex" justifyContent="flex-start" flexWrap="wrap">
           {proposal.sponsored && (
             <Box sx={{ width: { xs: '48%', xl: '30%' } }} mb={2} mx="1%">
@@ -51,7 +96,12 @@ const DetailsAccordion: FC<any> = ({ proposal }) => {
                   <Typography align="center" gutterBottom>
                     Sponsored by
                   </Typography>
-                  <TypographyBold align="center">{formatAddress(proposal.sponsor)}</TypographyBold>
+                  <CopyToClipboard text={proposal.sponsor} onCopy={handleCopySponsoredAddress}>
+                    <Box display="flex">
+                      <TypographyCursor align="center">{formatAddress(proposal.sponsor)}</TypographyCursor>
+                      <StyledCopyIcon />
+                    </Box>
+                  </CopyToClipboard>
                 </Box>
               </DAOTile>
             </Box>
@@ -64,7 +114,12 @@ const DetailsAccordion: FC<any> = ({ proposal }) => {
                   <Typography align="center" gutterBottom>
                     Applicant Address
                   </Typography>
-                  <TypographyBold align="center">{formatAddress(proposal.applicant)}</TypographyBold>
+                  <CopyToClipboard text={proposal.applicant} onCopy={handleCopyApplicantAddress}>
+                    <Box display="flex">
+                      <TypographyCursor align="center">{formatAddress(proposal.applicant)}</TypographyCursor>
+                      <StyledCopyIcon />
+                    </Box>
+                  </CopyToClipboard>
                 </Box>
               </DAOTile>
             </Box>
@@ -114,8 +169,14 @@ const DetailsAccordion: FC<any> = ({ proposal }) => {
               </DAOTile>
             </Box>
           )}
+
+          <Snackbar open={copiedSponsoredAddress || copiedApplicantAddress}>
+            <Alert severity="success" sx={{ width: '100%' }}>
+              Address copied!
+            </Alert>
+          </Snackbar>
         </Box>
-      </AccordionDetails>
+      </StyledAccordionDetails>
     </StyledAccordion>
   );
 };

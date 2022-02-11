@@ -13,10 +13,11 @@ import TwitterIcon from '@mui/icons-material/Twitter';
 import DAOTile from 'components/DAOTile/DAOTile';
 import Link from 'components/Link';
 
-import DetailsAccordion from 'sections/homePage/DetailsAccordion/DetailsAccordion';
-import VoteAccordion from 'sections/homePage/VoteAccordion/VoteAccordion';
+import DetailsAccordion from 'sections/proposalsPage/DetailsAccordion/DetailsAccordion';
+import VoteAccordion from 'sections/proposalsPage/VoteAccordion/VoteAccordion';
 
 import { formatSeconds } from 'utils/formatDate';
+import { APP_ROUTES } from 'utils/routes';
 
 const StyledExitToAppIcon = styled(ExitToAppIcon)`
   cursor: pointer;
@@ -45,6 +46,7 @@ const StyledLanguageIcon = styled(LanguageIcon)`
 
 const TypographyTitle = styled(Typography)`
   color: ${({ theme }) => theme.palette.colors.main7};
+  font-weight: 600;
 `;
 
 const TypographySmall = styled(Typography)`
@@ -103,13 +105,13 @@ const ProposalTile: FC<any> = ({ proposal }) => {
           </TypographySmall>
 
           <Box display="flex" justifyContent="space-between" alignItems="center" pb={4}>
-            <Link internal href={`${process.env.APP_URL}proposal/${proposal.id}`}>
+            <Link internal href={`${APP_ROUTES.PROPOSALS}/${proposal.id}`}>
               <TypographyTitle variant="h3">{formattedTitle}</TypographyTitle>
             </Link>
 
             <Box display="flex">
               <Tooltip title="Go to proposal page" placement="top">
-                <Link internal href={`${process.env.APP_URL}proposal/${proposal.id}`}>
+                <Link internal href={`${APP_ROUTES.PROPOSALS}/${proposal.id}`}>
                   <StyledExitToAppIcon />
                 </Link>
               </Tooltip>

@@ -1,5 +1,5 @@
 import { FC, ReactNode, useEffect } from 'react';
-import { useDispatch } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 
 import styled from '@emotion/styled';
 
@@ -10,10 +10,15 @@ import DesktopMenu from 'components/DesktopMenu/DesktopMenu';
 import Footer from 'components/Footer/Footer';
 import MobileMenu from 'components/MobileMenu/MobileMenu';
 import BlockchainStatus from 'components/BlockchainStatus/BlockchainStatus';
-
-import useMaintainSession from 'hooks/useMaintainSession';
+import LoadingPage from 'components/LoadingPage/LoadingPage';
 
 import { setTheme } from 'redux/slices/theme';
+import { selectSortedProposalsArray } from 'redux/slices/proposals';
+import { selectVotesArray } from 'redux/slices/votes';
+
+import useFetchProposals from 'hooks/useFetchProposals';
+import useFetchVotes from 'hooks/useFetchVotes';
+import useMaintainSession from 'hooks/useMaintainSession';
 
 import THEME_MODES from 'enums/themeModes';
 
@@ -35,6 +40,12 @@ const StyledBox = styled(Box)`
 const Layout: FC<LayoutProps> = ({ children }) => {
   const dispatch = useDispatch();
 
+  const sortedProposalsArray = useSelector(selectSortedProposalsArray);
+  const votesArray = useSelector(selectVotesArray);
+
+  const loadingProposals = useFetchProposals();
+  const loadingVotes = useFetchVotes();
+
   useMaintainSession();
 
   useEffect(() => {
@@ -54,7 +65,9 @@ const Layout: FC<LayoutProps> = ({ children }) => {
 
         <Box width="100%">
           <BlockchainStatus />
-          {children}
+          {(loadingProposals.loading || loadingVotes.loading) && <LoadingPage />}
+
+          {!loadingProposals.loading && !loadingVotes.loading && children}
         </Box>
       </StyledBox>
 
