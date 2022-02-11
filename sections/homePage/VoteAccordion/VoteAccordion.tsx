@@ -339,15 +339,15 @@ const VoteAccordion: FC<any> = ({ proposal }) => {
               )}
               <Box display="flex" justifyContent="space-between" width="100%" pb={2}>
                 <Typography>Voters Agreed</Typography>
-                <TypographyRose>{proposal.yesShares}</TypographyRose>
+                <TypographyRose>{proposal.yesVotes}</TypographyRose>
               </Box>
               <Box display="flex" justifyContent="space-between" width="100%" pb={2}>
                 <Typography>Voters Disagreed</Typography>
-                <TypographyBlue>{proposal.noShares}</TypographyBlue>
+                <TypographyBlue>{proposal.noVotes}</TypographyBlue>
               </Box>
             </Box>
             <Box sx={{ width: { xs: '200px', md: '30%' } }} px={2} pb={2}>
-              <Chart agreed={proposal.yesShares} disagreed={proposal.noShares} />
+              <Chart agreed={proposal.yesVotes} disagreed={proposal.noVotes} />
             </Box>
           </VoteAccordionWrapper>
         )}
