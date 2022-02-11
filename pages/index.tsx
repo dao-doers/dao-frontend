@@ -1,5 +1,5 @@
 import type { NextPage } from 'next';
-import React, { FC } from 'react';
+import React, { FC, useRef } from 'react';
 import { useSelector } from 'react-redux';
 
 import styled from '@emotion/styled';
@@ -36,7 +36,6 @@ const HomePage: FC<NextPage> = () => {
 
   const loadingProposals = useFetchProposals();
   const loadingVotes = useFetchVotes();
-
   return (
     <Layout>
       {(loadingProposals.loading || loadingVotes.loading) && <LoadingPage />}

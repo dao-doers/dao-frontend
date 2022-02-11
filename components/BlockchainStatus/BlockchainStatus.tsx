@@ -84,9 +84,9 @@ const BlockchainStatus: FC = () => {
   return (
     <MainWrapper>
       <StatusWrapper>
-        <div>
+        {/* <div>
           <DAOBridgeComponent />
-        </div>
+        </div> */}
         <StatusChip title="Indexer status:">
           {molochBlock === layer2Block && typeof layer2Block === 'number' && typeof molochBlock === 'number' && (
             <TypographyGreen>Online</TypographyGreen>

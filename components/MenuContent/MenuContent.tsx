@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useRouter } from 'next/router';
 
@@ -20,6 +20,7 @@ import {
   setFinishedProposals,
   clearSorted,
 } from 'redux/slices/proposals';
+import WireTestnetModal from 'modals/WireTestnetModal/WireTestnetModal';
 
 interface MenuContentProps {
   setDrawerOpen?: (arg0: false) => void;
@@ -28,6 +29,8 @@ interface MenuContentProps {
 const MenuContent: FC<MenuContentProps> = ({ setDrawerOpen }) => {
   const dispatch = useDispatch();
   const router = useRouter();
+
+  const [open, setOpen] = useState(false);
 
   const handleClick = (value: number) => {
     if (router.pathname !== '/') {
@@ -93,6 +96,13 @@ const MenuContent: FC<MenuContentProps> = ({ setDrawerOpen }) => {
             <Typography>Make a proposal</Typography>
           </DAOButton>
         </Link>
+      </Box>
+
+      <Box mx="auto" my={4} sx={{ width: { xs: '60%', md: '100%' } }}>
+        <DAOButton variant="gradientOutline" onClick={() => setOpen(true)}>
+          <Typography>Wire testnet dCKB</Typography>
+        </DAOButton>
+        <WireTestnetModal isModalOpen={open} isModalClose={() => setOpen(false)} />
       </Box>
 
       <Box mx="auto" my={4} sx={{ width: { xs: '60%', md: '100%' } }}>
