@@ -16,6 +16,10 @@ interface IStepperModal {
   isModalClose: () => void;
 }
 
+/* 
+  TODO 
+  refactor will come,need to thing about button, we dont need to much. Each step don't need all.
+*/
 const WireTestnetModal: FC<IStepperModal> = ({ isModalOpen, isModalClose }) => {
   const childRef = useRef<any>(null);
 
@@ -79,7 +83,6 @@ const WireTestnetModal: FC<IStepperModal> = ({ isModalOpen, isModalClose }) => {
                   NexisDAO page
                 </DAOButton>
               </Box>
-
               <Typography variant="h6" align="center" paragraph>
                 Get CKB from Layer 1 faucet by pasting the CKB address from NexisDAO page
               </Typography>
@@ -145,10 +148,16 @@ const WireTestnetModal: FC<IStepperModal> = ({ isModalOpen, isModalClose }) => {
               </Box>
             </Box>
           </Step>
+
+          <Step label="Summary">
+            <Box mt={2} mb={2}>
+              <Typography component="h5" variant="h5" align="center" paragraph>
+                Check dCKB balance on Layer 2
+              </Typography>
+            </Box>
+          </Step>
         </Stepper>
-        /* 
-        TODO 
-        */
+
         <DAOButton onClick={() => childRef.current.completeStep()}>Submit step</DAOButton>
         <DAOButton onClick={() => childRef.current.resetSteps()}>Reset</DAOButton>
         <DAOButton onClick={() => childRef.current.nextStep()}>Next</DAOButton>
