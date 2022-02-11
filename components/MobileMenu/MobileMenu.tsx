@@ -28,12 +28,10 @@ const StyledCloseIcon = styled(Close)`
 
 const StyledDrawer = styled(Drawer)`
   & .MuiDrawer-paper {
-    width: 100%;
+    min-width: 250px;
   }
   & .MuiPaper-root {
-    width: 100%;
-    height: 100%;
-    margin-top: 60px;
+    min-width: 250px;
     background-color: ${({ theme }) => theme.palette.background.default};
     box-shadow: 0px 0px 24px 0px ${({ theme }) => theme.palette.colors.main8};
   }
@@ -71,7 +69,7 @@ const MobileMenu: FC = () => {
         )}
       </Box>
 
-      <StyledDrawer variant="temporary" anchor="left" open={isDrawerOpen} onClose={handleDrawerToggle}>
+      <StyledDrawer variant="temporary" anchor="right" open={isDrawerOpen} onClose={handleDrawerToggle}>
         <MenuContent setDrawerOpen={setDrawerOpen} />
       </StyledDrawer>
     </Box>

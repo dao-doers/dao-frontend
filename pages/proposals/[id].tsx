@@ -9,8 +9,8 @@ import Box from '@mui/material/Box';
 
 import Layout from 'components/Layout/Layout';
 
-import ProposalTile from 'sections/homePage/ProposalTile/ProposalTile';
-import VoteTile from 'sections/homePage/VoteTile/VoteTile';
+import ProposalTile from 'sections/proposalsPage/ProposalTile/ProposalTile';
+import VoteTile from 'sections/proposalsPage/VoteTile/VoteTile';
 
 import config from 'config/config';
 

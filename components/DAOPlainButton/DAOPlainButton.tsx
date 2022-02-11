@@ -18,7 +18,6 @@ const StyledDAOPlainButton = styled(Button)<DAOPlainButtonProps>`
   width: 100%;
   height: 100%;
   min-width: 0;
-  font-weight: 600;
   text-transform: none;
   text-decoration: none;
   padding: 2px;

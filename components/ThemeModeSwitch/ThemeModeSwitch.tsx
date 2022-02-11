@@ -35,6 +35,7 @@ const ColoredBox = styled(Box)`
   height: 100%;
   padding: 2px;
   border-radius: 10px;
+  background: ${({ theme }) => theme.palette.gradients.grad2};
 `;
 
 const InnerColoredBox = styled(Box)`

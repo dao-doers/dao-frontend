@@ -55,6 +55,10 @@ const tileVariant = ({ theme, variant }: TileVariantProps & { theme: Theme }) =>
     case 'greyShadow':
       return css`
         box-shadow: 0px 0px 24px 0px ${theme.palette.colors.main8};
+
+        @media (max-width: 900px) {
+          box-shadow: none;
+        }
       `;
     case 'blueBackground':
       return css`
