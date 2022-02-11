@@ -18,7 +18,7 @@ import ConnectWalletButton from 'components/ConnectWalletButton/ConnectWalletBut
 import Counter from 'components/Counter/Counter';
 import TooltipIcon from 'components/TooltipIcon';
 
-import Chart from 'sections/homePage/VoteAccordion/Chart/Chart';
+import Chart from 'sections/proposalsPage/VoteAccordion/Chart/Chart';
 
 import { selectUserAddress } from 'redux/slices/user';
 import { setOpen, setStatus, setMessage } from 'redux/slices/modalTransaction';

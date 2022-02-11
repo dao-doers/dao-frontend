@@ -1,0 +1,123 @@
+import React, { FC } from 'react';
+import { useSelector } from 'react-redux';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Pagination } from 'swiper';
+
+import styled from '@emotion/styled';
+
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
+
+import ProposalTile from 'sections/proposalsPage/ProposalTile/ProposalTile';
+
+import { selectSortedProposalsArray } from 'redux/slices/proposals';
+
+import useIsMobile from 'hooks/useIsMobile';
+
+import 'swiper/css';
+import 'swiper/css/pagination';
+
+const params = {
+  grabCursor: true,
+};
+
+const StyledSwiper = styled(Swiper)`
+  .swiper-pagination {
+    bottom: 0;
+    top: auto;
+  }
+
+  .swiper-pagination-progressbar-fill {
+    background-color: ${({ theme }) => theme.palette.text.primary};
+  }
+`;
+
+const TypographyBold = styled(Typography)`
+  font-weight: 600;
+`;
+
+const LastProposals: FC = () => {
+  const isMobile = useIsMobile('md');
+
+  const sortedProposalsArray = useSelector(selectSortedProposalsArray);
+
+  return (
+    <Box width="100%">
+      <TypographyBold variant="h3" paragraph mt={8}>
+        Last Proposals
+      </TypographyBold>
+
+      {!isMobile && (
+        <>
+          <Box display="flex" justifyContent="space-between" width="100%">
+            <Box width="49%">
+              <ProposalTile
+                key={`proposal-${sortedProposalsArray[0].proposalId}`}
+                id={`proposal-${sortedProposalsArray[0].proposalId}`}
+                proposal={sortedProposalsArray[0]}
+              />
+            </Box>
+            <Box width="49%">
+              <ProposalTile
+                key={`proposal-${sortedProposalsArray[1].proposalId}`}
+                id={`proposal-${sortedProposalsArray[1].proposalId}`}
+                proposal={sortedProposalsArray[1]}
+              />
+            </Box>
+          </Box>
+
+          <Box display="flex" justifyContent="space-between" width="100%">
+            <Box width="49%">
+              <ProposalTile
+                key={`proposal-${sortedProposalsArray[2].proposalId}`}
+                id={`proposal-${sortedProposalsArray[2].proposalId}`}
+                proposal={sortedProposalsArray[2]}
+              />
+            </Box>
+            <Box width="49%">
+              <ProposalTile
+                key={`proposal-${sortedProposalsArray[3].proposalId}`}
+                id={`proposal-${sortedProposalsArray[3].proposalId}`}
+                proposal={sortedProposalsArray[3]}
+              />
+            </Box>
+          </Box>
+        </>
+      )}
+
+      {isMobile && (
+        <StyledSwiper modules={[Pagination]} pagination={{ type: 'progressbar' }} {...params}>
+          <SwiperSlide>
+            <Box width="90%" mx="auto">
+              <ProposalTile
+                key={`proposal-${sortedProposalsArray[0].proposalId}`}
+                id={`proposal-${sortedProposalsArray[0].proposalId}`}
+                proposal={sortedProposalsArray[0]}
+              />
+            </Box>
+          </SwiperSlide>
+          <SwiperSlide>
+            <Box width="90%" mx="auto">
+              <ProposalTile
+                key={`proposal-${sortedProposalsArray[1].proposalId}`}
+                id={`proposal-${sortedProposalsArray[1].proposalId}`}
+                proposal={sortedProposalsArray[1]}
+              />
+            </Box>
+          </SwiperSlide>
+          <SwiperSlide>
+            <Box width="90%" mx="auto">
+              <ProposalTile
+                key={`proposal-${sortedProposalsArray[2].proposalId}`}
+                id={`proposal-${sortedProposalsArray[2].proposalId}`}
+                proposal={sortedProposalsArray[2]}
+              />
+            </Box>
+          </SwiperSlide>
+        </StyledSwiper>
+      )}
+    </Box>
+  );
+};
+
+export default LastProposals;

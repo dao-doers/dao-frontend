@@ -2,6 +2,8 @@ import { FC } from 'react';
 import { useDispatch } from 'react-redux';
 import { useRouter } from 'next/router';
 
+import styled from '@emotion/styled';
+
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 
@@ -25,13 +27,18 @@ interface MenuContentProps {
   setDrawerOpen?: (arg0: false) => void;
 }
 
+const TypographyBlack = styled(Typography)`
+  color: ${({ theme }) => theme.palette.colors.main7};
+  font-weight: 600;
+`;
+
 const MenuContent: FC<MenuContentProps> = ({ setDrawerOpen }) => {
   const dispatch = useDispatch();
   const router = useRouter();
 
   const handleClick = (value: number) => {
-    if (router.pathname !== '/') {
-      router.push('/');
+    if (router.pathname !== '/proposals') {
+      router.push('/proposals');
     }
     if (setDrawerOpen) {
       setDrawerOpen(false);
@@ -63,36 +70,42 @@ const MenuContent: FC<MenuContentProps> = ({ setDrawerOpen }) => {
 
   return (
     <Box display="flex" flexDirection="column" sx={{ alignItems: { xs: 'center', md: 'flex-start' } }}>
-      <Box sx={{ py: { xs: 1, md: 0.5 } }} mt={2}>
+      <Box sx={{ mb: { xs: 1, md: 2 } }} mt={2}>
+        <Link internal href="/">
+          <TypographyBlack>Home</TypographyBlack>
+        </Link>
+      </Box>
+
+      <Box sx={{ mb: { xs: 1, md: 0.5 } }}>
         <DAOPlainButton onClick={() => handleClick(1)}>
-          <b>Proposals</b>
+          <TypographyBlack>Proposals</TypographyBlack>
         </DAOPlainButton>
       </Box>
 
-      <Box sx={{ py: { xs: 1, md: 0.5 }, pl: { xs: 0, md: 2 } }}>
+      <Box sx={{ mb: { xs: 1, md: 0.5 }, pl: { xs: 0, md: 2 } }}>
         <DAOPlainButton onClick={() => handleClick(2)}>Collecting Funds</DAOPlainButton>
       </Box>
 
-      <Box sx={{ py: { xs: 1, md: 0.5 }, pl: { xs: 0, md: 2 } }}>
+      <Box sx={{ mb: { xs: 1, md: 0.5 }, pl: { xs: 0, md: 2 } }}>
         <DAOPlainButton onClick={() => handleClick(3)}>Voting</DAOPlainButton>
       </Box>
 
-      <Box sx={{ py: { xs: 1, md: 0.5 }, pl: { xs: 0, md: 2 } }}>
+      <Box sx={{ mb: { xs: 1, md: 0.5 }, pl: { xs: 0, md: 2 } }}>
         <DAOPlainButton onClick={() => handleClick(4)}>Grace Period</DAOPlainButton>
       </Box>
 
-      <Box sx={{ py: { xs: 1, md: 0.5 }, pl: { xs: 0, md: 2 } }}>
+      <Box sx={{ mb: { xs: 1, md: 0.5 }, pl: { xs: 0, md: 2 } }}>
         <DAOPlainButton onClick={() => handleClick(5)}>Proceeding</DAOPlainButton>
       </Box>
 
-      <Box sx={{ py: { xs: 1, md: 0.5 }, pl: { xs: 0, md: 2 } }}>
+      <Box sx={{ mb: { xs: 1, md: 0.5 }, pl: { xs: 0, md: 2 } }}>
         <DAOPlainButton onClick={() => handleClick(6)}>Finished</DAOPlainButton>
       </Box>
 
       <Box mx="auto" my={4} sx={{ width: { xs: '60%', md: '100%' } }}>
         <Link internal href={APP_ROUTES.CREATE}>
           <DAOButton variant="gradientOutline">
-            <Typography>Make a proposal</Typography>
+            <Typography>Create proposal</Typography>
           </DAOButton>
         </Link>
       </Box>
