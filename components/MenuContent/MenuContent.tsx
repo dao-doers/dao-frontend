@@ -28,7 +28,7 @@ import {
 } from 'redux/slices/proposals';
 
 interface MenuContentProps {
-  setDrawerOpen: (arg0: false) => void;
+  setDrawerOpen?: (arg0: false) => void;
 }
 
 const TypographyBlack = styled(Typography)`
@@ -44,6 +44,12 @@ const MenuContent: FC<MenuContentProps> = ({ setDrawerOpen }) => {
   const dispatch = useDispatch();
   const router = useRouter();
   const isMobile = useIsMobile('md');
+
+  const handleClose = () => {
+    if (setDrawerOpen) {
+      setDrawerOpen(false);
+    }
+  };
 
   const handleClick = (value: number) => {
     if (router.pathname !== '/proposals') {
@@ -81,7 +87,7 @@ const MenuContent: FC<MenuContentProps> = ({ setDrawerOpen }) => {
     <Box display="flex" flexDirection="column" sx={{ alignItems: { xs: 'center', md: 'flex-start' } }}>
       {isMobile && (
         <Box display="flex" justifyContent="flex-end" width="100%" mt={2} mr={2}>
-          <IconButton aria-label="close drawer" onClick={() => setDrawerOpen(false)}>
+          <IconButton aria-label="close drawer" onClick={handleClose}>
             <StyledCloseIcon />
           </IconButton>
         </Box>
