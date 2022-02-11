@@ -273,7 +273,7 @@ const VoteAccordion: FC<any> = ({ proposal }) => {
                         <Typography variant="body2">
                           Voting is over, and the Proposal is set to pass or fail depending on the votes cast during
                           Voting. Members who voted No, and have no other pending Yes votes, can ragequit during this
-                          period
+                          period.
                         </Typography>
                       </TooltipIcon>
                     </Typography>
