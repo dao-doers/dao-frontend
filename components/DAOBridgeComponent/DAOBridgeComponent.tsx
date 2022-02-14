@@ -5,7 +5,7 @@ import { useSelector } from 'react-redux';
 import { selectUserAddress } from 'redux/slices/user';
 import { ethers } from 'ethers';
 
-const BridgeComponent = React.lazy(() => import('nervos-bridge'));
+// const BridgeComponent = React.lazy(() => import('nervos-bridge'));
 // import { BridgeComponent } from 'nervos-bridge';
 // import BridgeComponent from 'nervos-bridge';
 
@@ -30,27 +30,27 @@ https://stackoverflow.com/questions/66096260/why-am-i-getting-referenceerror-sel
 // };
 
 /* 2nd example */
-const DAOBridgeComponent = async () => {
-  // if (typeof window.ethereum !== 'undefined' || (typeof window.web3 !== 'undefined')) {
-  // Web3 browser user detected. You can now use the provider.
-  const accounts = await window.ethereum.enable();
-  // const curProvider = window['ethereum'] || window.web3.currentProvider
-  const provider = new ethers.providers.Web3Provider(window.ethereum);
+// const DAOBridgeComponent = async () => {
+//   // if (typeof window.ethereum !== 'undefined' || (typeof window.web3 !== 'undefined')) {
+//   // Web3 browser user detected. You can now use the provider.
+//   const accounts = await window.ethereum.enable();
+//   // const curProvider = window['ethereum'] || window.web3.currentProvider
+//   const provider = new ethers.providers.Web3Provider(window.ethereum);
 
-  console.log('accounts: ', accounts);
-  console.log('provider: ', provider);
+//   console.log('accounts: ', accounts);
+//   console.log('provider: ', provider);
 
-  const signer = provider.getSigner();
-  // }
-  // const userAddress = useSelector(selectUserAddress);
-  // console.log(userAddress);
-  // const { provider } = useCheckIndexerStatus();
-  return (
-    <Suspense fallback={<div>...Loading</div>}>
-      <BridgeComponent provider={provider} userAddress={accounts[0]} assetsBlacklist={[]} />
-    </Suspense>
-  );
-};
+//   const signer = provider.getSigner();
+//   // }
+//   // const userAddress = useSelector(selectUserAddress);
+//   // console.log(userAddress);
+//   // const { provider } = useCheckIndexerStatus();
+//   return (
+//     <Suspense fallback={<div>...Loading</div>}>
+//       <BridgeComponent provider={provider} userAddress={accounts[0]} assetsBlacklist={[]} />
+//     </Suspense>
+//   );
+// };
 
 // const DAOBridgeComponent = () => {
 //   const [state, setState] = useState<any>();
@@ -68,4 +68,4 @@ const DAOBridgeComponent = async () => {
 //   return state;
 // };
 
-export default DAOBridgeComponent;
+// export default DAOBridgeComponent;
