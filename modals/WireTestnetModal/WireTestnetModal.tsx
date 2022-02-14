@@ -1,4 +1,7 @@
 import { FC, useEffect, useRef, useState } from 'react';
+import Web3 from 'web3';
+import { useSelector } from 'react-redux';
+import { selectUserAddress } from 'redux/slices/user';
 
 import Box from '@mui/material/Box';
 
@@ -10,6 +13,8 @@ import Step from 'components/Steper/Step';
 import Typography from '@mui/material/Typography';
 import DividerLine from 'components/DividerLine/DividerLine';
 import DAOInput from 'components/DAOInput/DAOInput';
+import useERC20Contract from 'hooks/useERC20Contract';
+import config from 'config/config';
 
 interface IStepperModal {
   isModalOpen: boolean;
@@ -26,6 +31,26 @@ const WireTestnetModal: FC<IStepperModal> = ({ isModalOpen, isModalClose }) => {
   const handleTransactionModal = () => {
     if (childRef.current.completeStep()) {
       isModalClose();
+    }
+  };
+  const userAddress = useSelector(selectUserAddress);
+  const erc20 = useERC20Contract(config.nervos.SUDT_PROXY_CONTRACT_ADDRESS);
+
+  const [transferValue, setTransferValue] = useState<number>(0);
+  const [latestTransactionHash, setLatestTransactionHash] = useState<string | null>(null);
+
+  const deposit = async () => {
+    console.log('deposit');
+    const decimals = await erc20?.methods.decimals().call();
+    if (decimals) {
+      const weiTransferValue = Web3.utils.toBN(transferValue).mul(Web3.utils.toBN(10).pow(Web3.utils.toBN(decimals)));
+      console.log('deposit amount', weiTransferValue.toString());
+      const transactionHash = await erc20?.methods.deposit().send({ from: userAddress, value: weiTransferValue });
+      console.log('transaction hash', transactionHash);
+      setLatestTransactionHash(transactionHash);
+
+      const balance = await erc20?.methods.balanceOf(userAddress).call();
+      console.log('balance', balance);
     }
   };
 
@@ -128,21 +153,18 @@ const WireTestnetModal: FC<IStepperModal> = ({ isModalOpen, isModalClose }) => {
                 balance of 471 CKB needs to be maintained.
               </Typography>
               <DAOInput
-                label="Transfer"
+                label="Deposit to get"
                 inputProps={{
                   id: 'Transfer',
-                  // value: values.transfer,
-                  // onChange: handleChange,
+                  value: transferValue,
+                  onChange: value => setTransferValue(value),
                 }}
                 formControlProps={{
                   fullWidth: true,
                 }}
               />
               <Box pt={2} pb={2} display="flex" alignItems="center" justifyContent="center">
-                <DAOButton
-                  variant="gradientOutline"
-                  onClick={() => window.open('https://aggron.nexisdao.com/dckb', '_blank')}
-                >
+                <DAOButton variant="gradientOutline" onClick={deposit}>
                   Wait for Layer 1 balance to be founded.
                 </DAOButton>
               </Box>
