@@ -13,7 +13,7 @@ import DAOInput from 'components/DAOInput/DAOInput';
 import TooltipIcon from 'components/TooltipIcon';
 import ConnectWalletButton from 'components/ConnectWalletButton/ConnectWalletButton';
 
-import { setOpen, setStatus } from 'redux/slices/modalTransaction';
+import { setOpen, setStatus, setMessage } from 'redux/slices/modalTransaction';
 import { selectUserAddress } from 'redux/slices/user';
 
 import PROCESSING_STATUSES from 'enums/processingStatuses';
@@ -73,6 +73,10 @@ const CreateProposalForm: FC = () => {
       );
 
       dispatch(setStatus(PROCESSING_STATUSES.SUCCESS));
+      dispatch(
+        setMessage(`Your transaction has been processed by blockchain network and will be displayed with the block number 
+      ${receipt.blockNumber + 1}`),
+      );
     } catch (error) {
       dispatch(setStatus(PROCESSING_STATUSES.ERROR));
     }

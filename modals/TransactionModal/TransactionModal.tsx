@@ -65,7 +65,7 @@ const TransactionModal: FC = () => {
               Success
             </Typography>
             <TypographyGrey variant="subtitle2" align="center">
-              Your transaction has been processed by blockchain network
+              {message.length > 0 ? message : 'Your transaction has been processed by blockchain network'}
             </TypographyGrey>
             <Box width="210px" mx="auto" my={2}>
               <DAOButton variant="gradientOutline" onClick={handleTransactionModal}>

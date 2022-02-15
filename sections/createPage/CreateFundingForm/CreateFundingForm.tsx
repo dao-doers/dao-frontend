@@ -10,10 +10,9 @@ import Typography from '@mui/material/Typography';
 
 import DAOButton from 'components/DAOButton/DAOButton';
 import DAOInput from 'components/DAOInput/DAOInput';
-import DAOTile from 'components/DAOTile/DAOTile';
 import TooltipIcon from 'components/TooltipIcon';
 
-import { setOpen, setStatus } from 'redux/slices/modalTransaction';
+import { setOpen, setStatus, setMessage } from 'redux/slices/modalTransaction';
 import { selectUserAddress } from 'redux/slices/user';
 
 import PROCESSING_STATUSES from 'enums/processingStatuses';
@@ -90,6 +89,10 @@ const CreateFundingForm: FC = () => {
       );
 
       dispatch(setStatus(PROCESSING_STATUSES.SUCCESS));
+      dispatch(
+        setMessage(`Your transaction has been processed by blockchain network and will be displayed with the block number 
+      ${receipt.blockNumber + 1}`),
+      );
     } catch (error) {
       dispatch(setStatus(PROCESSING_STATUSES.ERROR));
     }
