@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/rules-of-hooks */
-import { FC } from 'react';
+import { FC, useState, useEffect } from 'react';
 import { Formik, Form } from 'formik';
 import { useSelector, useDispatch } from 'react-redux';
 
@@ -13,14 +13,14 @@ import DAOInput from 'components/DAOInput/DAOInput';
 import TooltipIcon from 'components/TooltipIcon';
 import ConnectWalletButton from 'components/ConnectWalletButton/ConnectWalletButton';
 
-import { setOpen, setStatus } from 'redux/slices/modalTransaction';
+import { setOpen, setStatus, setMessage } from 'redux/slices/modalTransaction';
 import { selectUserAddress } from 'redux/slices/user';
 
 import PROCESSING_STATUSES from 'enums/processingStatuses';
 
 import useCreateProposal from 'hooks/useCreateProposal';
 
-import newProposalSchema from 'validators/newProposalSchema';
+import newFundingSchema from 'validators/newFundingSchema';
 
 import abiLibrary from 'lib/abi';
 
@@ -29,22 +29,43 @@ const initialValues = {
   description: '',
   link: '',
   tributeOffered: 0,
+  paymentRequested: 0,
+  applicant: '0x0',
 };
 
 const version = 2;
 const daoAddress = process.env.DAO_ADDRESS;
 const lootRequested = 0;
 const tributeToken = process.env.TRIBUTE_TOKEN_ADDRESS;
-const paymentRequested = 0;
 const paymentToken = process.env.TRIBUTE_TOKEN_ADDRESS;
 
 const TypographyBold = styled(Typography)`
   font-weight: 600;
 `;
 
-const CreateProposalForm: FC = () => {
+const TypographyGreen = styled(Typography)`
+  color: ${({ theme }) => theme.palette.colors.col2};
+  font-weight: 600;
+`;
+
+const TypographyRed = styled(Typography)`
+  color: ${({ theme }) => theme.palette.colors.col6};
+  font-weight: 600;
+`;
+
+const FundProjectForm: FC = () => {
   const dispatch = useDispatch();
   const userAddress = useSelector(selectUserAddress);
+
+  const [validated, setValidated] = useState(true);
+
+  useEffect(() => {
+    // TODO: validate if user is DAO member
+    // const isApplicantValid = async () => {
+    //   setValidated(true);
+    // };
+    // isApplicantValid();
+  }, [userAddress]);
 
   const onSubmit = async (values: any) => {
     try {
@@ -63,7 +84,7 @@ const CreateProposalForm: FC = () => {
         lootRequested,
         values.tributeOffered,
         tributeToken,
-        paymentRequested,
+        values.tributeOffered,
         paymentToken,
         /* Details JSON */ {
           title: values.title,
@@ -73,6 +94,10 @@ const CreateProposalForm: FC = () => {
       );
 
       dispatch(setStatus(PROCESSING_STATUSES.SUCCESS));
+      dispatch(
+        setMessage(`Your transaction has been processed by blockchain network and will be displayed with the block number 
+      ${receipt.blockNumber + 1}`),
+      );
     } catch (error) {
       dispatch(setStatus(PROCESSING_STATUSES.ERROR));
     }
@@ -80,11 +105,11 @@ const CreateProposalForm: FC = () => {
 
   return (
     <Box width="100%">
-      <Box maxWidth="500px" mx="auto">
+      <Box maxWidth="500px" mx="auto" pt={3}>
         <TypographyBold variant="h4" mb={3} sx={{ display: { xs: 'none', md: 'block' } }}>
-          Create new proposal
+          Request for project funding
         </TypographyBold>
-        <Formik validationSchema={newProposalSchema} initialValues={initialValues} validateOnChange onSubmit={onSubmit}>
+        <Formik validationSchema={newFundingSchema} initialValues={initialValues} validateOnChange onSubmit={onSubmit}>
           {formik => (
             <Form>
               <Box width="100%">
@@ -144,14 +169,31 @@ const CreateProposalForm: FC = () => {
                     tootltip="The amount of capital you are committing to deposit to the DAO bank. "
                     inputProps={{
                       id: 'tributeOffered',
-                      placeholder: 'e.g. 10',
                       value: formik.values.tributeOffered,
+                      placeholder: 'e.g. 10',
                       onChange: formik.handleChange,
                     }}
                     formControlProps={{
                       fullWidth: true,
                     }}
                     error={formik.errors.tributeOffered}
+                  />
+                </Box>
+
+                <Box width="100%" mb={2}>
+                  <DAOInput
+                    label="Payment Requested"
+                    tootltip="The number amount of payment requested. Payment can be requested in CKB token held by the DAO"
+                    inputProps={{
+                      id: 'paymentRequested',
+                      value: formik.values.paymentRequested,
+                      placeholder: 'e.g. 10',
+                      onChange: formik.handleChange,
+                    }}
+                    formControlProps={{
+                      fullWidth: true,
+                    }}
+                    error={formik.errors.paymentRequested}
                   />
                 </Box>
 
@@ -166,6 +208,16 @@ const CreateProposalForm: FC = () => {
                 </Box>
 
                 <Box display="flex" width="100%" mb={2}>
+                  <Typography variant="subtitle2">Payment token: </Typography>
+                  <TypographyBold variant="subtitle2" mx={1}>
+                    dCKB
+                  </TypographyBold>
+                  <TooltipIcon>
+                    <Typography variant="body2">CKB token to use for your payment</Typography>
+                  </TooltipIcon>
+                </Box>
+
+                <Box display="flex" width="100%" mb={2}>
                   <Typography variant="subtitle2">Shares Requested: </Typography>
                   <TypographyBold variant="subtitle2" mx={1}>
                     {new Intl.NumberFormat('en-US').format(
@@ -175,20 +227,25 @@ const CreateProposalForm: FC = () => {
                   </TypographyBold>
                   <TooltipIcon>
                     <Typography variant="body2">
-                      Voting shares in the DAO. Shares are granted to members in order to allow them to vote on
-                      proposals in the DAO. Shares also represent a claim on the tokens held in the DAO. Shares can
-                      neither be exchanged or sold to other members of the DAO.
+                      Voting shares in the DAO. Members can request payment be made in shares up to x% of the total
+                      amount requested.
                     </Typography>
                   </TooltipIcon>
                 </Box>
 
                 <Box>
-                  {userAddress === '' ? (
-                    <ConnectWalletButton />
-                  ) : (
-                    <DAOButton variant="gradientOutline" type="submit">
-                      Submit proposal
+                  {userAddress === '' && <ConnectWalletButton />}
+
+                  {validated && userAddress !== '' && (
+                    <DAOButton disabled={!validated} variant="gradientOutline" type="submit">
+                      Send request
                     </DAOButton>
+                  )}
+
+                  {!validated && userAddress !== '' && (
+                    <TypographyRed ml={1} variant="subtitle2" align="center">
+                      You&apos;re not a member of the Guild.
+                    </TypographyRed>
                   )}
                 </Box>
               </Box>
@@ -200,4 +257,4 @@ const CreateProposalForm: FC = () => {
   );
 };
 
-export default CreateProposalForm;
+export default FundProjectForm;

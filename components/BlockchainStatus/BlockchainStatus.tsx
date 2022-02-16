@@ -89,7 +89,10 @@ const BlockchainStatus: FC = () => {
         </div> */}
         <StatusChip title="Indexer status:">
           {molochBlock === layer2Block && typeof layer2Block === 'number' && typeof molochBlock === 'number' && (
-            <TypographyGreen>Online</TypographyGreen>
+            <Box display="flex">
+              <TypographyGreen>Online </TypographyGreen>
+              <TypographyBold ml={1}>block: {molochBlock === layer2Block ? layer2Block : null}</TypographyBold>
+            </Box>
           )}
 
           {(typeof layer2Block !== 'number' || typeof molochBlock !== 'number') &&
