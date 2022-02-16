@@ -10,6 +10,9 @@ interface ModalProps {
   handleClose: () => void;
   children: ReactElement;
   className?: string;
+  hideOverlay?: boolean;
+  overlayColor?: string;
+  overlayOpacity?: number;
 }
 
 const StyledDialog = styled(Dialog)`
@@ -29,9 +32,49 @@ const StyledDialog = styled(Dialog)`
   }
 `;
 
-const Modal: FC<ModalProps> = ({ className, isOpen, handleClose, children }) => {
+const Modal: FC<ModalProps> = ({
+  className,
+  isOpen,
+  handleClose,
+  hideOverlay = false,
+  overlayColor = '#000000',
+  overlayOpacity = 0.5,
+  children,
+}) => {
+  function hexToRgb(hex: string): any {
+    const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+    if (result) {
+      return {
+        r: parseInt(result[1], 16),
+        g: parseInt(result[2], 16),
+        b: parseInt(result[3], 16),
+      };
+    }
+    return {};
+  }
+
+  let rgbOverlayColor: any = {};
+  if (overlayColor) {
+    rgbOverlayColor = hexToRgb(overlayColor);
+  }
   return (
-    <StyledDialog open={isOpen} onClose={handleClose} className={className}>
+    <StyledDialog
+      open={isOpen}
+      onClose={handleClose}
+      className={className}
+      style={
+        !hideOverlay
+          ? {
+              backgroundColor: `rgba(
+      ${rgbOverlayColor?.r},
+      ${rgbOverlayColor?.g},
+      ${rgbOverlayColor?.b},
+      ${overlayOpacity}
+    )`,
+            }
+          : {}
+      }
+    >
       <Box p={3}>{children}</Box>
     </StyledDialog>
   );
