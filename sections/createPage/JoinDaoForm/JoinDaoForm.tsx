@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/rules-of-hooks */
-import { FC, useState, useEffect } from 'react';
+import { FC } from 'react';
 import { Formik, Form } from 'formik';
 import { useSelector, useDispatch } from 'react-redux';
 
@@ -10,58 +10,41 @@ import Typography from '@mui/material/Typography';
 
 import DAOButton from 'components/DAOButton/DAOButton';
 import DAOInput from 'components/DAOInput/DAOInput';
-import DAOTile from 'components/DAOTile/DAOTile';
 import TooltipIcon from 'components/TooltipIcon';
+import ConnectWalletButton from 'components/ConnectWalletButton/ConnectWalletButton';
 
-import { setOpen, setStatus } from 'redux/slices/modalTransaction';
+import { setOpen, setStatus, setMessage } from 'redux/slices/modalTransaction';
 import { selectUserAddress } from 'redux/slices/user';
 
 import PROCESSING_STATUSES from 'enums/processingStatuses';
 
 import useCreateProposal from 'hooks/useCreateProposal';
 
-import newFundingSchema from 'validators/newFundingSchema';
+import newProposalSchema from 'validators/newProposalSchema';
 
 import abiLibrary from 'lib/abi';
-import { Chip } from '@mui/material';
-import isAddress from 'validators/isAddress';
 
 const initialValues = {
   title: '',
   description: '',
   link: '',
   tributeOffered: 0,
-  paymentRequested: 0,
-  applicant: '0x0',
 };
 
 const version = 2;
 const daoAddress = process.env.DAO_ADDRESS;
 const lootRequested = 0;
 const tributeToken = process.env.TRIBUTE_TOKEN_ADDRESS;
+const paymentRequested = 0;
 const paymentToken = process.env.TRIBUTE_TOKEN_ADDRESS;
 
 const TypographyBold = styled(Typography)`
   font-weight: 600;
 `;
 
-const CreateFundingForm: FC = () => {
+const JoinDaoForm: FC = () => {
   const dispatch = useDispatch();
   const userAddress = useSelector(selectUserAddress);
-
-  const [applicant, setApplicant] = useState(initialValues.applicant);
-  const [validated, setValidated] = useState(false);
-
-  useEffect(() => {
-    setApplicant(userAddress);
-  }, [userAddress]);
-
-  useEffect(() => {
-    const isApplicantValid = async () => {
-      setValidated(await isAddress(userAddress));
-    };
-    isApplicantValid();
-  }, [userAddress]);
 
   const onSubmit = async (values: any) => {
     try {
@@ -80,7 +63,7 @@ const CreateFundingForm: FC = () => {
         lootRequested,
         values.tributeOffered,
         tributeToken,
-        values.tributeOffered,
+        paymentRequested,
         paymentToken,
         /* Details JSON */ {
           title: values.title,
@@ -90,6 +73,10 @@ const CreateFundingForm: FC = () => {
       );
 
       dispatch(setStatus(PROCESSING_STATUSES.SUCCESS));
+      dispatch(
+        setMessage(`Your transaction has been processed by blockchain network and will be displayed with the block number 
+      ${receipt.blockNumber + 1}`),
+      );
     } catch (error) {
       dispatch(setStatus(PROCESSING_STATUSES.ERROR));
     }
@@ -97,11 +84,11 @@ const CreateFundingForm: FC = () => {
 
   return (
     <Box width="100%">
-      <Box maxWidth="500px" mx="auto">
+      <Box maxWidth="500px" mx="auto" pt={3}>
         <TypographyBold variant="h4" mb={3} sx={{ display: { xs: 'none', md: 'block' } }}>
-          Create new proposal with funding
+          Request for joining DAO
         </TypographyBold>
-        <Formik validationSchema={newFundingSchema} initialValues={initialValues} validateOnChange onSubmit={onSubmit}>
+        <Formik validationSchema={newProposalSchema} initialValues={initialValues} validateOnChange onSubmit={onSubmit}>
           {formik => (
             <Form>
               <Box width="100%">
@@ -161,8 +148,8 @@ const CreateFundingForm: FC = () => {
                     tootltip="The amount of capital you are committing to deposit to the DAO bank. "
                     inputProps={{
                       id: 'tributeOffered',
-                      value: formik.values.tributeOffered,
                       placeholder: 'e.g. 10',
+                      value: formik.values.tributeOffered,
                       onChange: formik.handleChange,
                     }}
                     formControlProps={{
@@ -172,40 +159,6 @@ const CreateFundingForm: FC = () => {
                   />
                 </Box>
 
-                <Box width="100%" mb={2}>
-                  <DAOInput
-                    label="Payment Requested"
-                    tootltip="The number amount of payment requested. Payment can be requested in CKB token held by the DAO"
-                    inputProps={{
-                      id: 'paymentRequested',
-                      value: formik.values.paymentRequested,
-                      placeholder: 'e.g. 10',
-                      onChange: formik.handleChange,
-                    }}
-                    formControlProps={{
-                      fullWidth: true,
-                    }}
-                    error={formik.errors.paymentRequested}
-                  />
-                </Box>
-
-                <Typography variant="subtitle2" gutterBottom>
-                  Applicant:{' '}
-                  {applicant ? (
-                    <Chip
-                      label={validated ? applicant : `${applicant} - address not valid`}
-                      variant="outlined"
-                      color={validated ? 'success' : 'info'}
-                    />
-                  ) : (
-                    <Chip
-                      label="You must specify an account that will receive the funding."
-                      variant="outlined"
-                      color="warning"
-                    />
-                  )}
-                </Typography>
-
                 <Box display="flex" width="100%" mb={2}>
                   <Typography variant="subtitle2">Tribute Token:</Typography>
                   <TypographyBold variant="subtitle2" mx={1}>
@@ -213,16 +166,6 @@ const CreateFundingForm: FC = () => {
                   </TypographyBold>
                   <TooltipIcon>
                     <Typography variant="body2">CKB token to use for your tribute.</Typography>
-                  </TooltipIcon>
-                </Box>
-
-                <Box display="flex" width="100%" mb={2}>
-                  <Typography variant="subtitle2">Payment token: </Typography>
-                  <TypographyBold variant="subtitle2" mx={1}>
-                    dCKB
-                  </TypographyBold>
-                  <TooltipIcon>
-                    <Typography variant="body2">CKB token to use for your payment</Typography>
                   </TooltipIcon>
                 </Box>
 
@@ -236,16 +179,21 @@ const CreateFundingForm: FC = () => {
                   </TypographyBold>
                   <TooltipIcon>
                     <Typography variant="body2">
-                      Voting shares in the DAO. Members can request payment be made in shares up to x% of the total
-                      amount requested.
+                      Voting shares in the DAO. Shares are granted to members in order to allow them to vote on
+                      proposals in the DAO. Shares also represent a claim on the tokens held in the DAO. Shares can
+                      neither be exchanged or sold to other members of the DAO.
                     </Typography>
                   </TooltipIcon>
                 </Box>
 
                 <Box>
-                  <DAOButton variant="gradientOutline" type="submit">
-                    Submit proposal
-                  </DAOButton>
+                  {userAddress === '' && <ConnectWalletButton />}
+
+                  {userAddress !== '' && (
+                    <DAOButton variant="gradientOutline" type="submit">
+                      Send request
+                    </DAOButton>
+                  )}
                 </Box>
               </Box>
             </Form>
@@ -256,4 +204,4 @@ const CreateFundingForm: FC = () => {
   );
 };
 
-export default CreateFundingForm;
+export default JoinDaoForm;

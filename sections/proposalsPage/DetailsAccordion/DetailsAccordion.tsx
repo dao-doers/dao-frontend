@@ -56,7 +56,7 @@ const StyledCopyIcon = styled(ContentCopyIcon)`
   cursor: pointer;
   font-size: 14px;
   position: relative;
-  top: 4px;
+  top: 3px;
   margin-left: 4px;
 `;
 
@@ -97,8 +97,8 @@ const DetailsAccordion: FC<any> = ({ proposal }) => {
                     Sponsored by
                   </Typography>
                   <CopyToClipboard text={proposal.sponsor} onCopy={handleCopySponsoredAddress}>
-                    <Box display="flex">
-                      <TypographyCursor align="center">{formatAddress(proposal.sponsor)}</TypographyCursor>
+                    <Box display="flex" justifyContent="center">
+                      <TypographyCursor align="center">{formatAddress(proposal.applicant, 5, 5)}</TypographyCursor>
                       <StyledCopyIcon />
                     </Box>
                   </CopyToClipboard>
@@ -115,8 +115,8 @@ const DetailsAccordion: FC<any> = ({ proposal }) => {
                     Applicant Address
                   </Typography>
                   <CopyToClipboard text={proposal.applicant} onCopy={handleCopyApplicantAddress}>
-                    <Box display="flex">
-                      <TypographyCursor align="center">{formatAddress(proposal.applicant)}</TypographyCursor>
+                    <Box display="flex" justifyContent="center">
+                      <TypographyCursor align="center">{formatAddress(proposal.applicant, 5, 5)}</TypographyCursor>
                       <StyledCopyIcon />
                     </Box>
                   </CopyToClipboard>
