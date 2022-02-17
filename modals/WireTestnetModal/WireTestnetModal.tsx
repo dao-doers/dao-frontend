@@ -3,6 +3,8 @@ import Web3 from 'web3';
 import { useSelector } from 'react-redux';
 import { selectUserAddress } from 'redux/slices/user';
 
+import styled from '@emotion/styled';
+
 import Box from '@mui/material/Box';
 
 import Modal from 'components/Modal/Modal';
@@ -15,7 +17,7 @@ import Typography from '@mui/material/Typography';
 import useERC20Contract from 'hooks/useERC20Contract';
 import config from 'config/config';
 import DAOPlainButton from 'components/DAOPlainButton/DAOPlainButton';
-import CreatAccountStep from './WireTestnetModalSteps/CreatAccountStep';
+import CreateAccountStep from './WireTestnetModalSteps/CreateAccountStep';
 import GetCKBStep from './WireTestnetModalSteps/GetCKBStep';
 import ReceiveCKBStep from './WireTestnetModalSteps/ReceiveCKBStep';
 import BridgeStep from './WireTestnetModalSteps/BridgeStep';
@@ -26,15 +28,26 @@ interface IStepperModal {
   isModalClose: () => void;
 }
 
+const StyledBox = styled(Box)`
+  width: 100%;
+
+  ${({ theme }) => theme.breakpoints.down('sm')} {
+    width: 80vw;
+  }
+`;
+
 const WireTestnetModal: FC<IStepperModal> = ({ isModalOpen, isModalClose }) => {
   const childRef = useRef<any>(null);
 
   const userAddress = useSelector(selectUserAddress);
+
   const erc20 = useERC20Contract(config.nervos.SUDT_PROXY_CONTRACT_ADDRESS);
 
   const [transferValue, setTransferValue] = useState<number>(0);
   const [latestTransactionHash, setLatestTransactionHash] = useState<string | null>(null);
+
   console.log('transferValue', transferValue);
+
   const deposit = async () => {
     console.log('deposit');
     const decimals = await erc20?.methods.decimals().call();
@@ -51,14 +64,8 @@ const WireTestnetModal: FC<IStepperModal> = ({ isModalOpen, isModalClose }) => {
   };
 
   return (
-    <Modal isOpen={isModalOpen} handleClose={isModalClose}>
-      <Box>
-        <Typography component="h3" variant="h3" align="center" paragraph style={{ color: '#2EA5E8' }}>
-          Welcome!
-        </Typography>
-        <Typography variant="subtitle2" align="center" pb={4} mt={-1.5}>
-          Just a few details to get you set.
-        </Typography>
+    <Modal isOpen={isModalOpen} handleClose={isModalClose} title="Get dCKB" divider>
+      <StyledBox>
         <Stepper
           nonLinear
           interactive
@@ -69,21 +76,18 @@ const WireTestnetModal: FC<IStepperModal> = ({ isModalOpen, isModalClose }) => {
           }
           onStepComplete={completedStep => console.log('Step ', completedStep, ' completed!')}
         >
-          <Step label="Create wallet address on Layer 2" optional>
-            <CreatAccountStep />
-            <DAOButton variant="gradientOutline" onClick={() => childRef.current.nextStep()}>
-              Continue
-            </DAOButton>
+          <Step label="Get Layer 2 address">
+            <CreateAccountStep handleNextStep={() => childRef.current.completeStep()} />
           </Step>
 
-          <Step label="Get CKB from Layer 1" optional>
+          <Step label="Get CKB">
             <GetCKBStep />
             <Box pt={2} pb={2} display="flex">
               <DAOButton variant="gradientOutline" onClick={() => childRef.current.previousStep()}>
                 Go Back
               </DAOButton>
               <Box padding={1} />
-              <DAOButton variant="gradientOutline" onClick={() => childRef.current.nextStep()}>
+              <DAOButton variant="gradientOutline" onClick={() => childRef.current.completeStep()}>
                 Continue
               </DAOButton>
             </Box>
@@ -96,7 +100,7 @@ const WireTestnetModal: FC<IStepperModal> = ({ isModalOpen, isModalClose }) => {
                 Go Back
               </DAOButton>
               <Box padding={1} />
-              <DAOButton variant="gradientOutline" onClick={() => childRef.current.nextStep()}>
+              <DAOButton variant="gradientOutline" onClick={() => childRef.current.completeStep()}>
                 Continue
               </DAOButton>
             </Box>
@@ -115,16 +119,7 @@ const WireTestnetModal: FC<IStepperModal> = ({ isModalOpen, isModalClose }) => {
             <DAOButton onClick={() => childRef.current.resetSteps()}>Reset Steps</DAOButton>
           </Step>
         </Stepper>
-
-        <Box mt={2} display="flex" flexDirection="row" justifyContent="center">
-          <Typography variant="subtitle2">Don't want to continue now?</Typography>
-          <Box sx={{ width: { xs: '10%' } }}>
-            <DAOPlainButton style={{ color: '#2EA5E8' }} size="small" onClick={() => isModalClose()}>
-              Close
-            </DAOPlainButton>
-          </Box>
-        </Box>
-      </Box>
+      </StyledBox>
     </Modal>
   );
 };

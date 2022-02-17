@@ -7,6 +7,10 @@ import DAOButton from 'components/DAOButton/DAOButton';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 
+interface CreateAccountStepProps {
+  handleNextStep: () => void;
+}
+
 const StyledBox = styled(Box)`
   display: flex;
   align-items: center;
@@ -24,36 +28,42 @@ const ButtonWrapper = styled(Box)`
   }
 `;
 
-const GetCKBStep: FC = () => {
+const CreateAccountStep: FC<CreateAccountStepProps> = ({ handleNextStep }) => {
   return (
     <Box mt={5} mb={4}>
       <StyledBox>
         <Box>
           <Typography component="h6" variant="h6" paragraph>
-            Get CKB from Layer 1
+            Create account on Nervos Layer 2
           </Typography>
           <Typography component="h6">
-            Go to NexisDAO and connect with metamask. Next, copy CKB address (copy button here or) from top left of
-            NexisDAO page. Get CKB from Layer 1 faucet (https://faucet.nervos.org/) by pasting the CKB address from step
-            one NexisDAO page Get CKB from Layer 1 faucet by pasting the CKB address from NexisDAO page
+            You will be taken to an external page where you will be able to create your account address on Layer 2.
           </Typography>
         </Box>
         <ButtonWrapper>
-          <DAOButton variant="gradientOutline" onClick={() => window.open('https://faucet.nervos.org/', '_blank')}>
-            Layer 1 faucet
+          <DAOButton
+            variant="gradientOutline"
+            onClick={() => window.open('https://dev.ckb.tools/create-layer2-account', '_blank')}
+          >
+            CREATE ACCOUNT
           </DAOButton>
         </ButtonWrapper>
       </StyledBox>
 
       <StyledBox>
         <Box>
-          <Typography component="h6" variant="h6" paragraph>
-            Get CKB from Layer 1 faucet by pasting the CKB address from NexisDAO page
+          <Typography component="h6" variant="h6">
+            Already have a Nervos Layer 2 account.
           </Typography>
         </Box>
+        <ButtonWrapper>
+          <DAOButton variant="gradientOutline" onClick={handleNextStep}>
+            NEXT STEP
+          </DAOButton>
+        </ButtonWrapper>
       </StyledBox>
     </Box>
   );
 };
 
-export default GetCKBStep;
+export default CreateAccountStep;
