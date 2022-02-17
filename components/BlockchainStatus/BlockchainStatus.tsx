@@ -22,10 +22,10 @@ import Timer from 'components/Timer/Timer';
 import useFetchProposals from 'hooks/useFetchProposals';
 import RecentActivityStatus from 'components/RecentActivityStatus/RecentActivityStatus';
 import dynamic from 'next/dynamic';
-// import DAOBridgeComponent from 'components/DAOBridgeComponent/DAOBridgeComponent';
-const DAOBridgeComponent = dynamic(() => import('components/DAOBridgeComponent/DAOBridgeComponent'), {
-  ssr: false,
-});
+const DynamicComponentWithNoSSR = dynamic(
+  () => import('components/DAOBridgeComponent/DAOBridgeComponent'),
+  { ssr: false }
+)
 
 const MainWrapper = styled(Box)`
   display: flex;
@@ -80,13 +80,10 @@ const BlockchainStatus: FC = () => {
     refetchProposal.refetch();
   };
 
-  // console.log(DAOBridgeComponent().then(d=> d));
   return (
     <MainWrapper>
       <StatusWrapper>
-        {/* <div>
-          <DAOBridgeComponent />
-        </div> */}
+        <DynamicComponentWithNoSSR />
         <StatusChip title="Indexer status:">
           {molochBlock === layer2Block && typeof layer2Block === 'number' && typeof molochBlock === 'number' && (
             <TypographyGreen>Online</TypographyGreen>

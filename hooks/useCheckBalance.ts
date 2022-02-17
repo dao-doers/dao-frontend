@@ -15,6 +15,7 @@ const useCheckBalance = () => {
   const [ckbBalance, setCkbBalance] = useState<BigInt | null>(null);
   const [depositAddress, setDepositAddress] = useState<string | null>(null)
   console.log('depositAddress', depositAddress);
+  console.log('fetchCkbBalance', ckbBalance);
 
   const [isChecked, setChecked] = useState(false);
 
@@ -40,8 +41,7 @@ const useCheckBalance = () => {
     const fetchCkbBalance = async () => {
       if (userAddress) {
         const CkbBalance = await ethers?.getBalance(userAddress);
-        console.log('fetchCkbBalance', ckbBalance);
-        setCkbBalance(CkbBalance.toBigInt());
+        setCkbBalance(CkbBalance?.toBigInt());
         await addressTranslator.init();
         const newDepositAddress = await addressTranslator.getLayer2DepositAddress(userAddress);
         setDepositAddress(newDepositAddress.toCKBAddress().toString());
