@@ -32,6 +32,9 @@ const WireTestnetModal: FC<IStepperModal> = ({ isModalOpen, isModalClose }) => {
   const userAddress = useSelector(selectUserAddress);
   const erc20 = useERC20Contract(config.nervos.SUDT_PROXY_CONTRACT_ADDRESS);
 
+  // const sudtBalance = await collector.getSUDTBalance(sudt, ckbAddress);
+
+
   const [transferValue, setTransferValue] = useState<number>(0);
   const [latestTransactionHash, setLatestTransactionHash] = useState<string | null>(null);
   console.log('transferValue', transferValue);
