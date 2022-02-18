@@ -11,6 +11,7 @@ import LastProposals from 'sections/homepage/LastProposals/LastProposals';
 import LastVotes from 'sections/homepage/LastVotes/LastVotes';
 
 import dynamic from 'next/dynamic';
+
 const DynamicComponentWithNoSSR = dynamic(() => import('components/DAOBridgeComponent/DAOBridgeComponent'), {
   ssr: false,
 });

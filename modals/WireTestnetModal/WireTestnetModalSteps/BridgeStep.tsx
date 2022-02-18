@@ -45,8 +45,6 @@ const BridgeStep: FC<IBridge> = ({ handlePreviousStep }) => {
 
   const [latestTransactionHash, setLatestTransactionHash] = useState<string | null>(null);
 
-  const transferdCKB = async () => {};
-
   const onSubmit = async (values: ValuesProps) => {
     console.log('deposit');
     const decimals = await erc20?.methods.decimals().call();

@@ -129,7 +129,6 @@ const iconStyles = makeStyles({
   },
 });
 
-
 const { forwardRef, useImperativeHandle } = React;
 
 const Stepper = forwardRef<any, StepperProps>(
@@ -372,12 +371,15 @@ const Stepper = forwardRef<any, StepperProps>(
       return (
         <div className={classes.root}>
           {completed ? (
+            // eslint-disable-next-line react/destructuring-assignment
             <div>{iconsObject.complete[Number(iconProps.icon)]}</div>
           ) : (
             <div>
               {active ? (
+                // eslint-disable-next-line react/destructuring-assignment
                 <div>{iconsObject.active[Number(iconProps.icon)]}</div>
               ) : (
+                // eslint-disable-next-line react/destructuring-assignment
                 <div>{iconsObject.default[Number(iconProps.icon)]}</div>
               )}
             </div>

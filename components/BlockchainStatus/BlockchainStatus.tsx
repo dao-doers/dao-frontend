@@ -123,6 +123,12 @@ const BlockchainStatus: FC = () => {
         </StatusChip>
       </StatusWrapper>
 
+      <StatusWrapper>
+        <StatusChip title="Last page update:">
+          <RecentActivityStatus refetch={refetch} timer={timer} />
+        </StatusChip>
+      </StatusWrapper>
+
       {userAddress === '' && (
         <StatusWrapper>
           <ConnectWalletButton />
@@ -157,12 +163,6 @@ const BlockchainStatus: FC = () => {
           </StatusChip>
         </StatusWrapper>
       )}
-
-      <StatusWrapper>
-        <StatusChip title="Last page update:">
-          <RecentActivityStatus refetch={refetch} timer={timer} />
-        </StatusChip>
-      </StatusWrapper>
     </MainWrapper>
   );
 };
