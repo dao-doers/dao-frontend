@@ -41,7 +41,9 @@ const useCheckBalance = () => {
     const fetchCkbBalance = async () => {
       if (userAddress) {
         const CkbBalance = await ethers?.getBalance(userAddress);
-        setCkbBalance(CkbBalance?.toBigInt());
+        if (CkbBalance) {
+          setCkbBalance(CkbBalance?.toBigInt());
+        }
         await addressTranslator.init();
         const newDepositAddress = await addressTranslator.getLayer2DepositAddress(userAddress);
         setDepositAddress(newDepositAddress.toCKBAddress().toString());
