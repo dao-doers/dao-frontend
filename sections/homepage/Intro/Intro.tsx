@@ -32,15 +32,15 @@ const Intro: FC = () => {
 
   return (
     <Box>
-      <Title variant="h2" paragraph>
+      <Title variant="h2" mb={2}>
         Welcome to Nervos DAO
       </Title>
       <Box>
-        <Typography variant="h6">
+        <Typography variant="h6" mb={4}>
           Decentralized Autonomous Organization introduced to the World by Nervos Foundation. Our mission is to spread
           true democracy.
         </Typography>
-        <TypographyBold variant="h3" align="center" mt={4}>
+        <TypographyBold variant="h2" align="center">
           <Typewriter
             onInit={typewriter => {
               typewriter

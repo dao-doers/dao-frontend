@@ -54,7 +54,7 @@ const LastVotes: FC = () => {
 
   return (
     <Box width="100%">
-      <TypographyBold variant="h3" paragraph mt={8}>
+      <TypographyBold variant="h3" mb={3} mt={8}>
         Last Votes
       </TypographyBold>
 

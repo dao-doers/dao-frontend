@@ -111,9 +111,16 @@ const VoteAccordion: FC<any> = ({ proposal }) => {
       dispatch(setStatus(PROCESSING_STATUSES.PROCESSING));
       dispatch(setOpen(true));
 
-      await useSponsorProposal(userAddress, daoAddress, proposalId);
+      const receipt = await useSponsorProposal(userAddress, daoAddress, proposalId);
+
+      console.log(receipt);
+
       dispatch(setStatus(PROCESSING_STATUSES.SUCCESS));
       setSponsorProposalStatus(PROCESSING_STATUSES.SUCCESS);
+      dispatch(
+        setMessage(`Your transaction has been processed by blockchain network and will be displayed with the block number 
+      ${receipt.blockNumber + 1}`),
+      );
     } catch (error) {
       dispatch(setStatus(PROCESSING_STATUSES.ERROR));
     }
@@ -155,6 +162,7 @@ const VoteAccordion: FC<any> = ({ proposal }) => {
 
     try {
       const receipt = await useProcessProposal(userAddress, daoAddress, proposalIndex);
+
       if (receipt.transactionHash) {
         setProcessProposalStatus(FETCH_STATUSES.SUCCESS);
         dispatch(setStatus(PROCESSING_STATUSES.SUCCESS));

@@ -10,10 +10,10 @@ import Typography from '@mui/material/Typography';
 
 import DAOButton from 'components/DAOButton/DAOButton';
 import DAOInput from 'components/DAOInput/DAOInput';
-import DAOTile from 'components/DAOTile/DAOTile';
 import TooltipIcon from 'components/TooltipIcon';
+import ConnectWalletButton from 'components/ConnectWalletButton/ConnectWalletButton';
 
-import { setOpen, setStatus } from 'redux/slices/modalTransaction';
+import { setOpen, setStatus, setMessage } from 'redux/slices/modalTransaction';
 import { selectUserAddress } from 'redux/slices/user';
 
 import PROCESSING_STATUSES from 'enums/processingStatuses';
@@ -23,8 +23,6 @@ import useCreateProposal from 'hooks/useCreateProposal';
 import newFundingSchema from 'validators/newFundingSchema';
 
 import abiLibrary from 'lib/abi';
-import { Chip } from '@mui/material';
-import isAddress from 'validators/isAddress';
 
 const initialValues = {
   title: '',
@@ -45,22 +43,23 @@ const TypographyBold = styled(Typography)`
   font-weight: 600;
 `;
 
-const CreateFundingForm: FC = () => {
+const TypographyRed = styled(Typography)`
+  color: ${({ theme }) => theme.palette.colors.col6};
+  font-weight: 600;
+`;
+
+const FundProjectForm: FC = () => {
   const dispatch = useDispatch();
   const userAddress = useSelector(selectUserAddress);
 
-  const [applicant, setApplicant] = useState(initialValues.applicant);
-  const [validated, setValidated] = useState(false);
+  const [validated, setValidated] = useState(true);
 
   useEffect(() => {
-    setApplicant(userAddress);
-  }, [userAddress]);
-
-  useEffect(() => {
-    const isApplicantValid = async () => {
-      setValidated(await isAddress(userAddress));
-    };
-    isApplicantValid();
+    // TODO: validate if user is DAO member
+    // const isApplicantValid = async () => {
+    //   setValidated(true);
+    // };
+    // isApplicantValid();
   }, [userAddress]);
 
   const onSubmit = async (values: any) => {
@@ -90,6 +89,10 @@ const CreateFundingForm: FC = () => {
       );
 
       dispatch(setStatus(PROCESSING_STATUSES.SUCCESS));
+      dispatch(
+        setMessage(`Your transaction has been processed by blockchain network and will be displayed with the block number 
+      ${receipt.blockNumber + 1}`),
+      );
     } catch (error) {
       dispatch(setStatus(PROCESSING_STATUSES.ERROR));
     }
@@ -97,9 +100,9 @@ const CreateFundingForm: FC = () => {
 
   return (
     <Box width="100%">
-      <Box maxWidth="500px" mx="auto">
+      <Box maxWidth="500px" mx="auto" pt={3}>
         <TypographyBold variant="h4" mb={3} sx={{ display: { xs: 'none', md: 'block' } }}>
-          Create new proposal with funding
+          Request for project funding
         </TypographyBold>
         <Formik validationSchema={newFundingSchema} initialValues={initialValues} validateOnChange onSubmit={onSubmit}>
           {formik => (
@@ -189,23 +192,6 @@ const CreateFundingForm: FC = () => {
                   />
                 </Box>
 
-                <Typography variant="subtitle2" gutterBottom>
-                  Applicant:{' '}
-                  {applicant ? (
-                    <Chip
-                      label={validated ? applicant : `${applicant} - address not valid`}
-                      variant="outlined"
-                      color={validated ? 'success' : 'info'}
-                    />
-                  ) : (
-                    <Chip
-                      label="You must specify an account that will receive the funding."
-                      variant="outlined"
-                      color="warning"
-                    />
-                  )}
-                </Typography>
-
                 <Box display="flex" width="100%" mb={2}>
                   <Typography variant="subtitle2">Tribute Token:</Typography>
                   <TypographyBold variant="subtitle2" mx={1}>
@@ -243,9 +229,19 @@ const CreateFundingForm: FC = () => {
                 </Box>
 
                 <Box>
-                  <DAOButton variant="gradientOutline" type="submit">
-                    Submit proposal
-                  </DAOButton>
+                  {userAddress === '' && <ConnectWalletButton />}
+
+                  {validated && userAddress !== '' && (
+                    <DAOButton disabled={!validated} variant="gradientOutline" type="submit">
+                      Send request
+                    </DAOButton>
+                  )}
+
+                  {!validated && userAddress !== '' && (
+                    <TypographyRed ml={1} variant="subtitle2" align="center">
+                      You&apos;re not a member of the Guild.
+                    </TypographyRed>
+                  )}
                 </Box>
               </Box>
             </Form>
@@ -256,4 +252,4 @@ const CreateFundingForm: FC = () => {
   );
 };
 
-export default CreateFundingForm;
+export default FundProjectForm;

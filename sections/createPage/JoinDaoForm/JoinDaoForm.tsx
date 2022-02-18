@@ -13,7 +13,7 @@ import DAOInput from 'components/DAOInput/DAOInput';
 import TooltipIcon from 'components/TooltipIcon';
 import ConnectWalletButton from 'components/ConnectWalletButton/ConnectWalletButton';
 
-import { setOpen, setStatus } from 'redux/slices/modalTransaction';
+import { setOpen, setStatus, setMessage } from 'redux/slices/modalTransaction';
 import { selectUserAddress } from 'redux/slices/user';
 
 import PROCESSING_STATUSES from 'enums/processingStatuses';
@@ -42,7 +42,7 @@ const TypographyBold = styled(Typography)`
   font-weight: 600;
 `;
 
-const CreateProposalForm: FC = () => {
+const JoinDaoForm: FC = () => {
   const dispatch = useDispatch();
   const userAddress = useSelector(selectUserAddress);
 
@@ -73,6 +73,10 @@ const CreateProposalForm: FC = () => {
       );
 
       dispatch(setStatus(PROCESSING_STATUSES.SUCCESS));
+      dispatch(
+        setMessage(`Your transaction has been processed by blockchain network and will be displayed with the block number 
+      ${receipt.blockNumber + 1}`),
+      );
     } catch (error) {
       dispatch(setStatus(PROCESSING_STATUSES.ERROR));
     }
@@ -80,9 +84,9 @@ const CreateProposalForm: FC = () => {
 
   return (
     <Box width="100%">
-      <Box maxWidth="500px" mx="auto">
+      <Box maxWidth="500px" mx="auto" pt={3}>
         <TypographyBold variant="h4" mb={3} sx={{ display: { xs: 'none', md: 'block' } }}>
-          Create new proposal
+          Request for joining DAO
         </TypographyBold>
         <Formik validationSchema={newProposalSchema} initialValues={initialValues} validateOnChange onSubmit={onSubmit}>
           {formik => (
@@ -183,11 +187,11 @@ const CreateProposalForm: FC = () => {
                 </Box>
 
                 <Box>
-                  {userAddress === '' ? (
-                    <ConnectWalletButton />
-                  ) : (
+                  {userAddress === '' && <ConnectWalletButton />}
+
+                  {userAddress !== '' && (
                     <DAOButton variant="gradientOutline" type="submit">
-                      Submit proposal
+                      Send request
                     </DAOButton>
                   )}
                 </Box>
@@ -200,4 +204,4 @@ const CreateProposalForm: FC = () => {
   );
 };
 
-export default CreateProposalForm;
+export default JoinDaoForm;
