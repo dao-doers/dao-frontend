@@ -10,6 +10,11 @@ import About from 'sections/homepage/About/About';
 import LastProposals from 'sections/homepage/LastProposals/LastProposals';
 import LastVotes from 'sections/homepage/LastVotes/LastVotes';
 
+import dynamic from 'next/dynamic';
+const DynamicComponentWithNoSSR = dynamic(() => import('components/DAOBridgeComponent/DAOBridgeComponent'), {
+  ssr: false,
+});
+
 const HomePage: FC<NextPage> = () => {
   return (
     <Layout>
@@ -18,6 +23,7 @@ const HomePage: FC<NextPage> = () => {
         <About />
         <LastProposals />
         <LastVotes />
+        <DynamicComponentWithNoSSR />
       </Box>
     </Layout>
   );

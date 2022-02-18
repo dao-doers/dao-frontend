@@ -45,7 +45,7 @@ const CreateAccountStep: FC<CreateAccountStepProps> = ({ handleNextStep }) => {
             variant="gradientOutline"
             onClick={() => window.open('https://dev.ckb.tools/create-layer2-account', '_blank')}
           >
-            CREATE ACCOUNT
+            Create account
           </DAOButton>
         </ButtonWrapper>
       </StyledBox>
@@ -58,7 +58,7 @@ const CreateAccountStep: FC<CreateAccountStepProps> = ({ handleNextStep }) => {
         </Box>
         <ButtonWrapper>
           <DAOButton variant="gradientOutline" onClick={handleNextStep}>
-            NEXT STEP
+            Next step
           </DAOButton>
         </ButtonWrapper>
       </StyledBox>

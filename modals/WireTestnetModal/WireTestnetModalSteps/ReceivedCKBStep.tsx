@@ -7,7 +7,7 @@ import DAOButton from 'components/DAOButton/DAOButton';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 
-interface GetCKBStepProps {
+interface ReceivedCKBStepProps {
   handlePreviousStep: () => void;
   handleNextStep: () => void;
 }
@@ -35,16 +35,17 @@ const NavButtonsWrapper = styled(Box)`
   justify-content: space-between;
 `;
 
-const GetCKBStep: FC<GetCKBStepProps> = ({ handlePreviousStep, handleNextStep }) => {
+const ReceivedCKBStep: FC<ReceivedCKBStepProps> = ({ handlePreviousStep, handleNextStep }) => {
   return (
     <Box mt={5} mb={4}>
       <StyledBox>
         <Box>
           <Typography component="h6" variant="h6" paragraph>
-            Get your Layer 1 address
+            Stake CKB via NexisDAO
           </Typography>
           <Typography component="h6">
-            Go to NexisDAO and connect with metamask. Next, copy CKB address (ckt...xxx) from top left of swap box.
+            On NexisDAO Page, fill in the form field as much as you would like to deposit from your total balance, the
+            tokens will be locked for 1 month and you will get an equivalent in dCKB, next press the Mint button.
           </Typography>
         </Box>
         <ButtonWrapper>
@@ -52,21 +53,7 @@ const GetCKBStep: FC<GetCKBStepProps> = ({ handlePreviousStep, handleNextStep })
             variant="gradientOutline"
             onClick={() => window.open('https://aggron.nexisdao.com/dckb', '_blank')}
           >
-            Nexis DAO
-          </DAOButton>
-        </ButtonWrapper>
-      </StyledBox>
-
-      <StyledBox>
-        <Box>
-          <Typography component="h6" variant="h6" paragraph>
-            Get CKB from Layer 1
-          </Typography>
-          <Typography component="h6">Get CKB from Layer 1 faucet by pasting the Layer 1 address.</Typography>
-        </Box>
-        <ButtonWrapper>
-          <DAOButton variant="gradientOutline" onClick={() => window.open('https://faucet.nervos.org/', '_blank')}>
-            Layer 1 faucet
+            Stake CKB
           </DAOButton>
         </ButtonWrapper>
       </StyledBox>
@@ -85,4 +72,4 @@ const GetCKBStep: FC<GetCKBStepProps> = ({ handlePreviousStep, handleNextStep })
   );
 };
 
-export default GetCKBStep;
+export default ReceivedCKBStep;

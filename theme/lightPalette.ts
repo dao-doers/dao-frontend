@@ -23,17 +23,17 @@ const palette: RecursivePartial<Palette> = {
     ...common.buttons,
     default: {
       basic: {
-        background: colors.main8,
+        background: colors.main4,
         text: colors.main7,
         border: 'transparent',
       },
       hover: {
-        background: colors.main8,
+        background: colors.main4,
         text: colors.main7,
         border: 'transparent',
       },
       disabled: {
-        background: colors.main4,
+        background: colors.main2,
         text: colors.main6,
         border: 'transparent',
       },

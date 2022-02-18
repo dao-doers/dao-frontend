@@ -87,7 +87,7 @@ const MenuContent: FC<MenuContentProps> = ({ setDrawerOpen }) => {
   };
 
   return (
-    <Box display="flex" flexDirection="column" sx={{ alignItems: { xs: 'center', md: 'flex-start' } }}>
+    <Box display="flex" flexDirection="column" sx={{ alignItems: { xs: 'center', md: 'flex-start' } }} minHeight="80vh">
       {isMobile && (
         <Box display="flex" justifyContent="flex-end" width="100%" mt={2} mr={2}>
           <IconButton aria-label="close drawer" onClick={handleClose}>
@@ -137,7 +137,7 @@ const MenuContent: FC<MenuContentProps> = ({ setDrawerOpen }) => {
         </DAOPlainButton>
       </Box>
 
-      <Box mx="auto" my={4} sx={{ width: { xs: '60%', md: '100%' } }}>
+      <Box mx="auto" mb={1} mt={5} sx={{ width: { xs: '60%', md: '100%' } }}>
         <Link internal href={APP_ROUTES.CREATE}>
           <DAOButton variant="gradientOutline">
             <Typography>Create proposal</Typography>
@@ -145,17 +145,15 @@ const MenuContent: FC<MenuContentProps> = ({ setDrawerOpen }) => {
         </Link>
       </Box>
 
-      <Box mx="auto" my={4} sx={{ width: { xs: '60%', md: '100%' } }}>
+      <Box mx="auto" my={1} sx={{ width: { xs: '60%', md: '100%' } }}>
         <DAOButton variant="gradientOutline" onClick={() => setOpen(true)}>
           <Typography>Wire testnet dCKB</Typography>
         </DAOButton>
         <WireTestnetModal isModalOpen={open} isModalClose={() => setOpen(false)} />
       </Box>
 
-      <Box mx="auto" my={4} sx={{ width: { xs: '60%', md: '100%' } }}>
-        <Box mx="auto" my={2} sx={{ width: { xs: '60%', md: '100%' } }}>
-          <ThemeModeSwitch />
-        </Box>
+      <Box mx="auto" my={1} sx={{ width: { xs: '60%', md: '100%' } }}>
+        <ThemeModeSwitch />
       </Box>
     </Box>
   );

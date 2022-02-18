@@ -43,11 +43,6 @@ const TypographyBold = styled(Typography)`
   font-weight: 600;
 `;
 
-const TypographyGreen = styled(Typography)`
-  color: ${({ theme }) => theme.palette.colors.col2};
-  font-weight: 600;
-`;
-
 const TypographyRed = styled(Typography)`
   color: ${({ theme }) => theme.palette.colors.col6};
   font-weight: 600;
