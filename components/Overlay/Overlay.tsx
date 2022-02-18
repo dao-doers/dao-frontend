@@ -2,7 +2,9 @@
 import React from 'react';
 import { Box } from '@mui/system';
 import DAOCircleLoader from 'components/DAOCircleLoader/DAOCircleLoader';
-import LoadingOverlay from 'react-loading-overlay-ts';
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
+import LoadingOverlay from 'react-loading-overlay';
 
 interface OverlayProps {
   show?: boolean;
@@ -37,9 +39,9 @@ const Overlay: React.FC<OverlayProps> = props => {
     const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
     if (result) {
       return {
-        r: parseInt(result[1], 16),
-        g: parseInt(result[2], 16),
-        b: parseInt(result[3], 16),
+        red: parseInt(result[1], 16),
+        green: parseInt(result[2], 16),
+        blue: parseInt(result[3], 16),
       };
     }
     return {};
@@ -61,12 +63,12 @@ const Overlay: React.FC<OverlayProps> = props => {
         </Box>
       }
       styles={{
-        overlay: base => ({
+        overlay: (base: any) => ({
           ...base,
           backgroundColor: `rgba(
-                ${rgbOverlayColor?.r},
-                ${rgbOverlayColor?.g},
-                ${rgbOverlayColor.b},
+                ${rgbOverlayColor?.red},
+                ${rgbOverlayColor?.green},
+                ${rgbOverlayColor.blue},
                 ${disableOverlay ? '0%' : overlayOpacity}
                 )`,
         }),
