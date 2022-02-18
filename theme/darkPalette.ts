@@ -28,12 +28,12 @@ const palette: RecursivePartial<Palette> = {
         border: 'transparent',
       },
       hover: {
-        background: colors.main3,
+        background: colors.main4,
         text: colors.main7,
         border: 'transparent',
       },
       disabled: {
-        background: colors.main4,
+        background: colors.main2,
         text: colors.main6,
         border: 'transparent',
       },
