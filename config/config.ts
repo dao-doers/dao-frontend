@@ -22,8 +22,9 @@ const config = {
     },
     ethAccountLockCodeHash: '0xdeec13a7b8e100579541384ccaf4b5223733e4a5483c3aec95ddc4c1d5ea5b22',
     depositLockScriptTypeHash: '0x5a2506bb68d81a11dcadad4cb7eae62a17c43c619fe47ac8037bc8ce2dd90360',
-    portal_wallet_lock_hash: '0x58c5f491aba6d61678b7cf7edf4910b1f5e00ec0cde2f42e0abb4fd9aff25a63',
+    portalWalletLockHash: '0x58c5f491aba6d61678b7cf7edf4910b1f5e00ec0cde2f42e0abb4fd9aff25a63',
     SUDT_PROXY_CONTRACT_ADDRESS: '0xc03da4356b4030f0ec2494c18dcfa426574e10d5',
+    forceBridgeUrl: 'https://testnet.forcebridge.com/api/force-bridge/api/v1',
   },
   ethereum: {
     networkId: '0x4',

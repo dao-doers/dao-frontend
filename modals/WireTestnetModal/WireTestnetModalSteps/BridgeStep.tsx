@@ -17,7 +17,11 @@ import useERC20Contract from 'hooks/useERC20Contract';
 import config from 'config/config';
 
 import { dCKBTransferSchema } from 'validators/minorValidators';
+import dynamic from 'next/dynamic';
 
+const DAOBridgeComponentWithNoSSR = dynamic(() => import('components/DAOBridgeComponent/DAOBridgeComponent'), {
+  ssr: false,
+});
 interface IBridge {
   handlePreviousStep: () => void;
 }
@@ -75,6 +79,7 @@ const BridgeStep: FC<IBridge> = ({ handlePreviousStep }) => {
                 Please make sure you have sufficient CKB balance in your L1 account before transferring to L2. A minimum
                 balance of 471 CKB needs to be maintained.
               </Typography>
+              <DAOBridgeComponentWithNoSSR />
             </Box>
 
             <Box display="flex" justifyContent="space-between" mt={2}>
