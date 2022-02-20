@@ -1,23 +1,20 @@
 import { FC, useRef } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
 import styled from '@emotion/styled';
 
 import Box from '@mui/material/Box';
 
 import Modal from 'components/Modal/Modal';
-
 import Stepper from 'components/Steper/Stepper';
 import Step from 'components/Steper/Step';
 
-import CreateAccountStep from './WireTestnetModalSteps/CreateAccountStep';
-import GetCKBStep from './WireTestnetModalSteps/GetCKBStep';
-import ReceivedCKBStep from './WireTestnetModalSteps/ReceivedCKBStep';
-import BridgeStep from './WireTestnetModalSteps/BridgeStep';
+import { selectOpen, setClose } from 'redux/slices/modalWireddCKB';
 
-interface IStepperModal {
-  isModalOpen: boolean;
-  isModalClose: () => void;
-}
+import CreateAccountStep from './WireddCKBModalSteps/CreateAccountStep';
+import GetCKBStep from './WireddCKBModalSteps/GetCKBStep';
+import ReceivedCKBStep from './WireddCKBModalSteps/ReceivedCKBStep';
+import BridgeStep from './WireddCKBModalSteps/BridgeStep';
 
 const StyledBox = styled(Box)`
   width: 100%;
@@ -27,11 +24,19 @@ const StyledBox = styled(Box)`
   }
 `;
 
-const WireTestnetModal: FC<IStepperModal> = ({ isModalOpen, isModalClose }) => {
+const WireddCKBModal: FC = () => {
   const childRef = useRef<any>(null);
 
+  const dispatch = useDispatch();
+
+  const isModalOpen = useSelector(selectOpen);
+
+  const handleModalOpen = () => {
+    dispatch(setClose());
+  };
+
   return (
-    <Modal isOpen={isModalOpen} handleClose={isModalClose} title="Get dCKB" divider>
+    <Modal isOpen={isModalOpen} handleClose={handleModalOpen} title="Get dCKB" divider>
       <StyledBox>
         <Stepper nonLinear interactive ref={childRef}>
           <Step label="Get Layer 2 address">
@@ -61,4 +66,4 @@ const WireTestnetModal: FC<IStepperModal> = ({ isModalOpen, isModalClose }) => {
   );
 };
 
-export default WireTestnetModal;
+export default WireddCKBModal;

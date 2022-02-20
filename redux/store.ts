@@ -7,6 +7,7 @@ import votesReducer from 'redux/slices/votes';
 import createProposalReducer from 'redux/slices/createProposal';
 
 import modalTransactionReducer from 'redux/slices/modalTransaction';
+import modalWireddCKBReducer from 'redux/slices/modalWireddCKB';
 
 export default configureStore({
   reducer: {
@@ -17,5 +18,6 @@ export default configureStore({
     createProposal: createProposalReducer,
 
     modalTransaction: modalTransactionReducer,
+    modalWireddCKB: modalWireddCKBReducer,
   },
 });

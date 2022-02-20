@@ -35,14 +35,14 @@ const TransactionModal: FC = () => {
   const status = useSelector(selectStatus);
   const message = useSelector(selectMessage);
 
-  const handleTransactionModal = () => {
+  const handleModalOpen = () => {
     if (status !== PROCESSING_STATUSES.PROCESSING) {
       dispatch(setClose());
     }
   };
 
   return (
-    <Modal isOpen={isModalOpen} handleClose={handleTransactionModal}>
+    <Modal isOpen={isModalOpen} handleClose={handleModalOpen}>
       <StyledBox>
         <Box mx="auto" mb={4}>
           <DAOCircleLoader status={mapToLoader(status)} />
@@ -65,10 +65,10 @@ const TransactionModal: FC = () => {
               Success
             </Typography>
             <TypographyGrey variant="subtitle2" align="center">
-              {message.length > 0 ? message : 'Your transaction has been processed by blockchain network'}
+              {message.length > 0 ? message : 'Your request has been processed by blockchain network'}
             </TypographyGrey>
             <Box width="210px" mx="auto" my={2}>
-              <DAOButton variant="gradientOutline" onClick={handleTransactionModal}>
+              <DAOButton variant="gradientOutline" onClick={handleModalOpen}>
                 CLOSE
               </DAOButton>
             </Box>
@@ -84,7 +84,7 @@ const TransactionModal: FC = () => {
               {message.length === 0 ? 'Please try again' : ''}
             </TypographyGrey>
             <Box width="210px" mx="auto" my={2}>
-              <DAOButton variant="gradientOutline" onClick={handleTransactionModal}>
+              <DAOButton variant="gradientOutline" onClick={handleModalOpen}>
                 CLOSE
               </DAOButton>
             </Box>
