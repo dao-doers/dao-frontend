@@ -119,11 +119,11 @@ const BlockchainStatus: FC = () => {
         </StatusChip>
       </StatusWrapper>
 
-      {userAddress === '' && (
-        <StatusWrapper>
-          <ConnectWalletButton />
-        </StatusWrapper>
-      )}
+      {/* {userAddress === '' && ( */}
+      <StatusWrapper>
+        <ConnectWalletButton />
+      </StatusWrapper>
+      {/* )} */}
 
       {userAddress !== '' && (
         <StatusWrapper>
