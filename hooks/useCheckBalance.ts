@@ -14,8 +14,6 @@ const useCheckBalance = () => {
   const [balance, setBalance] = useState(0);
   const [ckbBalance, setCkbBalance] = useState<BigInt | null>(null);
   const [depositAddress, setDepositAddress] = useState<string | null>(null);
-  console.log('depositAddress', depositAddress);
-  console.log('fetchCkbBalance', ckbBalance);
 
   const [isChecked, setChecked] = useState(false);
 

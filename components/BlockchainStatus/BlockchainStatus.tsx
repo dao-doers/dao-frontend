@@ -18,8 +18,6 @@ import { shannonsToCkb } from 'utils/formatShannons';
 import useCheckIndexerStatus from 'hooks/useCheckIndexerStatus';
 import useCheckBalance from 'hooks/useCheckBalance';
 
-import Timer from 'components/Timer/Timer';
-import useFetchProposals from 'hooks/useFetchProposals';
 import RecentActivityStatus from 'components/RecentActivityStatus/RecentActivityStatus';
 
 const MainWrapper = styled(Box)`
@@ -66,14 +64,6 @@ const BlockchainStatus: FC = () => {
   const { molochBlock, layer2Block, molochError, molochLoading, layer2BlockLoading } = useCheckIndexerStatus();
 
   const { balance, isChecked } = useCheckBalance();
-
-  const refetchProposal = useFetchProposals();
-
-  const timer = <Timer reset={refetchProposal.loading} />;
-
-  const refetch = () => {
-    refetchProposal.refetch();
-  };
 
   return (
     <MainWrapper>
@@ -125,7 +115,7 @@ const BlockchainStatus: FC = () => {
 
       <StatusWrapper>
         <StatusChip title="Last page update:">
-          <RecentActivityStatus refetch={refetch} timer={timer} />
+          <RecentActivityStatus />
         </StatusChip>
       </StatusWrapper>
 

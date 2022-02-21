@@ -1,5 +1,5 @@
 import { FC, ReactNode, useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import { useDispatch } from 'react-redux';
 
 import styled from '@emotion/styled';
 
@@ -13,8 +13,6 @@ import BlockchainStatus from 'components/BlockchainStatus/BlockchainStatus';
 import LoadingPage from 'components/LoadingPage/LoadingPage';
 
 import { setTheme } from 'redux/slices/theme';
-import { selectSortedProposalsArray } from 'redux/slices/proposals';
-import { selectVotesArray } from 'redux/slices/votes';
 
 import useFetchProposals from 'hooks/useFetchProposals';
 import useFetchVotes from 'hooks/useFetchVotes';
@@ -39,9 +37,6 @@ const StyledBox = styled(Box)`
 
 const Layout: FC<LayoutProps> = ({ children }) => {
   const dispatch = useDispatch();
-
-  const sortedProposalsArray = useSelector(selectSortedProposalsArray);
-  const votesArray = useSelector(selectVotesArray);
 
   const loadingProposals = useFetchProposals();
   const loadingVotes = useFetchVotes();
