@@ -6,16 +6,14 @@ import Box from '@mui/material/Box';
 
 import DAOButton from 'components/DAOButton/DAOButton';
 
-import { setUserAddress } from 'redux/slices/user';
+import { setUserAddress, setIsLoggedIn } from 'redux/slices/user';
 
-import { loadWeb3, getMetamaskAddress } from 'utils/login';
+import { loadWeb3, getMetamaskAddress } from 'utils/blockchain';
 
-import useMobileDetect from 'hooks/useMobileDetection';
 import detectEthereumProvider from '@metamask/detect-provider';
 
 const ConnectWalletButton: FC = () => {
   const dispatch = useDispatch();
-  const { isMobile } = useMobileDetect();
 
   const [hasProvider, setHasProvider] = useState(false);
 
@@ -28,6 +26,7 @@ const ConnectWalletButton: FC = () => {
     sessionStorage.setItem('dao-user-address', address);
 
     dispatch(setUserAddress(address));
+    dispatch(setIsLoggedIn(true));
   };
 
   useEffect(() => {
@@ -40,7 +39,7 @@ const ConnectWalletButton: FC = () => {
     setProvider();
   }, []);
 
-  return hasProvider || (!isMobile() && !hasProvider) ? (
+  return hasProvider ? (
     <DAOButton variant="gradientOutline" onClick={handleConnectWallet}>
       <Box display="flex" alignItems="center">
         <Image src="/logos/metamask.png" alt="header-logo" height="20" width="20" />
@@ -51,7 +50,7 @@ const ConnectWalletButton: FC = () => {
     <DAOButton href={`https://metamask.app.link/dapp/${dAppLink}`} variant="gradientOutline">
       <Box display="flex" alignItems="center">
         <Image src="/logos/metamask.png" alt="header-logo" height="20" width="20" />
-        Connect Wallet Mobile
+        Connect Wallet
       </Box>
     </DAOButton>
   );
