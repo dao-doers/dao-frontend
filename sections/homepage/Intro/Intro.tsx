@@ -36,7 +36,7 @@ const Intro: FC = () => {
         Welcome to Nervos DAO
       </Title>
       <Box>
-        <Typography variant="h6" mb={4}>
+        <Typography variant="subtitle1" mb={4}>
           Decentralized Autonomous Organization introduced to the World by Nervos Foundation. Our mission is to spread
           true democracy.
         </Typography>

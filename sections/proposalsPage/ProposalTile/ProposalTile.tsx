@@ -27,17 +27,16 @@ const StyledExitToAppIcon = styled(ExitToAppIcon)`
   }
 `;
 
-const StyledTwitterIcon = styled(TwitterIcon)`
-  color: ${({ theme }) => theme.palette.colors.col1};
-  margin-right: 10px;
+const StyledLanguageIcon = styled(LanguageIcon)`
   cursor: pointer;
+  margin-right: 10px;
   ${({ theme }) => theme.breakpoints.down('sm')} {
     font-size: 20px;
   }
 `;
 
-const StyledLanguageIcon = styled(LanguageIcon)`
-  color: ${({ theme }) => theme.palette.colors.col5};
+const StyledTwitterIcon = styled(TwitterIcon)`
+  color: ${({ theme }) => theme.palette.colors.col1};
   cursor: pointer;
   ${({ theme }) => theme.breakpoints.down('sm')} {
     font-size: 20px;
@@ -115,17 +114,17 @@ const ProposalTile: FC<any> = ({ proposal }) => {
                   <StyledExitToAppIcon />
                 </Link>
               </Tooltip>
+              <Tooltip title="Go to project website" placement="top">
+                <Link href={`https://${formattedWebsite}`} target="_blank">
+                  <StyledLanguageIcon />
+                </Link>
+              </Tooltip>
               <Tooltip title="Share this proposal on Twitter" placement="top">
                 <Link
                   href={`https://twitter.com/share?url=${process.env.APP_URL}proposal/${proposal.id}&text=${formattedTitle}`}
                   target="_blank"
                 >
                   <StyledTwitterIcon />
-                </Link>
-              </Tooltip>
-              <Tooltip title="Go to project website" placement="top">
-                <Link href={`https://${formattedWebsite}`} target="_blank">
-                  <StyledLanguageIcon />
                 </Link>
               </Tooltip>
             </Box>

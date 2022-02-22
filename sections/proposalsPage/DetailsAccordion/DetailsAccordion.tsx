@@ -85,7 +85,7 @@ const DetailsAccordion: FC<any> = ({ proposal }) => {
   return (
     <StyledAccordion>
       <StyledAccordionSummary expandIcon={<StyledExpandMoreIcon />} aria-controls="panel1a-content" id="panel1a-header">
-        <TypographyBold variant="h6">Poll Details</TypographyBold>
+        <TypographyBold variant="subtitle2">Poll Details</TypographyBold>
       </StyledAccordionSummary>
       <StyledAccordionDetails>
         <Box display="flex" justifyContent="flex-start" flexWrap="wrap">
@@ -93,7 +93,7 @@ const DetailsAccordion: FC<any> = ({ proposal }) => {
             <Box sx={{ width: { xs: '48%', xl: '30%' } }} mb={2} mx="1%">
               <DAOTile variant="gradientOutline" width="100%" height="100px">
                 <Box>
-                  <Typography align="center" gutterBottom>
+                  <Typography variant="body2" align="center" gutterBottom>
                     Sponsored by
                   </Typography>
                   <CopyToClipboard text={proposal.sponsor} onCopy={handleCopySponsoredAddress}>
@@ -111,7 +111,7 @@ const DetailsAccordion: FC<any> = ({ proposal }) => {
             <Box sx={{ width: { xs: '48%', xl: '30%' } }} mb={2} mx="1%">
               <DAOTile variant="gradientOutline" width="100%" height="100px">
                 <Box>
-                  <Typography align="center" gutterBottom>
+                  <Typography variant="body2" align="center" gutterBottom>
                     Applicant Address
                   </Typography>
                   <CopyToClipboard text={proposal.applicant} onCopy={handleCopyApplicantAddress}>
@@ -129,7 +129,7 @@ const DetailsAccordion: FC<any> = ({ proposal }) => {
             <Box sx={{ width: { xs: '48%', xl: '30%' } }} mb={2} mx="1%">
               <DAOTile variant="gradientOutline" width="100%" height="100px">
                 <Box>
-                  <Typography align="center" gutterBottom>
+                  <Typography variant="body2" align="center" gutterBottom>
                     Shares Requested
                   </Typography>
                   <TypographyBold align="center">
@@ -144,7 +144,7 @@ const DetailsAccordion: FC<any> = ({ proposal }) => {
             <Box sx={{ width: { xs: '48%', xl: '30%' } }} mb={2} mx="1%">
               <DAOTile variant="gradientOutline" width="100%" height="100px">
                 <Box>
-                  <Typography align="center" gutterBottom>
+                  <Typography variant="body2" align="center" gutterBottom>
                     Tribute to DAO
                   </Typography>
                   <TypographyBold align="center">
@@ -159,7 +159,7 @@ const DetailsAccordion: FC<any> = ({ proposal }) => {
             <Box sx={{ width: { xs: '48%', xl: '30%' } }} mb={2} mx="1%">
               <DAOTile variant="gradientOutline" width="100%" height="100px">
                 <Box>
-                  <Typography align="center" gutterBottom>
+                  <Typography variant="body2" align="center" gutterBottom>
                     Payment Requested
                   </Typography>
                   <TypographyBold align="center">

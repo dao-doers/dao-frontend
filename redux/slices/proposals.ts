@@ -34,6 +34,8 @@ const proposalsSlice = createSlice({
         const proposals = { ...proposal };
         if (proposal.sponsored === false && proposal.processed === false) {
           proposals.proposalStatus = PROPOSAL_STATUS.COLLECTING_FUNDS;
+          proposals.yesVotes = Number(proposal.yesVotes);
+          proposals.noVotes = Number(proposal.noVotes);
         } else if (
           proposal.sponsored === true &&
           currentTime < proposal.votingPeriodEnds &&
@@ -41,6 +43,8 @@ const proposalsSlice = createSlice({
           proposal.processed === false
         ) {
           proposals.proposalStatus = PROPOSAL_STATUS.VOTING;
+          proposals.yesVotes = Number(proposal.yesVotes);
+          proposals.noVotes = Number(proposal.noVotes);
         } else if (
           proposal.sponsored === true &&
           currentTime > proposal.votingPeriodEnds &&
@@ -48,6 +52,8 @@ const proposalsSlice = createSlice({
           proposal.processed === false
         ) {
           proposals.proposalStatus = PROPOSAL_STATUS.GRACE_PERIOD;
+          proposals.yesVotes = Number(proposal.yesVotes);
+          proposals.noVotes = Number(proposal.noVotes);
         } else if (
           proposal.sponsored === true &&
           currentTime > proposal.votingPeriodEnds &&
@@ -55,8 +61,12 @@ const proposalsSlice = createSlice({
           proposal.processed === false
         ) {
           proposals.proposalStatus = PROPOSAL_STATUS.PROCEEDING;
+          proposals.yesVotes = Number(proposal.yesVotes);
+          proposals.noVotes = Number(proposal.noVotes);
         } else if (proposal.processed === true) {
           proposals.proposalStatus = PROPOSAL_STATUS.FINISHED;
+          proposals.yesVotes = Number(proposal.yesVotes);
+          proposals.noVotes = Number(proposal.noVotes);
         } else {
           return null;
         }

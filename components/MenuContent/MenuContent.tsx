@@ -34,7 +34,6 @@ interface MenuContentProps {
 
 const TypographyBlack = styled(Typography)`
   color: ${({ theme }) => theme.palette.colors.main7};
-  font-weight: 600;
 `;
 
 const StyledCloseIcon = styled(Close)`

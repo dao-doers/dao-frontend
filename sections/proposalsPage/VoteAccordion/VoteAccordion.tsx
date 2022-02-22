@@ -10,6 +10,7 @@ import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import Typography from '@mui/material/Typography';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import PlaylistRemoveIcon from '@mui/icons-material/PlaylistRemove';
 
 import DividerLine from 'components/DividerLine/DividerLine';
 import DAOButton from 'components/DAOButton/DAOButton';
@@ -18,7 +19,7 @@ import ConnectWalletButton from 'components/ConnectWalletButton/ConnectWalletBut
 import Counter from 'components/Counter/Counter';
 import TooltipIcon from 'components/TooltipIcon';
 
-import Chart from 'sections/proposalsPage/VoteAccordion/Chart/Chart';
+import LinearChart from 'components/LinearChart/LinearChart';
 
 import { selectUserAddress, selectIsLoggedIn } from 'redux/slices/user';
 import { setOpen, setStatus, setMessage } from 'redux/slices/modalTransaction';
@@ -46,15 +47,7 @@ const StyledAccordionSummary = styled(AccordionSummary)`
   padding: 0;
 `;
 
-const VoteAccordionWrapper = styled(Box)`
-  display: flex;
-  align-items: center;
-  ${({ theme }) => `${theme.breakpoints.down('md')} {
-    flex-direction: column;
-    }`}
-`;
-
-const TypographyRose = styled(Typography)`
+const TypographyGreen = styled(Typography)`
   color: ${({ theme }) => theme.palette.colors.col2};
 `;
 
@@ -181,7 +174,7 @@ const VoteAccordion: FC<any> = ({ proposal }) => {
     <StyledAccordion>
       <StyledAccordionSummary expandIcon={<StyledExpandMoreIcon />} aria-controls="panel1a-content" id="panel1a-header">
         <Box display="flex" justifyContent="space-between" alignItems="center" width="100%">
-          <TypographyBold variant="h6">Vote Section</TypographyBold>
+          <TypographyBold variant="subtitle2">Vote Section</TypographyBold>
           {proposal.proposalStatus === PROPOSAL_STATUS.COLLECTING_FUNDS && (
             <TypographyViolet>Collecting Funds</TypographyViolet>
           )}
@@ -234,131 +227,137 @@ const VoteAccordion: FC<any> = ({ proposal }) => {
         {(proposal.proposalStatus === PROPOSAL_STATUS.VOTING ||
           proposal.proposalStatus === PROPOSAL_STATUS.GRACE_PERIOD ||
           proposal.proposalStatus === PROPOSAL_STATUS.PROCEEDING) && (
-          <VoteAccordionWrapper>
-            <Box sx={{ width: { xs: '100%', md: '70%' } }} p={2}>
-              <Box>
-                {currentTime <= proposal.votingPeriodEnds && (
-                  <>
-                    <Typography variant="h6" mb={3}>
-                      Your Vote
-                    </Typography>
+          <Box>
+            <Box>
+              {currentTime <= proposal.votingPeriodEnds && (
+                <>
+                  <Typography variant="h6" mb={3}>
+                    Your Vote
+                  </Typography>
 
-                    {!isLoggedIn && (
-                      <Box maxWidth="200px" mx="auto" mb={3}>
-                        <ConnectWalletButton />
-                      </Box>
-                    )}
+                  {!isLoggedIn && (
+                    <Box maxWidth="200px" mx="auto" mb={3}>
+                      <ConnectWalletButton />
+                    </Box>
+                  )}
 
-                    {isLoggedIn && notVotedYet !== 2 && (
-                      <Box display="flex" justifyContent="space-between" mb={3}>
-                        <Box width="48%">
-                          <DAOButton variant="agreeVariant" onClick={() => handleVote(1)}>
-                            Yes
-                          </DAOButton>
-                        </Box>
-                        <Box width="48%">
-                          <DAOButton variant="disagreeVariant" onClick={() => handleVote(2)}>
-                            No
-                          </DAOButton>
-                        </Box>
-                      </Box>
-                    )}
-
-                    {notVotedYet === 2 && (
-                      <DAOTile variant="redOutline">
-                        <Typography align="center" p={1}>
-                          You have already voted!
-                        </Typography>
-                      </DAOTile>
-                    )}
-                  </>
-                )}
-
-                {currentTime > proposal.votingPeriodEnds && currentTime < proposal.gracePeriodEnds && (
-                  <DAOTile variant="gradientOutline">
-                    <Typography align="center" p={1}>
-                      Proposal is in Grace Period.
-                      <TooltipIcon>
-                        <Typography variant="body2">
-                          Voting is over, and the Proposal is set to pass or fail depending on the votes cast during
-                          Voting. Members who voted No, and have no other pending Yes votes, can ragequit during this
-                          period.
-                        </Typography>
-                      </TooltipIcon>
-                    </Typography>
-                  </DAOTile>
-                )}
-
-                {currentTime > proposal.votingPeriodEnds && currentTime > proposal.gracePeriodEnds && (
-                  <>
-                    <DAOTile variant="greyOutline">
-                      <Typography align="center" p={1}>
-                        To finish the whole process proposal needs to be proceed.
-                      </Typography>
-                    </DAOTile>
-
-                    {processProposalStatus === FETCH_STATUSES.ERROR && (
-                      <Box mt={1}>
-                        <DAOTile variant="redOutline">
-                          <Typography align="center" p={1}>
-                            Proposal is not ready to be processed by blockchain network.
-                          </Typography>
-                        </DAOTile>
-                      </Box>
-                    )}
-
-                    {processProposalStatus === FETCH_STATUSES.SUCCESS && (
-                      <DAOTile variant="gradientOutline">
-                        <Typography align="center" p={1}>
-                          Proposal has been processed by blockchain network.
-                        </Typography>
-                      </DAOTile>
-                    )}
-
-                    {!isLoggedIn && (
-                      <Box maxWidth="200px" mx="auto" mt={2}>
-                        <ConnectWalletButton />
-                      </Box>
-                    )}
-
-                    {isLoggedIn && processProposalStatus !== FETCH_STATUSES.SUCCESS && (
-                      <Box maxWidth="200px" mx="auto" mt={2}>
-                        <DAOButton variant="gradientOutline" onClick={handleProcessProposal}>
-                          Process Proposal
+                  {isLoggedIn && notVotedYet !== 2 && (
+                    <Box display="flex" justifyContent="space-between" mb={3}>
+                      <Box width="48%">
+                        <DAOButton variant="agreeVariant" onClick={() => handleVote(1)}>
+                          Yes
                         </DAOButton>
                       </Box>
-                    )}
-                  </>
-                )}
-              </Box>
+                      <Box width="48%">
+                        <DAOButton variant="disagreeVariant" onClick={() => handleVote(2)}>
+                          No
+                        </DAOButton>
+                      </Box>
+                    </Box>
+                  )}
 
-              <DividerLine />
-
-              {currentTime <= proposal.votingPeriodEnds && (
-                <Box display="flex" justifyContent="space-between" width="100%" pb={2}>
-                  <Typography width="100%">Voting Ends In</Typography>
-                  <Counter time={Number(proposal.votingPeriodEnds)} />
-                </Box>
+                  {notVotedYet === 2 && (
+                    <DAOTile variant="redOutline">
+                      <Typography align="center" p={1}>
+                        You have already voted!
+                      </Typography>
+                    </DAOTile>
+                  )}
+                </>
               )}
+
               {currentTime > proposal.votingPeriodEnds && currentTime < proposal.gracePeriodEnds && (
-                <Box display="flex" justifyContent="space-between" width="100%" pb={2}>
-                  <Typography width="100%">Grace Period Ends In</Typography>
-                  <Counter time={Number(proposal.gracePeriodEnds)} />
-                </Box>
+                <DAOTile variant="gradientOutline">
+                  <Typography align="center" p={1}>
+                    Proposal is in Grace Period.
+                    <TooltipIcon>
+                      <Typography variant="body2">
+                        Voting is over, and the Proposal is set to pass or fail depending on the votes cast during
+                        Voting. Members who voted No, and have no other pending Yes votes, can ragequit during this
+                        period.
+                      </Typography>
+                    </TooltipIcon>
+                  </Typography>
+                </DAOTile>
               )}
-              <Box display="flex" justifyContent="space-between" width="100%" pb={2}>
-                <Typography>Voters Agreed</Typography>
-                <TypographyRose>{proposal.yesVotes}</TypographyRose>
-              </Box>
-              <Box display="flex" justifyContent="space-between" width="100%" pb={2}>
-                <Typography>Voters Disagreed</Typography>
-                <TypographyBlue>{proposal.noVotes}</TypographyBlue>
-              </Box>
+
+              {currentTime > proposal.votingPeriodEnds && currentTime > proposal.gracePeriodEnds && (
+                <>
+                  <DAOTile variant="greyOutline">
+                    <Typography align="center" p={1}>
+                      To finish the whole process, proposal needs to be processed.
+                    </Typography>
+                  </DAOTile>
+
+                  {processProposalStatus === FETCH_STATUSES.ERROR && (
+                    <Box mt={1}>
+                      <DAOTile variant="redOutline">
+                        <Typography align="center" p={1}>
+                          Proposal is not ready to be processed by blockchain network.
+                        </Typography>
+                      </DAOTile>
+                    </Box>
+                  )}
+
+                  {processProposalStatus === FETCH_STATUSES.SUCCESS && (
+                    <DAOTile variant="gradientOutline">
+                      <Typography align="center" p={1}>
+                        Proposal has been processed by blockchain network.
+                      </Typography>
+                    </DAOTile>
+                  )}
+
+                  {!isLoggedIn && (
+                    <Box maxWidth="200px" mx="auto" mt={2}>
+                      <ConnectWalletButton />
+                    </Box>
+                  )}
+
+                  {isLoggedIn && processProposalStatus !== FETCH_STATUSES.SUCCESS && (
+                    <Box maxWidth="200px" mx="auto" mt={2}>
+                      <DAOButton variant="gradientOutline" onClick={handleProcessProposal}>
+                        Process Proposal
+                      </DAOButton>
+                    </Box>
+                  )}
+                </>
+              )}
             </Box>
-            <Box sx={{ width: { xs: '200px', md: '30%' } }} px={2} pb={2}>
-              <Chart agreed={proposal.yesVotes} disagreed={proposal.noVotes} />
-            </Box>
-          </VoteAccordionWrapper>
+
+            <DividerLine />
+
+            {currentTime <= proposal.votingPeriodEnds && (
+              <Box display="flex" justifyContent="space-between" width="100%" pb={2}>
+                <Typography width="100%">Voting Ends In</Typography>
+                <Counter time={Number(proposal.votingPeriodEnds)} />
+              </Box>
+            )}
+            {currentTime > proposal.votingPeriodEnds && currentTime < proposal.gracePeriodEnds && (
+              <Box display="flex" justifyContent="space-between" width="100%" pb={2}>
+                <Typography width="100%">Grace Period Ends In</Typography>
+                <Counter time={Number(proposal.gracePeriodEnds)} />
+              </Box>
+            )}
+            {proposal.yesVotes + proposal.noVotes > 0 && (
+              <Box width="100%">
+                <Box display="flex" justifyContent="space-between" width="100%" pb={2}>
+                  <TypographyGreen>Agreed: {proposal.yesVotes}</TypographyGreen>
+
+                  <TypographyBlue>Disagreed: {proposal.noVotes}</TypographyBlue>
+                </Box>
+
+                <Box>
+                  <LinearChart agreed={proposal.yesVotes} disagreed={proposal.noVotes} />
+                </Box>
+              </Box>
+            )}
+            {proposal.yesVotes + proposal.noVotes === 0 && (
+              <Box display="flex" alignItems="center" width="100%">
+                <PlaylistRemoveIcon />
+                <Typography ml={1}>No votes</Typography>
+              </Box>
+            )}
+          </Box>
         )}
 
         {proposal.proposalStatus === PROPOSAL_STATUS.FINISHED && (
@@ -378,24 +377,26 @@ const VoteAccordion: FC<any> = ({ proposal }) => {
               </DAOTile>
             )}
 
-            <Box
-              display="flex"
-              alignItems="center"
-              sx={{ flexDirection: { xs: 'column', md: 'row' }, mt: { xs: 4, md: 0 } }}
-            >
-              <Box sx={{ width: { xs: '100%', md: '70%' } }}>
-                <Box display="flex" justifyContent="space-between" width="100%" pb={2}>
-                  <Typography>Voters Agreed</Typography>
-                  <TypographyRose>{proposal.yesShares}</TypographyRose>
+            <Box sx={{ mt: { xs: 4, md: 0 } }}>
+              {proposal.yesVotes + proposal.noVotes > 0 && (
+                <Box width="100%">
+                  <Box display="flex" justifyContent="space-between" width="100%" pb={2}>
+                    <TypographyGreen>Agreed: {proposal.yesVotes}</TypographyGreen>
+
+                    <TypographyBlue>Disagreed: {proposal.noVotes}</TypographyBlue>
+                  </Box>
+
+                  <Box>
+                    <LinearChart agreed={proposal.yesVotes} disagreed={proposal.noVotes} />
+                  </Box>
                 </Box>
-                <Box display="flex" justifyContent="space-between" width="100%" pb={2}>
-                  <Typography>Voters Disagreed</Typography>
-                  <TypographyBlue>{proposal.noShares}</TypographyBlue>
+              )}
+              {proposal.yesVotes + proposal.noVotes === 0 && (
+                <Box display="flex" alignItems="center" width="100%">
+                  <PlaylistRemoveIcon />
+                  <Typography ml={1}>No votes</Typography>
                 </Box>
-              </Box>
-              <Box sx={{ width: { xs: '150px', md: '30%' } }} px={2} pb={2}>
-                <Chart agreed={proposal.yesShares} disagreed={proposal.noShares} />
-              </Box>
+              )}
             </Box>
           </>
         )}

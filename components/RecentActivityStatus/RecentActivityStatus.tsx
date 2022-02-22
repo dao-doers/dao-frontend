@@ -29,7 +29,7 @@ const RecentActivityStatus = () => {
           <Timer reset={refetchProposal.loading} />
         </Box>
       </Box>
-      <Box ml={2}>
+      <Box ml={0.5}>
         <DAOPlainButton variant="gradientOutline" onClick={refetch}>
           <Tooltip arrow title="Refresh data" placement="bottom">
             <StyledSyncIcon />

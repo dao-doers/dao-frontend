@@ -32,19 +32,19 @@ const TypographyBold = styled(Typography)`
 `;
 
 const StyledAddReactionIcon = styled(AddReactionIcon)`
-  color: ${({ theme }) => theme.palette.colors.col1};
+  color: ${({ theme }) => theme.palette.colors.main7};
   font-size: 40px;
   margin-bottom: 30px;
 `;
 
 const StyledAddCircleOutlineIcon = styled(AddCircleOutlineIcon)`
-  color: ${({ theme }) => theme.palette.colors.col1};
+  color: ${({ theme }) => theme.palette.colors.main7};
   font-size: 40px;
   margin-bottom: 30px;
 `;
 
 const StyledAddTaskIcon = styled(AddTaskIcon)`
-  color: ${({ theme }) => theme.palette.colors.col1};
+  color: ${({ theme }) => theme.palette.colors.main7};
   font-size: 40px;
   margin-bottom: 30px;
 `;
