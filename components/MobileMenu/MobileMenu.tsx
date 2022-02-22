@@ -46,6 +46,10 @@ const MobileMenu: FC = () => {
     setDrawerOpen(!isDrawerOpen);
   };
 
+  const BlurryStyledDrawer = {
+    backdropFilter: 'blur(1px)',
+  };
+
   return (
     <Box sx={{ display: { xs: 'block', lg: 'none' } }}>
       <Box display="flex" justifyContent="space-between" alignItems="center">
@@ -69,7 +73,15 @@ const MobileMenu: FC = () => {
         )}
       </Box>
 
-      <StyledDrawer variant="temporary" anchor="right" open={isDrawerOpen} onClose={handleDrawerToggle}>
+      <StyledDrawer
+        variant="temporary"
+        anchor="right"
+        open={isDrawerOpen}
+        onClose={handleDrawerToggle}
+        BackdropProps={{
+          style: BlurryStyledDrawer,
+        }}
+      >
         <MenuContent setDrawerOpen={setDrawerOpen} />
       </StyledDrawer>
     </Box>

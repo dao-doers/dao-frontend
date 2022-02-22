@@ -17,7 +17,6 @@ import config from 'config/config';
 
 const useEthers = (connectedAccountAddress: string | null) => {
   const [ethers, setEthers] = useState<providers.Provider | null>(null);
-  console.log('ethers', ethers);
 
   useEffect(() => {
     if (connectedAccountAddress) {

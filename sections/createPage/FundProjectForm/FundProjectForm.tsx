@@ -14,7 +14,7 @@ import TooltipIcon from 'components/TooltipIcon';
 import ConnectWalletButton from 'components/ConnectWalletButton/ConnectWalletButton';
 
 import { setOpen, setStatus, setMessage } from 'redux/slices/modalTransaction';
-import { selectUserAddress } from 'redux/slices/user';
+import { selectUserAddress, selectIsLoggedIn } from 'redux/slices/user';
 
 import PROCESSING_STATUSES from 'enums/processingStatuses';
 
@@ -51,6 +51,7 @@ const TypographyRed = styled(Typography)`
 const FundProjectForm: FC = () => {
   const dispatch = useDispatch();
   const userAddress = useSelector(selectUserAddress);
+  const isLoggedIn = useSelector(selectIsLoggedIn);
 
   const [validated, setValidated] = useState(true);
 
@@ -90,7 +91,7 @@ const FundProjectForm: FC = () => {
 
       dispatch(setStatus(PROCESSING_STATUSES.SUCCESS));
       dispatch(
-        setMessage(`Your transaction has been processed by blockchain network and will be displayed with the block number 
+        setMessage(`Your request has been processed by blockchain network and will be displayed with the block number 
       ${receipt.blockNumber + 1}`),
       );
     } catch (error) {
@@ -229,15 +230,15 @@ const FundProjectForm: FC = () => {
                 </Box>
 
                 <Box>
-                  {userAddress === '' && <ConnectWalletButton />}
+                  {!isLoggedIn && <ConnectWalletButton />}
 
-                  {validated && userAddress !== '' && (
+                  {validated && isLoggedIn && (
                     <DAOButton disabled={!validated} variant="gradientOutline" type="submit">
                       Send request
                     </DAOButton>
                   )}
 
-                  {!validated && userAddress !== '' && (
+                  {!validated && isLoggedIn && (
                     <TypographyRed ml={1} variant="subtitle2" align="center">
                       You&apos;re not a member of the Guild.
                     </TypographyRed>
