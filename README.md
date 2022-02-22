@@ -17,6 +17,10 @@ How to run:
 
 ### Download repo.
 
+```
+git clone https://github.com/dao-doers/dao-frontend.git
+```
+
 ### Install dependencies
 
 ```
@@ -29,7 +33,7 @@ yarn
 yarn dev
 ```
 
-Go to:
+### Go to:
 
 ```
 http://localhost:3015/
@@ -41,6 +45,7 @@ http://localhost:3015/
 
 - [React](https://reactjs.org/)
 - [NextJS](https://nextjs.org/)
+- [web3](https://web3js.readthedocs.io/en/v1.7.0/#)
 - [Material UI](https://mui.com/)
 - [Emotion](https://emotion.sh/)
 - [Redux](https://redux.js.org/)
