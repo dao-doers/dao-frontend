@@ -14,7 +14,7 @@ import TooltipIcon from 'components/TooltipIcon';
 import ConnectWalletButton from 'components/ConnectWalletButton/ConnectWalletButton';
 
 import { setOpen, setStatus, setMessage } from 'redux/slices/modalTransaction';
-import { selectUserAddress } from 'redux/slices/user';
+import { selectUserAddress, selectIsLoggedIn } from 'redux/slices/user';
 
 import PROCESSING_STATUSES from 'enums/processingStatuses';
 
@@ -45,6 +45,7 @@ const TypographyBold = styled(Typography)`
 const JoinDaoForm: FC = () => {
   const dispatch = useDispatch();
   const userAddress = useSelector(selectUserAddress);
+  const isLoggedIn = useSelector(selectIsLoggedIn);
 
   const onSubmit = async (values: any) => {
     try {
@@ -187,9 +188,9 @@ const JoinDaoForm: FC = () => {
                 </Box>
 
                 <Box>
-                  {userAddress === '' && <ConnectWalletButton />}
+                  {!isLoggedIn && <ConnectWalletButton />}
 
-                  {userAddress !== '' && (
+                  {isLoggedIn && (
                     <DAOButton variant="gradientOutline" type="submit">
                       Send request
                     </DAOButton>

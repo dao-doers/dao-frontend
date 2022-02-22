@@ -10,7 +10,7 @@ import ConnectWalletButton from 'components/ConnectWalletButton/ConnectWalletBut
 import DAOCircleLoader from 'components/DAOCircleLoader/DAOCircleLoader';
 import StatusChip from 'components/StatusChip/StatusChip';
 
-import { selectUserAddress } from 'redux/slices/user';
+import { selectUserAddress, selectIsLoggedIn } from 'redux/slices/user';
 
 import formatAddress from 'utils/formatAddress';
 import { shannonsToCkb } from 'utils/formatShannons';
@@ -60,6 +60,7 @@ const TypographyYellow = styled(Typography)`
 
 const BlockchainStatus: FC = () => {
   const userAddress = useSelector(selectUserAddress);
+  const isLoggedIn = useSelector(selectIsLoggedIn);
 
   const { molochBlock, layer2Block, molochError, molochLoading, layer2BlockLoading } = useCheckIndexerStatus();
 
@@ -119,13 +120,13 @@ const BlockchainStatus: FC = () => {
         </StatusChip>
       </StatusWrapper>
 
-      {userAddress === '' && (
+      {!isLoggedIn && (
         <StatusWrapper>
           <ConnectWalletButton />
         </StatusWrapper>
       )}
 
-      {userAddress !== '' && (
+      {isLoggedIn && (
         <StatusWrapper>
           <StatusChip title="User address:">
             <TypographyBold>{formatAddress(userAddress)}</TypographyBold>
@@ -133,7 +134,7 @@ const BlockchainStatus: FC = () => {
         </StatusWrapper>
       )}
 
-      {userAddress !== '' && isChecked && (
+      {isLoggedIn && isChecked && (
         <StatusWrapper>
           <StatusChip title="dCKB balance:">
             <TypographyBold>{shannonsToCkb(balance)}</TypographyBold>
@@ -141,7 +142,7 @@ const BlockchainStatus: FC = () => {
         </StatusWrapper>
       )}
 
-      {userAddress !== '' && !isChecked && (
+      {isLoggedIn && !isChecked && (
         <StatusWrapper>
           <StatusChip title="dCKB balance:">
             <Box display="flex" alignItems="center">

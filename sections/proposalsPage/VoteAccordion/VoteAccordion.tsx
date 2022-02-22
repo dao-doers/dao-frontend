@@ -20,7 +20,7 @@ import TooltipIcon from 'components/TooltipIcon';
 
 import Chart from 'sections/proposalsPage/VoteAccordion/Chart/Chart';
 
-import { selectUserAddress } from 'redux/slices/user';
+import { selectUserAddress, selectIsLoggedIn } from 'redux/slices/user';
 import { setOpen, setStatus, setMessage } from 'redux/slices/modalTransaction';
 
 import useSponsorProposal from 'hooks/useSponsorProposal';
@@ -83,6 +83,7 @@ const VoteAccordion: FC<any> = ({ proposal }) => {
   const dispatch = useDispatch();
 
   const userAddress = useSelector(selectUserAddress);
+  const isLoggedIn = useSelector(selectIsLoggedIn);
 
   const [sponsorProposalStatus, setSponsorProposalStatus] = useState(PROCESSING_STATUSES.IDLE);
   // 0 means idle state, 1 means user can vote, 2 means user already voted
@@ -92,7 +93,7 @@ const VoteAccordion: FC<any> = ({ proposal }) => {
   const currentTime = new Date().getTime() / 1000;
 
   useEffect(() => {
-    if (userAddress !== '' && proposal.proposalIndex !== null) {
+    if (isLoggedIn && proposal.proposalIndex !== null) {
       useNotVotedYetCheck(userAddress, proposal.proposalIndex, process.env.DAO_ADDRESS as any).then(async response => {
         if (response === true) {
           setNotVotedYet(1);
@@ -101,7 +102,7 @@ const VoteAccordion: FC<any> = ({ proposal }) => {
         }
       });
     }
-  }, [userAddress, proposal, process.env.DAO_ADDRESS]);
+  }, [userAddress, isLoggedIn, proposal, process.env.DAO_ADDRESS]);
 
   const handleSponsorProposal = async () => {
     const daoAddress = process.env.DAO_ADDRESS;
@@ -213,13 +214,13 @@ const VoteAccordion: FC<any> = ({ proposal }) => {
                 </DAOTile>
               )}
 
-              {userAddress === '' && (
+              {!isLoggedIn && (
                 <Box maxWidth="200px" mx="auto" mt={2}>
                   <ConnectWalletButton />
                 </Box>
               )}
 
-              {userAddress !== '' && sponsorProposalStatus !== PROCESSING_STATUSES.SUCCESS && (
+              {isLoggedIn && sponsorProposalStatus !== PROCESSING_STATUSES.SUCCESS && (
                 <Box maxWidth="200px" mx="auto" mt={2}>
                   <DAOButton variant="gradientOutline" onClick={handleSponsorProposal}>
                     Sponsor Proposal
@@ -242,13 +243,13 @@ const VoteAccordion: FC<any> = ({ proposal }) => {
                       Your Vote
                     </Typography>
 
-                    {userAddress === '' && (
+                    {!isLoggedIn && (
                       <Box maxWidth="200px" mx="auto" mb={3}>
                         <ConnectWalletButton />
                       </Box>
                     )}
 
-                    {userAddress !== '' && notVotedYet !== 2 && (
+                    {isLoggedIn && notVotedYet !== 2 && (
                       <Box display="flex" justifyContent="space-between" mb={3}>
                         <Box width="48%">
                           <DAOButton variant="agreeVariant" onClick={() => handleVote(1)}>
@@ -314,13 +315,13 @@ const VoteAccordion: FC<any> = ({ proposal }) => {
                       </DAOTile>
                     )}
 
-                    {userAddress === '' && (
+                    {!isLoggedIn && (
                       <Box maxWidth="200px" mx="auto" mt={2}>
                         <ConnectWalletButton />
                       </Box>
                     )}
 
-                    {userAddress !== '' && processProposalStatus !== FETCH_STATUSES.SUCCESS && (
+                    {isLoggedIn && processProposalStatus !== FETCH_STATUSES.SUCCESS && (
                       <Box maxWidth="200px" mx="auto" mt={2}>
                         <DAOButton variant="gradientOutline" onClick={handleProcessProposal}>
                           Process Proposal
