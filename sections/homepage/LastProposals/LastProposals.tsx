@@ -11,7 +11,7 @@ import PlaylistRemoveIcon from '@mui/icons-material/PlaylistRemove';
 
 import ProposalTile from 'sections/proposalsPage/ProposalTile/ProposalTile';
 
-import { selectSortedProposalsArray } from 'redux/slices/proposals';
+import { selectProposalsArray } from 'redux/slices/proposals';
 
 import useIsMobile from 'hooks/useIsMobile';
 
@@ -50,36 +50,36 @@ const TypographyBlue = styled(Typography)`
 const LastProposals: FC = () => {
   const isMobile = useIsMobile('md');
 
-  const sortedProposalsArray = useSelector(selectSortedProposalsArray);
+  const proposalsArray = useSelector(selectProposalsArray);
   return (
     <Box width="100%">
       <TypographyBold variant="h3" mb={3} mt={8}>
         Last Proposals
       </TypographyBold>
 
-      {sortedProposalsArray.length === 0 && (
+      {proposalsArray.length === 0 && (
         <Box display="flex" flexDirection="column" alignItems="center">
           <StyledPlaylistRemoveIcon />
           <TypographyBlue>There are no proposals of selected type</TypographyBlue>
         </Box>
       )}
-      {sortedProposalsArray.length > 0 && (
+      {proposalsArray.length > 0 && (
         <>
           {!isMobile && (
             <>
               <Box display="flex" justifyContent="space-between" width="100%">
                 <Box width="49%">
                   <ProposalTile
-                    key={`proposal-${sortedProposalsArray[0].proposalId}`}
-                    id={`proposal-${sortedProposalsArray[0].proposalId}`}
-                    proposal={sortedProposalsArray[0]}
+                    key={`proposal-${proposalsArray[0].proposalId}`}
+                    id={`proposal-${proposalsArray[0].proposalId}`}
+                    proposal={proposalsArray[0]}
                   />
                 </Box>
                 <Box width="49%">
                   <ProposalTile
-                    key={`proposal-${sortedProposalsArray[1].proposalId}`}
-                    id={`proposal-${sortedProposalsArray[1].proposalId}`}
-                    proposal={sortedProposalsArray[1]}
+                    key={`proposal-${proposalsArray[1].proposalId}`}
+                    id={`proposal-${proposalsArray[1].proposalId}`}
+                    proposal={proposalsArray[1]}
                   />
                 </Box>
               </Box>
@@ -87,16 +87,16 @@ const LastProposals: FC = () => {
               <Box display="flex" justifyContent="space-between" width="100%">
                 <Box width="49%">
                   <ProposalTile
-                    key={`proposal-${sortedProposalsArray[2].proposalId}`}
-                    id={`proposal-${sortedProposalsArray[2].proposalId}`}
-                    proposal={sortedProposalsArray[2]}
+                    key={`proposal-${proposalsArray[2].proposalId}`}
+                    id={`proposal-${proposalsArray[2].proposalId}`}
+                    proposal={proposalsArray[2]}
                   />
                 </Box>
                 <Box width="49%">
                   <ProposalTile
-                    key={`proposal-${sortedProposalsArray[3].proposalId}`}
-                    id={`proposal-${sortedProposalsArray[3].proposalId}`}
-                    proposal={sortedProposalsArray[3]}
+                    key={`proposal-${proposalsArray[3].proposalId}`}
+                    id={`proposal-${proposalsArray[3].proposalId}`}
+                    proposal={proposalsArray[3]}
                   />
                 </Box>
               </Box>
@@ -108,27 +108,27 @@ const LastProposals: FC = () => {
               <SwiperSlide>
                 <Box width="90%" mx="auto">
                   <ProposalTile
-                    key={`proposal-${sortedProposalsArray[0].proposalId}`}
-                    id={`proposal-${sortedProposalsArray[0].proposalId}`}
-                    proposal={sortedProposalsArray[0]}
+                    key={`proposal-${proposalsArray[0].proposalId}`}
+                    id={`proposal-${proposalsArray[0].proposalId}`}
+                    proposal={proposalsArray[0]}
                   />
                 </Box>
               </SwiperSlide>
               <SwiperSlide>
                 <Box width="90%" mx="auto">
                   <ProposalTile
-                    key={`proposal-${sortedProposalsArray[1].proposalId}`}
-                    id={`proposal-${sortedProposalsArray[1].proposalId}`}
-                    proposal={sortedProposalsArray[1]}
+                    key={`proposal-${proposalsArray[1].proposalId}`}
+                    id={`proposal-${proposalsArray[1].proposalId}`}
+                    proposal={proposalsArray[1]}
                   />
                 </Box>
               </SwiperSlide>
               <SwiperSlide>
                 <Box width="90%" mx="auto">
                   <ProposalTile
-                    key={`proposal-${sortedProposalsArray[2].proposalId}`}
-                    id={`proposal-${sortedProposalsArray[2].proposalId}`}
-                    proposal={sortedProposalsArray[2]}
+                    key={`proposal-${proposalsArray[2].proposalId}`}
+                    id={`proposal-${proposalsArray[2].proposalId}`}
+                    proposal={proposalsArray[2]}
                   />
                 </Box>
               </SwiperSlide>
