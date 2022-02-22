@@ -31,7 +31,18 @@ const StyledDialog = styled(Dialog)`
   & .MuiPaper-root {
     box-shadow: 0 0 50px -45px ${({ theme }) => theme.palette.text.primary};
   }
+
+  .MuiBackdrop-root {
+    backdrop-filter: blur(5px),
+    box-shadow: 0px 0px 20px 20px rgba(255,255,255,1),
+    text-shadow: 0px 0px 10px rgba(51, 51, 51, 0.9),
+    transform: scale(0.9),
+  }
 `;
+
+const BlurryStyledDialog = {
+  backdropFilter: 'blur(1px)',
+};
 
 const StyledIcon = styled(Close)`
   color: ${({ theme }) => theme.palette.colors.main6};
@@ -57,7 +68,14 @@ const Divider = styled(Box)`
 
 const Modal: FC<ModalProps> = ({ className, isOpen, handleClose, title, divider, children }) => {
   return (
-    <StyledDialog open={isOpen} onClose={handleClose} className={className}>
+    <StyledDialog
+      open={isOpen}
+      onClose={handleClose}
+      className={className}
+      BackdropProps={{
+        style: BlurryStyledDialog,
+      }}
+    >
       {title && (
         <StyledHeader>
           <Box>
