@@ -51,7 +51,6 @@ const LastProposals: FC = () => {
   const isMobile = useIsMobile('md');
 
   const sortedProposalsArray = useSelector(selectSortedProposalsArray);
-
   return (
     <Box width="100%">
       <TypographyBold variant="h3" mb={3} mt={8}>
@@ -64,7 +63,6 @@ const LastProposals: FC = () => {
           <TypographyBlue>There are no proposals of selected type</TypographyBlue>
         </Box>
       )}
-
       {sortedProposalsArray.length > 0 && (
         <>
           {!isMobile && (
