@@ -149,7 +149,7 @@ const MenuContent: FC<MenuContentProps> = ({ setDrawerOpen }) => {
 
       <Box mx="auto" my={1} sx={{ width: { xs: '60%', md: '100%' } }}>
         <DAOButton variant="gradientOutline" onClick={handledCKBModal}>
-          <Typography>Wire testnet dCKB</Typography>
+          <Typography>Get dCKB</Typography>
         </DAOButton>
       </Box>
 

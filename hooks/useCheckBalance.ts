@@ -11,8 +11,6 @@ const useCheckBalance = () => {
   const userAddress = useSelector(selectUserAddress);
   const isLoggedIn = useSelector(selectIsLoggedIn);
 
-  console.log(isLoggedIn);
-
   const addressTranslator = new AddressTranslator();
 
   const [balance, setBalance] = useState(0);
