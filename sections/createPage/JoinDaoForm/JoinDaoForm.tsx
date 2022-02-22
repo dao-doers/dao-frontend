@@ -14,7 +14,7 @@ import TooltipIcon from 'components/TooltipIcon';
 import ConnectWalletButton from 'components/ConnectWalletButton/ConnectWalletButton';
 
 import { setOpen, setStatus, setMessage } from 'redux/slices/modalTransaction';
-import { selectUserAddress } from 'redux/slices/user';
+import { selectUserAddress, selectIsLoggedIn } from 'redux/slices/user';
 
 import PROCESSING_STATUSES from 'enums/processingStatuses';
 
@@ -45,6 +45,7 @@ const TypographyBold = styled(Typography)`
 const JoinDaoForm: FC = () => {
   const dispatch = useDispatch();
   const userAddress = useSelector(selectUserAddress);
+  const isLoggedIn = useSelector(selectIsLoggedIn);
 
   const onSubmit = async (values: any) => {
     try {
@@ -74,7 +75,7 @@ const JoinDaoForm: FC = () => {
 
       dispatch(setStatus(PROCESSING_STATUSES.SUCCESS));
       dispatch(
-        setMessage(`Your transaction has been processed by blockchain network and will be displayed with the block number 
+        setMessage(`Your request has been processed by blockchain network and will be displayed with the block number 
       ${receipt.blockNumber + 1}`),
       );
     } catch (error) {
@@ -187,9 +188,9 @@ const JoinDaoForm: FC = () => {
                 </Box>
 
                 <Box>
-                  {userAddress === '' && <ConnectWalletButton />}
+                  {!isLoggedIn && <ConnectWalletButton />}
 
-                  {userAddress !== '' && (
+                  {isLoggedIn && (
                     <DAOButton variant="gradientOutline" type="submit">
                       Send request
                     </DAOButton>

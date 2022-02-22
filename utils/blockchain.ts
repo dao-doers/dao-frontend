@@ -2,7 +2,7 @@
 import Web3 from 'web3';
 import store from 'redux/store';
 
-import { setUserAddress } from 'redux/slices/user';
+import { setUserAddress, setIsLoggedIn } from 'redux/slices/user';
 
 export const loadWeb3 = async () => {
   if (window.web3) {
@@ -12,6 +12,7 @@ export const loadWeb3 = async () => {
     });
     window.ethereum.on('accountsChanged', () => {
       console.log('accountChanged');
+      store.dispatch(setIsLoggedIn(false));
       store.dispatch(setUserAddress(''));
       sessionStorage.removeItem('dao-user-address');
     });

@@ -34,7 +34,9 @@ const BridgeStep: FC<IBridge> = ({ handlePreviousStep }) => {
           Please make sure you have sufficient CKB balance in your L1 account before transferring to L2. A minimum
           balance of 471 CKB needs to be maintained.
         </Typography>
-        <DAOBridgeComponentWithNoSSR />
+        <Box>
+          <DAOBridgeComponentWithNoSSR />
+        </Box>
       </Box>
 
       <NavButtonsWrapper>

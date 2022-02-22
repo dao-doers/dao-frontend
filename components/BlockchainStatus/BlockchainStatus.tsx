@@ -10,7 +10,7 @@ import ConnectWalletButton from 'components/ConnectWalletButton/ConnectWalletBut
 import DAOCircleLoader from 'components/DAOCircleLoader/DAOCircleLoader';
 import StatusChip from 'components/StatusChip/StatusChip';
 
-import { selectUserAddress } from 'redux/slices/user';
+import { selectUserAddress, selectIsLoggedIn } from 'redux/slices/user';
 
 import formatAddress from 'utils/formatAddress';
 import { shannonsToCkb } from 'utils/formatShannons';
@@ -18,8 +18,6 @@ import { shannonsToCkb } from 'utils/formatShannons';
 import useCheckIndexerStatus from 'hooks/useCheckIndexerStatus';
 import useCheckBalance from 'hooks/useCheckBalance';
 
-import Timer from 'components/Timer/Timer';
-import useFetchProposals from 'hooks/useFetchProposals';
 import RecentActivityStatus from 'components/RecentActivityStatus/RecentActivityStatus';
 
 const MainWrapper = styled(Box)`
@@ -62,18 +60,11 @@ const TypographyYellow = styled(Typography)`
 
 const BlockchainStatus: FC = () => {
   const userAddress = useSelector(selectUserAddress);
+  const isLoggedIn = useSelector(selectIsLoggedIn);
 
   const { molochBlock, layer2Block, molochError, molochLoading, layer2BlockLoading } = useCheckIndexerStatus();
 
   const { balance, isChecked } = useCheckBalance();
-
-  const refetchProposal = useFetchProposals();
-
-  const timer = <Timer reset={refetchProposal.loading} />;
-
-  const refetch = () => {
-    refetchProposal.refetch();
-  };
 
   return (
     <MainWrapper>
@@ -125,17 +116,17 @@ const BlockchainStatus: FC = () => {
 
       <StatusWrapper>
         <StatusChip title="Last page update:">
-          <RecentActivityStatus refetch={refetch} timer={timer} />
+          <RecentActivityStatus />
         </StatusChip>
       </StatusWrapper>
 
-      {userAddress === '' && (
+      {!isLoggedIn && (
         <StatusWrapper>
           <ConnectWalletButton />
         </StatusWrapper>
       )}
 
-      {userAddress !== '' && (
+      {isLoggedIn && (
         <StatusWrapper>
           <StatusChip title="User address:">
             <TypographyBold>{formatAddress(userAddress)}</TypographyBold>
@@ -143,7 +134,7 @@ const BlockchainStatus: FC = () => {
         </StatusWrapper>
       )}
 
-      {userAddress !== '' && isChecked && (
+      {isLoggedIn && isChecked && (
         <StatusWrapper>
           <StatusChip title="dCKB balance:">
             <TypographyBold>{shannonsToCkb(balance)}</TypographyBold>
@@ -151,7 +142,7 @@ const BlockchainStatus: FC = () => {
         </StatusWrapper>
       )}
 
-      {userAddress !== '' && !isChecked && (
+      {isLoggedIn && !isChecked && (
         <StatusWrapper>
           <StatusChip title="dCKB balance:">
             <Box display="flex" alignItems="center">
