@@ -28,6 +28,14 @@ import {
 } from 'redux/slices/proposals';
 import { setOpen } from 'redux/slices/modalWireddCKB';
 
+import HomeIcon from '@mui/icons-material/Home';
+import FeaturedPlayListIcon from '@mui/icons-material/FeaturedPlayList';
+import CategoryIcon from '@mui/icons-material/Category';
+import BallotIcon from '@mui/icons-material/Ballot';
+import HowToVoteIcon from '@mui/icons-material/HowToVote';
+import ScheduleSendIcon from '@mui/icons-material/ScheduleSend';
+import PollIcon from '@mui/icons-material/Poll';
+
 interface MenuContentProps {
   setDrawerOpen?: (arg0: false) => void;
 }
@@ -89,7 +97,25 @@ const MenuContent: FC<MenuContentProps> = ({ setDrawerOpen }) => {
   };
 
   return (
-    <Box display="flex" flexDirection="column" sx={{ alignItems: { xs: 'center', md: 'flex-start' } }} minHeight="80vh">
+    <Box
+      display="flex"
+      flexDirection="column"
+      sx={{ alignItems: { xs: 'center', md: 'flex-start' } }}
+      minHeight="60vh"
+      style={{
+        backgroundColor: 'rgba(255,255,255,1)',
+        // backgroundImage: 'linear-gradient(to top left, #d70a84, #51127f)',
+        boxShadow: '0 4px 6px -1px #0000001a,0 2px 4px -1px #0000000f',
+        height: '70vh',
+        width: '14vw',
+        borderRadius: '15px',
+        overflow: 'hidden',
+        margin: 0,
+        padding: 0,
+        justifyContent: 'center',
+        alignItems: 'flex-start',
+      }}
+    >
       {isMobile && (
         <Box display="flex" justifyContent="flex-end" width="100%" mt={2} mr={2}>
           <IconButton aria-label="close drawer" onClick={handleClose}>
@@ -97,49 +123,72 @@ const MenuContent: FC<MenuContentProps> = ({ setDrawerOpen }) => {
           </IconButton>
         </Box>
       )}
-      <Box sx={{ mb: { xs: 1, md: 2 } }} mt={2}>
+      <Box sx={{ mb: { xs: 1, md: 0.5 } }} mt={2}>
         <Link internal href="/">
-          <TypographyBlack>Home</TypographyBlack>
+          <DAOPlainButton fullWidth focusRipple>
+            <Box display="flex" pl={5} pr={5} pt={2} pb={2}>
+              <HomeIcon fontSize="medium" style={{ marginRight: '15px' }} />
+              <TypographyBlack>Home</TypographyBlack>
+            </Box>
+          </DAOPlainButton>
         </Link>
       </Box>
 
       <Box sx={{ mb: { xs: 1, md: 0.5 } }}>
         <DAOPlainButton onClick={() => handleClick(1)}>
-          <TypographyBlack>Proposals</TypographyBlack>
+          <Box display="flex" pl={5} pr={5} pt={2} pb={2}>
+            <FeaturedPlayListIcon fontSize="medium" style={{ marginRight: '15px' }} />
+            <TypographyBlack>Proposals</TypographyBlack>
+          </Box>
         </DAOPlainButton>
       </Box>
 
       <Box sx={{ mb: { xs: 1, md: 0.5 }, pl: { xs: 0, md: 2 } }}>
         <DAOPlainButton onClick={() => handleClick(2)}>
-          <TypographyBlack>Collecting Funds</TypographyBlack>
+          <Box display="flex" pl={5} pr={5} pt={2} pb={2}>
+            <CategoryIcon fontSize="medium" style={{ marginRight: '15px' }} />
+            <TypographyBlack>Collecting Funds</TypographyBlack>
+          </Box>
         </DAOPlainButton>
       </Box>
 
       <Box sx={{ mb: { xs: 1, md: 0.5 }, pl: { xs: 0, md: 2 } }}>
         <DAOPlainButton onClick={() => handleClick(3)}>
-          <TypographyBlack>Voting</TypographyBlack>
+          <Box display="flex" pl={5} pr={5} pt={2} pb={2}>
+            <BallotIcon fontSize="medium" style={{ marginRight: '15px' }} />
+            <TypographyBlack>Voting</TypographyBlack>
+          </Box>
         </DAOPlainButton>
       </Box>
 
       <Box sx={{ mb: { xs: 1, md: 0.5 }, pl: { xs: 0, md: 2 } }}>
         <DAOPlainButton onClick={() => handleClick(4)}>
-          <TypographyBlack>Grace Period</TypographyBlack>
+          <Box display="flex" pl={5} pr={5} pt={2} pb={2}>
+            <HowToVoteIcon fontSize="medium" style={{ marginRight: '15px' }} />
+            <TypographyBlack>Grace Period</TypographyBlack>
+          </Box>
         </DAOPlainButton>
       </Box>
 
       <Box sx={{ mb: { xs: 1, md: 0.5 }, pl: { xs: 0, md: 2 } }}>
         <DAOPlainButton onClick={() => handleClick(5)}>
-          <TypographyBlack>Proceeding</TypographyBlack>
+          <Box display="flex" pl={5} pr={5} pt={2} pb={2}>
+            <ScheduleSendIcon fontSize="medium" style={{ marginRight: '15px' }} />
+            <TypographyBlack>Proceeding</TypographyBlack>
+          </Box>
         </DAOPlainButton>
       </Box>
 
       <Box sx={{ mb: { xs: 1, md: 0.5 }, pl: { xs: 0, md: 2 } }}>
         <DAOPlainButton onClick={() => handleClick(6)}>
-          <TypographyBlack>Finished</TypographyBlack>
+          <Box display="flex" pl={5} pr={5} pt={2} pb={2}>
+            <PollIcon fontSize="medium" style={{ marginRight: '15px' }} />
+            <TypographyBlack>Finished</TypographyBlack>
+          </Box>
         </DAOPlainButton>
       </Box>
 
-      <Box mx="auto" mb={1} mt={5} sx={{ width: { xs: '60%', md: '100%' } }}>
+      <Box mx="auto" mb={1} mt={5} sx={{ width: { xs: '60%', md: '100%' } }} pl={5} pr={5}>
         <Link internal href={APP_ROUTES.CREATE}>
           <DAOButton variant="gradientOutline">
             <Typography>Create proposal</Typography>
@@ -147,13 +196,13 @@ const MenuContent: FC<MenuContentProps> = ({ setDrawerOpen }) => {
         </Link>
       </Box>
 
-      <Box mx="auto" my={1} sx={{ width: { xs: '60%', md: '100%' } }}>
+      <Box mx="auto" my={1} sx={{ width: { xs: '60%', md: '100%' } }} pl={5} pr={5}>
         <DAOButton variant="gradientOutline" onClick={handledCKBModal}>
           <Typography>Get dCKB</Typography>
         </DAOButton>
       </Box>
 
-      <Box mx="auto" my={1} sx={{ width: { xs: '60%', md: '100%' } }}>
+      <Box mx="auto" my={1} sx={{ width: { xs: '60%', md: '100%' } }} pl={5} pr={5}>
         <ThemeModeSwitch />
       </Box>
     </Box>
