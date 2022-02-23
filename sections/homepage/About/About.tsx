@@ -4,9 +4,8 @@ import styled from '@emotion/styled';
 
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
-import AddReactionIcon from '@mui/icons-material/AddReaction';
-import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
-import AddTaskIcon from '@mui/icons-material/AddTask';
+
+import Image from 'next/image';
 
 const ColumnsWrapper = styled(Box)`
   display: flex;
@@ -31,24 +30,6 @@ const TypographyBold = styled(Typography)`
   font-weight: 600;
 `;
 
-const StyledAddReactionIcon = styled(AddReactionIcon)`
-  color: ${({ theme }) => theme.palette.colors.main7};
-  font-size: 40px;
-  margin-bottom: 30px;
-`;
-
-const StyledAddCircleOutlineIcon = styled(AddCircleOutlineIcon)`
-  color: ${({ theme }) => theme.palette.colors.main7};
-  font-size: 40px;
-  margin-bottom: 30px;
-`;
-
-const StyledAddTaskIcon = styled(AddTaskIcon)`
-  color: ${({ theme }) => theme.palette.colors.main7};
-  font-size: 40px;
-  margin-bottom: 30px;
-`;
-
 const About: FC = () => {
   return (
     <Box>
@@ -57,20 +38,43 @@ const About: FC = () => {
       </TypographyBold>
       <ColumnsWrapper>
         <ColumnWrapper>
-          <StyledAddReactionIcon />
-          <Typography variant="subtitle2">
+          <Box
+            style={{ background: '#f09', backgroundImage: 'linear-gradient(45deg, #3023AE 0%, #f09 100%)' }}
+            borderRadius="30% 70% 70% 30% / 30% 33% 67% 70%"
+          >
+            <Image src="/logos/vote_choice_icon.svg" alt="header-logo" height="200" width="200" />
+          </Box>
+          <Typography variant="subtitle2" mt={2}>
             Every person can request to join our guild which will allow you to take part in votings.
           </Typography>
         </ColumnWrapper>
         <ColumnWrapper>
-          <StyledAddCircleOutlineIcon />
-          <Typography variant="subtitle2">
+          <Box
+            style={{
+              background: '#f09',
+              backgroundImage: 'linear-gradient(45deg, #3023AE 0%, #f09 100%)',
+            }}
+            borderRadius="51% 49% 53% 47% / 86% 86% 14% 14%"
+          >
+            <Image src="/logos/vote_button_icon.svg" alt="header-logo" height="200" width="200" />
+          </Box>
+          <Typography variant="subtitle2" mt={2}>
             Every guild member can create his own proposal on which the community will vote.
           </Typography>
         </ColumnWrapper>
         <ColumnWrapper>
-          <StyledAddTaskIcon />
-          <Typography variant="subtitle2">Once the proposal is approved, it goes to the execution phase.</Typography>
+          <Box
+            style={{
+              background: '#f09',
+              backgroundImage: 'linear-gradient(45deg, #3023AE 0%, #f09 100%)',
+            }}
+            borderRadius="55% 45% 54% 46% / 39% 53% 47% 61%"
+          >
+            <Image src="/logos/vote_magnifier_counting_icon.svg" alt="header-logo" height="200" width="200" />
+          </Box>
+          <Typography variant="subtitle2" mt={2}>
+            Once the proposal is approved, it goes to the execution phase.
+          </Typography>
         </ColumnWrapper>
       </ColumnsWrapper>
     </Box>
