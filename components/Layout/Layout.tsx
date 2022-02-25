@@ -59,7 +59,7 @@ const Layout: FC<LayoutProps> = ({ children }) => {
     if (!fetchMembers.loading && fetchMembers && fetchMembers.data && isLoggedIn) {
       const user = fetchMembers.data.members.filter((a: any) => {
         // TODO: replace that string with userAddress variable
-        return a.memberAddress === '0x8016dcd1af7dc8cceda53e4d2d2cd4e2924e245b6';
+        return a.memberAddress === '0x8016dcd1af7c8cceda53e4d2d2cd4e2924e245b6';
       });
       if (user[0]) {
         dispatch(setUserShares(user[0].shares));
