@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/rules-of-hooks */
-import { FC, useState, useEffect } from 'react';
+import { FC } from 'react';
 import { Formik, Form } from 'formik';
 import { useSelector, useDispatch } from 'react-redux';
 
@@ -14,7 +14,7 @@ import TooltipIcon from 'components/TooltipIcon';
 import ConnectWalletButton from 'components/ConnectWalletButton/ConnectWalletButton';
 
 import { setOpen, setStatus, setMessage } from 'redux/slices/modalTransaction';
-import { selectUserAddress, selectIsLoggedIn } from 'redux/slices/user';
+import { selectUserAddress, selectIsLoggedIn, selectUserShares } from 'redux/slices/user';
 
 import PROCESSING_STATUSES from 'enums/processingStatuses';
 
@@ -52,16 +52,7 @@ const FundProjectForm: FC = () => {
   const dispatch = useDispatch();
   const userAddress = useSelector(selectUserAddress);
   const isLoggedIn = useSelector(selectIsLoggedIn);
-
-  const [validated, setValidated] = useState(true);
-
-  useEffect(() => {
-    // TODO: validate if user is DAO member
-    // const isApplicantValid = async () => {
-    //   setValidated(true);
-    // };
-    // isApplicantValid();
-  }, [userAddress]);
+  const userShares = useSelector(selectUserShares);
 
   const onSubmit = async (values: any) => {
     try {
@@ -232,13 +223,13 @@ const FundProjectForm: FC = () => {
                 <Box>
                   {!isLoggedIn && <ConnectWalletButton />}
 
-                  {validated && isLoggedIn && (
-                    <DAOButton disabled={!validated} variant="gradientOutline" type="submit">
+                  {userShares > 0 && isLoggedIn && (
+                    <DAOButton variant="gradientOutline" type="submit">
                       Send request
                     </DAOButton>
                   )}
 
-                  {!validated && isLoggedIn && (
+                  {userShares === 0 && isLoggedIn && (
                     <TypographyRed ml={1} variant="subtitle2" align="center">
                       You&apos;re not a member of the Guild.
                     </TypographyRed>
