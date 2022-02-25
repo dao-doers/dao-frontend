@@ -51,6 +51,7 @@ const LastProposals: FC = () => {
   const isMobile = useIsMobile('md');
 
   const proposalsArray = useSelector(selectProposalsArray);
+
   return (
     <Box width="100%">
       <TypographyBold variant="h3" mb={3} mt={8}>
@@ -63,75 +64,55 @@ const LastProposals: FC = () => {
           <TypographyBlue>There are no proposals of selected type</TypographyBlue>
         </Box>
       )}
+
       {proposalsArray.length > 0 && (
         <>
           {!isMobile && (
             <>
               <Box display="flex" justifyContent="space-between" width="100%">
-                <Box width="49%">
-                  <ProposalTile
-                    key={`proposal-${proposalsArray[0].proposalId}`}
-                    id={`proposal-${proposalsArray[0].proposalId}`}
-                    proposal={proposalsArray[0]}
-                  />
-                </Box>
-                <Box width="49%">
-                  <ProposalTile
-                    key={`proposal-${proposalsArray[1].proposalId}`}
-                    id={`proposal-${proposalsArray[1].proposalId}`}
-                    proposal={proposalsArray[1]}
-                  />
-                </Box>
+                {proposalsArray.slice(0, 2).map((proposal: any) => {
+                  return (
+                    <Box width="49%">
+                      <ProposalTile
+                        key={`proposal-${proposal.proposalId}`}
+                        id={`proposal-${proposal.proposalId}`}
+                        proposal={proposal}
+                      />
+                    </Box>
+                  );
+                })}
               </Box>
-
               <Box display="flex" justifyContent="space-between" width="100%">
-                <Box width="49%">
-                  <ProposalTile
-                    key={`proposal-${proposalsArray[2].proposalId}`}
-                    id={`proposal-${proposalsArray[2].proposalId}`}
-                    proposal={proposalsArray[2]}
-                  />
-                </Box>
-                <Box width="49%">
-                  <ProposalTile
-                    key={`proposal-${proposalsArray[3].proposalId}`}
-                    id={`proposal-${proposalsArray[3].proposalId}`}
-                    proposal={proposalsArray[3]}
-                  />
-                </Box>
+                {proposalsArray.slice(2, 4).map((proposal: any) => {
+                  return (
+                    <Box width="49%">
+                      <ProposalTile
+                        key={`proposal-${proposal.proposalId}`}
+                        id={`proposal-${proposal.proposalId}`}
+                        proposal={proposal}
+                      />
+                    </Box>
+                  );
+                })}
               </Box>
             </>
           )}
 
           {isMobile && (
             <StyledSwiper modules={[Pagination]} pagination={{ type: 'progressbar' }} {...params}>
-              <SwiperSlide>
-                <Box width="90%" mx="auto">
-                  <ProposalTile
-                    key={`proposal-${proposalsArray[0].proposalId}`}
-                    id={`proposal-${proposalsArray[0].proposalId}`}
-                    proposal={proposalsArray[0]}
-                  />
-                </Box>
-              </SwiperSlide>
-              <SwiperSlide>
-                <Box width="90%" mx="auto">
-                  <ProposalTile
-                    key={`proposal-${proposalsArray[1].proposalId}`}
-                    id={`proposal-${proposalsArray[1].proposalId}`}
-                    proposal={proposalsArray[1]}
-                  />
-                </Box>
-              </SwiperSlide>
-              <SwiperSlide>
-                <Box width="90%" mx="auto">
-                  <ProposalTile
-                    key={`proposal-${proposalsArray[2].proposalId}`}
-                    id={`proposal-${proposalsArray[2].proposalId}`}
-                    proposal={proposalsArray[2]}
-                  />
-                </Box>
-              </SwiperSlide>
+              {proposalsArray.slice(0, 3).map((proposal: any) => {
+                return (
+                  <SwiperSlide>
+                    <Box width="90%" mx="auto">
+                      <ProposalTile
+                        key={`proposal-${proposal.proposalId}`}
+                        id={`proposal-${proposal.proposalId}`}
+                        proposal={proposal}
+                      />
+                    </Box>
+                  </SwiperSlide>
+                );
+              })}
             </StyledSwiper>
           )}
         </>
