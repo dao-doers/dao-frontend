@@ -10,7 +10,7 @@ import ConnectWalletButton from 'components/ConnectWalletButton/ConnectWalletBut
 import DAOCircleLoader from 'components/DAOCircleLoader/DAOCircleLoader';
 import StatusChip from 'components/StatusChip/StatusChip';
 
-import { selectUserAddress, selectIsLoggedIn } from 'redux/slices/user';
+import { selectUserAddress, selectIsLoggedIn, selectUserShares } from 'redux/slices/user';
 
 import formatAddress from 'utils/formatAddress';
 import { shannonsToCkb } from 'utils/formatShannons';
@@ -61,6 +61,7 @@ const TypographyYellow = styled(Typography)`
 const BlockchainStatus: FC = () => {
   const userAddress = useSelector(selectUserAddress);
   const isLoggedIn = useSelector(selectIsLoggedIn);
+  const userShares = useSelector(selectUserShares);
 
   const { molochBlock, layer2Block, molochError, molochLoading, layer2BlockLoading } = useCheckIndexerStatus();
 
@@ -151,6 +152,22 @@ const BlockchainStatus: FC = () => {
               </Box>
               <Typography variant="body2">Checking</Typography>
             </Box>
+          </StatusChip>
+        </StatusWrapper>
+      )}
+
+      {isLoggedIn && userShares > 0 && (
+        <StatusWrapper>
+          <StatusChip title="Member shares:">
+            <TypographyBold>{userShares}</TypographyBold>
+          </StatusChip>
+        </StatusWrapper>
+      )}
+
+      {isLoggedIn && userShares === 0 && (
+        <StatusWrapper>
+          <StatusChip title="Member status:">
+            <TypographyRed>Not a member</TypographyRed>
           </StatusChip>
         </StatusWrapper>
       )}
