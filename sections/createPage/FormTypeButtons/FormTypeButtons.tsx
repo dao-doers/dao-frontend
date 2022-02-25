@@ -30,9 +30,9 @@ const FormTypeButtons: FC<any> = () => {
           onClick={() => handleSetProposalType(CREATE_PROPOSAL_TYPE.NORMAL)}
         >
           <Typography variant="h6" align="center" paragraph>
-            New proposal
+            Request for joining DAO
           </Typography>
-          <Typography align="center">Tributing capital and Requesting new shares to join the DAO</Typography>
+          <Typography align="center">Tributing capital and requesting new shares to join the DAO</Typography>
         </Box>
       </DAOTile>
 
@@ -46,10 +46,10 @@ const FormTypeButtons: FC<any> = () => {
             onClick={() => handleSetProposalType(CREATE_PROPOSAL_TYPE.WITH_FUNDING)}
           >
             <Typography variant="h6" align="center" paragraph>
-              New proposal with funding
+              Request for project funding
             </Typography>
             <Typography align="center">
-              Tributing Spoils or Requesting funds from the DAO to work on internal projects and improvements
+              Tributing spoils or requesting funds from the DAO to work on internal projects and improvements
             </Typography>
           </Box>
         </DAOTile>

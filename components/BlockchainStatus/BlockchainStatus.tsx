@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import React, { FC } from 'react';
 import { useSelector } from 'react-redux';
 
 import styled from '@emotion/styled';
@@ -10,7 +10,7 @@ import ConnectWalletButton from 'components/ConnectWalletButton/ConnectWalletBut
 import DAOCircleLoader from 'components/DAOCircleLoader/DAOCircleLoader';
 import StatusChip from 'components/StatusChip/StatusChip';
 
-import { selectUserAddress } from 'redux/slices/user';
+import { selectUserAddress, selectIsLoggedIn, selectUserShares } from 'redux/slices/user';
 
 import formatAddress from 'utils/formatAddress';
 import { shannonsToCkb } from 'utils/formatShannons';
@@ -18,8 +18,6 @@ import { shannonsToCkb } from 'utils/formatShannons';
 import useCheckIndexerStatus from 'hooks/useCheckIndexerStatus';
 import useCheckBalance from 'hooks/useCheckBalance';
 
-import Timer from 'components/Timer/Timer';
-import useFetchProposals from 'hooks/useFetchProposals';
 import RecentActivityStatus from 'components/RecentActivityStatus/RecentActivityStatus';
 
 const MainWrapper = styled(Box)`
@@ -62,25 +60,22 @@ const TypographyYellow = styled(Typography)`
 
 const BlockchainStatus: FC = () => {
   const userAddress = useSelector(selectUserAddress);
+  const isLoggedIn = useSelector(selectIsLoggedIn);
+  const userShares = useSelector(selectUserShares);
 
   const { molochBlock, layer2Block, molochError, molochLoading, layer2BlockLoading } = useCheckIndexerStatus();
 
   const { balance, isChecked } = useCheckBalance();
-
-  const refetchProposal = useFetchProposals();
-
-  const timer = <Timer reset={refetchProposal.loading} />;
-
-  const refetch = () => {
-    refetchProposal.refetch();
-  };
 
   return (
     <MainWrapper>
       <StatusWrapper>
         <StatusChip title="Indexer status:">
           {molochBlock === layer2Block && typeof layer2Block === 'number' && typeof molochBlock === 'number' && (
-            <TypographyGreen>Online</TypographyGreen>
+            <Box display="flex">
+              <TypographyGreen>Online </TypographyGreen>
+              <TypographyBold ml={1}>block: {molochBlock === layer2Block ? layer2Block : null}</TypographyBold>
+            </Box>
           )}
 
           {(typeof layer2Block !== 'number' || typeof molochBlock !== 'number') &&
@@ -120,13 +115,19 @@ const BlockchainStatus: FC = () => {
         </StatusChip>
       </StatusWrapper>
 
-      {userAddress === '' && (
+      <StatusWrapper>
+        <StatusChip title="Last page update:">
+          <RecentActivityStatus />
+        </StatusChip>
+      </StatusWrapper>
+
+      {!isLoggedIn && (
         <StatusWrapper>
           <ConnectWalletButton />
         </StatusWrapper>
       )}
 
-      {userAddress !== '' && (
+      {isLoggedIn && (
         <StatusWrapper>
           <StatusChip title="User address:">
             <TypographyBold>{formatAddress(userAddress)}</TypographyBold>
@@ -134,7 +135,7 @@ const BlockchainStatus: FC = () => {
         </StatusWrapper>
       )}
 
-      {userAddress !== '' && isChecked && (
+      {isLoggedIn && isChecked && (
         <StatusWrapper>
           <StatusChip title="dCKB balance:">
             <TypographyBold>{shannonsToCkb(balance)}</TypographyBold>
@@ -142,7 +143,7 @@ const BlockchainStatus: FC = () => {
         </StatusWrapper>
       )}
 
-      {userAddress !== '' && !isChecked && (
+      {isLoggedIn && !isChecked && (
         <StatusWrapper>
           <StatusChip title="dCKB balance:">
             <Box display="flex" alignItems="center">
@@ -155,11 +156,21 @@ const BlockchainStatus: FC = () => {
         </StatusWrapper>
       )}
 
-      <StatusWrapper>
-        <StatusChip title="Last page update:">
-          <RecentActivityStatus refetch={refetch} timer={timer} />
-        </StatusChip>
-      </StatusWrapper>
+      {isLoggedIn && userShares > 0 && (
+        <StatusWrapper>
+          <StatusChip title="Member shares:">
+            <TypographyBold>{userShares}</TypographyBold>
+          </StatusChip>
+        </StatusWrapper>
+      )}
+
+      {isLoggedIn && userShares === 0 && (
+        <StatusWrapper>
+          <StatusChip title="Member status:">
+            <TypographyRed>Not a member</TypographyRed>
+          </StatusChip>
+        </StatusWrapper>
+      )}
     </MainWrapper>
   );
 };

@@ -40,12 +40,12 @@ const tileVariant = ({ theme, variant }: TileVariantProps & { theme: Theme }) =>
     case 'gradientOutline':
       return css`
         background: ${theme.palette.gradients.grad2};
-        padding: 2px;
+        padding: 1px;
       `;
     case 'greyOutline':
       return css`
         background: ${theme.palette.colors.main6};
-        padding: 2px;
+        padding: 1px;
       `;
     case 'redOutline':
       return css`
@@ -63,22 +63,22 @@ const tileVariant = ({ theme, variant }: TileVariantProps & { theme: Theme }) =>
     case 'blueBackground':
       return css`
         background: ${theme.palette.colors.col1};
-        padding: 2px;
+        padding: 1px;
       `;
     case 'greenBackground':
       return css`
         background: ${theme.palette.colors.col2};
-        padding: 2px;
+        padding: 1px;
       `;
     case 'redBackground':
       return css`
         background: ${theme.palette.colors.col6};
-        padding: 2px;
+        padding: 1px;
       `;
     case 'yellowBackground':
       return css`
         background: ${theme.palette.colors.col4};
-        padding: 2px;
+        padding: 1px;
       `;
     default:
       return css`

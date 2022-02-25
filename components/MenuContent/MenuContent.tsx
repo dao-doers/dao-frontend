@@ -26,6 +26,7 @@ import {
   setFinishedProposals,
   clearSorted,
 } from 'redux/slices/proposals';
+import { setOpen } from 'redux/slices/modalWireddCKB';
 
 interface MenuContentProps {
   setDrawerOpen?: (arg0: false) => void;
@@ -33,7 +34,6 @@ interface MenuContentProps {
 
 const TypographyBlack = styled(Typography)`
   color: ${({ theme }) => theme.palette.colors.main7};
-  font-weight: 600;
 `;
 
 const StyledCloseIcon = styled(Close)`
@@ -44,6 +44,10 @@ const MenuContent: FC<MenuContentProps> = ({ setDrawerOpen }) => {
   const dispatch = useDispatch();
   const router = useRouter();
   const isMobile = useIsMobile('md');
+
+  const handledCKBModal = () => {
+    dispatch(setOpen(true));
+  };
 
   const handleClose = () => {
     if (setDrawerOpen) {
@@ -84,7 +88,7 @@ const MenuContent: FC<MenuContentProps> = ({ setDrawerOpen }) => {
   };
 
   return (
-    <Box display="flex" flexDirection="column" sx={{ alignItems: { xs: 'center', md: 'flex-start' } }}>
+    <Box display="flex" flexDirection="column" sx={{ alignItems: { xs: 'center', md: 'flex-start' } }} minHeight="80vh">
       {isMobile && (
         <Box display="flex" justifyContent="flex-end" width="100%" mt={2} mr={2}>
           <IconButton aria-label="close drawer" onClick={handleClose}>
@@ -134,7 +138,7 @@ const MenuContent: FC<MenuContentProps> = ({ setDrawerOpen }) => {
         </DAOPlainButton>
       </Box>
 
-      <Box mx="auto" my={4} sx={{ width: { xs: '60%', md: '100%' } }}>
+      <Box mx="auto" mb={1} mt={5} sx={{ width: { xs: '60%', md: '100%' } }}>
         <Link internal href={APP_ROUTES.CREATE}>
           <DAOButton variant="gradientOutline">
             <Typography>Create proposal</Typography>
@@ -142,7 +146,13 @@ const MenuContent: FC<MenuContentProps> = ({ setDrawerOpen }) => {
         </Link>
       </Box>
 
-      <Box mx="auto" my={2} sx={{ width: { xs: '60%', md: '100%' } }}>
+      <Box mx="auto" my={1} sx={{ width: { xs: '60%', md: '100%' } }}>
+        <DAOButton variant="gradientOutline" onClick={handledCKBModal}>
+          <Typography>Get dCKB</Typography>
+        </DAOButton>
+      </Box>
+
+      <Box mx="auto" my={1} sx={{ width: { xs: '60%', md: '100%' } }}>
         <ThemeModeSwitch />
       </Box>
     </Box>
