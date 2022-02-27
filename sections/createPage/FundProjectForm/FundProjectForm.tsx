@@ -19,6 +19,7 @@ import { selectUserAddress, selectIsLoggedIn, selectUserShares } from 'redux/sli
 import PROCESSING_STATUSES from 'enums/processingStatuses';
 
 import useCreateProposal from 'hooks/useCreateProposal';
+import useIsMobile from 'hooks/useIsMobile';
 
 import newFundingSchema from 'validators/newFundingSchema';
 
@@ -53,6 +54,8 @@ const FundProjectForm: FC = () => {
   const userAddress = useSelector(selectUserAddress);
   const isLoggedIn = useSelector(selectIsLoggedIn);
   const userShares = useSelector(selectUserShares);
+
+  const isMobile = useIsMobile('md');
 
   const onSubmit = async (values: any) => {
     try {
@@ -96,6 +99,11 @@ const FundProjectForm: FC = () => {
         <TypographyBold variant="h4" mb={3} sx={{ display: { xs: 'none', md: 'block' } }}>
           Request for project funding
         </TypographyBold>
+        {isMobile && (
+          <Typography variant="body2" mb={3}>
+            Press question mark to display tooltip.
+          </Typography>
+        )}
         <Formik validationSchema={newFundingSchema} initialValues={initialValues} validateOnChange onSubmit={onSubmit}>
           {formik => (
             <Form>
