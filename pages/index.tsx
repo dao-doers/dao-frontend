@@ -11,6 +11,7 @@ import LastProposals from 'sections/homepage/LastProposals/LastProposals';
 import LastVotes from 'sections/homepage/LastVotes/LastVotes';
 
 const sectionStyle = {
+  // eslint-disable-next-line quotes
   backgroundImage: "url('/logos/wave.svg') ",
   backgroundRepeat: 'no-repeat',
   backgroundPosition: 'top',
