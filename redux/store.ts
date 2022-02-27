@@ -20,4 +20,5 @@ export default configureStore({
     modalTransaction: modalTransactionReducer,
     modalWireddCKB: modalWireddCKBReducer,
   },
+  devTools: process.env.MODE !== 'production',
 });
