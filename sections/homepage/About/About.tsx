@@ -34,7 +34,7 @@ const About: FC = () => {
   return (
     <Box>
       <TypographyBold variant="h3" paragraph mt={8}>
-        How does it works
+        Build for you
       </TypographyBold>
       <ColumnsWrapper>
         <ColumnWrapper>

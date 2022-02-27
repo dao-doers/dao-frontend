@@ -38,12 +38,12 @@ const TypographyBold = styled(Typography)`
 `;
 
 const StyledPlaylistRemoveIcon = styled(PlaylistRemoveIcon)`
-  color: ${({ theme }) => theme.palette.colors.col1};
+  color: ${({ theme }) => theme.palette.colors.main7};
   font-size: 60px;
 `;
 
 const TypographyBlue = styled(Typography)`
-  color: ${({ theme }) => theme.palette.colors.col1};
+  color: ${({ theme }) => theme.palette.colors.main7};
   font-weight: 600;
 `;
 

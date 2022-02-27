@@ -7,6 +7,11 @@ import makeStyles from '@mui/styles/makeStyles';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 
+import Link from 'components/Link';
+import DAOButton from 'components/DAOButton/DAOButton';
+
+import { APP_ROUTES } from 'utils/routes';
+
 const heroStyles = () => ({
   typing: {
     color: '#ED2391',
@@ -23,6 +28,14 @@ const Title = styled(Typography)`
   }
 `;
 
+const TitleReadyToBegin = styled(Typography)`
+  font-weight: 600;
+  margin-top: 20px;
+  ${({ theme }) => theme.breakpoints.down('sm')} {
+    margin-top: 0;
+  }
+`;
+
 const TypographyBold = styled(Typography)`
   font-weight: 600;
 `;
@@ -32,14 +45,16 @@ const Intro: FC = () => {
 
   return (
     <Box>
-      <Title variant="h2" mb={2}>
-        Welcome to Nervos DAO
+      <Title variant="h2" align="center" mb={2}>
+        Your DAO world, all in one place.
       </Title>
       <Box>
-        <Typography variant="subtitle1" mb={4}>
-          Decentralized Autonomous Organization introduced to the World by Nervos Foundation. Our mission is to spread
-          true democracy.
-        </Typography>
+        <Box mx="auto" my={3} sx={{ width: { xs: '60%', md: '50%' } }}>
+          <Typography variant="subtitle1" align="center">
+            Decentralized Autonomous Organization introduced to the World by Nervos Foundation. Our mission is to spread
+            true democracy.
+          </Typography>
+        </Box>
         <TypographyBold variant="h2" align="center">
           <Typewriter
             onInit={typewriter => {
@@ -59,6 +74,16 @@ const Intro: FC = () => {
             }}
           />
         </TypographyBold>
+        <TitleReadyToBegin variant="h3" align="center" pt={2}>
+          Ready to begin?
+        </TitleReadyToBegin>
+        <Box mx="auto" my={2} sx={{ width: { xs: '60%', md: '30%' } }}>
+          <Link internal href={APP_ROUTES.CREATE}>
+            <DAOButton variant="gradientOutline">
+              <Typography>Create Proposal</Typography>
+            </DAOButton>
+          </Link>
+        </Box>
       </Box>
     </Box>
   );

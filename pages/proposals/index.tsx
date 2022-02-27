@@ -22,7 +22,7 @@ const StyledPlaylistRemoveIcon = styled(PlaylistRemoveIcon)`
 `;
 
 const TypographyBlue = styled(Typography)`
-  color: ${({ theme }) => theme.palette.colors.col1};
+  color: ${({ theme }) => theme.palette.colors.col3};
   font-weight: 600;
 `;
 
