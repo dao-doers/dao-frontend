@@ -10,8 +10,12 @@ import CREATE_PROPOSAL_TYPE from 'enums/createProposalType';
 
 import { selectProposalType, setProposalType } from 'redux/slices/createProposal';
 
+import useIsMobile from 'hooks/useIsMobile';
+
 const FormTypeButtons: FC<any> = () => {
   const dispatch = useDispatch();
+
+  const isMobile = useIsMobile('md');
 
   const proposalType = useSelector(selectProposalType);
 
@@ -20,7 +24,7 @@ const FormTypeButtons: FC<any> = () => {
   };
 
   return (
-    <Box my={3}>
+    <Box sx={{ mb: { xs: 0, md: 3 } }} mt={3}>
       <DAOTile variant={proposalType === CREATE_PROPOSAL_TYPE.NORMAL ? 'gradientOutline' : 'greyOutline'}>
         <Box
           width="100%"
@@ -55,16 +59,18 @@ const FormTypeButtons: FC<any> = () => {
         </DAOTile>
       </Box>
 
-      <DAOTile variant="greyShadow">
-        <Box width="100%" height="100%" p={3} sx={{ cursor: 'pointer' }}>
-          <Typography variant="h6" align="center" paragraph>
-            Guild kick
-          </Typography>
-          <Typography align="center">
-            (Available soon!) Request to forcibly remove a malicious member through a vote
-          </Typography>
-        </Box>
-      </DAOTile>
+      {!isMobile && (
+        <DAOTile variant="greyShadow">
+          <Box width="100%" height="100%" p={3} sx={{ cursor: 'pointer' }}>
+            <Typography variant="h6" align="center" paragraph>
+              Guild kick
+            </Typography>
+            <Typography align="center">
+              (Available soon!) Request to forcibly remove a malicious member through a vote
+            </Typography>
+          </Box>
+        </DAOTile>
+      )}
     </Box>
   );
 };

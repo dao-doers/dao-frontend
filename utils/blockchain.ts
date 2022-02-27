@@ -2,7 +2,7 @@
 import Web3 from 'web3';
 import store from 'redux/store';
 
-import { setUserAddress, setIsLoggedIn } from 'redux/slices/user';
+import { setUserAddress, setIsLoggedIn, setUserShares } from 'redux/slices/user';
 
 export const loadWeb3 = async () => {
   if (window.web3) {
@@ -14,6 +14,7 @@ export const loadWeb3 = async () => {
       console.log('accountChanged');
       store.dispatch(setIsLoggedIn(false));
       store.dispatch(setUserAddress(''));
+      store.dispatch(setUserShares(0));
       sessionStorage.removeItem('dao-user-address');
     });
   } else {

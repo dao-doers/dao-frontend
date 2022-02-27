@@ -19,6 +19,7 @@ import { selectUserAddress, selectIsLoggedIn } from 'redux/slices/user';
 import PROCESSING_STATUSES from 'enums/processingStatuses';
 
 import useCreateProposal from 'hooks/useCreateProposal';
+import useIsMobile from 'hooks/useIsMobile';
 
 import newProposalSchema from 'validators/newProposalSchema';
 
@@ -46,6 +47,8 @@ const JoinDaoForm: FC = () => {
   const dispatch = useDispatch();
   const userAddress = useSelector(selectUserAddress);
   const isLoggedIn = useSelector(selectIsLoggedIn);
+
+  const isMobile = useIsMobile('md');
 
   const onSubmit = async (values: any) => {
     try {
@@ -89,6 +92,11 @@ const JoinDaoForm: FC = () => {
         <TypographyBold variant="h4" mb={3} sx={{ display: { xs: 'none', md: 'block' } }}>
           Request for joining DAO
         </TypographyBold>
+        {isMobile && (
+          <Typography variant="body2" mb={3}>
+            Press question mark to display tooltip.
+          </Typography>
+        )}
         <Formik validationSchema={newProposalSchema} initialValues={initialValues} validateOnChange onSubmit={onSubmit}>
           {formik => (
             <Form>

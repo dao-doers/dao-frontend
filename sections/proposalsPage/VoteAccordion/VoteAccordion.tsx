@@ -21,7 +21,7 @@ import TooltipIcon from 'components/TooltipIcon';
 
 import LinearChart from 'components/LinearChart/LinearChart';
 
-import { selectUserAddress, selectIsLoggedIn } from 'redux/slices/user';
+import { selectUserAddress, selectIsLoggedIn, selectUserShares } from 'redux/slices/user';
 import { setOpen, setStatus, setMessage } from 'redux/slices/modalTransaction';
 
 import useSponsorProposal from 'hooks/useSponsorProposal';
@@ -77,6 +77,7 @@ const VoteAccordion: FC<any> = ({ proposal }) => {
 
   const userAddress = useSelector(selectUserAddress);
   const isLoggedIn = useSelector(selectIsLoggedIn);
+  const userShares = useSelector(selectUserShares);
 
   const [sponsorProposalStatus, setSponsorProposalStatus] = useState(PROCESSING_STATUSES.IDLE);
   // 0 means idle state, 1 means user can vote, 2 means user already voted
@@ -86,7 +87,7 @@ const VoteAccordion: FC<any> = ({ proposal }) => {
   const currentTime = new Date().getTime() / 1000;
 
   useEffect(() => {
-    if (isLoggedIn && proposal.proposalIndex !== null) {
+    if (isLoggedIn && userShares > 0 && proposal.proposalIndex !== null) {
       useNotVotedYetCheck(userAddress, proposal.proposalIndex, process.env.DAO_ADDRESS as any).then(async response => {
         if (response === true) {
           setNotVotedYet(1);
