@@ -39,10 +39,6 @@ const StatusWrapper = styled(Box)`
   }
 `;
 
-const TypographyBold = styled(Typography)`
-  font-weight: 600;
-`;
-
 const TypographyGreen = styled(Typography)`
   color: ${({ theme }) => theme.palette.colors.col2};
   font-weight: 600;
@@ -74,7 +70,9 @@ const BlockchainStatus: FC = () => {
           {molochBlock === layer2Block && typeof layer2Block === 'number' && typeof molochBlock === 'number' && (
             <Box display="flex">
               <TypographyGreen>Online </TypographyGreen>
-              <TypographyBold ml={1}>block: {molochBlock === layer2Block ? layer2Block : null}</TypographyBold>
+              <Typography variant="body1-bold" ml={1}>
+                block: {molochBlock === layer2Block ? layer2Block : null}
+              </Typography>
             </Box>
           )}
 
@@ -130,7 +128,7 @@ const BlockchainStatus: FC = () => {
       {isLoggedIn && (
         <StatusWrapper>
           <StatusChip title="User address:">
-            <TypographyBold>{formatAddress(userAddress)}</TypographyBold>
+            <Typography variant="body1-bold">{formatAddress(userAddress)}</Typography>
           </StatusChip>
         </StatusWrapper>
       )}
@@ -138,7 +136,7 @@ const BlockchainStatus: FC = () => {
       {isLoggedIn && isChecked && (
         <StatusWrapper>
           <StatusChip title="dCKB balance:">
-            <TypographyBold>{shannonsToCkb(balance)}</TypographyBold>
+            <Typography variant="body1-bold">{shannonsToCkb(balance)}</Typography>
           </StatusChip>
         </StatusWrapper>
       )}
@@ -159,7 +157,7 @@ const BlockchainStatus: FC = () => {
       {isLoggedIn && userShares > 0 && (
         <StatusWrapper>
           <StatusChip title="Member shares:">
-            <TypographyBold>{userShares}</TypographyBold>
+            <Typography variant="body1-bold">{userShares}</Typography>
           </StatusChip>
         </StatusWrapper>
       )}

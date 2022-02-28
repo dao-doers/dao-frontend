@@ -23,10 +23,6 @@ const Title = styled(Typography)`
   }
 `;
 
-const TypographyBold = styled(Typography)`
-  font-weight: 600;
-`;
-
 const Intro: FC = () => {
   const classes = useStyles();
 
@@ -40,7 +36,7 @@ const Intro: FC = () => {
           Decentralized Autonomous Organization introduced to the World by Nervos Foundation. Our mission is to spread
           true democracy.
         </Typography>
-        <TypographyBold variant="h2" align="center">
+        <Typography variant="h2-bold" align="center">
           <Typewriter
             onInit={typewriter => {
               typewriter
@@ -58,7 +54,7 @@ const Intro: FC = () => {
               wrapperClassName: classes.typing,
             }}
           />
-        </TypographyBold>
+        </Typography>
       </Box>
     </Box>
   );

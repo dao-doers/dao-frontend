@@ -55,10 +55,6 @@ const TypographyBlue = styled(Typography)`
   color: ${({ theme }) => theme.palette.colors.col1};
 `;
 
-const TypographyBold = styled(Typography)`
-  font-weight: 600;
-`;
-
 const TypographyViolet = styled(Typography)`
   font-weight: 600;
   margin-right: 10px;
@@ -175,7 +171,7 @@ const VoteAccordion: FC<any> = ({ proposal }) => {
     <StyledAccordion>
       <StyledAccordionSummary expandIcon={<StyledExpandMoreIcon />} aria-controls="panel1a-content" id="panel1a-header">
         <Box display="flex" justifyContent="space-between" alignItems="center" width="100%">
-          <TypographyBold variant="subtitle2">Vote Section</TypographyBold>
+          <Typography variant="subtitle2-bold">Vote Section</Typography>
           {proposal.proposalStatus === PROPOSAL_STATUS.COLLECTING_FUNDS && (
             <TypographyViolet>Collecting Funds</TypographyViolet>
           )}

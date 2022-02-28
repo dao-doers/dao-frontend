@@ -39,10 +39,6 @@ const tributeToken = process.env.TRIBUTE_TOKEN_ADDRESS;
 const paymentRequested = 0;
 const paymentToken = process.env.TRIBUTE_TOKEN_ADDRESS;
 
-const TypographyBold = styled(Typography)`
-  font-weight: 600;
-`;
-
 const JoinDaoForm: FC = () => {
   const dispatch = useDispatch();
   const userAddress = useSelector(selectUserAddress);
@@ -89,9 +85,6 @@ const JoinDaoForm: FC = () => {
   return (
     <Box width="100%">
       <Box maxWidth="500px" mx="auto" pt={3}>
-        <TypographyBold variant="h4" mb={3} sx={{ display: { xs: 'none', md: 'block' } }}>
-          Request for joining DAO
-        </TypographyBold>
         {isMobile && (
           <Typography variant="body2" mb={3}>
             Press question mark to display tooltip.
@@ -154,7 +147,7 @@ const JoinDaoForm: FC = () => {
                 <Box width="100%" mb={2}>
                   <DAOInput
                     label="Tribute Offered"
-                    tootltip="The amount of capital you are committing to deposit to the DAO bank. "
+                    tootltip="The amount of dCKB you are committing to deposit to the DAO bank."
                     inputProps={{
                       id: 'tributeOffered',
                       placeholder: 'e.g. 10',
@@ -168,24 +161,34 @@ const JoinDaoForm: FC = () => {
                   />
                 </Box>
 
+                <Typography variant="subtitle1-bold" paragraph>
+                  Summary:
+                </Typography>
+
                 <Box display="flex" width="100%" mb={2}>
-                  <Typography variant="subtitle2">Tribute Token:</Typography>
-                  <TypographyBold variant="subtitle2" mx={1}>
+                  <Typography>Tribute Token:</Typography>
+                  <Typography variant="body1-bold" mx={1}>
+                    {new Intl.NumberFormat('en-US').format(
+                      // eslint-disable-next-line no-restricted-globals
+                      isNaN(formik.values.tributeOffered) ? 0 : formik.values.tributeOffered,
+                    )}{' '}
                     dCKB
-                  </TypographyBold>
+                  </Typography>
                   <TooltipIcon>
-                    <Typography variant="body2">CKB token to use for your tribute.</Typography>
+                    <Typography variant="body2">
+                      The amount of dCKB you are committing to deposit to the DAO bank.
+                    </Typography>
                   </TooltipIcon>
                 </Box>
 
                 <Box display="flex" width="100%" mb={2}>
-                  <Typography variant="subtitle2">Shares Requested: </Typography>
-                  <TypographyBold variant="subtitle2" mx={1}>
+                  <Typography>Shares Requested: </Typography>
+                  <Typography variant="body1-bold" mx={1}>
                     {new Intl.NumberFormat('en-US').format(
                       // eslint-disable-next-line no-restricted-globals
                       isNaN(formik.values.tributeOffered) ? 0 : formik.values.tributeOffered,
                     )}
-                  </TypographyBold>
+                  </Typography>
                   <TooltipIcon>
                     <Typography variant="body2">
                       Voting shares in the DAO. Shares are granted to members in order to allow them to vote on

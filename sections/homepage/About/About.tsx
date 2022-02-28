@@ -27,10 +27,6 @@ const ColumnWrapper = styled(Box)`
   }
 `;
 
-const TypographyBold = styled(Typography)`
-  font-weight: 600;
-`;
-
 const StyledAddReactionIcon = styled(AddReactionIcon)`
   color: ${({ theme }) => theme.palette.colors.main7};
   font-size: 40px;
@@ -52,9 +48,9 @@ const StyledAddTaskIcon = styled(AddTaskIcon)`
 const About: FC = () => {
   return (
     <Box>
-      <TypographyBold variant="h3" paragraph mt={8}>
+      <Typography variant="h3-bold" paragraph mt={8}>
         How does it works
-      </TypographyBold>
+      </Typography>
       <ColumnsWrapper>
         <ColumnWrapper>
           <StyledAddReactionIcon />

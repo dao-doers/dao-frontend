@@ -33,10 +33,6 @@ const StyledSwiper = styled(Swiper)`
   }
 `;
 
-const TypographyBold = styled(Typography)`
-  font-weight: 600;
-`;
-
 const StyledPlaylistRemoveIcon = styled(PlaylistRemoveIcon)`
   color: ${({ theme }) => theme.palette.colors.col1};
   font-size: 60px;
@@ -54,9 +50,9 @@ const LastVotes: FC = () => {
 
   return (
     <Box width="100%">
-      <TypographyBold variant="h3" mb={3} mt={8}>
+      <Typography variant="h3-bold" mb={3} mt={8}>
         Last Votes
-      </TypographyBold>
+      </Typography>
 
       {votesArray.length === 0 && (
         <Box display="flex" flexDirection="column" alignItems="center">

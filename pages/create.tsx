@@ -2,8 +2,6 @@ import type { NextPage } from 'next';
 import React, { FC } from 'react';
 import { useSelector } from 'react-redux';
 
-import styled from '@emotion/styled';
-
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 
@@ -18,10 +16,6 @@ import { selectProposalType } from 'redux/slices/createProposal';
 
 import CREATE_PROPOSAL_TYPE from 'enums/createProposalType';
 
-const TypographyBold = styled(Typography)`
-  font-weight: 600;
-`;
-
 const CreatePage: FC<NextPage> = () => {
   const proposalType = useSelector(selectProposalType);
 
@@ -34,10 +28,10 @@ const CreatePage: FC<NextPage> = () => {
           justifyContent: { md: 'space-between', xl: 'normal' },
         }}
       >
-        <TypographyBold variant="h4" mb={1} sx={{ display: { xs: 'block', md: 'none' } }}>
+        <Typography variant="h4-bold" mb={1} sx={{ display: { xs: 'block', md: 'none' } }}>
           Create new proposal
-        </TypographyBold>
-        <Box sx={{ width: { xs: '100%', md: '40%' }, pl: { xs: 0, md: 4 }, mb: { xs: 3, md: 0 } }}>
+        </Typography>
+        <Box sx={{ width: { xs: '100%', md: '40%' }, pl: { xs: 0, md: 4 } }}>
           <FormTypeButtons />
         </Box>
         <Box sx={{ width: { xs: '100%', md: '50%' } }}>
