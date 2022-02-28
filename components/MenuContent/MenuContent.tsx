@@ -98,13 +98,13 @@ const MenuContent: FC<MenuContentProps> = ({ setDrawerOpen }) => {
       )}
       <Box sx={{ mb: { xs: 1, md: 2 } }} mt={2}>
         <Link internal href="/">
-          <TypographyBlack>Home</TypographyBlack>
+          <TypographyBlack variant="body1-bold">Home</TypographyBlack>
         </Link>
       </Box>
 
       <Box sx={{ mb: { xs: 1, md: 0.5 } }}>
         <DAOPlainButton onClick={() => handleClick(1)}>
-          <TypographyBlack>Proposals</TypographyBlack>
+          <TypographyBlack variant="body1-bold">Proposals</TypographyBlack>
         </DAOPlainButton>
       </Box>
 

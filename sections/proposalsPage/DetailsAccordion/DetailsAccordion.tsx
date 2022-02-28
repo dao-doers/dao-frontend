@@ -43,10 +43,6 @@ const StyledAccordionDetails = styled(AccordionDetails)`
   }
 `;
 
-const TypographyBold = styled(Typography)`
-  font-weight: 600;
-`;
-
 const TypographyCursor = styled(Typography)`
   font-weight: 600;
   cursor: pointer;
@@ -85,7 +81,7 @@ const DetailsAccordion: FC<any> = ({ proposal }) => {
   return (
     <StyledAccordion>
       <StyledAccordionSummary expandIcon={<StyledExpandMoreIcon />} aria-controls="panel1a-content" id="panel1a-header">
-        <TypographyBold variant="subtitle2">Poll Details</TypographyBold>
+        <Typography variant="subtitle2-bold">Poll Details</Typography>
       </StyledAccordionSummary>
       <StyledAccordionDetails>
         <Box display="flex" justifyContent="flex-start" flexWrap="wrap">
@@ -132,9 +128,9 @@ const DetailsAccordion: FC<any> = ({ proposal }) => {
                   <Typography variant="body2" align="center" gutterBottom>
                     Shares Requested
                   </Typography>
-                  <TypographyBold align="center">
+                  <Typography variant="body1-bold" align="center">
                     {new Intl.NumberFormat('de-DE').format(proposal.sharesRequested)}
-                  </TypographyBold>
+                  </Typography>
                 </Box>
               </DAOTile>
             </Box>
@@ -147,9 +143,9 @@ const DetailsAccordion: FC<any> = ({ proposal }) => {
                   <Typography variant="body2" align="center" gutterBottom>
                     Tribute to DAO
                   </Typography>
-                  <TypographyBold align="center">
+                  <Typography variant="body1-bold" align="center">
                     {shannonsToCkb(proposal.tributeOffered)} {proposal.tributeTokenSymbol}
-                  </TypographyBold>
+                  </Typography>
                 </Box>
               </DAOTile>
             </Box>
@@ -162,9 +158,9 @@ const DetailsAccordion: FC<any> = ({ proposal }) => {
                   <Typography variant="body2" align="center" gutterBottom>
                     Payment Requested
                   </Typography>
-                  <TypographyBold align="center">
+                  <Typography variant="body1-bold" align="center">
                     {shannonsToCkb(proposal.paymentRequested)} {proposal.paymentTokenSymbol}
-                  </TypographyBold>
+                  </Typography>
                 </Box>
               </DAOTile>
             </Box>

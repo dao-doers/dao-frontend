@@ -3,22 +3,20 @@ import { useSelector } from 'react-redux';
 
 import styled from '@emotion/styled';
 
+import Accordion from '@mui/material/Accordion';
+import AccordionSummary from '@mui/material/AccordionSummary';
+import AccordionDetails from '@mui/material/AccordionDetails';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 import ConnectWalletButton from 'components/ConnectWalletButton/ConnectWalletButton';
-import DAOCircleLoader from 'components/DAOCircleLoader/DAOCircleLoader';
-import StatusChip from 'components/StatusChip/StatusChip';
 
-import { selectUserAddress, selectIsLoggedIn, selectUserShares } from 'redux/slices/user';
+import { selectIsLoggedIn } from 'redux/slices/user';
 
-import formatAddress from 'utils/formatAddress';
-import { shannonsToCkb } from 'utils/formatShannons';
+import useIsMobile from 'hooks/useIsMobile';
 
-import useCheckIndexerStatus from 'hooks/useCheckIndexerStatus';
-import useCheckBalance from 'hooks/useCheckBalance';
-
-import RecentActivityStatus from 'components/RecentActivityStatus/RecentActivityStatus';
+import BlockchainStatusContent from './BlockchainStatusContent/BlockchainStatusContent';
 
 const MainWrapper = styled(Box)`
   display: flex;
@@ -28,6 +26,7 @@ const MainWrapper = styled(Box)`
   margin-bottom: 30px;
   ${({ theme }) => theme.breakpoints.down('sm')} {
     flex-direction: column;
+    margin-top: 0px;
   }
 `;
 
@@ -39,136 +38,49 @@ const StatusWrapper = styled(Box)`
   }
 `;
 
-const TypographyBold = styled(Typography)`
-  font-weight: 600;
+const StyledAccordion = styled(Accordion)`
+  background-color: transparent;
+  box-shadow: none;
+  border-top: none;
+  &:before {
+    display: none;
+  }
 `;
 
-const TypographyGreen = styled(Typography)`
-  color: ${({ theme }) => theme.palette.colors.col2};
-  font-weight: 600;
+const StyledAccordionSummary = styled(AccordionSummary)`
+  padding: 0;
 `;
 
-const TypographyRed = styled(Typography)`
-  color: ${({ theme }) => theme.palette.colors.col6};
-  font-weight: 600;
-`;
-
-const TypographyYellow = styled(Typography)`
-  color: ${({ theme }) => theme.palette.colors.col4};
-  font-weight: 600;
+const StyledExpandMoreIcon = styled(ExpandMoreIcon)`
+  color: ${({ theme }) => theme.palette.text.primary};
 `;
 
 const BlockchainStatus: FC = () => {
-  const userAddress = useSelector(selectUserAddress);
   const isLoggedIn = useSelector(selectIsLoggedIn);
-  const userShares = useSelector(selectUserShares);
-
-  const { molochBlock, layer2Block, molochError, molochLoading, layer2BlockLoading } = useCheckIndexerStatus();
-
-  const { balance, isChecked } = useCheckBalance();
+  const isMobile = useIsMobile('md');
 
   return (
     <MainWrapper>
-      <StatusWrapper>
-        <StatusChip title="Indexer status:">
-          {molochBlock === layer2Block && typeof layer2Block === 'number' && typeof molochBlock === 'number' && (
-            <Box display="flex">
-              <TypographyGreen>Online </TypographyGreen>
-              <TypographyBold ml={1}>block: {molochBlock === layer2Block ? layer2Block : null}</TypographyBold>
-            </Box>
-          )}
+      {isMobile && (
+        <StyledAccordion>
+          <StyledAccordionSummary
+            expandIcon={<StyledExpandMoreIcon />}
+            aria-controls="panel1a-content"
+            id="panel1a-header"
+          >
+            <Typography variant="body1-bold">Blockchain status details</Typography>
+          </StyledAccordionSummary>
+          <AccordionDetails>
+            <BlockchainStatusContent />
+          </AccordionDetails>
+        </StyledAccordion>
+      )}
 
-          {(typeof layer2Block !== 'number' || typeof molochBlock !== 'number') &&
-            (layer2BlockLoading && molochLoading ? (
-              <TypographyRed>Offline</TypographyRed>
-            ) : (
-              <Box display="flex" alignItems="center">
-                <Box display="flex" alignItems="center" mr={1}>
-                  <DAOCircleLoader size={20} />
-                </Box>
-                <Typography variant="body2">Checking</Typography>
-              </Box>
-            ))}
-
-          {!molochError ? (
-            molochBlock !== layer2Block &&
-            typeof layer2Block === 'number' &&
-            typeof molochBlock === 'number' &&
-            !Number.isNaN(layer2Block) &&
-            !Number.isNaN(molochBlock) && (
-              <>
-                {layer2Block - molochBlock === 1 && (
-                  <TypographyYellow>
-                    lagging {'>>'} {layer2Block - molochBlock} block behind
-                  </TypographyYellow>
-                )}
-                {layer2Block - molochBlock > 1 && (
-                  <TypographyYellow>
-                    lagging {'>>'} {layer2Block - molochBlock} blocks behind
-                  </TypographyYellow>
-                )}
-              </>
-            )
-          ) : (
-            <TypographyRed>INDEXER ERROR</TypographyRed>
-          )}
-        </StatusChip>
-      </StatusWrapper>
-
-      <StatusWrapper>
-        <StatusChip title="Last page update:">
-          <RecentActivityStatus />
-        </StatusChip>
-      </StatusWrapper>
+      {!isMobile && <BlockchainStatusContent />}
 
       {!isLoggedIn && (
         <StatusWrapper>
           <ConnectWalletButton />
-        </StatusWrapper>
-      )}
-
-      {isLoggedIn && (
-        <StatusWrapper>
-          <StatusChip title="User address:">
-            <TypographyBold>{formatAddress(userAddress)}</TypographyBold>
-          </StatusChip>
-        </StatusWrapper>
-      )}
-
-      {isLoggedIn && isChecked && (
-        <StatusWrapper>
-          <StatusChip title="dCKB balance:">
-            <TypographyBold>{shannonsToCkb(balance)}</TypographyBold>
-          </StatusChip>
-        </StatusWrapper>
-      )}
-
-      {isLoggedIn && !isChecked && (
-        <StatusWrapper>
-          <StatusChip title="dCKB balance:">
-            <Box display="flex" alignItems="center">
-              <Box display="flex" alignItems="center" mr={1}>
-                <DAOCircleLoader size={20} />
-              </Box>
-              <Typography variant="body2">Checking</Typography>
-            </Box>
-          </StatusChip>
-        </StatusWrapper>
-      )}
-
-      {isLoggedIn && userShares > 0 && (
-        <StatusWrapper>
-          <StatusChip title="Member shares:">
-            <TypographyBold>{userShares}</TypographyBold>
-          </StatusChip>
-        </StatusWrapper>
-      )}
-
-      {isLoggedIn && userShares === 0 && (
-        <StatusWrapper>
-          <StatusChip title="Member status:">
-            <TypographyRed>Not a member</TypographyRed>
-          </StatusChip>
         </StatusWrapper>
       )}
     </MainWrapper>

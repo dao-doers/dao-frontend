@@ -5,9 +5,9 @@ import { useSelector, useDispatch } from 'react-redux';
 import styled from '@emotion/styled';
 
 import Accordion from '@mui/material/Accordion';
-import Box from '@mui/material/Box';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
+import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import PlaylistRemoveIcon from '@mui/icons-material/PlaylistRemove';
@@ -53,10 +53,6 @@ const TypographyGreen = styled(Typography)`
 
 const TypographyBlue = styled(Typography)`
   color: ${({ theme }) => theme.palette.colors.col1};
-`;
-
-const TypographyBold = styled(Typography)`
-  font-weight: 600;
 `;
 
 const TypographyViolet = styled(Typography)`
@@ -175,7 +171,7 @@ const VoteAccordion: FC<any> = ({ proposal }) => {
     <StyledAccordion>
       <StyledAccordionSummary expandIcon={<StyledExpandMoreIcon />} aria-controls="panel1a-content" id="panel1a-header">
         <Box display="flex" justifyContent="space-between" alignItems="center" width="100%">
-          <TypographyBold variant="subtitle2">Vote Section</TypographyBold>
+          <Typography variant="subtitle2-bold">Vote Section</Typography>
           {proposal.proposalStatus === PROPOSAL_STATUS.COLLECTING_FUNDS && (
             <TypographyViolet>Collecting Funds</TypographyViolet>
           )}
@@ -339,6 +335,10 @@ const VoteAccordion: FC<any> = ({ proposal }) => {
                 <Counter time={Number(proposal.gracePeriodEnds)} />
               </Box>
             )}
+
+            <Typography variant="subtitle2-bold" paragraph>
+              Votes:{' '}
+            </Typography>
             {proposal.yesVotes + proposal.noVotes > 0 && (
               <Box width="100%">
                 <Box display="flex" justifyContent="space-between" width="100%" pb={2}>
@@ -378,7 +378,10 @@ const VoteAccordion: FC<any> = ({ proposal }) => {
               </DAOTile>
             )}
 
-            <Box sx={{ mt: { xs: 4, md: 0 } }}>
+            <Box mt={4}>
+              <Typography variant="subtitle2-bold" paragraph>
+                Votes:{' '}
+              </Typography>
               {proposal.yesVotes + proposal.noVotes > 0 && (
                 <Box width="100%">
                   <Box display="flex" justifyContent="space-between" width="100%" pb={2}>

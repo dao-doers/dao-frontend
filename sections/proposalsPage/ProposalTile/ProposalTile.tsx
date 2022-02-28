@@ -96,7 +96,7 @@ const ProposalTile: FC<any> = ({ proposal }) => {
   }
 
   return (
-    <Box mb={3}>
+    <Box sx={{ mb: { xs: 0, md: 3 } }}>
       <DAOTile variant="greyShadow">
         <Box width="100%" height="100%" p={3}>
           <TypographySmall align="right" paragraph>

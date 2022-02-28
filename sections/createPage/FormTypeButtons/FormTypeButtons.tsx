@@ -24,7 +24,7 @@ const FormTypeButtons: FC<any> = () => {
   };
 
   return (
-    <Box sx={{ mb: { xs: 0, md: 3 } }} mt={3}>
+    <Box sx={{ mb: { xs: 0, md: 3 }, mt: { xs: 1.5, md: 3 } }}>
       <DAOTile variant={proposalType === CREATE_PROPOSAL_TYPE.NORMAL ? 'gradientOutline' : 'greyOutline'}>
         <Box
           width="100%"
@@ -33,14 +33,14 @@ const FormTypeButtons: FC<any> = () => {
           sx={{ cursor: 'pointer' }}
           onClick={() => handleSetProposalType(CREATE_PROPOSAL_TYPE.NORMAL)}
         >
-          <Typography variant="h6" align="center" paragraph>
+          <Typography variant="h6-bold" align="center" paragraph>
             Request for joining DAO
           </Typography>
           <Typography align="center">Tributing capital and requesting new shares to join the DAO</Typography>
         </Box>
       </DAOTile>
 
-      <Box my={3}>
+      <Box my={2}>
         <DAOTile variant={proposalType === CREATE_PROPOSAL_TYPE.WITH_FUNDING ? 'gradientOutline' : 'greyOutline'}>
           <Box
             width="100%"
@@ -49,7 +49,7 @@ const FormTypeButtons: FC<any> = () => {
             sx={{ cursor: 'pointer' }}
             onClick={() => handleSetProposalType(CREATE_PROPOSAL_TYPE.WITH_FUNDING)}
           >
-            <Typography variant="h6" align="center" paragraph>
+            <Typography variant="h6-bold" align="center" paragraph>
               Request for project funding
             </Typography>
             <Typography align="center">
