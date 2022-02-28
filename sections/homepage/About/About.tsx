@@ -29,12 +29,12 @@ const ColumnWrapper = styled(Box)`
 const TypographyBold = styled(Typography)`
   font-weight: 600;
 `;
-const gradient = 'linear-gradient(45deg, #2EA5E8 0%, #00D395 100%)';
+
 const About: FC = () => {
   return (
     <Box>
       <TypographyBold variant="h3" paragraph mt={8}>
-        Build for you
+        How does it works
       </TypographyBold>
       <ColumnsWrapper>
         <ColumnWrapper>

@@ -55,7 +55,7 @@ const LastProposals: FC = () => {
   return (
     <Box width="100%">
       <TypographyBold variant="h3" mb={3} mt={8}>
-        Recent activity
+        Last proposals
       </TypographyBold>
 
       {proposalsArray.length === 0 && (

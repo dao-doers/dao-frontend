@@ -38,12 +38,12 @@ const TypographyBold = styled(Typography)`
 `;
 
 const StyledPlaylistRemoveIcon = styled(PlaylistRemoveIcon)`
-  color: ${({ theme }) => theme.palette.colors.main7};
+  color: ${({ theme }) => theme.palette.colors.col1};
   font-size: 60px;
 `;
 
 const TypographyBlue = styled(Typography)`
-  color: ${({ theme }) => theme.palette.colors.main7};
+  color: ${({ theme }) => theme.palette.colors.col1};
   font-weight: 600;
 `;
 
@@ -55,7 +55,7 @@ const LastVotes: FC = () => {
   return (
     <Box width="100%">
       <TypographyBold variant="h3" mb={3} mt={8}>
-        Recent Votes
+        Last Votes
       </TypographyBold>
 
       {votesArray.length === 0 && (
