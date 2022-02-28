@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from 'react';
+import { FC } from 'react';
 import Image from 'next/image';
 import { useDispatch } from 'react-redux';
 
@@ -10,12 +10,12 @@ import { setUserAddress, setIsLoggedIn } from 'redux/slices/user';
 
 import { loadWeb3, getMetamaskAddress } from 'utils/blockchain';
 
-import detectEthereumProvider from '@metamask/detect-provider';
+import useCheckProvider from 'hooks/useCheckProvider';
 
 const ConnectWalletButton: FC = () => {
   const dispatch = useDispatch();
 
-  const [hasProvider, setHasProvider] = useState(false);
+  const hasProvider = useCheckProvider();
 
   const dAppLink = process.env.APP_URL;
 
@@ -28,16 +28,6 @@ const ConnectWalletButton: FC = () => {
     dispatch(setUserAddress(address));
     dispatch(setIsLoggedIn(true));
   };
-
-  useEffect(() => {
-    const setProvider = async () => {
-      const provider = await detectEthereumProvider();
-      if (provider) {
-        setHasProvider(true);
-      }
-    };
-    setProvider();
-  }, []);
 
   return hasProvider ? (
     <DAOButton variant="gradientOutline" onClick={handleConnectWallet}>
