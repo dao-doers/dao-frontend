@@ -28,7 +28,11 @@ const CreatePage: FC<NextPage> = () => {
           justifyContent: { md: 'space-between', xl: 'normal' },
         }}
       >
-        <Typography variant="h4-bold" mb={1} sx={{ display: { xs: 'block', md: 'none' } }}>
+        <Typography
+          variant="h3-bold"
+          mt={1}
+          sx={{ display: { xs: 'block', md: 'none' }, textAlign: { xs: 'center', md: 'left' } }}
+        >
           Create new proposal
         </Typography>
         <Box sx={{ width: { xs: '100%', md: '40%' }, pl: { xs: 0, md: 4 } }}>

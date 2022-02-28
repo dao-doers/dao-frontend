@@ -49,8 +49,8 @@ const LastVotes: FC = () => {
   const votesArray = useSelector(selectVotesArray);
 
   return (
-    <Box width="100%">
-      <Typography variant="h3-bold" mb={3} mt={8}>
+    <Box>
+      <Typography variant="h3-bold" paragraph>
         Last Votes
       </Typography>
 

@@ -49,8 +49,8 @@ const LastProposals: FC = () => {
   const proposalsArray = useSelector(selectProposalsArray);
 
   return (
-    <Box width="100%">
-      <Typography variant="h3-bold" mb={3} mt={8}>
+    <Box mb={4}>
+      <Typography variant="h3-bold" paragraph>
         Last Proposals
       </Typography>
 

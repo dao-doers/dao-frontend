@@ -8,6 +8,13 @@ import AddReactionIcon from '@mui/icons-material/AddReaction';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import AddTaskIcon from '@mui/icons-material/AddTask';
 
+import Link from 'components/Link';
+import DAOButton from 'components/DAOButton/DAOButton';
+
+import { APP_ROUTES } from 'utils/routes';
+
+import useIsMobile from 'hooks/useIsMobile';
+
 const ColumnsWrapper = styled(Box)`
   display: flex;
   justify-content: space-between;
@@ -45,18 +52,36 @@ const StyledAddTaskIcon = styled(AddTaskIcon)`
   margin-bottom: 30px;
 `;
 
+const Title = styled(Typography)`
+  ${({ theme }) => theme.breakpoints.down('sm')} {
+    text-align: center;
+  }
+`;
+
 const About: FC = () => {
+  const isMobile = useIsMobile('md');
+
   return (
-    <Box>
-      <Typography variant="h3-bold" paragraph mt={8}>
+    <Box mb={8}>
+      <Title variant="h3-bold" paragraph>
         How does it works
-      </Typography>
+      </Title>
       <ColumnsWrapper>
         <ColumnWrapper>
           <StyledAddReactionIcon />
           <Typography variant="subtitle2">
-            Every person can request to join our guild which will allow you to take part in votings.
+            Every person can create proposal request to join our guild which will allow you to take part in votings.
           </Typography>
+
+          {isMobile && (
+            <Box mx="auto" mb={1} mt={5} sx={{ width: { xs: '60%', md: '100%' } }}>
+              <Link internal href={APP_ROUTES.CREATE}>
+                <DAOButton variant="gradientOutline">
+                  <Typography>Create proposal</Typography>
+                </DAOButton>
+              </Link>
+            </Box>
+          )}
         </ColumnWrapper>
         <ColumnWrapper>
           <StyledAddCircleOutlineIcon />
@@ -66,7 +91,9 @@ const About: FC = () => {
         </ColumnWrapper>
         <ColumnWrapper>
           <StyledAddTaskIcon />
-          <Typography variant="subtitle2">Once the proposal is approved, it goes to the execution phase.</Typography>
+          <Typography variant="subtitle2">
+            Once the proposal is approved, it goes to the grace period and then execution phase.
+          </Typography>
         </ColumnWrapper>
       </ColumnsWrapper>
     </Box>

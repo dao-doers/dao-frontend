@@ -5,9 +5,9 @@ import { useSelector, useDispatch } from 'react-redux';
 import styled from '@emotion/styled';
 
 import Accordion from '@mui/material/Accordion';
-import Box from '@mui/material/Box';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
+import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import PlaylistRemoveIcon from '@mui/icons-material/PlaylistRemove';
@@ -335,6 +335,10 @@ const VoteAccordion: FC<any> = ({ proposal }) => {
                 <Counter time={Number(proposal.gracePeriodEnds)} />
               </Box>
             )}
+
+            <Typography variant="subtitle2-bold" paragraph>
+              Votes:{' '}
+            </Typography>
             {proposal.yesVotes + proposal.noVotes > 0 && (
               <Box width="100%">
                 <Box display="flex" justifyContent="space-between" width="100%" pb={2}>
@@ -374,7 +378,10 @@ const VoteAccordion: FC<any> = ({ proposal }) => {
               </DAOTile>
             )}
 
-            <Box sx={{ mt: { xs: 4, md: 0 } }}>
+            <Box mt={4}>
+              <Typography variant="subtitle2-bold" paragraph>
+                Votes:{' '}
+              </Typography>
               {proposal.yesVotes + proposal.noVotes > 0 && (
                 <Box width="100%">
                   <Box display="flex" justifyContent="space-between" width="100%" pb={2}>

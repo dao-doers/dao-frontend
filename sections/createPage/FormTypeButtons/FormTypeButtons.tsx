@@ -24,7 +24,7 @@ const FormTypeButtons: FC<any> = () => {
   };
 
   return (
-    <Box sx={{ mb: { xs: 0, md: 3 } }} mt={3}>
+    <Box sx={{ mb: { xs: 0, md: 3 }, mt: { xs: 1.5, md: 3 } }}>
       <DAOTile variant={proposalType === CREATE_PROPOSAL_TYPE.NORMAL ? 'gradientOutline' : 'greyOutline'}>
         <Box
           width="100%"
@@ -40,7 +40,7 @@ const FormTypeButtons: FC<any> = () => {
         </Box>
       </DAOTile>
 
-      <Box my={3}>
+      <Box my={2}>
         <DAOTile variant={proposalType === CREATE_PROPOSAL_TYPE.WITH_FUNDING ? 'gradientOutline' : 'greyOutline'}>
           <Box
             width="100%"
