@@ -124,11 +124,11 @@ const DetailsAccordion: FC<any> = ({ proposal }) => {
           {proposal.sharesRequested && (
             <Box sx={{ width: { xs: '48%', xl: '30%' } }} mb={2} mx="1%">
               <DAOTile variant="gradientOutline" width="100%" height="100px">
-                <Box>
-                  <Typography variant="body2" align="center" gutterBottom>
+                <Box display="flex" flexDirection="column" alignItems="center">
+                  <Typography variant="body2" gutterBottom>
                     Shares Requested
                   </Typography>
-                  <Typography variant="body1-bold" align="center">
+                  <Typography variant="body1-bold">
                     {new Intl.NumberFormat('de-DE').format(proposal.sharesRequested)}
                   </Typography>
                 </Box>
@@ -139,11 +139,11 @@ const DetailsAccordion: FC<any> = ({ proposal }) => {
           {proposal.tributeOffered && (
             <Box sx={{ width: { xs: '48%', xl: '30%' } }} mb={2} mx="1%">
               <DAOTile variant="gradientOutline" width="100%" height="100px">
-                <Box>
-                  <Typography variant="body2" align="center" gutterBottom>
+                <Box display="flex" flexDirection="column" alignItems="center">
+                  <Typography variant="body2" gutterBottom>
                     Tribute to DAO
                   </Typography>
-                  <Typography variant="body1-bold" align="center">
+                  <Typography variant="body1-bold">
                     {shannonsToCkb(proposal.tributeOffered)} {proposal.tributeTokenSymbol}
                   </Typography>
                 </Box>
@@ -154,11 +154,11 @@ const DetailsAccordion: FC<any> = ({ proposal }) => {
           {Number(proposal.paymentRequested) > 0 && (
             <Box sx={{ width: { xs: '48%', xl: '30%' } }} mb={2} mx="1%">
               <DAOTile variant="gradientOutline" width="100%" height="100px">
-                <Box>
-                  <Typography variant="body2" align="center" gutterBottom>
+                <Box display="flex" flexDirection="column" alignItems="center">
+                  <Typography variant="body2" gutterBottom>
                     Payment Requested
                   </Typography>
-                  <Typography variant="body1-bold" align="center">
+                  <Typography variant="body1-bold">
                     {shannonsToCkb(proposal.paymentRequested)} {proposal.paymentTokenSymbol}
                   </Typography>
                 </Box>

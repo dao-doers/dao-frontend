@@ -186,39 +186,37 @@ const VoteAccordion: FC<any> = ({ proposal }) => {
 
       <AccordionDetails>
         {proposal.proposalStatus === PROPOSAL_STATUS.COLLECTING_FUNDS && (
-          <DAOTile>
-            <Box width="100%" p={2}>
-              {sponsorProposalStatus !== PROCESSING_STATUSES.SUCCESS && (
-                <DAOTile variant="greyOutline">
-                  <Typography align="center" p={1}>
-                    This proposal has not been sponsored yet. It can be sponsored by DAO member.
-                  </Typography>
-                </DAOTile>
-              )}
+          <Box>
+            {sponsorProposalStatus !== PROCESSING_STATUSES.SUCCESS && (
+              <DAOTile variant="greyOutline">
+                <Typography align="center" p={1}>
+                  This proposal has not been sponsored yet. It can be sponsored by DAO member.
+                </Typography>
+              </DAOTile>
+            )}
 
-              {sponsorProposalStatus === PROCESSING_STATUSES.SUCCESS && (
-                <DAOTile variant="gradientOutline">
-                  <Typography align="center" p={1}>
-                    You have successfully sponsored this proposal!
-                  </Typography>
-                </DAOTile>
-              )}
+            {sponsorProposalStatus === PROCESSING_STATUSES.SUCCESS && (
+              <DAOTile variant="gradientOutline">
+                <Typography align="center" p={1}>
+                  You have successfully sponsored this proposal!
+                </Typography>
+              </DAOTile>
+            )}
 
-              {!isLoggedIn && (
-                <Box maxWidth="200px" mx="auto" mt={2}>
-                  <ConnectWalletButton />
-                </Box>
-              )}
+            {!isLoggedIn && (
+              <Box maxWidth="200px" mx="auto" mt={2}>
+                <ConnectWalletButton />
+              </Box>
+            )}
 
-              {isLoggedIn && sponsorProposalStatus !== PROCESSING_STATUSES.SUCCESS && (
-                <Box maxWidth="200px" mx="auto" mt={2}>
-                  <DAOButton variant="gradientOutline" onClick={handleSponsorProposal}>
-                    Sponsor Proposal
-                  </DAOButton>
-                </Box>
-              )}
-            </Box>
-          </DAOTile>
+            {isLoggedIn && sponsorProposalStatus !== PROCESSING_STATUSES.SUCCESS && (
+              <Box maxWidth="200px" mx="auto" mt={2}>
+                <DAOButton variant="gradientOutline" onClick={handleSponsorProposal}>
+                  Sponsor Proposal
+                </DAOButton>
+              </Box>
+            )}
+          </Box>
         )}
 
         {(proposal.proposalStatus === PROPOSAL_STATUS.VOTING ||
