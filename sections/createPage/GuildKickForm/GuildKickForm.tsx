@@ -64,16 +64,12 @@ const GuildKickForm: FC = () => {
     setTimeout(() => dispatch(setProposalStatus(FETCH_STATUSES.SUCCESS)), 1000);
   };
 
-  const TypographyBold = styled(Typography)`
-    font-weight: 600;
-  `;
-
   return (
     <StyledBox>
       <Box maxWidth="500px" mx="auto">
-        <TypographyBold variant="h4" paragraph sx={{ display: { xs: 'none', md: 'block' } }}>
+        <Typography variant="h4-bold" paragraph sx={{ display: { xs: 'none', md: 'block' } }}>
           Create new proposal
-        </TypographyBold>
+        </Typography>
         <Formik validationSchema={guildKickSchema} initialValues={initialValues} validateOnChange onSubmit={onSubmit}>
           {formik => (
             <Form>

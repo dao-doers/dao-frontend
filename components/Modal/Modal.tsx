@@ -33,6 +33,10 @@ const StyledDialog = styled(Dialog)`
   }
 `;
 
+const BlurryStyledDialog = {
+  backdropFilter: 'blur(1px)',
+};
+
 const StyledIcon = styled(Close)`
   color: ${({ theme }) => theme.palette.colors.main6};
   cursor: pointer;
@@ -57,7 +61,14 @@ const Divider = styled(Box)`
 
 const Modal: FC<ModalProps> = ({ className, isOpen, handleClose, title, divider, children }) => {
   return (
-    <StyledDialog open={isOpen} onClose={handleClose} className={className}>
+    <StyledDialog
+      open={isOpen}
+      onClose={handleClose}
+      className={className}
+      BackdropProps={{
+        style: BlurryStyledDialog,
+      }}
+    >
       {title && (
         <StyledHeader>
           <Box>

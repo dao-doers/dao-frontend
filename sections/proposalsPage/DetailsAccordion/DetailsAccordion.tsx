@@ -43,10 +43,6 @@ const StyledAccordionDetails = styled(AccordionDetails)`
   }
 `;
 
-const TypographyBold = styled(Typography)`
-  font-weight: 600;
-`;
-
 const TypographyCursor = styled(Typography)`
   font-weight: 600;
   cursor: pointer;
@@ -85,7 +81,7 @@ const DetailsAccordion: FC<any> = ({ proposal }) => {
   return (
     <StyledAccordion>
       <StyledAccordionSummary expandIcon={<StyledExpandMoreIcon />} aria-controls="panel1a-content" id="panel1a-header">
-        <TypographyBold variant="h6">Poll Details</TypographyBold>
+        <Typography variant="subtitle2-bold">Poll Details</Typography>
       </StyledAccordionSummary>
       <StyledAccordionDetails>
         <Box display="flex" justifyContent="flex-start" flexWrap="wrap">
@@ -93,7 +89,7 @@ const DetailsAccordion: FC<any> = ({ proposal }) => {
             <Box sx={{ width: { xs: '48%', xl: '30%' } }} mb={2} mx="1%">
               <DAOTile variant="gradientOutline" width="100%" height="100px">
                 <Box>
-                  <Typography align="center" gutterBottom>
+                  <Typography variant="body2" align="center" gutterBottom>
                     Sponsored by
                   </Typography>
                   <CopyToClipboard text={proposal.sponsor} onCopy={handleCopySponsoredAddress}>
@@ -111,7 +107,7 @@ const DetailsAccordion: FC<any> = ({ proposal }) => {
             <Box sx={{ width: { xs: '48%', xl: '30%' } }} mb={2} mx="1%">
               <DAOTile variant="gradientOutline" width="100%" height="100px">
                 <Box>
-                  <Typography align="center" gutterBottom>
+                  <Typography variant="body2" align="center" gutterBottom>
                     Applicant Address
                   </Typography>
                   <CopyToClipboard text={proposal.applicant} onCopy={handleCopyApplicantAddress}>
@@ -128,13 +124,13 @@ const DetailsAccordion: FC<any> = ({ proposal }) => {
           {proposal.sharesRequested && (
             <Box sx={{ width: { xs: '48%', xl: '30%' } }} mb={2} mx="1%">
               <DAOTile variant="gradientOutline" width="100%" height="100px">
-                <Box>
-                  <Typography align="center" gutterBottom>
+                <Box display="flex" flexDirection="column" alignItems="center">
+                  <Typography variant="body2" gutterBottom>
                     Shares Requested
                   </Typography>
-                  <TypographyBold align="center">
+                  <Typography variant="body1-bold">
                     {new Intl.NumberFormat('de-DE').format(proposal.sharesRequested)}
-                  </TypographyBold>
+                  </Typography>
                 </Box>
               </DAOTile>
             </Box>
@@ -143,13 +139,13 @@ const DetailsAccordion: FC<any> = ({ proposal }) => {
           {proposal.tributeOffered && (
             <Box sx={{ width: { xs: '48%', xl: '30%' } }} mb={2} mx="1%">
               <DAOTile variant="gradientOutline" width="100%" height="100px">
-                <Box>
-                  <Typography align="center" gutterBottom>
+                <Box display="flex" flexDirection="column" alignItems="center">
+                  <Typography variant="body2" gutterBottom>
                     Tribute to DAO
                   </Typography>
-                  <TypographyBold align="center">
+                  <Typography variant="body1-bold">
                     {shannonsToCkb(proposal.tributeOffered)} {proposal.tributeTokenSymbol}
-                  </TypographyBold>
+                  </Typography>
                 </Box>
               </DAOTile>
             </Box>
@@ -158,13 +154,13 @@ const DetailsAccordion: FC<any> = ({ proposal }) => {
           {Number(proposal.paymentRequested) > 0 && (
             <Box sx={{ width: { xs: '48%', xl: '30%' } }} mb={2} mx="1%">
               <DAOTile variant="gradientOutline" width="100%" height="100px">
-                <Box>
-                  <Typography align="center" gutterBottom>
+                <Box display="flex" flexDirection="column" alignItems="center">
+                  <Typography variant="body2" gutterBottom>
                     Payment Requested
                   </Typography>
-                  <TypographyBold align="center">
+                  <Typography variant="body1-bold">
                     {shannonsToCkb(proposal.paymentRequested)} {proposal.paymentTokenSymbol}
-                  </TypographyBold>
+                  </Typography>
                 </Box>
               </DAOTile>
             </Box>

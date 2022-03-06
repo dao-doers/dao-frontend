@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/rules-of-hooks */
-import { FC, useState, useEffect } from 'react';
+import { FC } from 'react';
 import { Formik, Form } from 'formik';
 import { useSelector, useDispatch } from 'react-redux';
 
@@ -14,11 +14,12 @@ import TooltipIcon from 'components/TooltipIcon';
 import ConnectWalletButton from 'components/ConnectWalletButton/ConnectWalletButton';
 
 import { setOpen, setStatus, setMessage } from 'redux/slices/modalTransaction';
-import { selectUserAddress } from 'redux/slices/user';
+import { selectUserAddress, selectIsLoggedIn, selectUserShares } from 'redux/slices/user';
 
 import PROCESSING_STATUSES from 'enums/processingStatuses';
 
 import useCreateProposal from 'hooks/useCreateProposal';
+import useIsMobile from 'hooks/useIsMobile';
 
 import newFundingSchema from 'validators/newFundingSchema';
 
@@ -39,10 +40,6 @@ const lootRequested = 0;
 const tributeToken = process.env.TRIBUTE_TOKEN_ADDRESS;
 const paymentToken = process.env.TRIBUTE_TOKEN_ADDRESS;
 
-const TypographyBold = styled(Typography)`
-  font-weight: 600;
-`;
-
 const TypographyRed = styled(Typography)`
   color: ${({ theme }) => theme.palette.colors.col6};
   font-weight: 600;
@@ -51,16 +48,10 @@ const TypographyRed = styled(Typography)`
 const FundProjectForm: FC = () => {
   const dispatch = useDispatch();
   const userAddress = useSelector(selectUserAddress);
+  const isLoggedIn = useSelector(selectIsLoggedIn);
+  const userShares = useSelector(selectUserShares);
 
-  const [validated, setValidated] = useState(true);
-
-  useEffect(() => {
-    // TODO: validate if user is DAO member
-    // const isApplicantValid = async () => {
-    //   setValidated(true);
-    // };
-    // isApplicantValid();
-  }, [userAddress]);
+  const isMobile = useIsMobile('md');
 
   const onSubmit = async (values: any) => {
     try {
@@ -101,9 +92,11 @@ const FundProjectForm: FC = () => {
   return (
     <Box width="100%">
       <Box maxWidth="500px" mx="auto" pt={3}>
-        <TypographyBold variant="h4" mb={3} sx={{ display: { xs: 'none', md: 'block' } }}>
-          Request for project funding
-        </TypographyBold>
+        {isMobile && (
+          <Typography variant="body2" mb={3}>
+            Press question mark to display tooltip.
+          </Typography>
+        )}
         <Formik validationSchema={newFundingSchema} initialValues={initialValues} validateOnChange onSubmit={onSubmit}>
           {formik => (
             <Form>
@@ -161,7 +154,7 @@ const FundProjectForm: FC = () => {
                 <Box width="100%" mb={2}>
                   <DAOInput
                     label="Tribute Offered"
-                    tootltip="The amount of capital you are committing to deposit to the DAO bank. "
+                    tootltip="The amount of dCKB you are committing to deposit to the DAO bank."
                     inputProps={{
                       id: 'tributeOffered',
                       value: formik.values.tributeOffered,
@@ -178,7 +171,7 @@ const FundProjectForm: FC = () => {
                 <Box width="100%" mb={2}>
                   <DAOInput
                     label="Payment Requested"
-                    tootltip="The number amount of payment requested. Payment can be requested in CKB token held by the DAO"
+                    tootltip="The amount of payment requested. Payment can be requested in dCKB token held by the DAO."
                     inputProps={{
                       id: 'paymentRequested',
                       value: formik.values.paymentRequested,
@@ -192,34 +185,50 @@ const FundProjectForm: FC = () => {
                   />
                 </Box>
 
+                <Typography variant="subtitle1-bold" paragraph>
+                  Summary:
+                </Typography>
+
                 <Box display="flex" width="100%" mb={2}>
-                  <Typography variant="subtitle2">Tribute Token:</Typography>
-                  <TypographyBold variant="subtitle2" mx={1}>
+                  <Typography>Tribute Offered:</Typography>
+                  <Typography variant="body1-bold" mx={1}>
+                    {new Intl.NumberFormat('en-US').format(
+                      // eslint-disable-next-line no-restricted-globals
+                      isNaN(formik.values.tributeOffered) ? 0 : formik.values.tributeOffered,
+                    )}{' '}
                     dCKB
-                  </TypographyBold>
+                  </Typography>
                   <TooltipIcon>
-                    <Typography variant="body2">CKB token to use for your tribute.</Typography>
+                    <Typography variant="body2">
+                      The amount of dCKB you are committing to deposit to the DAO bank.
+                    </Typography>
                   </TooltipIcon>
                 </Box>
 
                 <Box display="flex" width="100%" mb={2}>
-                  <Typography variant="subtitle2">Payment token: </Typography>
-                  <TypographyBold variant="subtitle2" mx={1}>
+                  <Typography>Payment Requested: </Typography>
+                  <Typography variant="body1-bold" mx={1}>
+                    {new Intl.NumberFormat('en-US').format(
+                      // eslint-disable-next-line no-restricted-globals
+                      isNaN(formik.values.paymentRequested) ? 0 : formik.values.paymentRequested,
+                    )}{' '}
                     dCKB
-                  </TypographyBold>
+                  </Typography>
                   <TooltipIcon>
-                    <Typography variant="body2">CKB token to use for your payment</Typography>
+                    <Typography variant="body2">
+                      The amount of payment requested. Payment can be requested in dCKB token held by the DAO.
+                    </Typography>
                   </TooltipIcon>
                 </Box>
 
                 <Box display="flex" width="100%" mb={2}>
-                  <Typography variant="subtitle2">Shares Requested: </Typography>
-                  <TypographyBold variant="subtitle2" mx={1}>
+                  <Typography>Shares Requested: </Typography>
+                  <Typography variant="body1-bold" mx={1}>
                     {new Intl.NumberFormat('en-US').format(
                       // eslint-disable-next-line no-restricted-globals
                       isNaN(formik.values.tributeOffered) ? 0 : formik.values.tributeOffered,
                     )}
-                  </TypographyBold>
+                  </Typography>
                   <TooltipIcon>
                     <Typography variant="body2">
                       Voting shares in the DAO. Members can request payment be made in shares up to x% of the total
@@ -229,15 +238,15 @@ const FundProjectForm: FC = () => {
                 </Box>
 
                 <Box>
-                  {userAddress === '' && <ConnectWalletButton />}
+                  {!isLoggedIn && <ConnectWalletButton />}
 
-                  {validated && userAddress !== '' && (
-                    <DAOButton disabled={!validated} variant="gradientOutline" type="submit">
+                  {userShares > 0 && isLoggedIn && (
+                    <DAOButton variant="gradientOutline" type="submit">
                       Send request
                     </DAOButton>
                   )}
 
-                  {!validated && userAddress !== '' && (
+                  {userShares === 0 && isLoggedIn && (
                     <TypographyRed ml={1} variant="subtitle2" align="center">
                       You&apos;re not a member of the Guild.
                     </TypographyRed>

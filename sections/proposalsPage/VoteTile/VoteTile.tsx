@@ -27,10 +27,6 @@ const TypographyDisagree = styled(Typography)`
   font-weight: 600;
 `;
 
-const TypographyBold = styled(Typography)`
-  font-weight: 600;
-`;
-
 const TypographySmall = styled(Typography)`
   font-size: 12px;
 `;
@@ -61,12 +57,12 @@ const VoteTile: FC<any> = ({ vote }) => {
 
           <Box display="flex" alignItems="center" width="100%">
             <Box width="60%">
-              <TypographyBold>User address:</TypographyBold>
+              <Typography variant="body1-bold">User address:</Typography>
               <Typography>{formatAddress(vote.memberAddress)}</Typography>
             </Box>
 
             <Box width="40%">
-              <TypographyBold>Voted on:</TypographyBold>
+              <Typography variant="body1-bold">Voted on:</Typography>
               {vote.uintVote === 1 && <TypographyAgree>Yes</TypographyAgree>}
               {vote.uintVote === 2 && <TypographyDisagree>No</TypographyDisagree>}
             </Box>

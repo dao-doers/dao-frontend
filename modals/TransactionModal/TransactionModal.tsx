@@ -51,7 +51,7 @@ const TransactionModal: FC = () => {
         {status === PROCESSING_STATUSES.PROCESSING && (
           <>
             <Typography component="h5" variant="h5" align="center" paragraph>
-              Processing transaction
+              Processing request
             </Typography>
             <TypographyGrey variant="subtitle2" align="center">
               It may take a while

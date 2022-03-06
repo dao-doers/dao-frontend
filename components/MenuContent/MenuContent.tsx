@@ -34,7 +34,6 @@ interface MenuContentProps {
 
 const TypographyBlack = styled(Typography)`
   color: ${({ theme }) => theme.palette.colors.main7};
-  font-weight: 600;
 `;
 
 const StyledCloseIcon = styled(Close)`
@@ -99,13 +98,13 @@ const MenuContent: FC<MenuContentProps> = ({ setDrawerOpen }) => {
       )}
       <Box sx={{ mb: { xs: 1, md: 2 } }} mt={2}>
         <Link internal href="/">
-          <TypographyBlack>Home</TypographyBlack>
+          <TypographyBlack variant="body1-bold">Home</TypographyBlack>
         </Link>
       </Box>
 
       <Box sx={{ mb: { xs: 1, md: 0.5 } }}>
         <DAOPlainButton onClick={() => handleClick(1)}>
-          <TypographyBlack>Proposals</TypographyBlack>
+          <TypographyBlack variant="body1-bold">Proposals</TypographyBlack>
         </DAOPlainButton>
       </Box>
 
@@ -149,7 +148,7 @@ const MenuContent: FC<MenuContentProps> = ({ setDrawerOpen }) => {
 
       <Box mx="auto" my={1} sx={{ width: { xs: '60%', md: '100%' } }}>
         <DAOButton variant="gradientOutline" onClick={handledCKBModal}>
-          <Typography>Wire testnet dCKB</Typography>
+          <Typography>Get dCKB</Typography>
         </DAOButton>
       </Box>
 

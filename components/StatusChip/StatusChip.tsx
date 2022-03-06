@@ -15,14 +15,10 @@ const StyledBox = styled(Box)`
   padding: 5px 20px;
 `;
 
-const TypographyColor = styled(Typography)`
-  font-weight: 500;
-`;
-
 const StatusChip: FC<StatusChipProps> = ({ title, children }) => {
   return (
     <StyledBox>
-      <TypographyColor variant="body2">{title}</TypographyColor>
+      <Typography variant="body2">{title}</Typography>
       {children}
     </StyledBox>
   );

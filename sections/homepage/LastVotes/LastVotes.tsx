@@ -33,10 +33,6 @@ const StyledSwiper = styled(Swiper)`
   }
 `;
 
-const TypographyBold = styled(Typography)`
-  font-weight: 600;
-`;
-
 const StyledPlaylistRemoveIcon = styled(PlaylistRemoveIcon)`
   color: ${({ theme }) => theme.palette.colors.col1};
   font-size: 60px;
@@ -53,10 +49,10 @@ const LastVotes: FC = () => {
   const votesArray = useSelector(selectVotesArray);
 
   return (
-    <Box width="100%">
-      <TypographyBold variant="h3" mb={3} mt={8}>
+    <Box>
+      <Typography variant="h3-bold" paragraph>
         Last Votes
-      </TypographyBold>
+      </Typography>
 
       {votesArray.length === 0 && (
         <Box display="flex" flexDirection="column" alignItems="center">
@@ -69,35 +65,27 @@ const LastVotes: FC = () => {
         <>
           {!isMobile && (
             <Box display="flex" justifyContent="space-between" width="100%">
-              <Box width="32%">
-                <VoteTile key={`vote-${votesArray[0].id}`} vote={votesArray[0]} />
-              </Box>
-              <Box width="32%">
-                <VoteTile key={`vote-${votesArray[1].id}`} vote={votesArray[1]} />
-              </Box>
-              <Box width="32%">
-                <VoteTile key={`vote-${votesArray[2].id}`} vote={votesArray[2]} />
-              </Box>
+              {votesArray.slice(0, 3).map((vote: any) => {
+                return (
+                  <Box width="32%">
+                    <VoteTile key={`vote-${vote.id}`} vote={vote} />
+                  </Box>
+                );
+              })}
             </Box>
           )}
 
           {isMobile && (
             <StyledSwiper modules={[Pagination]} pagination={{ type: 'progressbar' }} {...params}>
-              <SwiperSlide>
-                <Box width="90%" mx="auto">
-                  <VoteTile key={`vote-${votesArray[0].id}`} vote={votesArray[0]} />
-                </Box>
-              </SwiperSlide>
-              <SwiperSlide>
-                <Box width="90%" mx="auto">
-                  <VoteTile key={`vote-${votesArray[1].id}`} vote={votesArray[1]} />
-                </Box>
-              </SwiperSlide>
-              <SwiperSlide>
-                <Box width="90%" mx="auto">
-                  <VoteTile key={`vote-${votesArray[2].id}`} vote={votesArray[2]} />
-                </Box>
-              </SwiperSlide>
+              {votesArray.slice(0, 3).map((vote: any) => {
+                return (
+                  <SwiperSlide>
+                    <Box width="90%" mx="auto">
+                      <VoteTile key={`vote-${vote.id}`} vote={vote} />
+                    </Box>
+                  </SwiperSlide>
+                );
+              })}
             </StyledSwiper>
           )}
         </>
