@@ -4,26 +4,36 @@ import { gql } from 'apollo-boost';
 
 const useFetchMembers = () => {
   const PROPOSAL_DATA = `
-  id                          
-  createdAt                   
-  moloch                      
-  molochAddress              
-  memberAddress              
-  delegateKey                
-  shares                      
-  loot                        
-  exists                      
-  highestIndexYesVote          
-  tokenTribute                 
-  didRagequit                 
-  votes                      
-  submissions                
-  tokenBalances               
-  rageQuits                  
-  proposedToKick              
-  kicked                      
-  jailed  
+  id 
+  createdAt 
+  moloch 
+  molochAddress 
+  memberAddress 
+  delegateKey 
+  shares 
+  loot 
+  exists 
+  highestIndexYesVote 
+  tokenTribute 
+  didRagequit 
+  votes 
+  submissions 
+  tokenBalances {
+    id
+    tokenBalance
+    guildBank
+    token {
+      decimals
+      symbol
+      tokenAddress
+    }
+  } 
+  rageQuits 
+  proposedToKick 
+  kicked 
+  jailed 
 `;
+
   const PROPOSAL_ORDER = ' $orderBy: String, $orderDirection: String';
   const PROPOSAL_SORT = ' orderBy: $orderBy, orderDirection: $orderDirection';
 
