@@ -3,8 +3,6 @@ import { FC } from 'react';
 import { Formik, Form } from 'formik';
 import { useSelector, useDispatch } from 'react-redux';
 
-import styled from '@emotion/styled';
-
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 
@@ -28,7 +26,6 @@ import abiLibrary from 'lib/abi';
 const initialValues = {
   title: '',
   description: '',
-  applicant: '',
   link: '',
   tributeOffered: 0,
 };
@@ -59,7 +56,7 @@ const JoinDaoForm: FC = () => {
         abiLibrary,
         version,
         daoAddress as any,
-        values.applicant,
+        userAddress,
         values.tributeOffered,
         lootRequested,
         values.tributeOffered,
@@ -125,22 +122,6 @@ const JoinDaoForm: FC = () => {
                       fullWidth: true,
                     }}
                     error={formik.errors.description}
-                  />
-                </Box>
-
-                <Box width="100%" mb={2}>
-                  <DAOInput
-                    label="Applicant address"
-                    tootltip="You must specify the address of the account to be added to the Guild."
-                    inputProps={{
-                      id: 'applicant',
-                      value: formik.values.applicant,
-                      onChange: formik.handleChange,
-                    }}
-                    formControlProps={{
-                      fullWidth: true,
-                    }}
-                    error={formik.errors.applicant}
                   />
                 </Box>
 
