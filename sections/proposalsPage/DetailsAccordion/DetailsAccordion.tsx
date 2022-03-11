@@ -80,7 +80,11 @@ const DetailsAccordion: FC<any> = ({ proposal }) => {
 
   return (
     <StyledAccordion>
-      <StyledAccordionSummary expandIcon={<StyledExpandMoreIcon />} aria-controls="panel1a-content" id="panel1a-header">
+      <StyledAccordionSummary
+        expandIcon={<StyledExpandMoreIcon />}
+        aria-controls="deails-accordion"
+        id="panel1a-header"
+      >
         <Typography variant="subtitle2-bold">Poll Details</Typography>
       </StyledAccordionSummary>
       <StyledAccordionDetails>

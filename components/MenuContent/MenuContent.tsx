@@ -139,11 +139,9 @@ const MenuContent: FC<MenuContentProps> = ({ setDrawerOpen }) => {
       </Box>
 
       <Box mx="auto" mb={1} mt={5} sx={{ width: { xs: '60%', md: '100%' } }}>
-        <Link internal href={APP_ROUTES.CREATE}>
-          <DAOButton variant="gradientOutline">
-            <Typography>Create proposal</Typography>
-          </DAOButton>
-        </Link>
+        <DAOButton variant="gradientOutline" href={APP_ROUTES.CREATE}>
+          <Typography>Create proposal</Typography>
+        </DAOButton>
       </Box>
 
       <Box mx="auto" my={1} sx={{ width: { xs: '60%', md: '100%' } }}>

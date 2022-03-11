@@ -169,7 +169,7 @@ const VoteAccordion: FC<any> = ({ proposal }) => {
 
   return (
     <StyledAccordion>
-      <StyledAccordionSummary expandIcon={<StyledExpandMoreIcon />} aria-controls="panel1a-content" id="panel1a-header">
+      <StyledAccordionSummary expandIcon={<StyledExpandMoreIcon />} aria-controls="vote-accordion" id="panel1a-header">
         <Box display="flex" justifyContent="space-between" alignItems="center" width="100%">
           <Typography variant="subtitle2-bold">Vote Section</Typography>
           {proposal.proposalStatus === PROPOSAL_STATUS.COLLECTING_FUNDS && (
