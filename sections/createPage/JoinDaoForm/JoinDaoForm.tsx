@@ -75,7 +75,7 @@ const JoinDaoForm: FC = () => {
       dispatch(setStatus(PROCESSING_STATUSES.SUCCESS));
       dispatch(
         setMessage(`Your request has been processed by blockchain network and will be displayed with the block number 
-      ${receipt.blockNumber + 1}`),
+      ${!Number.isNaN(receipt.blockNumber) && receipt.blockNumber + 1}`),
       );
     } catch (error) {
       dispatch(setStatus(PROCESSING_STATUSES.ERROR));
