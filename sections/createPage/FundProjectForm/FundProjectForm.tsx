@@ -153,6 +153,22 @@ const FundProjectForm: FC = () => {
 
                 <Box width="100%" mb={2}>
                   <DAOInput
+                    label="Applicant address"
+                    tootltip="You must specify the address of the account to be added to the Guild."
+                    inputProps={{
+                      id: 'applicant',
+                      value: formik.values.applicant,
+                      onChange: formik.handleChange,
+                    }}
+                    formControlProps={{
+                      fullWidth: true,
+                    }}
+                    error={formik.errors.applicant}
+                  />
+                </Box>
+
+                <Box width="100%" mb={2}>
+                  <DAOInput
                     label="Tribute Offered"
                     tootltip="The amount of dCKB you are committing to deposit to the DAO bank."
                     inputProps={{

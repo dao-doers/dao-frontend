@@ -62,7 +62,9 @@ const GetCKBStep: FC<GetCKBStepProps> = ({ handlePreviousStep, handleNextStep })
           <Typography component="h6" variant="h6" paragraph>
             Get CKB from Layer 1
           </Typography>
-          <Typography component="h6">Get CKB from Layer 1 faucet by pasting the Layer 1 address.</Typography>
+          <Typography component="h6">
+            Get CKB from Layer 1 faucet by pasting the Layer 1 address and clicking Claim.
+          </Typography>
         </Box>
         <ButtonWrapper>
           <DAOButton variant="gradientOutline" onClick={() => window.open('https://faucet.nervos.org/', '_blank')}>

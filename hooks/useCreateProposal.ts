@@ -82,7 +82,7 @@ const useCreateProposal = async (
 
   const estimatedGas = 6000000;
   const receipt = await getReceipt(proposal, user, estimatedGas);
-
+  console.log(receipt);
   return receipt;
 };
 

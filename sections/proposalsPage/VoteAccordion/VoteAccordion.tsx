@@ -226,9 +226,7 @@ const VoteAccordion: FC<any> = ({ proposal }) => {
             <Box>
               {currentTime <= proposal.votingPeriodEnds && (
                 <>
-                  <Typography variant="h6" mb={3}>
-                    Your Vote
-                  </Typography>
+                  <Typography mb={2}>Your Vote:</Typography>
 
                   {!isLoggedIn && (
                     <Box maxWidth="200px" mx="auto" mb={3}>
@@ -323,13 +321,13 @@ const VoteAccordion: FC<any> = ({ proposal }) => {
 
             {currentTime <= proposal.votingPeriodEnds && (
               <Box display="flex" justifyContent="space-between" width="100%" pb={2}>
-                <Typography width="100%">Voting Ends In</Typography>
+                <Typography width="100%">Voting Ends In:</Typography>
                 <Counter time={Number(proposal.votingPeriodEnds)} />
               </Box>
             )}
             {currentTime > proposal.votingPeriodEnds && currentTime < proposal.gracePeriodEnds && (
               <Box display="flex" justifyContent="space-between" width="100%" pb={2}>
-                <Typography width="100%">Grace Period Ends In</Typography>
+                <Typography width="100%">Grace Period Ends In:</Typography>
                 <Counter time={Number(proposal.gracePeriodEnds)} />
               </Box>
             )}

@@ -1,9 +1,13 @@
-import Web3 from 'web3';
+// import * as yup from 'yup';
+// import Web3 from 'web3';
 
-// Validation utils
-const isAddress = async (address: string) => {
-  const web3 = await new Web3((window as any).web3.currentProvider);
-  return web3.utils.isAddress(address);
-};
+// yup.addMethod(yup.string, 'metamaskAddress', function (errorMessage: string) {
+//   return this.test('metamask-address', errorMessage, function (value) {
+//     const { path, createError } = this;
+//     const isValidAddress = Web3.utils.isAddress(value);
 
-export default isAddress;
+//     return isValidAddress ? value : createError({ path, message: errorMessage });
+//   });
+// });
+
+export {};

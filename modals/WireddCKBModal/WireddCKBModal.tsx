@@ -13,7 +13,7 @@ import { selectOpen, setClose } from 'redux/slices/modalWireddCKB';
 
 import CreateAccountStep from './WireddCKBModalSteps/CreateAccountStep';
 import GetCKBStep from './WireddCKBModalSteps/GetCKBStep';
-import ReceivedCKBStep from './WireddCKBModalSteps/ReceivedCKBStep';
+import DepositCKBStep from './WireddCKBModalSteps/DepositCKBStep';
 import BridgeStep from './WireddCKBModalSteps/BridgeStep';
 
 const StyledBox = styled(Box)`
@@ -51,7 +51,7 @@ const WireddCKBModal: FC = () => {
           </Step>
 
           <Step label="Receive dCKB">
-            <ReceivedCKBStep
+            <DepositCKBStep
               handlePreviousStep={() => childRef.current.previousStep()}
               handleNextStep={() => childRef.current.nextStep()}
             />

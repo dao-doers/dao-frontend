@@ -3,8 +3,6 @@ import { FC } from 'react';
 import { Formik, Form } from 'formik';
 import { useSelector, useDispatch } from 'react-redux';
 
-import styled from '@emotion/styled';
-
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 

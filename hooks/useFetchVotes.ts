@@ -5,7 +5,9 @@ import { useQuery } from '@apollo/react-hooks';
 
 import { gql } from 'apollo-boost';
 
-import { setVotes } from 'redux/slices/votes';
+import { setVotes, setFetchStatus } from 'redux/slices/votes';
+
+import FETCH_STATUSES from 'enums/fetchStatuses';
 
 const useFetchVotes = () => {
   const dispatch = useDispatch();
@@ -40,6 +42,7 @@ const useFetchVotes = () => {
   useEffect(() => {
     if (!loading && data) {
       dispatch(setVotes(data.votes));
+      dispatch(setFetchStatus(FETCH_STATUSES.SUCCESS));
     }
   }, [loading, error, data]);
 
