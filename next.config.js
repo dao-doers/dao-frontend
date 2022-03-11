@@ -14,4 +14,17 @@ module.exports = {
     loader: 'akamai',
     path: '/',
   },
+  headers: async () => {
+    return [
+      {
+        source: '/:pages*',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'private, max-age=43200, must-revalidate',
+          },
+        ],
+      },
+    ];
+  },
 };
