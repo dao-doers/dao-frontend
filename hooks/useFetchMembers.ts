@@ -59,7 +59,7 @@ const useFetchMembers = () => {
 
   useEffect(() => {
     if (!loading && data && isLoggedIn) {
-      // TODO: uncomment after new godwoken
+      // TODO: uncomment after new godwoken and dont fetch if unnecessary
       // const user = fetchMembers.data.members.filter((a: any) => {
       //   return a.memberAddress === userAddress;
       // });

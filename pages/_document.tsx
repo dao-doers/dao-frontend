@@ -13,6 +13,7 @@ export default class MyDocument extends Document {
           <title>Nervos DAO</title>
 
           <meta name="viewport" content="initial-scale=1.0, width=device-width" />
+          <meta name="description" content="Nervos foundation DAO app" />
           <meta name="theme-color" />
           <meta charSet="utf-8" />
 

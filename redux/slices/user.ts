@@ -4,6 +4,7 @@ interface UserSlice {
   address: string;
   isLoggedIn: boolean;
   userShares: number;
+  sessionMaintained: boolean;
 }
 
 interface StateProps {
@@ -16,6 +17,7 @@ const userSlice = createSlice({
     address: '',
     isLoggedIn: false,
     userShares: 0,
+    sessionMaintained: false,
   },
   reducers: {
     setUserAddress: (state, action) => {
@@ -27,13 +29,17 @@ const userSlice = createSlice({
     setUserShares: (state, action) => {
       state.userShares = Number(action.payload);
     },
+    setSessionMaintained: (state, action) => {
+      state.sessionMaintained = action.payload;
+    },
   },
 });
 
 export const selectUserAddress = (state: StateProps) => state.user.address;
 export const selectIsLoggedIn = (state: StateProps) => state.user.isLoggedIn;
 export const selectUserShares = (state: StateProps) => state.user.userShares;
+export const selectessionMaintained = (state: StateProps) => state.user.sessionMaintained;
 
-export const { setUserAddress, setIsLoggedIn, setUserShares } = userSlice.actions;
+export const { setUserAddress, setIsLoggedIn, setUserShares, setSessionMaintained } = userSlice.actions;
 
 export default userSlice.reducer;

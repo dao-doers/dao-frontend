@@ -1,5 +1,5 @@
 import { FC, ReactNode, useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import { useDispatch } from 'react-redux';
 
 import styled from '@emotion/styled';
 
