@@ -46,7 +46,7 @@ const BridgeStep: FC<IBridge> = ({ handlePreviousStep }) => {
         </Typography>
         <Typography component="h6">
           Please make sure you have sufficient CKB balance in your L1 account before transferring to L2. A minimum
-          balance of 471 CKB needs to be maintained.
+          balance of 471 CKB needs to be maintained after transaction.
         </Typography>
         {hasProvider && isLoggedIn ? (
           <Box>

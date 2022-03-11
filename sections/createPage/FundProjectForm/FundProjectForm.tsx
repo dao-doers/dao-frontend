@@ -82,7 +82,7 @@ const FundProjectForm: FC = () => {
       dispatch(setStatus(PROCESSING_STATUSES.SUCCESS));
       dispatch(
         setMessage(`Your request has been processed by blockchain network and will be displayed with the block number 
-      ${receipt.blockNumber + 1}`),
+        ${!Number.isNaN(receipt.blockNumber) && receipt.blockNumber + 1}`),
       );
     } catch (error) {
       dispatch(setStatus(PROCESSING_STATUSES.ERROR));
@@ -148,6 +148,22 @@ const FundProjectForm: FC = () => {
                       fullWidth: true,
                     }}
                     error={formik.errors.link}
+                  />
+                </Box>
+
+                <Box width="100%" mb={2}>
+                  <DAOInput
+                    label="Applicant address"
+                    tootltip="You must specify the address of the account to be added to the Guild."
+                    inputProps={{
+                      id: 'applicant',
+                      value: formik.values.applicant,
+                      onChange: formik.handleChange,
+                    }}
+                    formControlProps={{
+                      fullWidth: true,
+                    }}
+                    error={formik.errors.applicant}
                   />
                 </Box>
 

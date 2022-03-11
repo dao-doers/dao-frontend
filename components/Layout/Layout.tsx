@@ -13,7 +13,6 @@ import BlockchainStatus from 'components/BlockchainStatus/BlockchainStatus';
 import LoadingPage from 'components/LoadingPage/LoadingPage';
 
 import { setTheme } from 'redux/slices/theme';
-import { selectUserAddress, selectIsLoggedIn, setUserShares } from 'redux/slices/user';
 
 import useFetchProposals from 'hooks/useFetchProposals';
 import useFetchVotes from 'hooks/useFetchVotes';
@@ -42,11 +41,7 @@ const Layout: FC<LayoutProps> = ({ children }) => {
 
   const loadingProposals = useFetchProposals();
   const loadingVotes = useFetchVotes();
-  const userAddress = useSelector(selectUserAddress);
-  const isLoggedIn = useSelector(selectIsLoggedIn);
-
-  const fetchMembers = useFetchMembers();
-
+  useFetchMembers();
   useMaintainSession();
 
   useEffect(() => {
@@ -54,18 +49,6 @@ const Layout: FC<LayoutProps> = ({ children }) => {
 
     dispatch(setTheme(theme === THEME_MODES.DARK ? THEME_MODES.DARK : THEME_MODES.LIGHT));
   }, [dispatch]);
-
-  useEffect(() => {
-    if (!fetchMembers.loading && fetchMembers && fetchMembers.data && isLoggedIn) {
-      const user = fetchMembers.data.members.filter((a: any) => {
-        // TODO: replace that string with userAddress variable
-        return a.memberAddress === '0x8016dcd1af7c8cceda53e4d2d2cd4e2924e245b6';
-      });
-      if (user[0]) {
-        dispatch(setUserShares(user[0].shares));
-      }
-    }
-  }, [fetchMembers.loading, fetchMembers.data, isLoggedIn]);
 
   return (
     <StyledContainer>

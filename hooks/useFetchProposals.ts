@@ -1,14 +1,18 @@
 import { useEffect } from 'react';
-import { useDispatch } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 
 import { useQuery } from '@apollo/react-hooks';
 
 import { gql } from 'apollo-boost';
 
-import { setProposals } from 'redux/slices/proposals';
+import { setProposals, setFetchStatus, selectFetchStatus as fetchProposalsStatus } from 'redux/slices/proposals';
+
+import FETCH_STATUSES from 'enums/fetchStatuses';
 
 const useFetchProposals = () => {
   const dispatch = useDispatch();
+
+  const proposalsStatus = useSelector(fetchProposalsStatus);
 
   const PROPOSAL_DATA = `
 id
@@ -85,12 +89,13 @@ molochVersion
   });
 
   useEffect(() => {
-    if (!loading && !error) {
+    if (!loading && !error && proposalsStatus !== FETCH_STATUSES.SUCCESS) {
       dispatch(setProposals(data.proposals));
+      dispatch(setFetchStatus(FETCH_STATUSES.SUCCESS));
     }
   }, [loading, error, data]);
 
-  return { data, loading, refetch };
+  return { loading, refetch };
 };
 
 export default useFetchProposals;

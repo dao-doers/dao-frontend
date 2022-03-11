@@ -80,6 +80,9 @@ const proposalsSlice = createSlice({
         return -(a.createdAt - b.createdAt);
       });
     },
+    setFetchStatus: (state, action) => {
+      state.fetchStatus = action.payload;
+    },
     setProposalStatus: (state, action) => {
       state.sendProposalStatus = action.payload;
     },
@@ -125,6 +128,7 @@ export const selectSortedProposalsArray = (state: StateProps) => state.proposals
 
 export const {
   setProposals,
+  setFetchStatus,
   setProposalStatus,
   setSponsorProposalStatus,
   setCollectingFundsProposals,
