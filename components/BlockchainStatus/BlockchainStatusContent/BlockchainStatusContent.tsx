@@ -115,7 +115,7 @@ const BlockchainStatusContent: FC = () => {
         </StatusWrapper>
       )}
 
-      {isLoggedIn && isChecked && (
+      {isLoggedIn && (
         <StatusWrapper>
           <StatusChip title="dCKB balance:">
             {isChecked ? (
