@@ -5,8 +5,7 @@ import { useQuery } from '@apollo/react-hooks';
 
 import { gql } from 'apollo-boost';
 
-import { setProposals, setFetchStatus } from 'redux/slices/proposals';
-import { selectFetchStatus as fetchProposalsStatus } from 'redux/slices/proposals';
+import { setProposals, setFetchStatus, selectFetchStatus as fetchProposalsStatus } from 'redux/slices/proposals';
 
 import FETCH_STATUSES from 'enums/fetchStatuses';
 
@@ -90,13 +89,13 @@ molochVersion
   });
 
   useEffect(() => {
-    if (!loading && !error) {
+    if (!loading && !error && proposalsStatus !== FETCH_STATUSES.SUCCESS) {
       dispatch(setProposals(data.proposals));
       dispatch(setFetchStatus(FETCH_STATUSES.SUCCESS));
     }
   }, [loading, error, data]);
 
-  return { data, loading, refetch };
+  return { loading, refetch };
 };
 
 export default useFetchProposals;
