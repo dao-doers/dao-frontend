@@ -115,11 +115,11 @@ const BlockchainStatusContent: FC = () => {
         </StatusWrapper>
       )}
 
-      {isLoggedIn && isChecked && (
+      {isLoggedIn && (
         <StatusWrapper>
           <StatusChip title="dCKB balance:">
             {isChecked ? (
-              <Typography variant="body1-bold">{shannonsToCkb(balance)}</Typography>
+              <Typography variant="body1-bold">{shannonsToCkb(balance || 0)}</Typography>
             ) : (
               <Box display="flex" alignItems="center">
                 <Box display="flex" alignItems="center" mr={1}>

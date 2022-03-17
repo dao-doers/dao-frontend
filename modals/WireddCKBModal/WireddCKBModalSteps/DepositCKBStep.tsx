@@ -7,7 +7,7 @@ import DAOButton from 'components/DAOButton/DAOButton';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 
-interface ReceivedCKBStepProps {
+interface DepositCKBStepProps {
   handlePreviousStep: () => void;
   handleNextStep: () => void;
 }
@@ -35,17 +35,16 @@ const NavButtonsWrapper = styled(Box)`
   justify-content: space-between;
 `;
 
-const ReceivedCKBStep: FC<ReceivedCKBStepProps> = ({ handlePreviousStep, handleNextStep }) => {
+const DepositCKBStep: FC<DepositCKBStepProps> = ({ handlePreviousStep, handleNextStep }) => {
   return (
     <Box mt={5} mb={4}>
       <StyledBox>
         <Box>
           <Typography component="h6" variant="h6" paragraph>
-            Stake CKB via NexisDAO
+            Get Layer 1 dCKB
           </Typography>
           <Typography component="h6">
-            On NexisDAO Page, fill in the form field as much as you would like to deposit from your total balance, the
-            tokens will be locked for 1 month and you will get an equivalent in dCKB, next press the Mint button.
+            On NexisDAO Page press the Mint button and deposit as much Layer 1 CKB as you would like to.
           </Typography>
         </Box>
         <ButtonWrapper>
@@ -53,7 +52,7 @@ const ReceivedCKBStep: FC<ReceivedCKBStepProps> = ({ handlePreviousStep, handleN
             variant="gradientOutline"
             onClick={() => window.open('https://aggron.nexisdao.com/dckb', '_blank')}
           >
-            Stake CKB
+            Nexis DAO
           </DAOButton>
         </ButtonWrapper>
       </StyledBox>
@@ -72,4 +71,4 @@ const ReceivedCKBStep: FC<ReceivedCKBStepProps> = ({ handlePreviousStep, handleN
   );
 };
 
-export default ReceivedCKBStep;
+export default DepositCKBStep;

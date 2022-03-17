@@ -1,14 +1,18 @@
 import { useEffect } from 'react';
-import { useDispatch } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 
 import { useQuery } from '@apollo/react-hooks';
 
 import { gql } from 'apollo-boost';
 
-import { setVotes } from 'redux/slices/votes';
+import { setVotes, setFetchStatus, selectFetchStatus } from 'redux/slices/votes';
+
+import FETCH_STATUSES from 'enums/fetchStatuses';
 
 const useFetchVotes = () => {
   const dispatch = useDispatch();
+
+  const fetchStatus = useSelector(selectFetchStatus);
 
   const VOTE_DATA = `
   id
@@ -38,8 +42,9 @@ const useFetchVotes = () => {
   const { loading, error, data } = useQuery(gql(expression.GET_VOTES));
 
   useEffect(() => {
-    if (!loading && data) {
+    if (!loading && data && fetchStatus !== FETCH_STATUSES.SUCCESS) {
       dispatch(setVotes(data.votes));
+      dispatch(setFetchStatus(FETCH_STATUSES.SUCCESS));
     }
   }, [loading, error, data]);
 

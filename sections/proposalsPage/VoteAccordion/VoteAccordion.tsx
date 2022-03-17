@@ -110,7 +110,7 @@ const VoteAccordion: FC<any> = ({ proposal }) => {
       setSponsorProposalStatus(PROCESSING_STATUSES.SUCCESS);
       dispatch(
         setMessage(`Your request has been processed by blockchain network and will be displayed with the block number 
-      ${receipt.blockNumber + 1}`),
+        ${!Number.isNaN(receipt.blockNumber) && receipt.blockNumber + 1}`),
       );
     } catch (error) {
       dispatch(setStatus(PROCESSING_STATUSES.ERROR));
@@ -169,7 +169,7 @@ const VoteAccordion: FC<any> = ({ proposal }) => {
 
   return (
     <StyledAccordion>
-      <StyledAccordionSummary expandIcon={<StyledExpandMoreIcon />} aria-controls="panel1a-content" id="panel1a-header">
+      <StyledAccordionSummary expandIcon={<StyledExpandMoreIcon />} aria-controls="vote-accordion" id="panel1a-header">
         <Box display="flex" justifyContent="space-between" alignItems="center" width="100%">
           <Typography variant="subtitle2-bold">Vote Section</Typography>
           {proposal.proposalStatus === PROPOSAL_STATUS.COLLECTING_FUNDS && (
@@ -226,9 +226,7 @@ const VoteAccordion: FC<any> = ({ proposal }) => {
             <Box>
               {currentTime <= proposal.votingPeriodEnds && (
                 <>
-                  <Typography variant="h6" mb={3}>
-                    Your Vote
-                  </Typography>
+                  <Typography mb={2}>Your Vote:</Typography>
 
                   {!isLoggedIn && (
                     <Box maxWidth="200px" mx="auto" mb={3}>
@@ -323,13 +321,13 @@ const VoteAccordion: FC<any> = ({ proposal }) => {
 
             {currentTime <= proposal.votingPeriodEnds && (
               <Box display="flex" justifyContent="space-between" width="100%" pb={2}>
-                <Typography width="100%">Voting Ends In</Typography>
+                <Typography width="100%">Voting Ends In:</Typography>
                 <Counter time={Number(proposal.votingPeriodEnds)} />
               </Box>
             )}
             {currentTime > proposal.votingPeriodEnds && currentTime < proposal.gracePeriodEnds && (
               <Box display="flex" justifyContent="space-between" width="100%" pb={2}>
-                <Typography width="100%">Grace Period Ends In</Typography>
+                <Typography width="100%">Grace Period Ends In:</Typography>
                 <Counter time={Number(proposal.gracePeriodEnds)} />
               </Box>
             )}

@@ -65,7 +65,7 @@ const BlockchainStatus: FC = () => {
         <StyledAccordion>
           <StyledAccordionSummary
             expandIcon={<StyledExpandMoreIcon />}
-            aria-controls="panel1a-content"
+            aria-controls="blockchain-status-accordion"
             id="panel1a-header"
           >
             <Typography variant="body1-bold">Blockchain status details</Typography>
