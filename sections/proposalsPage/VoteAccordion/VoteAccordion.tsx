@@ -8,21 +8,17 @@ import Accordion from '@mui/material/Accordion';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import PlaylistRemoveIcon from '@mui/icons-material/PlaylistRemove';
+import Typography from '@mui/material/Typography';
 
-import DividerLine from 'components/DividerLine/DividerLine';
-import DAOButton from 'components/DAOButton/DAOButton';
-import DAOTile from 'components/DAOTile/DAOTile';
 import ConnectWalletButton from 'components/ConnectWalletButton/ConnectWalletButton';
 import Counter from 'components/Counter/Counter';
-import TooltipIcon from 'components/TooltipIcon';
-
+import DAOButton from 'components/DAOButton/DAOButton';
+import DAOTile from 'components/DAOTile/DAOTile';
+import DividerLine from 'components/DividerLine/DividerLine';
 import LinearChart from 'components/LinearChart/LinearChart';
-
-import { selectUserAddress, selectIsLoggedIn, selectUserShares } from 'redux/slices/user';
-import { setOpen, setStatus, setMessage } from 'redux/slices/modalTransaction';
+import TooltipIcon from 'components/TooltipIcon';
 
 import useSponsorProposal from 'hooks/useSponsorProposal';
 import useVote from 'hooks/useVote';
@@ -32,6 +28,9 @@ import useProcessProposal from 'hooks/useProcessProposal';
 import FETCH_STATUSES from 'enums/fetchStatuses';
 import PROPOSAL_STATUS from 'enums/proposalStatus';
 import PROCESSING_STATUSES from 'enums/processingStatuses';
+
+import { selectUserAddress, selectIsLoggedIn, selectUserShares } from 'redux/slices/user';
+import { setOpen, setStatus, setMessage } from 'redux/slices/modalTransaction';
 
 const StyledAccordion = styled(Accordion)`
   margin-top: 10px;

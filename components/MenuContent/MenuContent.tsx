@@ -5,14 +5,14 @@ import { useRouter } from 'next/router';
 import styled from '@emotion/styled';
 
 import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
 import Close from '@mui/icons-material/Close';
 import IconButton from '@mui/material/IconButton';
+import Typography from '@mui/material/Typography';
 
-import Link from 'components/Link';
 import DAOButton from 'components/DAOButton/DAOButton';
-import ThemeModeSwitch from 'components/ThemeModeSwitch/ThemeModeSwitch';
 import DAOPlainButton from 'components/DAOPlainButton/DAOPlainButton';
+import Link from 'components/Link/Link';
+import ThemeModeSwitch from 'components/ThemeModeSwitch/ThemeModeSwitch';
 
 import useIsMobile from 'hooks/useIsMobile';
 

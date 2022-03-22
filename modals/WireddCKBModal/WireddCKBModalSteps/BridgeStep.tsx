@@ -1,15 +1,14 @@
+import dynamic from 'next/dynamic';
 import { FC } from 'react';
 import { useSelector } from 'react-redux';
 
 import styled from '@emotion/styled';
 
-import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
 
-import DAOButton from 'components/DAOButton/DAOButton';
 import ConnectWalletButton from 'components/ConnectWalletButton/ConnectWalletButton';
-
-import dynamic from 'next/dynamic';
+import DAOButton from 'components/DAOButton/DAOButton';
 
 import useCheckProvider from 'hooks/useCheckProvider';
 

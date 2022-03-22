@@ -1,5 +1,5 @@
-import React, { FC, useState } from 'react';
 import Image from 'next/image';
+import React, { FC, useState } from 'react';
 import { useSelector } from 'react-redux';
 
 import styled from '@emotion/styled';
@@ -10,13 +10,12 @@ import Drawer from '@mui/material/Drawer';
 import IconButton from '@mui/material/IconButton';
 import Menu from '@mui/icons-material/Menu';
 
-import Link from 'components/Link';
-
+import Link from 'components/Link/Link';
 import MenuContent from 'components/MenuContent/MenuContent';
 
-import { selectTheme } from 'redux/slices/theme';
-
 import THEME_MODES from 'enums/themeModes';
+
+import { selectTheme } from 'redux/slices/theme';
 
 const StyledMenuIcon = styled(Menu)`
   color: ${({ theme }) => theme.palette.text.primary};

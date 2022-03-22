@@ -6,14 +6,14 @@ import { Pagination } from 'swiper';
 import styled from '@emotion/styled';
 
 import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
 import PlaylistRemoveIcon from '@mui/icons-material/PlaylistRemove';
+import Typography from '@mui/material/Typography';
 
 import VoteTile from 'sections/proposalsPage/VoteTile/VoteTile';
 
-import { selectVotesArray } from 'redux/slices/votes';
-
 import useIsMobile from 'hooks/useIsMobile';
+
+import { selectVotesArray } from 'redux/slices/votes';
 
 import 'swiper/css';
 import 'swiper/css/pagination';

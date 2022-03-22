@@ -1,18 +1,17 @@
-import { FC } from 'react';
 import Image from 'next/image';
+import { FC } from 'react';
 import { useSelector } from 'react-redux';
 
 import styled from '@emotion/styled';
 
 import Box from '@mui/material/Box';
 
-import Link from 'components/Link';
-
+import Link from 'components/Link/Link';
 import MenuContent from 'components/MenuContent/MenuContent';
 
-import { selectTheme } from 'redux/slices/theme';
-
 import THEME_MODES from 'enums/themeModes';
+
+import { selectTheme } from 'redux/slices/theme';
 
 const MainBox = styled(Box)`
   width: 15vw;

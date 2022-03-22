@@ -12,9 +12,9 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 import ConnectWalletButton from 'components/ConnectWalletButton/ConnectWalletButton';
 
-import { selectIsLoggedIn } from 'redux/slices/user';
-
 import useIsMobile from 'hooks/useIsMobile';
+
+import { selectIsLoggedIn } from 'redux/slices/user';
 
 import BlockchainStatusContent from './BlockchainStatusContent/BlockchainStatusContent';
 

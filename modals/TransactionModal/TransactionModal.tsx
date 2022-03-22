@@ -6,13 +6,13 @@ import styled from '@emotion/styled';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 
-import Modal from 'components/Modal/Modal';
-import DAOCircleLoader from 'components/DAOCircleLoader/DAOCircleLoader';
 import DAOButton from 'components/DAOButton/DAOButton';
-
-import { selectOpen, selectStatus, selectMessage, setClose } from 'redux/slices/modalTransaction';
+import DAOCircleLoader from 'components/DAOCircleLoader/DAOCircleLoader';
+import Modal from 'components/Modal/Modal';
 
 import PROCESSING_STATUSES, { mapToLoader } from 'enums/processingStatuses';
+
+import { selectOpen, selectStatus, selectMessage, setClose } from 'redux/slices/modalTransaction';
 
 const StyledBox = styled(Box)`
   width: 420px;

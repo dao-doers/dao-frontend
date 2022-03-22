@@ -3,9 +3,9 @@ import { useState } from 'react';
 import styled from '@emotion/styled';
 
 import Box from '@mui/material/Box';
-import Tooltip from '@mui/material/Tooltip';
-import SyncIcon from '@mui/icons-material/Sync';
 import CheckIcon from '@mui/icons-material/Check';
+import SyncIcon from '@mui/icons-material/Sync';
+import Tooltip from '@mui/material/Tooltip';
 
 import DAOPlainButton from 'components/DAOPlainButton/DAOPlainButton';
 import Timer from 'components/Timer/Timer';

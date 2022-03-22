@@ -1,11 +1,10 @@
 import { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-
-import { selectessionMaintained, setUserAddress, setIsLoggedIn, setSessionMaintained } from 'redux/slices/user';
+import detectEthereumProvider from '@metamask/detect-provider';
 
 import { loadWeb3, getMetamaskAddress } from 'utils/blockchain';
 
-import detectEthereumProvider from '@metamask/detect-provider';
+import { selectessionMaintained, setUserAddress, setIsLoggedIn, setSessionMaintained } from 'redux/slices/user';
 
 const useMaintainSession = async () => {
   const dispatch = useDispatch();

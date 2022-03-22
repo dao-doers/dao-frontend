@@ -2,7 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 
 import FETCH_STATUSES from 'enums/fetchStatuses';
 
-type FetchingStatusProps = FETCH_STATUSES.ERROR | FETCH_STATUSES.LOADING | FETCH_STATUSES.SUCCESS | FETCH_STATUSES.IDLE;
+type FetchingStatusProps = FETCH_STATUSES;
 
 interface VotesProps {
   fetchStatus: FetchingStatusProps;

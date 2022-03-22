@@ -5,7 +5,7 @@ import PROPOSAL_STATUS from 'enums/proposalStatus';
 
 const currentTime = new Date().getTime() / 1000;
 
-type FetchingStatusProps = FETCH_STATUSES.ERROR | FETCH_STATUSES.LOADING | FETCH_STATUSES.SUCCESS | FETCH_STATUSES.IDLE;
+type FetchingStatusProps = FETCH_STATUSES;
 
 interface ProposalProps {
   fetchStatus: FetchingStatusProps;

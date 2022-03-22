@@ -1,13 +1,11 @@
 import { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-
 import { useQuery } from '@apollo/react-hooks';
-
 import { gql } from 'apollo-boost';
 
-import { setProposals, setFetchStatus, selectFetchStatus } from 'redux/slices/proposals';
-
 import FETCH_STATUSES from 'enums/fetchStatuses';
+
+import { setProposals, setFetchStatus, selectFetchStatus } from 'redux/slices/proposals';
 
 const useFetchProposals = () => {
   const dispatch = useDispatch();

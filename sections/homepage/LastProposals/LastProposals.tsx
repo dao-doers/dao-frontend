@@ -11,9 +11,9 @@ import PlaylistRemoveIcon from '@mui/icons-material/PlaylistRemove';
 
 import ProposalTile from 'sections/proposalsPage/ProposalTile/ProposalTile';
 
-import { selectProposalsArray } from 'redux/slices/proposals';
-
 import useIsMobile from 'hooks/useIsMobile';
+
+import { selectProposalsArray } from 'redux/slices/proposals';
 
 import 'swiper/css';
 import 'swiper/css/pagination';

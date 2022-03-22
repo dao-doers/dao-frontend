@@ -6,6 +6,8 @@ import DAOCircleLoader from 'components/DAOCircleLoader/DAOCircleLoader';
 // @ts-ignore
 import LoadingOverlay from 'react-loading-overlay';
 
+// TODO: do we need that component?
+
 interface OverlayProps {
   show?: boolean;
   children?: React.ReactNode;

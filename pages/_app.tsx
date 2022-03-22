@@ -13,12 +13,10 @@ import store from 'redux/store';
 
 import { GlobalThemeProvider } from 'theme';
 
-import config from 'config/config';
-
 import createEmotionCache from '../createEmotionCache';
 
 const client = new ApolloClient({
-  uri: config.graph.moloch,
+  uri: process.env.INDEXER_URL,
   cache: new InMemoryCache(),
 });
 

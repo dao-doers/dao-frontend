@@ -1,12 +1,11 @@
 import React, { FC, forwardRef, ReactNode } from 'react';
 
 import styled from '@emotion/styled';
-
-import Button, { ButtonProps } from '@mui/material/Button';
 import { css } from '@emotion/react';
-import { Theme } from '@mui/system';
 
 import Box from '@mui/material/Box';
+import Button, { ButtonProps } from '@mui/material/Button';
+import { Theme } from '@mui/system';
 
 import DAOCircleLoader from 'components/DAOCircleLoader/DAOCircleLoader';
 

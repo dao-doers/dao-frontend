@@ -1,59 +1,57 @@
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
+import Web3 from 'web3';
 
-import useERC20Contract from 'hooks/useERC20Contract';
 import { selectUserAddress, selectIsLoggedIn } from 'redux/slices/user';
 
-import { AddressTranslator } from 'nervos-godwoken-integration';
-// import useEthers from './useEthers';
+// TODO: remove later
+// import { AddressTranslator } from 'nervos-godwoken-integration';
+
+const web3 = new Web3(process.env.PROVIDER_URL || '');
 
 const useCheckBalance = () => {
   const userAddress = useSelector(selectUserAddress);
   const isLoggedIn = useSelector(selectIsLoggedIn);
 
-  const addressTranslator = new AddressTranslator();
+  // TODO: remove later
+  // const addressTranslator = new AddressTranslator();
 
-  const [balance, setBalance] = useState(0);
-  // const [ckbBalance, setCkbBalance] = useState<BigInt | null>(null);
+  const [dckbBalance, setdCkbBalance] = useState(0);
+  // TODO: remove later - start
   // const [depositAddress, setDepositAddress] = useState<string | null>(null);
 
   const [isChecked, setChecked] = useState(false);
 
-  // TODO: solve problem with string | undefined
-  // const SUDT_PROXY_CONTRACT_ADDRESS = process.env.SUDT_PROXY_CONTRACT_ADDRESS;
-  const SUDT_PROXY_CONTRACT_ADDRESS = '0xc03da4356b4030f0ec2494c18dcfa426574e10d5';
-  const erc20 = useERC20Contract(SUDT_PROXY_CONTRACT_ADDRESS);
-  // const ethers = useEthers(userAddress);
+  // TODO: remove later - start
+  // useEffect(() => {
+  //   if (isLoggedIn) {
+  //     const checkBalance = async () => {
+  //       const polyjuiceAddress = addressTranslator.ethAddressToGodwokenShortAddress(userAddress);
+  //       console.log(polyjuiceAddress);
+  //     };
+  //     checkBalance();
+  //   }
+  // }, [erc20, userAddress, isLoggedIn]);
+  // TODO: remove later - end
 
   useEffect(() => {
-    if (isLoggedIn) {
-      const checkBalance = async () => {
-        const polyjuiceAddress = addressTranslator.ethAddressToGodwokenShortAddress(userAddress);
-        const tokenBalance = await erc20?.methods.balanceOf(polyjuiceAddress).call({ from: userAddress });
-        setBalance(tokenBalance);
+    const fetchCkbBalance = async () => {
+      if (isLoggedIn) {
+        const balance = Number(BigInt(await web3.eth.getBalance(userAddress)));
+        if (balance) {
+          setdCkbBalance(balance);
+        }
         setChecked(true);
-      };
-      checkBalance();
-    }
-  }, [erc20, userAddress, isLoggedIn]);
+        // await addressTranslator.init();
+        // const newDepositAddress = await addressTranslator.getLayer2DepositAddress(userAddress);
+        // setDepositAddress(newDepositAddress.toCKBAddress().toString());
+      }
+    };
 
-  // useEffect(() => {
-  //   const fetchCkbBalance = async () => {
-  //     if (isLoggedIn) {
-  //       const CkbBalance = await ethers?.getBalance(userAddress);
-  //       if (CkbBalance) {
-  //         setCkbBalance(CkbBalance?.toBigInt());
-  //       }
-  //       await addressTranslator.init();
-  //       const newDepositAddress = await addressTranslator.getLayer2DepositAddress(userAddress);
-  //       setDepositAddress(newDepositAddress.toCKBAddress().toString());
-  //     }
-  //   };
+    fetchCkbBalance();
+  }, [isLoggedIn, userAddress]);
 
-  //   fetchCkbBalance();
-  // }, [isLoggedIn, userAddress, ethers]);
-
-  return { balance, isChecked };
+  return { dckbBalance, isChecked };
 };
 
 export default useCheckBalance;

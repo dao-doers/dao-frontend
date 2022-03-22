@@ -1,20 +1,19 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import { FC } from 'react';
-import { Formik, Form } from 'formik';
 import { useSelector, useDispatch } from 'react-redux';
+import { Formik, Form } from 'formik';
 
 import styled from '@emotion/styled';
 
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 
+import ConnectWalletButton from 'components/ConnectWalletButton/ConnectWalletButton';
 import DAOButton from 'components/DAOButton/DAOButton';
 import DAOInput from 'components/DAOInput/DAOInput';
 import TooltipIcon from 'components/TooltipIcon';
-import ConnectWalletButton from 'components/ConnectWalletButton/ConnectWalletButton';
 
-import { setOpen, setStatus, setMessage } from 'redux/slices/modalTransaction';
-import { selectUserAddress, selectIsLoggedIn, selectUserShares } from 'redux/slices/user';
+import abiLibrary from 'lib/abi';
 
 import PROCESSING_STATUSES from 'enums/processingStatuses';
 
@@ -23,7 +22,8 @@ import useIsMobile from 'hooks/useIsMobile';
 
 import newFundingSchema from 'validators/newFundingSchema';
 
-import abiLibrary from 'lib/abi';
+import { setOpen, setStatus, setMessage } from 'redux/slices/modalTransaction';
+import { selectUserAddress, selectIsLoggedIn, selectUserShares } from 'redux/slices/user';
 
 const initialValues = {
   title: '',

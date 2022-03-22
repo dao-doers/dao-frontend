@@ -1,18 +1,9 @@
 import Web3 from 'web3';
 import BigNumber from 'bignumber.js/bignumber';
-import PolyjuiceHttpProvider from '@polyjuice-provider/web3';
-import { AddressTranslator } from 'nervos-godwoken-integration';
 
 import abiLibrary from 'lib/abi';
 
-const providerConfig = {
-  web3Url: 'https://godwoken-testnet-web3-rpc.ckbapp.dev',
-};
-
-const addressTranslator = new AddressTranslator();
-const provider = new PolyjuiceHttpProvider(providerConfig.web3Url, providerConfig);
-
-const web3 = new Web3(provider);
+const web3 = new Web3(process.env.PROVIDER_URL || '');
 
 const getDao = async (address: string) => {
   const dao = await new web3.eth.Contract(abiLibrary.moloch2, address);
@@ -37,10 +28,8 @@ const useSponsorProposal = async (user: string, daoAddress: any, proposalId: str
 
   const token = new web3.eth.Contract(abiLibrary.erc20, await dao.methods.depositToken().call());
 
-  const userPolyAddress = addressTranslator.ethAddressToGodwokenShortAddress(user);
-
-  const userBalance = new BigNumber(await token.methods.balanceOf(userPolyAddress).call());
-  const allowance = new BigNumber(await token.methods.allowance(userPolyAddress, daoAddress).call());
+  const userBalance = new BigNumber(await token.methods.balanceOf(user).call());
+  const allowance = new BigNumber(await token.methods.allowance(user, daoAddress).call());
   const proposalDeposit = new BigNumber(await dao.methods.proposalDeposit().call());
 
   if (userBalance.lt(proposalDeposit)) {
