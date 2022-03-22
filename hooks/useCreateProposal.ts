@@ -1,16 +1,9 @@
 import Web3 from 'web3';
 import BigNumber from 'bignumber.js/bignumber';
-import PolyjuiceHttpProvider from '@polyjuice-provider/web3';
 
 import abiLibrary from 'lib/abi';
 
-const providerConfig = {
-  web3Url: 'https://godwoken-testnet-web3-rpc.ckbapp.dev',
-};
-
-const provider = new PolyjuiceHttpProvider(providerConfig.web3Url, providerConfig);
-provider.setMultiAbi([abiLibrary.moloch2, abiLibrary.erc20]);
-const web3 = new Web3(provider);
+const web3 = new Web3(new Web3.providers.HttpProvider(process.env.PROVIDER_URL || ''));
 
 const getDao = async (address: string) => {
   const dao = await new web3.eth.Contract(abiLibrary.moloch2, address);
@@ -50,24 +43,31 @@ const useCreateProposal = async (
   const exponentialValue = new BigNumber(10 ** 8);
   const tributeOfferedToExponential = new BigNumber(tributeOffered).multipliedBy(exponentialValue);
   const paymentRequestedToExponential = new BigNumber(paymentRequested).multipliedBy(exponentialValue);
-
   const dao = await getDao(daoAddress);
   const token = new web3.eth.Contract(abiLibrary.erc20, await dao.methods.depositToken().call());
 
   const userBalance = new BigNumber(await token.methods.balanceOf(user).call());
-  const allowance = new BigNumber(await token.methods.allowance(user, daoAddress).call());
-  const tributeOfferedBN = new BigNumber(tributeOfferedToExponential);
-  const requiredAllowance = tributeOfferedBN;
+  const allowance = await token.methods.allowance(user, daoAddress).call();
+  const requiredAllowance = new BigNumber(tributeOfferedToExponential);
 
   if (userBalance.lt(requiredAllowance)) {
-    throw new Error('Not enough funds to pay the tribute.');
+    console.log('Not enough funds to pay the tribute.');
   }
 
-  if (allowance.lt(requiredAllowance)) {
-    await token.methods.approve(daoAddress, requiredAllowance).send({
+  // if (allowance.lt(requiredAllowance)) {
+  // throws error: eth_sendTransaction is not supported!
+  await token.methods
+    .approve(daoAddress, requiredAllowance)
+    .send({
       from: user,
+    })
+    .on('receipt', () => {
+      console.log('receipt');
+    })
+    .on('error', error => {
+      console.log(error);
     });
-  }
+  // }
 
   const proposal = await dao.methods.submitProposal(
     applicantAddress,
