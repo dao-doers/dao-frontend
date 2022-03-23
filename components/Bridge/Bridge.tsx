@@ -11,9 +11,11 @@ import { Formik, Form, FormikErrors, useFormikContext } from 'formik';
 import DAOButton from 'components/DAOButton/DAOButton';
 import DAOInput from 'components/DAOInput/DAOInput';
 
+import useQueryUdtBalance from 'hooks/useQueryUdtBalance';
 import { CryptoNetwork } from './models/CryptoNetwork';
 import { Currency } from './models/Currency';
 import { LayerSwapSettings } from './models/LayerSwapSettings';
+import useCreateLayer2Address from 'hooks/useCreateLayer2Address';
 
 const Title = styled(Typography)`
   font-weight: 600;
@@ -54,8 +56,25 @@ interface IBridge {
 }
 
 const Bridge: FC<IBridge> = () => {
+  const [depositAddress, setDepositAddress] = useState<string | null>(null);
+  const [queryUdtBalance, setQueryUdtBalance] = useState<string | null>(null);
+
+  const [error, setError] = useState<string | null>(null);
+  const [invalidAddress, setInvalidAddress] = useState<string | null>(null);
+
   const [networkOptionField, setNetworkOptionField] = useState([]);
   const [defaultNetwork, setDefaultNetwork] = useState('');
+
+  useQueryUdtBalance()
+    .then(response => setQueryUdtBalance(response))
+    .catch(err => setError(err));
+
+  useCreateLayer2Address()
+    .then(response => setDepositAddress(response))
+    .catch(err => setInvalidAddress(err));
+
+  console.log('queryUdtBalance', queryUdtBalance);
+  console.log('depositAddress', depositAddress);
 
   const availableNetworks = ['CKB', 'Godwoken', 'Ethereum'];
   const initialNetwork = availableNetworks.find(x => x);
