@@ -36,7 +36,7 @@ const WireddCKBModal: FC = () => {
   };
 
   return (
-    <Modal isOpen={isModalOpen} handleClose={handleModalOpen} title="Get dCKB" divider>
+    <Modal isOpen={true} handleClose={handleModalOpen} title="Get dCKB" divider>
       <StyledBox>
         <Stepper nonLinear interactive ref={childRef}>
           <Step label="Get Layer 2 address">

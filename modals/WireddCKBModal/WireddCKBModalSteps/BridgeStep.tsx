@@ -14,6 +14,7 @@ import dynamic from 'next/dynamic';
 import useCheckProvider from 'hooks/useCheckProvider';
 
 import { selectIsLoggedIn } from 'redux/slices/user';
+import Bridge from 'components/Bridge/Bridge';
 
 const DAOBridgeComponentWithNoSSR = dynamic(() => import('components/DAOBridgeComponent/DAOBridgeComponent'), {
   ssr: false,
@@ -48,16 +49,17 @@ const BridgeStep: FC<IBridge> = ({ handlePreviousStep }) => {
           Please make sure you have sufficient CKB balance in your L1 account before transferring to L2. A minimum
           balance of 471 CKB needs to be maintained after transaction.
         </Typography>
-        {hasProvider && isLoggedIn ? (
-          <Box>
-            <DAOBridgeComponentWithNoSSR />
+        {/* {hasProvider && isLoggedIn ? ( */}
+          <Box pb={20}>
+            {/* <DAOBridgeComponentWithNoSSR /> */}
+            <Bridge />
           </Box>
-        ) : (
+        {/* ) : (
           <Box mt={3}>
             <TypographyRed paragraph>You have to login by metamask to use our beta version Bridge.</TypographyRed>
             <ConnectWalletButton />
           </Box>
-        )}
+        )} */}
       </Box>
 
       <NavButtonsWrapper>

@@ -1,4 +1,4 @@
-import { Gradients, CommonColors, CommonButtonsColors } from '@mui/material/styles';
+import { Gradients, CommonColors, CommonButtonsColors, Colors } from '@mui/material/styles';
 import { Theme as MuiTheme } from '@mui/material/styles/createTheme';
 import { linearGradient } from '../utils/gradients';
 

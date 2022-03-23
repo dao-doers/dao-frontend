@@ -15,7 +15,6 @@ import VoteTile from 'sections/proposalsPage/VoteTile/VoteTile';
 
 import { selectSortedProposalsArray } from 'redux/slices/proposals';
 import { selectVotesArray } from 'redux/slices/votes';
-import Bridge from 'components/Bridge/Bridge';
 
 const StyledPlaylistRemoveIcon = styled(PlaylistRemoveIcon)`
   color: ${({ theme }) => theme.palette.colors.col1};
@@ -33,7 +32,6 @@ const HomePage: FC<NextPage> = () => {
 
   return (
     <Layout>
-      <Bridge />
       <Box display="flex" justifyContent="space-between" width="100%">
         <Box sx={{ width: { xs: '100%', md: '63%' } }}>
           {sortedProposalsArray.length === 0 && (
