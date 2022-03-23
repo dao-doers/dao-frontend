@@ -105,5 +105,8 @@
   },
   "resolutions": {
     "**/@emotion/styled": "^11.0.0"
-  }
+  },
+  "browser": {
+    "crypto": false
+}
 }
