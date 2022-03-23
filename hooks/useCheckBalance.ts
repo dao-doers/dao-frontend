@@ -7,7 +7,7 @@ import { selectUserAddress, selectIsLoggedIn } from 'redux/slices/user';
 // TODO: remove later
 // import { AddressTranslator } from 'nervos-godwoken-integration';
 
-const web3 = new Web3(process.env.PROVIDER_URL || '');
+// const web3 = new Web3(process.env.PROVIDER_URL || '');
 
 const useCheckBalance = () => {
   const userAddress = useSelector(selectUserAddress);
@@ -36,6 +36,11 @@ const useCheckBalance = () => {
 
   useEffect(() => {
     const fetchCkbBalance = async () => {
+      if (window.ethereum) {
+        await window.ethereum.request({ method: 'eth_requestAccounts' });
+        window.web3 = new Web3(window.ethereum);
+      }
+
       if (isLoggedIn) {
         const balance = Number(BigInt(await web3.eth.getBalance(userAddress)));
         if (balance) {

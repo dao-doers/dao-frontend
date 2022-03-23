@@ -17,7 +17,7 @@ const colors: Colors = {
 const palette: RecursivePartial<Palette> = {
   ...common,
   background: {
-    default: colors.main2,
+    default: colors.main1,
   },
   buttons: {
     ...common.buttons,

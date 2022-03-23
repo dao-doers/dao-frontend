@@ -3,8 +3,6 @@ import BigNumber from 'bignumber.js/bignumber';
 
 import abiLibrary from 'lib/abi';
 
-const web3 = new Web3(new Web3.providers.HttpProvider(process.env.PROVIDER_URL || ''));
-
 const getDao = async (address: string) => {
   const dao = await new web3.eth.Contract(abiLibrary.moloch2, address);
   return dao;
@@ -40,6 +38,11 @@ const useCreateProposal = async (
   paymentToken: string | undefined,
   details: { title: any; description: any; link: any },
 ) => {
+  if (window.ethereum) {
+    await window.ethereum.request({ method: 'eth_requestAccounts' });
+    window.web3 = new Web3(window.ethereum);
+  }
+
   const exponentialValue = new BigNumber(10 ** 8);
   const tributeOfferedToExponential = new BigNumber(tributeOffered).multipliedBy(exponentialValue);
   const paymentRequestedToExponential = new BigNumber(paymentRequested).multipliedBy(exponentialValue);
@@ -54,20 +57,23 @@ const useCreateProposal = async (
     console.log('Not enough funds to pay the tribute.');
   }
 
-  // if (allowance.lt(requiredAllowance)) {
-  // throws error: eth_sendTransaction is not supported!
-  await token.methods
-    .approve(daoAddress, requiredAllowance)
-    .send({
-      from: user,
-    })
-    .on('receipt', () => {
-      console.log('receipt');
-    })
-    .on('error', error => {
-      console.log(error);
-    });
-  // }
+  console.log(allowance, 'allowance');
+  console.log(requiredAllowance, 'requiredAllowance');
+
+  if (allowance.lt(requiredAllowance)) {
+    // throws error: eth_sendTransaction is not supported!
+    await token.methods
+      .approve(daoAddress, requiredAllowance)
+      .send({
+        from: user,
+      })
+      .on('receipt', () => {
+        console.log('receipt');
+      })
+      .on('error', error => {
+        console.log(error);
+      });
+  }
 
   const proposal = await dao.methods.submitProposal(
     applicantAddress,
