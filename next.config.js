@@ -27,7 +27,7 @@ module.exports = {
       },
     ];
   },
-  webpack: (config) => {
+  webpack: (config, { buildId, dev, isServer, defaultLoaders, webpack }) => {
     config.resolve = {
       ...config.resolve,
       fallback: {
@@ -35,7 +35,9 @@ module.exports = {
         "path": false,
         "os": false,
       }
-    }
+    },
+    config.resolve.alias.https = "https-browserify",
+    config.resolve.alias.http = "http-browserify"
     return config
   },
 };
