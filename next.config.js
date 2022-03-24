@@ -27,7 +27,7 @@ module.exports = {
       },
     ];
   },
-  webpack: (config, { buildId, dev, isServer, defaultLoaders, webpack }) => {
+  webpack: (config) => {
     config.resolve = {
       ...config.resolve,
       fallback: {
