@@ -1,4 +1,4 @@
-import { BridgedToken, Token } from 'components/Bridge/models/data';
+import { BridgedToken, Token } from 'interfaces/data';
 
 export enum CanonicalTokenSymbol {
   ETH = 'ETH',

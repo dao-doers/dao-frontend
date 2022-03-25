@@ -14,7 +14,7 @@ import dynamic from 'next/dynamic';
 import useCheckProvider from 'hooks/useCheckProvider';
 
 import { selectIsLoggedIn } from 'redux/slices/user';
-import Bridge from 'components/Bridge/Bridge';
+import BridgeComponent from 'components/Bridge/Bridge';
 
 const DAOBridgeComponentWithNoSSR = dynamic(() => import('components/DAOBridgeComponent/DAOBridgeComponent'), {
   ssr: false,
@@ -52,7 +52,7 @@ const BridgeStep: FC<IBridge> = ({ handlePreviousStep }) => {
         {/* {hasProvider && isLoggedIn ? ( */}
           <Box pb={20}>
             {/* <DAOBridgeComponentWithNoSSR /> */}
-            <Bridge />
+            <BridgeComponent />
           </Box>
         {/* ) : (
           <Box mt={3}>

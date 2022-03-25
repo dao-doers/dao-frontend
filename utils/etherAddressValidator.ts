@@ -1,6 +1,6 @@
 /*
 
-import { CryptoNetwork } from "components/Bridge/models/CryptoNetwork";
+import { CryptoNetwork } from "interfaces/CryptoNetwork";
 import { keccak256 } from "js-sha3";
 
 

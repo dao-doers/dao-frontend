@@ -110,7 +110,7 @@ export type selectorOptionType = {
 type OnChange = (value: ValueType<selectorOptionType, boolean>, actionMeta: ActionMeta<selectorOptionType>) => void;
 
 interface IconProps {
-  imgSrc: string;
+  src?: any;
   color?: string;
   role?: string;
   backgroundColor?: string;
@@ -316,15 +316,13 @@ const Selector = ({
     if (icon) {
       return (
         <Image
-          src={icon.imgSrc}
-          alt="project"
-          height="40"
-          width="40"
-          layout="responsive"
-          className="rounded-md object-contain"
+          src={icon.src}
+          alt="select"
+          height="30"
+          width="30"
           color={
             (error && `#eb0000`) ||
-            icon.color ||
+            icon?.color ||
             '#5a7681'
           }
         />
@@ -332,6 +330,7 @@ const Selector = ({
     }
     return undefined;
   });
+
   const [selectLabels] = useState(() => {
     let selectOptions: any[] = [];
     let selectOption;
@@ -399,14 +398,16 @@ const Selector = ({
       setPreviousIcon(selectedIcon?.props.name);
       setSelectedIcon(
         <Image
-          src={icon.imgSrc}
-          alt="project"
-          height="40"
-          width="40"
-          layout="responsive"
-          className="rounded-md object-contain"
-          color={(error && '#eb0000') || icon.color || '#5a7681'}
-        />,
+          src={icon.src}
+          alt="select"
+          height="30"
+          width="30"
+          color={
+            (error && `#eb0000`) ||
+            icon?.color ||
+            '#5a7681'
+          }
+        />
       );
     }
   }, [error]);
@@ -581,15 +582,13 @@ const Selector = ({
           <LeftIconContainer>
             {controlProps.isDisabled ? (
               <Image
-              src={icon.imgSrc}
-              alt="project"
-              height="40"
-              width="40"
-              layout="responsive"
-              className="rounded-md object-contain"
+              src={iconProps.src}
+              alt="select"
+              height="30"
+              width="30"
               color={
                 (error && `#eb0000`) ||
-                icon.color ||
+                icon?.color ||
                 '#5a7681'
               }
             />

@@ -15,7 +15,6 @@ import CurrencyInput from 'react-currency-input-field';
 import Image from 'next/image';
 import { Tooltip } from '@mui/material';
 import styled from '@emotion/styled';
-import MoneyIcon from '@mui/icons-material/Money';
 
 const InputOuterContainer = styled.div`
   width: 100%;
@@ -137,7 +136,7 @@ const InputPrefix = styled(InputAdornment)`
 `;
 
 interface IconProps {
-  imgSrc: string;
+  src: any;
   color?: string;
   role?: string;
   backgroundColor?: string;
@@ -479,15 +478,13 @@ const Input = ({
           <InputIcon onClick={focusTextArea} role="link">
             {icon && (
               <Image
-                src={icon.imgSrc}
-                alt="project"
-                height="40"
-                width="40"
-                layout="responsive"
-                className="rounded-md object-contain"
+                src={icon.src}
+                alt="quantity"
+                height="30"
+                width="30"
                 color={
                   (error && `#eb0000`) ||
-                  icon.color ||
+                  icon?.color ||
                   '#5a7681'
                 }
              />
@@ -689,10 +686,10 @@ const Input = ({
             }
           >
             <Image
-              src={icon.imgSrc}
-              alt="project"
-              height="40"
-              width="40"
+              src={icon?.src}
+              alt="quantity"
+              height="30"
+              width="30"
               layout="responsive"
               className="rounded-md object-contain"
               color={
@@ -707,7 +704,7 @@ const Input = ({
         )}
         {tooltipMessage && (
           <InputTooltip>
-            <Tooltip title={tooltipMessage} />
+            {/* <Tooltip title={tooltipMessage} /> */}
           </InputTooltip>
         )}
       </NoLeftBorderRadius>

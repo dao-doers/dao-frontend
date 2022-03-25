@@ -1,10 +1,10 @@
 import { BigNumber } from 'ethers';
 
-import { NetworkName } from 'components/Bridge/models/data';
 import { TokensRegistry } from 'api/types';
+import { Network, NetworkName } from 'interfaces/data';
 
 export interface INetworkAdapter {
-  id: string;
+  id: Network;
   name: NetworkName;
   getBalance(tokenAddress: string, accountAddress: string): Promise<BigNumber>;
   getTokens(): TokensRegistry;

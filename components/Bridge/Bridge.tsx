@@ -12,10 +12,15 @@ import DAOButton from 'components/DAOButton/DAOButton';
 import DAOInput from 'components/DAOInput/DAOInput';
 
 import useQueryUdtBalance from 'hooks/useQueryUdtBalance';
+import useCreateLayer2Address from 'hooks/useCreateLayer2Address';
+import { IBridgeDescriptor, Bridge } from 'interfaces/data'
 import { CryptoNetwork } from './models/CryptoNetwork';
 import { Currency } from './models/Currency';
 import { LayerSwapSettings } from './models/LayerSwapSettings';
-import useCreateLayer2Address from 'hooks/useCreateLayer2Address';
+import { IBridgeDescriptor } from './models/data';
+import { useBridge } from 'hooks/useBridge';
+import { useBridgeRegistry } from 'hooks/useBridgeRegistry';
+import { IBridgeContainerProps } from './models/IBridgeContainerProps';
 
 const Title = styled(Typography)`
   font-weight: 600;
@@ -55,7 +60,38 @@ interface IBridge {
   asset?: string;
 }
 
-const Bridge: FC<IBridge> = () => {
+const BridgeComponent: FC<IBridgeContainerProps> = () => {
+  // const { bridges, selectedBridge, selectBridge } = useBridgeRegistry<IBridgeContainerProps>({
+  //   environment,
+  //   provider,
+  //   addressTranslator,
+  //   config: {
+  //     godwokenRpcUrl: config ? config.godwokenRpcUrl : Config.nervos.godwoken.rpcUrl,
+  //     ckbRpcUrl: config ? config.ckbRpcUrl : Config.nervos.ckb.url,
+  //     ckbIndexerUrl: config ? config.ckbIndexerUrl : Config.nervos.indexer.url,
+  //     depositLockScriptTypeHash: config ? config.depositLockScriptTypeHash : Config.nervos.depositLockScriptTypeHash,
+  //     ethAccountLockCodeHash: config ? config.ethAccountLockCodeHash : Config.nervos.ethAccountLockCodeHash,
+  //     rollupTypeHash: config ? config.rollupTypeHash : Config.nervos.rollupTypeHash,
+  //     bridge: {
+  //       forceBridge: {
+  //         url: config ? config.bridge.forceBridge.url : Config.nervos.forceBridgeUrl,
+  //       },
+  //     },
+  //   },
+  //   defaultBridge: Bridge.CkbBridge,
+  // })
+
+  // const {
+  //   tokens,
+  //   token,
+  //   setToken,
+  //   setValue,
+  //   value,
+  //   deposit,
+  //   withdraw,
+  //   selectedFeature,
+  //   setSelectedFeature,
+  // } = useBridge({ bridge: selectedBridge, provider, polyjuiceProvider })
   const [depositAddress, setDepositAddress] = useState<string | null>(null);
   const [queryUdtBalance, setQueryUdtBalance] = useState<string | null>(null);
 
@@ -69,15 +105,15 @@ const Bridge: FC<IBridge> = () => {
     .then(response => setQueryUdtBalance(response))
     .catch(err => setError(err));
 
-  useCreateLayer2Address()
-    .then(response => setDepositAddress(response))
-    .catch(err => setInvalidAddress(err));
+  // useCreateLayer2Address()
+  //   .then(response => setDepositAddress(response))
+  //   .catch(err => setInvalidAddress(err));
 
   console.log('queryUdtBalance', queryUdtBalance);
   console.log('depositAddress', depositAddress);
 
   const availableNetworks = ['CKB', 'Godwoken', 'Ethereum'];
-  const initialNetwork = availableNetworks.find(x => x);
+  // const initialNetwork = settings.networks
   const initialAddress = '0xD173313A51f8fc37BcF67569b463abd89d81844f';
   // const initialCurrency = ['CKB'];
   // const initialCurrency = ['CKB', 'dCKB', 'wCKB'];
@@ -108,7 +144,7 @@ const Bridge: FC<IBridge> = () => {
     return 'Swap now';
   }
 
-  const NetworkOptionField = (networkList): void => {
+  const NetworkOptionField = (networkList: IBridgeDescriptor['id']): void => {
     const networkSelectorOptions: any = [];
     networkList.forEach(network => {
       networkSelectorOptions.push(
@@ -169,12 +205,12 @@ const Bridge: FC<IBridge> = () => {
         {formik => (
           <Form>
             <Box display="flex" height="32px">
-              <div style={{ width: '150px' }}>
+              <div style={{ width: '250px' }}>
                 <Selector
                   id="network"
                   placeholder="Choose network..."
                   header="Nervos Network"
-                  icon={{ imgSrc: 'assets/images/ethereum-logo.svg' }}
+                  icon={{ src: '/logos/metamask.png' }}
                   customStyles={{
                     placeholderStyles: { color: '#00cc9b' },
                     headerStyles: { color: '#00cc9b' },
@@ -204,7 +240,7 @@ const Bridge: FC<IBridge> = () => {
               </div>
               <div className="Balance">
                 <Input
-                  icon={{ imgSrc: 'assets/images/ethereum-logo.svg' }}
+                  icon={{ src: '/logos/metamask.png' }}
                   header="Amount"
                   placeholder="Enter amount..."
                   name="amount"
@@ -244,7 +280,7 @@ const Bridge: FC<IBridge> = () => {
               <Typography variant="subtitle2">SEND TO</Typography>
             </Box>
             <Box display="flex" height="32px">
-              <div style={{ width: '150px' }}>
+              <div style={{ width: '250px' }}>
                 <Selector
                   placeholder="Choose network..."
                   header="Nervos Network"
@@ -253,19 +289,14 @@ const Bridge: FC<IBridge> = () => {
                   showDropdownIcon
                   isWindowed
                 >
-                  <SelectorOption value="Layer 1" label="Layer 1">
-                    <span> Layer 1</span>
-                  </SelectorOption>
-                  <SelectorOption value="Godwoken" label="Godwoken">
-                    <span> Godwoken</span>
-                  </SelectorOption>
+                 {networkOptionField}
                 </Selector>
               </div>
               <Input
                 id="AmountReceive"
                 type="number"
                 autoComplete="off"
-                header="AmountReceive"
+                header="Receive"
                 placeholder="Amount you get"
                 // value={formik.values.amount}
                 customStyles={{
@@ -342,4 +373,4 @@ const Bridge: FC<IBridge> = () => {
   );
 };
 
-export default Bridge;
+export default BridgeComponent;

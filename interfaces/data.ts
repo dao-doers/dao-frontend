@@ -1,6 +1,6 @@
-import { INetworkAdapter } from 'api/network/types';
 import { BigNumber, providers } from 'ethers';
 
+import { INetworkAdapter } from 'api/network/types';
 import { Networks } from 'utils/constants';
 
 export enum Environment {
