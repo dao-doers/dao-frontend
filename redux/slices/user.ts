@@ -4,6 +4,7 @@ interface UserSlice {
   address: string;
   isLoggedIn: boolean;
   userShares: number;
+  dckbBalance: number;
   sessionMaintained: boolean;
 }
 
@@ -16,6 +17,7 @@ const userSlice = createSlice({
   initialState: {
     address: '',
     isLoggedIn: false,
+    dckbBalance: 0,
     userShares: 0,
     sessionMaintained: false,
   },
@@ -25,6 +27,9 @@ const userSlice = createSlice({
     },
     setIsLoggedIn: (state, action) => {
       state.isLoggedIn = action.payload;
+    },
+    setdckbBalance: (state, action) => {
+      state.dckbBalance = action.payload;
     },
     setUserShares: (state, action) => {
       state.userShares = Number(action.payload);
@@ -37,9 +42,10 @@ const userSlice = createSlice({
 
 export const selectUserAddress = (state: StateProps) => state.user.address;
 export const selectIsLoggedIn = (state: StateProps) => state.user.isLoggedIn;
+export const selectdckbBalance = (state: StateProps) => state.user.dckbBalance;
 export const selectUserShares = (state: StateProps) => state.user.userShares;
 export const selectessionMaintained = (state: StateProps) => state.user.sessionMaintained;
 
-export const { setUserAddress, setIsLoggedIn, setUserShares, setSessionMaintained } = userSlice.actions;
+export const { setUserAddress, setIsLoggedIn, setdckbBalance, setUserShares, setSessionMaintained } = userSlice.actions;
 
 export default userSlice.reducer;

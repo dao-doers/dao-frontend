@@ -1,5 +1,6 @@
 import { FC, ReactNode, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
+import Web3 from 'web3';
 
 import styled from '@emotion/styled';
 
@@ -36,6 +37,12 @@ const StyledBox = styled(Box)`
   display: flex;
 `;
 
+declare global {
+  interface Window {
+    web3: Web3;
+  }
+}
+
 const Layout: FC<LayoutProps> = ({ children }) => {
   const dispatch = useDispatch();
 
@@ -50,6 +57,13 @@ const Layout: FC<LayoutProps> = ({ children }) => {
 
     dispatch(setTheme(theme === THEME_MODES.DARK ? THEME_MODES.DARK : THEME_MODES.LIGHT));
   }, [dispatch]);
+
+  useEffect(async () => {
+    if (window.ethereum) {
+      await window.ethereum.request({ method: 'eth_requestAccounts' });
+      window.web3 = new Web3(window.ethereum);
+    }
+  }, []);
 
   return (
     <StyledContainer>

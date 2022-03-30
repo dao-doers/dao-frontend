@@ -29,6 +29,7 @@ const RecentActivityStatus = () => {
 
   const refetch = () => {
     refetchProposal.refetch();
+    console.log('refetch');
     setClicked(true);
     setTimeout(() => {
       setClicked(false);
