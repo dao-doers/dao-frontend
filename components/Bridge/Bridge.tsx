@@ -12,11 +12,12 @@ import DAOButton from 'components/DAOButton/DAOButton';
 import DAOInput from 'components/DAOInput/DAOInput';
 
 import useQueryUdtBalance from 'hooks/useQueryUdtBalance';
-import { IBridgeDescriptor, Bridge } from 'interfaces/data'
+import { IBridgeDescriptor, Bridge } from 'interfaces/data';
+import useCreateLayer2Address from 'hooks/useCreateLayer2Address';
+import { useDCKBTokenHook } from 'hooks/DCKBTokenHook';
 import { CryptoNetwork } from './models/CryptoNetwork';
 import { Currency } from './models/Currency';
 import { LayerSwapSettings } from './models/LayerSwapSettings';
-import useCreateLayer2Address from 'hooks/useCreateLayer2Address';
 
 const Title = styled(Typography)`
   font-weight: 600;
@@ -41,9 +42,9 @@ export const DownArrowBackground = styled.div`
 `;
 interface SwapFormValues {
   amount: string;
-  destination_address: string;
-  network: CryptoNetwork;
-  currency: Currency;
+  destination_address?: string;
+  network?: CryptoNetwork;
+  currency?: Currency;
 }
 
 interface IBridge {
@@ -55,9 +56,9 @@ interface IBridge {
   addressSource?: string;
   asset?: string;
 }
+const SUDT_SYMBOL = 'dCKB';
 
 const BridgeComponent: FC<IBridge> = () => {
-
   const [depositAddress, setDepositAddress] = useState<string | null>(null);
   const [queryUdtBalance, setQueryUdtBalance] = useState<string | null>(null);
 
@@ -66,6 +67,8 @@ const BridgeComponent: FC<IBridge> = () => {
 
   const [networkOptionField, setNetworkOptionField] = useState([]);
   const [defaultNetwork, setDefaultNetwork] = useState('');
+
+  const { mintDCKTokens } = useDCKBTokenHook();
 
   useQueryUdtBalance()
     .then(response => setQueryUdtBalance(response))
@@ -80,7 +83,7 @@ const BridgeComponent: FC<IBridge> = () => {
 
   const availableNetworks = ['CKB', 'Godwoken', 'Ethereum'];
   // const initialNetwork = settings.networks
-  const initialAddress = '0xD173313A51f8fc37BcF67569b463abd89d81844f';
+  const initialAddress = depositAddress;
   // const initialCurrency = ['CKB'];
   // const initialCurrency = ['CKB', 'dCKB', 'wCKB'];
 
@@ -90,14 +93,19 @@ const BridgeComponent: FC<IBridge> = () => {
     // network: initialNetwork,
     // currency: initialCurrency,
   };
-  const onSubmit = (values: any, actions) => {
+  const onSubmit = async (values: SwapFormValues) => {
+    try {
+      await mintDCKTokens('dCKB', values.amount, values.destination_address);
+    } catch (err) {
+      console.log(err);
+    }
     console.log({
       amount: Number(values.amount?.toString()?.replace(',', '.')),
       currency: values.currency.name,
       destination_address: values.destination_address,
       network: values.network.id,
     });
-    console.log(actions);
+
   };
 
   function displayErrorsOrSubmit(errors: FormikErrors<SwapFormValues>): string {
@@ -129,7 +137,7 @@ const BridgeComponent: FC<IBridge> = () => {
   };
   useEffect(() => {
     NetworkOptionField(availableNetworks);
-    setDefaultNetwork(availableNetworks[0])
+    setDefaultNetwork(availableNetworks[0]);
   }, []);
 
   return (
@@ -155,7 +163,7 @@ const BridgeComponent: FC<IBridge> = () => {
           } else if (!/^[0-9]*[.,]?[0-9]*$/i.test(amount.toString())) {
             errors.amount = 'Invalid amount';
           } else if (amount < 0) {
-            errors.amount = "Can't be negative";
+            errors.amount = 'Can\'t be negative';
 
             if (!values.destination_address) {
               errors.destination_address = 'Enter a destination address';
@@ -170,6 +178,7 @@ const BridgeComponent: FC<IBridge> = () => {
       >
         {formik => (
           <Form>
+            { /*
             <Box display="flex" height="32px">
               <div style={{ width: '250px' }}>
                 <Selector
@@ -189,15 +198,11 @@ const BridgeComponent: FC<IBridge> = () => {
                   onChange={formik.handleChange}
                   // value={formik.values.network}
                   defaultValue={{
-                    value: `${
-                      defaultNetwork
-                    }`,
-                    label: `${defaultNetwork} (${'CKB'
-                    })`,
-                    selected: `${defaultNetwork} (${'CKB'
-                  })`,
+                    value: `${defaultNetwork}`,
+                    label: `${defaultNetwork} (${'CKB'})`,
+                    selected: `${defaultNetwork} (${'CKB'})`,
                     // icon: (
-                      
+
                     // )
                   }}
                 >
@@ -211,7 +216,7 @@ const BridgeComponent: FC<IBridge> = () => {
                   placeholder="Enter amount..."
                   name="amount"
                   id="amount"
-                  type="number"
+                  type="text"
                   autoComplete="off"
                   onChange={formik.handleChange}
                   // value={formik.values.amount}
@@ -226,17 +231,21 @@ const BridgeComponent: FC<IBridge> = () => {
                   // }}
                   // tooltipMessage="Please make sure you have sufficient CKB balance in your L1 account before transferring to L2. A minimum balance of 471 CKB needs to be maintained after transaction."
                   disableLeftBorderRadius
-                  // currencyInput={{
-                  //   decimalsLimit: 2,
-                  //   decimalSeparator: '.',
-                  //   groupSeparator: ' ',
-                  //   suffix: `\u00a0${'CKB'}`,
-                  //   allowNegativeValue: false,
-                  //   onValueChange: (val: any) => {
-                  //     formik.handleChange(val);
-                  //     return val;
-                  //   },
-                  // }}
+                  currencyInput={{
+                    decimalsLimit: 2,
+                    groupSeparator: ' ',
+                    suffix: `\u00a0${SUDT_SYMBOL}`,
+                    allowNegativeValue: false,
+                    onValueChange: val => {
+                      if (val === undefined) {
+                        formik.handleChange(0);
+                        return 0;
+                      }
+
+                      formik.handleChange(val);
+                      return val;
+                    },
+                  }}
                   errorMessage={formik.errors.amount}
                   required
                 />
@@ -255,7 +264,7 @@ const BridgeComponent: FC<IBridge> = () => {
                   showDropdownIcon
                   isWindowed
                 >
-                 {networkOptionField}
+                  {networkOptionField}
                 </Selector>
               </div>
               <Input
@@ -305,6 +314,7 @@ const BridgeComponent: FC<IBridge> = () => {
               disabled={initialAddress !== ''}
               // tooltipMessage=""
             />
+   */ }
             <Box display="flex" justifyContent="space-between" mt={2}>
               <DAOInput
                 label="Deposit to get"

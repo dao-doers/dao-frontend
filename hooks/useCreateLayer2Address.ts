@@ -16,10 +16,9 @@ const useCreateLayer2Address = async () => {
   const ethereumAddress = addressTranslator.getConnectedWalletAddress();
 
   const layer2Address = await addressTranslator.createLayer2Address(ethereumAddress);
-  const createlayer2Address = layer2Address.toCKBAddress().toString();
-  console.log(`Deposit to Layer 2 address on Layer 1: \n${createlayer2Address}`);
+  console.log(`Deposit to Layer 2 address on Layer 1: \n${layer2Address}`);
 
-  return createlayer2Address;
+  return layer2Address;
 };
 
 export default useCreateLayer2Address;
