@@ -12,15 +12,11 @@ import DAOButton from 'components/DAOButton/DAOButton';
 import DAOInput from 'components/DAOInput/DAOInput';
 
 import useQueryUdtBalance from 'hooks/useQueryUdtBalance';
-import useCreateLayer2Address from 'hooks/useCreateLayer2Address';
 import { IBridgeDescriptor, Bridge } from 'interfaces/data'
 import { CryptoNetwork } from './models/CryptoNetwork';
 import { Currency } from './models/Currency';
 import { LayerSwapSettings } from './models/LayerSwapSettings';
-import { IBridgeDescriptor } from './models/data';
-import { useBridge } from 'hooks/useBridge';
-import { useBridgeRegistry } from 'hooks/useBridgeRegistry';
-import { IBridgeContainerProps } from './models/IBridgeContainerProps';
+import useCreateLayer2Address from 'hooks/useCreateLayer2Address';
 
 const Title = styled(Typography)`
   font-weight: 600;
@@ -60,38 +56,8 @@ interface IBridge {
   asset?: string;
 }
 
-const BridgeComponent: FC<IBridgeContainerProps> = () => {
-  // const { bridges, selectedBridge, selectBridge } = useBridgeRegistry<IBridgeContainerProps>({
-  //   environment,
-  //   provider,
-  //   addressTranslator,
-  //   config: {
-  //     godwokenRpcUrl: config ? config.godwokenRpcUrl : Config.nervos.godwoken.rpcUrl,
-  //     ckbRpcUrl: config ? config.ckbRpcUrl : Config.nervos.ckb.url,
-  //     ckbIndexerUrl: config ? config.ckbIndexerUrl : Config.nervos.indexer.url,
-  //     depositLockScriptTypeHash: config ? config.depositLockScriptTypeHash : Config.nervos.depositLockScriptTypeHash,
-  //     ethAccountLockCodeHash: config ? config.ethAccountLockCodeHash : Config.nervos.ethAccountLockCodeHash,
-  //     rollupTypeHash: config ? config.rollupTypeHash : Config.nervos.rollupTypeHash,
-  //     bridge: {
-  //       forceBridge: {
-  //         url: config ? config.bridge.forceBridge.url : Config.nervos.forceBridgeUrl,
-  //       },
-  //     },
-  //   },
-  //   defaultBridge: Bridge.CkbBridge,
-  // })
+const BridgeComponent: FC<IBridge> = () => {
 
-  // const {
-  //   tokens,
-  //   token,
-  //   setToken,
-  //   setValue,
-  //   value,
-  //   deposit,
-  //   withdraw,
-  //   selectedFeature,
-  //   setSelectedFeature,
-  // } = useBridge({ bridge: selectedBridge, provider, polyjuiceProvider })
   const [depositAddress, setDepositAddress] = useState<string | null>(null);
   const [queryUdtBalance, setQueryUdtBalance] = useState<string | null>(null);
 
@@ -105,9 +71,9 @@ const BridgeComponent: FC<IBridgeContainerProps> = () => {
     .then(response => setQueryUdtBalance(response))
     .catch(err => setError(err));
 
-  // useCreateLayer2Address()
-  //   .then(response => setDepositAddress(response))
-  //   .catch(err => setInvalidAddress(err));
+  useCreateLayer2Address()
+    .then(response => setDepositAddress(response))
+    .catch(err => setInvalidAddress(err));
 
   console.log('queryUdtBalance', queryUdtBalance);
   console.log('depositAddress', depositAddress);

@@ -1,6 +1,5 @@
 import { BigNumber, providers } from 'ethers';
 
-import { INetworkAdapter } from 'api/network/types';
 import { Networks } from 'utils/constants';
 
 export enum Environment {
@@ -39,8 +38,6 @@ export interface IBridge {
   toDescriptor(): IBridgeDescriptor;
   deposit(amount: BigNumber, token: Token): Promise<string>;
   withdraw(amount: BigNumber, token: Token): Promise<string>;
-  getDepositNetwork(): INetworkAdapter;
-  getWithdrawalNetwork(): INetworkAdapter;
 }
 
 export interface IBridgeFeaturesToggle {
