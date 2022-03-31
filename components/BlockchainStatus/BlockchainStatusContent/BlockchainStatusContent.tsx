@@ -11,7 +11,6 @@ import RecentActivityStatus from 'components/RecentActivityStatus/RecentActivity
 import StatusChip from 'components/StatusChip/StatusChip';
 
 import formatAddress from 'utils/formatAddress';
-import { shannonsToCkb } from 'utils/formatShannons';
 
 import useCheckBalance from 'hooks/useCheckBalance';
 import useCheckIndexerStatus from 'hooks/useCheckIndexerStatus';

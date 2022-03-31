@@ -18,6 +18,8 @@ import useIsMobile from 'hooks/useIsMobile';
 
 import newProposalSchema from 'validators/newProposalSchema';
 
+import { getMetamaskMessageError } from 'utils/blockchain';
+
 import { setOpen, setStatus, setMessage } from 'redux/slices/modalTransaction';
 import { selectUserAddress, selectIsLoggedIn, selectdckbBalance } from 'redux/slices/user';
 
@@ -47,7 +49,7 @@ const JoinDaoForm: FC = () => {
 
       if (dckbBalance < values.tributeOffered) {
         dispatch(setStatus(PROCESSING_STATUSES.ERROR));
-        dispatch(setMessage('You have not enough dCKB '));
+        dispatch(setMessage('You have not enough dCKB'));
       } else {
         const receipt = await useCreateProposal(
           userAddress,
@@ -63,9 +65,7 @@ const JoinDaoForm: FC = () => {
           },
         );
 
-        if (receipt.code) {
-          dispatch(setStatus(PROCESSING_STATUSES.ERROR));
-        } else {
+        if (receipt.blockNumber) {
           dispatch(setStatus(PROCESSING_STATUSES.SUCCESS));
           dispatch(
             setMessage(
@@ -75,9 +75,14 @@ const JoinDaoForm: FC = () => {
             ),
           );
         }
+        if (receipt.code) {
+          dispatch(setStatus(PROCESSING_STATUSES.ERROR));
+          dispatch(setMessage(getMetamaskMessageError(receipt)));
+        }
       }
     } catch (error) {
       dispatch(setStatus(PROCESSING_STATUSES.ERROR));
+      dispatch(setMessage(getMetamaskMessageError(error)));
     }
   };
 

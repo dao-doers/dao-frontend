@@ -37,6 +37,34 @@ const useCreateProposal = async (
   const paymentRequestedToExponential = new BigNumber(paymentRequested).multipliedBy(exponentialValue);
 
   const dao = await getDao(daoAddress);
+  const token = new web3.eth.Contract(abiLibrary.erc20, tributeToken);
+
+  // TODO: check if there is existing approval in case if user approved first MM request and rejected second
+  console.log('token whitelist', {
+    a: await dao.methods.tokenWhitelist(tributeToken).call(),
+    daoAddress,
+    existingApproval: await token.methods.allowance(user, daoAddress).call(),
+  });
+
+  const approveTx = await token.methods.approve(daoAddress, tributeOfferedToExponential).send({
+    gasLimit: 6000000,
+    gasPrice: 0,
+    from: user,
+  });
+
+  console.log({
+    approveTx,
+  });
+
+  console.log('submitProposal', {
+    applicantAddress,
+    sharesRequested,
+    lootRequested,
+    tributeOfferedToExponential,
+    tributeToken,
+    paymentRequestedToExponential,
+    paymentToken,
+  });
 
   const proposal = await dao.methods.submitProposal(
     applicantAddress,

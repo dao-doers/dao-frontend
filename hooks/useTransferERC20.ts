@@ -1,12 +1,16 @@
 import abiLibrary from 'lib/abi';
 
-const useTransferERC20 = async () => {
-  const token = new web3.eth.Contract(abiLibrary.erc20, '0x884541623C1B26A926a5320615F117113765fF81');
+import { ckbToShannons } from 'utils/formatShannons';
+
+const tributeToken = process.env.TRIBUTE_TOKEN_ADDRESS;
+
+const useTransferERC20 = async (userAddress, receiverAddress, amount) => {
+  const token = new web3.eth.Contract(abiLibrary.erc20, tributeToken);
 
   await token.methods
-    .transfer('0x966B30e576A4d6731996748B48Dd67C94eF29067', 100000000)
+    .transfer(receiverAddress, ckbToShannons(amount))
     .send({
-      from: '0x1AB74D40A7FCF1f43E5A3D3581881F060A08e139',
+      from: userAddress,
       gas: 22000,
     })
     .on('receipt', () => {

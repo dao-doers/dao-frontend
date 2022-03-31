@@ -25,29 +25,34 @@ const useSponsorProposal = async (user: string, daoAddress: any, proposalId: str
   const dao = await getDao(daoAddress);
   const token = new web3.eth.Contract(abiLibrary.erc20, tributeToken);
 
-  const userBalance = new BigNumber(await token.methods.balanceOf(user).call());
-  const allowance = new BigNumber(await token.methods.allowance(user, daoAddress).call());
   const proposalDeposit = new BigNumber(await dao.methods.proposalDeposit().call());
 
-  // console.log('Not enough funds to pay for proposalDeposit.');
-  // throw new Error('Not enough funds to pay for proposalDeposit.');
+  // TODO: check if there is existing approval in case if user approved first MM request and rejected second
+  console.log('token whitelist', {
+    a: await dao.methods.tokenWhitelist(tributeToken).call(),
+    daoAddress,
+    existingApproval: await token.methods.allowance(user, daoAddress).call(),
+  });
 
-  if (userBalance.lt(proposalDeposit)) {
-    throw new Error('Not enough funds to pay for proposalDeposit.');
-  }
-  console.log('test');
+  const approveTx = await token.methods.approve(daoAddress, proposalDeposit).send({
+    gasLimit: 6000000,
+    gasPrice: 0,
+    from: user,
+  });
 
-  // if (allowance.lt(proposalDeposit)) {
-  //   await token.methods.approve(daoAddress, proposalDeposit).send({
-  //     from: user,
-  //   });
-  // }
+  console.log({
+    approveTx,
+  });
+
+  console.log('sponsorProposal', {
+    proposalId,
+  });
 
   const proposal = await dao.methods.sponsorProposal(proposalId);
 
   const estimatedGas = 6000000;
   const receipt = await getReceipt(proposal, user, estimatedGas);
-
+  console.log(receipt);
   return receipt;
 };
 

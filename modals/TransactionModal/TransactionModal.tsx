@@ -78,10 +78,10 @@ const TransactionModal: FC = () => {
         {status === PROCESSING_STATUSES.ERROR && (
           <>
             <Typography component="h5" variant="h5" align="center" paragraph>
-              {message.length > 0 ? message : 'Something went wrong'}
+              Error
             </Typography>
             <TypographyGrey variant="subtitle2" align="center">
-              {message.length === 0 ? 'Please try again' : ''}
+              {message.length > 0 ? message : 'Something went wrong'}
             </TypographyGrey>
             <Box width="210px" mx="auto" my={2}>
               <DAOButton variant="gradientOutline" onClick={handleModalOpen}>

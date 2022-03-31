@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useDispatch } from 'react-redux';
 
 import styled from '@emotion/styled';
 
@@ -12,6 +13,8 @@ import Timer from 'components/Timer/Timer';
 
 import useFetchProposals from 'hooks/useFetchProposals';
 
+import { setProposals } from 'redux/slices/proposals';
+
 const StyledSyncIcon = styled(SyncIcon)`
   font-size: 17px;
   color: ${({ theme }) => theme.palette.colors.col1};
@@ -23,13 +26,14 @@ const StyledCheckIcon = styled(CheckIcon)`
 `;
 
 const RecentActivityStatus = () => {
+  const dispatch = useDispatch();
   const refetchProposal = useFetchProposals();
 
   const [isClicked, setClicked] = useState(false);
 
   const refetch = () => {
     refetchProposal.refetch();
-    console.log('refetch');
+    dispatch(setProposals(refetchProposal.data.proposals));
     setClicked(true);
     setTimeout(() => {
       setClicked(false);

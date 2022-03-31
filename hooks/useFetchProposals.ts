@@ -93,7 +93,7 @@ molochVersion
     }
   }, [loading, error, data]);
 
-  return { loading, refetch };
+  return { data, loading, refetch };
 };
 
 export default useFetchProposals;

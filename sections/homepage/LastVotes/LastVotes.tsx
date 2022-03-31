@@ -67,7 +67,7 @@ const LastVotes: FC = () => {
             <Box display="flex" justifyContent="space-between" width="100%">
               {votesArray.slice(0, 3).map((vote: any) => {
                 return (
-                  <Box width="32%">
+                  <Box width="32%" key={`key-${vote.id}`}>
                     <VoteTile key={`vote-${vote.id}`} vote={vote} />
                   </Box>
                 );
@@ -79,7 +79,7 @@ const LastVotes: FC = () => {
             <StyledSwiper modules={[Pagination]} pagination={{ type: 'progressbar' }} {...params}>
               {votesArray.slice(0, 3).map((vote: any) => {
                 return (
-                  <SwiperSlide>
+                  <SwiperSlide key={`key-${vote.id}`}>
                     <Box width="90%" mx="auto">
                       <VoteTile key={`vote-${vote.id}`} vote={vote} />
                     </Box>
