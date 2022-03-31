@@ -16,7 +16,7 @@ import { shannonsToCkb } from 'utils/formatShannons';
 import useCheckBalance from 'hooks/useCheckBalance';
 import useCheckIndexerStatus from 'hooks/useCheckIndexerStatus';
 
-import { selectUserAddress, selectIsLoggedIn, selectUserShares } from 'redux/slices/user';
+import { selectUserAddress, selectIsLoggedIn, selectUserShares, selectdckbBalance } from 'redux/slices/user';
 
 const StatusWrapper = styled(Box)`
   margin-left: 16px;
@@ -45,10 +45,11 @@ const BlockchainStatusContent: FC = () => {
   const userAddress = useSelector(selectUserAddress);
   const isLoggedIn = useSelector(selectIsLoggedIn);
   const userShares = useSelector(selectUserShares);
+  const dckbBalance = useSelector(selectdckbBalance);
 
   const { molochBlock, layer2Block, molochError, molochLoading, layer2BlockLoading } = useCheckIndexerStatus();
 
-  const { dckbBalance, isChecked } = useCheckBalance();
+  const { isChecked } = useCheckBalance();
 
   return (
     <>
@@ -118,7 +119,7 @@ const BlockchainStatusContent: FC = () => {
         <StatusWrapper>
           <StatusChip title="dCKB balance:">
             {isChecked ? (
-              <Typography variant="body1-bold">{shannonsToCkb(dckbBalance || 0)}</Typography>
+              <Typography variant="body1-bold">{dckbBalance}</Typography>
             ) : (
               <Box display="flex" alignItems="center">
                 <Box display="flex" alignItems="center" mr={1}>

@@ -8,7 +8,7 @@ import { shannonsToCkb } from 'utils/formatShannons';
 
 import { selectUserAddress, selectIsLoggedIn, setdckbBalance } from 'redux/slices/user';
 
-const daoAddress = process.env.DAO_ADDRESS;
+const daoAddress = process.env.DAO_ADDRESS || '';
 
 const getDao = async (address: string) => {
   const dao = await new web3.eth.Contract(abiLibrary.moloch2, address);
@@ -20,8 +20,6 @@ const useCheckBalance = () => {
 
   const userAddress = useSelector(selectUserAddress);
   const isLoggedIn = useSelector(selectIsLoggedIn);
-
-  const [dckbBalance, setdCkbBalance] = useState(0);
 
   const [isChecked, setChecked] = useState(false);
 
@@ -40,7 +38,6 @@ const useCheckBalance = () => {
         const balance = await token.methods.balanceOf(userAddress).call();
         if (balance) {
           dispatch(setdckbBalance(shannonsToCkb(balance)));
-          setdCkbBalance(balance);
         }
         setChecked(true);
       }
@@ -49,7 +46,7 @@ const useCheckBalance = () => {
     fetchCkbBalance();
   }, [isLoggedIn, userAddress]);
 
-  return { dckbBalance, isChecked };
+  return { isChecked };
 };
 
 export default useCheckBalance;

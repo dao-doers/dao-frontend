@@ -19,7 +19,7 @@ const HomePage: FC<NextPage> = () => {
   return (
     <Layout>
       <Box sx={{ pl: { xs: 0, md: 6 } }}>
-        <button onClick={handleClick}>ssdfvsdfvdfvdfvdvd</button>
+        <button onClick={handleClick}>transfer dCKB</button>
         <Intro />
         <About />
         <LastProposals />

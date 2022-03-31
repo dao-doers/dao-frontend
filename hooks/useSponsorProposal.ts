@@ -1,7 +1,8 @@
-import Web3 from 'web3';
 import BigNumber from 'bignumber.js/bignumber';
 
 import abiLibrary from 'lib/abi';
+
+const tributeToken = process.env.TRIBUTE_TOKEN_ADDRESS;
 
 const getDao = async (address: string) => {
   const dao = await new web3.eth.Contract(abiLibrary.moloch2, address);
@@ -11,7 +12,6 @@ const getDao = async (address: string) => {
 const getReceipt = async (proposal: any, user: string, estimatedGas: number) => {
   let receipt;
   try {
-    // eslint-disable-next-line @typescript-eslint/no-shadow
     receipt = await proposal.send({ from: user, gas: estimatedGas }).on('receipt', (receipt: any) => {
       return receipt;
     });
@@ -22,28 +22,26 @@ const getReceipt = async (proposal: any, user: string, estimatedGas: number) => 
 };
 
 const useSponsorProposal = async (user: string, daoAddress: any, proposalId: string) => {
-  if (window.ethereum) {
-    await window.ethereum.request({ method: 'eth_requestAccounts' });
-    window.web3 = new Web3(window.ethereum);
-  }
-
   const dao = await getDao(daoAddress);
-
-  const token = new web3.eth.Contract(abiLibrary.erc20, await dao.methods.depositToken().call());
+  const token = new web3.eth.Contract(abiLibrary.erc20, tributeToken);
 
   const userBalance = new BigNumber(await token.methods.balanceOf(user).call());
   const allowance = new BigNumber(await token.methods.allowance(user, daoAddress).call());
   const proposalDeposit = new BigNumber(await dao.methods.proposalDeposit().call());
 
+  // console.log('Not enough funds to pay for proposalDeposit.');
+  // throw new Error('Not enough funds to pay for proposalDeposit.');
+
   if (userBalance.lt(proposalDeposit)) {
     throw new Error('Not enough funds to pay for proposalDeposit.');
   }
+  console.log('test');
 
-  if (allowance.lt(proposalDeposit)) {
-    await token.methods.approve(daoAddress, proposalDeposit).send({
-      from: user,
-    });
-  }
+  // if (allowance.lt(proposalDeposit)) {
+  //   await token.methods.approve(daoAddress, proposalDeposit).send({
+  //     from: user,
+  //   });
+  // }
 
   const proposal = await dao.methods.sponsorProposal(proposalId);
 
