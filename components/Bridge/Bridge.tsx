@@ -1,9 +1,13 @@
 import React, { useEffect, useState, FC } from 'react';
+import { useSelector } from 'react-redux';
+
+import { selectUserAddress, selectIsLoggedIn } from 'redux/slices/user';
+
 import Selector from 'components/Selector/Selector';
 import SelectorOption from 'components/Selector/SelectorOption';
 import Input from 'components/Input/Input';
 import Box from '@mui/material/Box';
-import { Typography } from '@mui/material';
+import { Accordion, AccordionSummary, Typography } from '@mui/material';
 import styled from '@emotion/styled';
 import UnstyledSwitches from 'components/Toggle/Toggle';
 import { dCKBTransferSchema } from 'validators/minorValidators';
@@ -15,6 +19,8 @@ import useQueryUdtBalance from 'hooks/useQueryUdtBalance';
 import { IBridgeDescriptor, Bridge } from 'interfaces/data';
 import useCreateLayer2Address from 'hooks/useCreateLayer2Address';
 import { useDCKBTokenHook } from 'hooks/DCKBTokenHook';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import AccordionDetails from '@mui/material/AccordionDetails';
 import { CryptoNetwork } from './models/CryptoNetwork';
 import { Currency } from './models/Currency';
 import { LayerSwapSettings } from './models/LayerSwapSettings';
@@ -40,6 +46,37 @@ export const DownArrowBackground = styled.div`
   margin: 3px auto;
   cursor: pointer;
 `;
+
+const AccordionWrapper = styled(Box)`
+  justify-content: flex-end;
+  width: 100%;
+  padding-top: 100px;
+  margin-bottom: 30px;
+  ${({ theme }) => theme.breakpoints.down('sm')} {
+    flex-direction: column;
+    margin-top: 0px;
+  }
+`;
+
+const StyledAccordionB = styled(Accordion)`
+  background-color: transparent;
+  box-shadow: none;
+  border-top: none;
+  &:before {
+    display: none;
+  }
+`;
+const StyledAccordionSummaryB = styled(AccordionSummary)`
+  padding: 0;
+`;
+const StyledAccordionDetails = styled(AccordionDetails)`
+  padding-top: 10;
+  padding-bottom: 30;
+`;
+
+const StyledExpandMoreIcon = styled(ExpandMoreIcon)`
+  color: ${({ theme }) => theme.palette.text.primary};
+`;
 interface SwapFormValues {
   amount: string;
   destination_address?: string;
@@ -48,7 +85,7 @@ interface SwapFormValues {
 }
 
 interface IBridge {
-  settings: LayerSwapSettings;
+  settings?: LayerSwapSettings;
   destNetwork?: string;
   destAddress?: string;
   lockAddress?: boolean;
@@ -59,7 +96,10 @@ interface IBridge {
 const SUDT_SYMBOL = 'dCKB';
 
 const BridgeComponent: FC<IBridge> = () => {
-  const [depositAddress, setDepositAddress] = useState<string | null>(null);
+  const userAddress = useSelector(selectUserAddress);
+
+  const [depositAddress, setDepositAddress] = useState<string>(null);
+  const [destinationAddress, setDestinationAddress] = useState<string>(null);
   const [queryUdtBalance, setQueryUdtBalance] = useState<string | null>(null);
 
   const [error, setError] = useState<string | null>(null);
@@ -67,31 +107,29 @@ const BridgeComponent: FC<IBridge> = () => {
 
   const [networkOptionField, setNetworkOptionField] = useState([]);
   const [defaultNetwork, setDefaultNetwork] = useState('');
-
   const { mintDCKTokens } = useDCKBTokenHook();
 
-  useQueryUdtBalance()
-    .then(response => setQueryUdtBalance(response))
-    .catch(err => setError(err));
+  // useQueryUdtBalance()
+  //   .then(response => setQueryUdtBalance(response))
+  //   .catch(err => setError(err));
 
-  useCreateLayer2Address()
-    .then(response => setDepositAddress(response))
-    .catch(err => setInvalidAddress(err));
+  // useCreateLayer2Address()
+  //   .then(response => setDepositAddress(response))
+  //   .catch(err => setInvalidAddress(err));
 
   console.log('queryUdtBalance', queryUdtBalance);
   console.log('depositAddress', depositAddress);
 
-  const availableNetworks = ['CKB', 'Godwoken', 'Ethereum'];
+  const availableNetworks = ['Nervos Layer 1', 'Nervos Layer 2'];
   // const initialNetwork = settings.networks
   const initialAddress = depositAddress;
-  // const initialCurrency = ['CKB'];
-  // const initialCurrency = ['CKB', 'dCKB', 'wCKB'];
+  const initialCurrency = ['CKB'];
 
   const initialValues: SwapFormValues = {
     amount: '',
     destination_address: initialAddress,
     // network: initialNetwork,
-    // currency: initialCurrency,
+    currency: initialCurrency,
   };
   const onSubmit = async (values: SwapFormValues) => {
     try {
@@ -105,7 +143,6 @@ const BridgeComponent: FC<IBridge> = () => {
       destination_address: values.destination_address,
       network: values.network.id,
     });
-
   };
 
   function displayErrorsOrSubmit(errors: FormikErrors<SwapFormValues>): string {
@@ -118,35 +155,13 @@ const BridgeComponent: FC<IBridge> = () => {
     return 'Swap now';
   }
 
-  const NetworkOptionField = (networkList: IBridgeDescriptor['id']): void => {
-    const networkSelectorOptions: any = [];
-    networkList.forEach(network => {
-      networkSelectorOptions.push(
-        <SelectorOption
-          key={network.id}
-          value={network.name}
-          label={`${network} (${network})`}
-          selected={`${network} (${network})`}
-          // icon={{ imgSrc: network.imgSrc }}
-        >
-          <span>{`${network} (${network})`}</span>
-        </SelectorOption>,
-      );
-    });
-    setNetworkOptionField(networkSelectorOptions);
-  };
-  useEffect(() => {
-    NetworkOptionField(availableNetworks);
-    setDefaultNetwork(availableNetworks[0]);
-  }, []);
-
   return (
     <>
       <Title variant="h2" mb={2}>
         Bridge
       </Title>
       <Box display="flex" height="32px">
-        <Typography variant="subtitle2">SEND FROM</Typography>
+        <Typography variant="subtitle2">SEND FROM: {userAddress}</Typography>
       </Box>
       <Formik
         validationSchema={dCKBTransferSchema}
@@ -178,102 +193,59 @@ const BridgeComponent: FC<IBridge> = () => {
       >
         {formik => (
           <Form>
-            { /*
             <Box display="flex" height="32px">
-              <div style={{ width: '250px' }}>
-                <Selector
-                  id="network"
-                  placeholder="Choose network..."
-                  header="Nervos Network"
-                  icon={{ src: '/logos/metamask.png' }}
-                  customStyles={{
-                    placeholderStyles: { color: '#00cc9b' },
-                    headerStyles: { color: '#00cc9b' },
-                    selectedValueStyles: { color: '#00cc9b' },
-                    selectorFocusedBorder: '1px dotted #00cc9b',
-                  }}
-                  displayOptionIcon
-                  allowIconReplacing
-                  isWindowed
-                  onChange={formik.handleChange}
-                  // value={formik.values.network}
-                  defaultValue={{
-                    value: `${defaultNetwork}`,
-                    label: `${defaultNetwork} (${'CKB'})`,
-                    selected: `${defaultNetwork} (${'CKB'})`,
-                    // icon: (
+              <Input
+                icon={{ src: '/logos/nervos.svg' }}
+                header="Amount"
+                placeholder="Enter amount..."
+                name="amount"
+                id="amount"
+                type="number"
+                autoComplete="off"
+                // onChange={formik.handleChange}
+                value={formik.values.amount}
+                customStyles={{
+                  inputColor: '#00cc9b',
+                  headerStyles: { color: '#00cc9b' },
+                  borderOnFocus: '#00D395',
+                }}
+                // inputMask={{
+                //   mask: '999 999 999 999',
+                //   maskChar: '',
+                // }}
+                tooltipMessage="Please make sure you have sufficient CKB balance in your L1 account before transferring to L2. A minimum balance of 471 CKB needs to be maintained after transaction."
+                disableLeftBorderRadius
+                currencyInput={{
+                  decimalsLimit: 2,
+                  groupSeparator: ' ',
+                  suffix: `\u00a0${SUDT_SYMBOL}`,
+                  allowNegativeValue: false,
+                  // intlConfig: { locale: 'de-DE', currency: 'EUR' }
+                  onValueChange: value => {
+                    if (value === Number.isNaN(value)) {
+                      formik.setFieldValue('amount', 0);
+                      return 0;
+                    }
 
-                    // )
-                  }}
-                >
-                  {networkOptionField}
-                </Selector>
-              </div>
-              <div className="Balance">
-                <Input
-                  icon={{ src: '/logos/metamask.png' }}
-                  header="Amount"
-                  placeholder="Enter amount..."
-                  name="amount"
-                  id="amount"
-                  type="text"
-                  autoComplete="off"
-                  onChange={formik.handleChange}
-                  // value={formik.values.amount}
-                  customStyles={{
-                    inputColor: '#00cc9b',
-                    headerStyles: { color: '#00cc9b' },
-                    borderOnFocus: '#00cc9b',
-                  }}
-                  // inputMask={{
-                  //   mask: '999 999 999 999',
-                  //   maskChar: '',
-                  // }}
-                  // tooltipMessage="Please make sure you have sufficient CKB balance in your L1 account before transferring to L2. A minimum balance of 471 CKB needs to be maintained after transaction."
-                  disableLeftBorderRadius
-                  currencyInput={{
-                    decimalsLimit: 2,
-                    groupSeparator: ' ',
-                    suffix: `\u00a0${SUDT_SYMBOL}`,
-                    allowNegativeValue: false,
-                    onValueChange: val => {
-                      if (val === undefined) {
-                        formik.handleChange(0);
-                        return 0;
-                      }
-
-                      formik.handleChange(val);
-                      return val;
-                    },
-                  }}
-                  errorMessage={formik.errors.amount}
-                  required
-                />
-              </div>
+                    formik.setFieldValue('amount', value);
+                    return value;
+                  },
+                }}
+                errorMessage={formik.errors.amount}
+                required
+              />
             </Box>
             <Box pt={10} pb={1}>
-              <Typography variant="subtitle2">SEND TO</Typography>
+              <Typography variant="subtitle2">SEND TO: {initialAddress}</Typography>
             </Box>
             <Box display="flex" height="32px">
-              <div style={{ width: '250px' }}>
-                <Selector
-                  placeholder="Choose network..."
-                  header="Nervos Network"
-                  displayOptionIcon
-                  allowIconReplacing
-                  showDropdownIcon
-                  isWindowed
-                >
-                  {networkOptionField}
-                </Selector>
-              </div>
               <Input
                 id="AmountReceive"
                 type="number"
                 autoComplete="off"
                 header="Receive"
                 placeholder="Amount you get"
-                // value={formik.values.amount}
+                value={formik.values.amount}
                 customStyles={{
                   inputColor: '#00cc9b',
                   headerStyles: { color: '#00cc9b' },
@@ -286,37 +258,58 @@ const BridgeComponent: FC<IBridge> = () => {
                 onChange={formik.handleChange}
                 // tooltipMessage="Give me the money!"
                 disableLeftBorderRadius
-                // currencyInput={{
-                //   decimalsLimit: 2,
-                //   decimalSeparator: ',',
-                //   groupSeparator: ' ',
-                //   prefix: ' CKB',
-                //   allowNegativeValue: false,
-                // }}
+                currencyInput={{
+                  decimalsLimit: 2,
+                  groupSeparator: ' ',
+                  suffix: `\u00a0${SUDT_SYMBOL}`,
+                  allowNegativeValue: false,
+                  onValueChange: value => {
+                    if (value === Number.isNaN(value)) {
+                      formik.setFieldValue('amount', 0);
+                      return 0;
+                    }
+
+                    formik.setFieldValue('amount', value);
+                    return value;
+                  },
+                }}
                 errorMessage={formik.errors.amount}
+                disabled
               />
             </Box>
-            <Box pt={10} pb={1}>
-              <UnstyledSwitches />
-            </Box>
-            <Input
-              id="destination_address"
-              name="destination_address"
-              type="text"
-              autoComplete="off"
-              header="Destination address"
-              placeholder="Nervos layer 2 adress: e.g 0x123...ab56c"
-              customStyles={{
-                inputColor: '#00cc9b',
-                headerStyles: { color: '#00cc9b' },
-                borderOnFocus: '#00cc9b',
-              }}
-              disabled={initialAddress !== ''}
-              // tooltipMessage=""
-            />
-   */ }
+
+            <AccordionWrapper>
+              <StyledAccordionB>
+                <StyledAccordionSummaryB
+                  expandIcon={<StyledExpandMoreIcon />}
+                  aria-controls="blockchain-status-accordion"
+                  id="panel1a-header"
+                >
+                  <Typography variant="body1-bold">Advanced</Typography>
+                </StyledAccordionSummaryB>
+                <StyledAccordionDetails>
+                  <Input
+                    icon={{ src: '/logos/wallet.png' }}
+                    id="destination_address"
+                    name="destination_address"
+                    type="text"
+                    autoComplete="off"
+                    header="Destination address (optional)"
+                    placeholder="Nervos layer 2 adress: e.g 0x123...ab56c"
+                    value={formik.values.destination_address}
+                    customStyles={{
+                      inputColor: '#00cc9b',
+                      headerStyles: { color: '#00cc9b' },
+                      borderOnFocus: '#00cc9b',
+                    }}
+                    disabled={initialAddress === ''}
+                    // tooltipMessage=""
+                  />
+                </StyledAccordionDetails>
+              </StyledAccordionB>
+            </AccordionWrapper>
             <Box display="flex" justifyContent="space-between" mt={2}>
-              <DAOInput
+              {/* <DAOInput
                 label="Deposit to get"
                 inputProps={{
                   id: 'amount',
@@ -327,7 +320,7 @@ const BridgeComponent: FC<IBridge> = () => {
                   fullWidth: true,
                 }}
                 error={formik.errors.amount}
-              />
+              /> */}
             </Box>
             <label className="block font-medium text-center">Fee TODO</label>
             <Box pt={5}>

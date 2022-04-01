@@ -13,8 +13,11 @@ import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import InputMask, { InputState } from 'react-input-mask';
 import CurrencyInput from 'react-currency-input-field';
 import Image from 'next/image';
-import { Tooltip } from '@mui/material';
+import HelpOutlineRoundedIcon from '@mui/icons-material/HelpOutlineRounded';
+
 import styled from '@emotion/styled';
+
+import DAOTooltip from 'components/DAOTooltip/DAOTooltip';
 
 const InputOuterContainer = styled.div`
   width: 100%;
@@ -121,6 +124,13 @@ const InputTooltip = styled.div`
   outline: none;
 `;
 
+const InputMessages = styled.div`
+  display: flex;
+  justify-content: flex-start;
+  padding: 12px;
+  font-size: 0.75em;
+`;
+
 const InputErrorMessage = styled.span`
   padding: 12px;
   color: #eb0000;
@@ -170,6 +180,14 @@ export interface InputProps {
    * @param errorMessage - message displayed on the bottom of component, to be used as form error messages.
    */
   errorMessage?: string;
+  /**
+   * @param lengthMessage - message displayed on the bottom of component, to be used as form messages to inform user about chars used from max chars number.
+   */
+  lengthMessage?: string;
+  /**
+   * @param lengthMessageValidationError - flag for validation error - this idicates length message color
+   */
+  lengthMessageValidationError?: boolean;
   /**
    * @param icon - Image icon to be placed on left side of component.
    * @type IconProps
@@ -398,6 +416,8 @@ const Input = ({
   id,
   inputRef,
   errorMessage,
+  lengthMessage,
+  lengthMessageValidationError = false,
   multiline,
   name,
   onChange,
@@ -412,6 +432,7 @@ const Input = ({
   tooltipMessage,
   value,
   prefix,
+  overrideMuiStyles,
   currencyInput,
   trimSpacesFromPastedValue,
 }: InputProps) => {
@@ -463,7 +484,7 @@ const Input = ({
 
   return (
     <InputOuterContainer>
-      <NoLeftBorderRadius
+      <InputMainContainer
         style={{
           border: error ? '1px solid #eb0000' : isFocused ? borderOnFocus : '1px solid #eef2f2',
         }}
@@ -480,14 +501,10 @@ const Input = ({
               <Image
                 src={icon.src}
                 alt="quantity"
-                height="30"
-                width="30"
-                color={
-                  (error && `#eb0000`) ||
-                  icon?.color ||
-                  '#5a7681'
-                }
-             />
+                height="20"
+                width="20"
+                color={(error && '#eb0000') || icon?.color || '#5a7681'}
+              />
             )}
           </InputIcon>
         ) : (
@@ -499,10 +516,8 @@ const Input = ({
             onClick={focusTextArea}
             role="link"
           >
-            <span className="inputHeaderText">
-              {header}
-              {required && <InputRequired>*</InputRequired>}
-            </span>
+            {header}
+            {required && <InputRequired>*</InputRequired>}
           </InputHeader>
           <InputTextField>
             {inputMask ? (
@@ -589,13 +604,10 @@ const Input = ({
                     InputProps={{
                       classes,
                       endAdornment: prefix ? (
-                        <InputAdornment className="input-prefix" position="end">
-                          {prefix}
-                        </InputAdornment>
+                        <InputPrefix position="end">{prefix}</InputPrefix>
                       ) : type === 'password' ? (
                         <InputAdornment position="end">
-                          <IconButton
-                            className="showPasswordIcon"
+                          <ShowPasswordIcon
                             aria-label="toggle password visibility"
                             onClick={() => setShowPassword(!showPassword)}
                             onMouseDown={() => {
@@ -604,7 +616,7 @@ const Input = ({
                             edge="end"
                           >
                             {showPassword ? <VisibilityOff /> : <Visibility />}
-                          </IconButton>
+                          </ShowPasswordIcon>
                         </InputAdornment>
                       ) : (
                         <span />
@@ -680,35 +692,55 @@ const Input = ({
             onClick={rightIconOnClick}
             role={rightIcon.role ? rightIcon.role : 'link'}
             style={
-              rightIcon.backgroundColor && {
-                backgroundColor: rightIcon.backgroundColor,
-              }
+              rightIcon.backgroundColor
+                ? {
+                    backgroundColor: rightIcon.backgroundColor,
+                  }
+                : {}
             }
           >
             <Image
               src={icon?.src}
               alt="quantity"
-              height="30"
-              width="30"
-              layout="responsive"
-              className="rounded-md object-contain"
-              color={
-                (error && `#eb0000`) ||
-                icon.color ||
-                '#5a7681'
-              }
-             />
+              height="20"
+              width="20"
+              color={(error && '#eb0000') || icon.color || '#5a7681'}
+            />
           </RightIcon>
         ) : (
           <div />
         )}
         {tooltipMessage && (
           <InputTooltip>
-            {/* <Tooltip title={tooltipMessage} /> */}
+            <DAOTooltip
+              tooltipStyles={{ borderRadius: '10px' }}
+              backgroundColor="#5a7681"
+              message={tooltipMessage}
+              textColor="#383838"
+            >
+              <HelpOutlineRoundedIcon />
+            </DAOTooltip>
           </InputTooltip>
         )}
-      </NoLeftBorderRadius>
+      </InputMainContainer>
       {errorMessage && <InputErrorMessage>{errorMessage}</InputErrorMessage>}
+      {lengthMessage && (
+        <InputMessages
+          style={{
+            justifyContent:
+              errorMessage && lengthMessage
+                ? 'space-between'
+                : errorMessage && !lengthMessage
+                ? 'flex-start'
+                : 'flex-end',
+          }}
+        >
+          {errorMessage && <span style={{ color: '#eb0000' }}>{errorMessage}</span>}
+          <span style={lengthMessageValidationError ? { color: '#eb0000' } : { color: '#5a7681' }}>
+            {lengthMessage}
+          </span>
+        </InputMessages>
+      )}
     </InputOuterContainer>
   );
 };
