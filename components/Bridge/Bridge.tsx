@@ -18,6 +18,8 @@ import useCreateLayer2Address from 'hooks/useCreateLayer2Address';
 import { useDCKBTokenHook } from 'hooks/DCKBTokenHook';
 import { dCKBTransferSchema } from 'validators/minorValidators';
 import formatAddress from 'utils/formatAddress';
+import DAOPlainButton from 'components/DAOPlainButton/DAOPlainButton';
+import DAOTooltip from 'components/DAOTooltip/DAOTooltip';
 
 const Title = styled(Typography)`
   font-weight: 600;
@@ -91,7 +93,6 @@ const BridgeComponent: FC<SwapFormValues> = () => {
   const [networkOptionField, setNetworkOptionField] = useState([]);
   const [defaultNetwork, setDefaultNetwork] = useState('');
   const { mintDCKTokens } = useDCKBTokenHook();
-
   // useQueryUdtBalance()
   //   .then(response => setQueryUdtBalance(response))
   //   .catch(err => setError(err));
@@ -106,7 +107,7 @@ const BridgeComponent: FC<SwapFormValues> = () => {
   TODO
   */
   // setDepositAddress(userAddress)
-
+  const walletBalance = 10001010101;
   const initialAddress = '0xD173313A51f8fc37BcF67569b463abd89d81844f';
 
   const initialValues: SwapFormValues = {
@@ -193,7 +194,7 @@ const BridgeComponent: FC<SwapFormValues> = () => {
                 id="amount"
                 type="string"
                 autoComplete="off"
-                // value={formik.values.amount}
+                value={formik.values.amount}
                 onChange={formik.handleChange}
                 customStyles={{
                   inputColor: '#00cc9b',
@@ -229,9 +230,31 @@ const BridgeComponent: FC<SwapFormValues> = () => {
             <Box display="flex" height="32px" alignItems="center" pt={8}>
               BALANCE:{' '}
               <Typography variant="body1-bold">
-                <Box display="flex" alignItems="center" pl={1}>
-                  {`0.00000000 ${SUDT_SYMBOL}`}
-                </Box>
+                {walletBalance ? (
+                  <Box display="flex" alignItems="center" pl={1}>
+                    {`${walletBalance} ${SUDT_SYMBOL}`}
+                    <Box pl={5}>
+                      <DAOPlainButton
+                        onClick={() => {
+                          formik.setFieldValue('amount', walletBalance);
+                        }}
+                      >
+                        <DAOTooltip
+                          tooltipStyles={{ borderRadius: '10px' }}
+                          backgroundColor="#333"
+                          message="use full balance"
+                          textColor="#eee"
+                        >
+                          USE FULL AMOUNT
+                        </DAOTooltip>
+                      </DAOPlainButton>
+                    </Box>
+                  </Box>
+                ) : (
+                  <span style={{ color: '#eb0000', paddingLeft: '10px' }}>
+                    you do not have dCKB tokens in your account
+                  </span>
+                )}
               </Typography>
             </Box>
             <Box display="flex" height="32px" justifyContent="space-between" alignItems="center" pt={8} pb={2}>
