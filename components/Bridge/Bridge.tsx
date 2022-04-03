@@ -1,27 +1,22 @@
-import React, { useEffect, useState, FC, useRef } from 'react';
-import { useSelector } from 'react-redux';
+import React, { useState, FC } from 'react';
 
+import { useSelector } from 'react-redux';
 import { selectUserAddress, selectIsLoggedIn } from 'redux/slices/user';
 
-import Selector from 'components/Selector/Selector';
-import SelectorOption from 'components/Selector/SelectorOption';
+import { Formik, Form, FormikErrors } from 'formik';
+import Image from 'next/image';
+import styled from '@emotion/styled';
 import Input from 'components/Input/Input';
+import DAOButton from 'components/DAOButton/DAOButton';
 import Box from '@mui/material/Box';
 import { Accordion, AccordionSummary, Typography } from '@mui/material';
-import styled from '@emotion/styled';
-import { dCKBTransferSchema } from 'validators/minorValidators';
-import { Formik, Form, FormikErrors, useFormikContext } from 'formik';
-import DAOButton from 'components/DAOButton/DAOButton';
-import DAOInput from 'components/DAOInput/DAOInput';
-
-import useQueryUdtBalance from 'hooks/useQueryUdtBalance';
-import { IBridgeDescriptor, Bridge } from 'interfaces/data';
-import useCreateLayer2Address from 'hooks/useCreateLayer2Address';
-import { useDCKBTokenHook } from 'hooks/DCKBTokenHook';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import AccordionDetails from '@mui/material/AccordionDetails';
-import Image from 'next/image';
-import { LayerSwapSettings } from './models/LayerSwapSettings';
+
+import useQueryUdtBalance from 'hooks/useQueryUdtBalance';
+import useCreateLayer2Address from 'hooks/useCreateLayer2Address';
+import { useDCKBTokenHook } from 'hooks/DCKBTokenHook';
+import { dCKBTransferSchema } from 'validators/minorValidators';
 import formatAddress from 'utils/formatAddress';
 
 const Title = styled(Typography)`
@@ -65,9 +60,11 @@ const StyledAccordionB = styled(Accordion)`
     display: none;
   }
 `;
+
 const StyledAccordionSummaryB = styled(AccordionSummary)`
   padding: 0;
 `;
+
 const StyledAccordionDetails = styled(AccordionDetails)`
   padding: 8px 0px 16px 0px;
 `;
@@ -80,15 +77,6 @@ interface SwapFormValues {
   destination_address?: string;
 }
 
-interface IBridge {
-  settings?: LayerSwapSettings;
-  destNetwork?: string;
-  destAddress?: string;
-  lockAddress?: boolean;
-  lockNetwork?: boolean;
-  addressSource?: string;
-  asset?: string;
-}
 const SUDT_SYMBOL = 'dCKB';
 
 const BridgeComponent: FC<SwapFormValues> = () => {
