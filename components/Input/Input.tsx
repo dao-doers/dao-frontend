@@ -37,6 +37,7 @@ interface IconProps {
   color?: string;
   role?: string;
   backgroundColor?: string;
+  tooltipMessage?: string
 }
 
 export interface InputProps {
@@ -565,13 +566,20 @@ const Input = ({
                 : {}
             }
           >
-            <Image
-              src={rightIcon.src}
-              alt="quantity"
-              height="20"
-              width="20"
-              color={(error && '#eb0000') || icon?.color || '#5a7681'}
-            />
+            <DAOTooltip
+              tooltipStyles={{ borderRadius: '10px' }}
+              backgroundColor="#333"
+              message={rightIcon.tooltipMessage}
+              textColor="#eee"
+            >
+              <Image
+                src={rightIcon.src}
+                alt="quantity"
+                height="20"
+                width="20"
+                color={(error && '#eb0000') || icon?.color || '#5a7681'}
+              />
+            </DAOTooltip>
           </RightIcon>
         ) : (
           <div />

@@ -71,6 +71,7 @@ export const RightIcon = styled.div`
   flex-shrink: 0;
   flex-basis: 50px;
   box-sizing: border-box;
+  background-color: #fff;
   &:hover {
     cursor: pointer;
   }

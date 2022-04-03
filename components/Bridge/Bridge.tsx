@@ -306,8 +306,9 @@ const BridgeComponent: FC<SwapFormValues> = () => {
                     name="destination_address"
                     type="text"
                     autoComplete="off"
-                    header="Destination address (optional)"
+                    header="Edit destination address (optional)"
                     placeholder="Nervos layer 2 adress: e.g 0x123...ab56c"
+                    value={formik.values.destination_address}
                     onChange={formik.handleChange}
                     customStyles={{
                       inputColor: '#00cc9b',
@@ -316,9 +317,13 @@ const BridgeComponent: FC<SwapFormValues> = () => {
                     }}
                     disabled={initialAddress === ''}
                     tooltipMessage="enter the wallet address you want to send funds, it must be layer 2 wallet address"
-                    rightIcon={formik.values.destination_address !== initialAddress ? { src: '/logos/x.svg' } : undefined}
+                    rightIcon={
+                      formik.values.destination_address === initialAddress
+                        ? { src: '/logos/x.svg', tooltipMessage: 'Clear address' }
+                        : undefined
+                    }
                     rightIconOnClick={() => {
-                      formik.setFieldValue('destination_address', initialAddress);
+                      formik.setFieldValue('destination_address', '');
                     }}
                   />
                 </StyledAccordionDetails>
