@@ -7,143 +7,30 @@ import TextField, { TextFieldProps } from '@mui/material/TextField';
 import makeStyles from '@mui/styles/makeStyles';
 import withStyles from '@mui/styles/withStyles';
 import InputAdornment from '@mui/material/InputAdornment';
-import IconButton from '@mui/material/IconButton';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import InputMask, { InputState } from 'react-input-mask';
-import CurrencyInput from 'react-currency-input-field';
 import Image from 'next/image';
 import HelpOutlineRoundedIcon from '@mui/icons-material/HelpOutlineRounded';
 
-import styled from '@emotion/styled';
-
 import DAOTooltip from 'components/DAOTooltip/DAOTooltip';
-
-const InputOuterContainer = styled.div`
-  width: 100%;
-  font-family: 'Roboto', 'Helvetica', 'Arial', sans-serif;
-`;
-
-const CurrencyInputStyle = styled(CurrencyInput)`
-  border: none;
-  outline: none;
-  height: 32px;
-  font-size: 1em;
-  color: #474747e0;
-  padding: 2px 4px 2px 0px;
-  min-height: 28px;
-  font-weight: 300;
-  letter-spacing: 1px;
-  width: 100%;
-  font-family: 'Roboto', 'Helvetica', 'Arial', sans-serif;
-`;
-
-const InputMainContainer = styled.div`
-  border-radius: 5px;
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  overflow: hidden;
-  border: 0.063rem solid rgb(0, 0, 0);
-  padding: 0;
-`;
-
-const InputIcon = styled.div`
-  background-color: #fff;
-  padding: 1px;
-  display: flex;
-  align-items: center;
-  min-width: 65px;
-  max-width: 80px;
-  justify-content: center;
-  flex-shrink: 0;
-  flex-basis: 50px;
-  box-sizing: border-box;
-`;
-
-const InputRightContainer = styled.div`
-  background-color: #fff;
-  flex-grow: 3;
-  box-sizing: border-box;
-`;
-
-const InputHeader = styled.div`
-  background-color: #fff;
-  flex-grow: 3;
-  box-sizing: border-box;
-`;
-
-const RightIcon = styled.div`
-  padding: 1px;
-  flex-grow: 1;
-  display: flex;
-  align-items: center;
-  min-width: 65px;
-  max-width: 80px;
-  justify-content: center;
-  flex-shrink: 0;
-  flex-basis: 50px;
-  box-sizing: border-box;
-  &:hover {
-    cursor: pointer;
-  }
-`;
-const InputTextField = styled.div`
-  padding-bottom: 4px;
-`;
-
-const InputNoIcon = styled.div`
-  padding-bottom: 4px;
-`;
-const noIcon = styled.div`
-  padding-bottom: 4px;
-`;
-const withIcon = styled.div`
-  min-width: 250px;
-`;
-
-const NoLeftBorderRadius = styled.div`
-  min-width: 250px;
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  overflow: hidden;
-  border: 0.063rem solid rgb(0, 0, 0);
-  padding: 0;
-`;
-
-const ShowPasswordIcon = styled(IconButton)`
-  margin-right: 10px;
-`;
-
-const InputTooltip = styled.div`
-  margin: auto;
-  cursor: pointer;
-  margin-right: 10px;
-  color: #5a7681;
-  outline: none;
-`;
-
-const InputMessages = styled.div`
-  display: flex;
-  justify-content: flex-start;
-  padding: 12px;
-  font-size: 0.75em;
-`;
-
-const InputErrorMessage = styled.span`
-  padding: 12px;
-  color: #eb0000;
-  font-size: 0.75em;
-`;
-
-const InputRequired = styled.span`
-  color: #eb0000;
-`;
-
-const InputPrefix = styled(InputAdornment)`
-  color: #eb0000;
-`;
+import {
+  CurrencyInputStyle,
+  InputErrorMessage,
+  InputHeader,
+  InputIcon,
+  InputMainContainer,
+  InputMessages,
+  InputNoIcon,
+  InputOuterContainer,
+  InputPrefix,
+  InputRequired,
+  InputRightContainer,
+  InputTextField,
+  InputTooltip,
+  RightIcon,
+  ShowPasswordIcon,
+} from './Input.styles';
 
 interface IconProps {
   src: any;
@@ -152,9 +39,6 @@ interface IconProps {
   backgroundColor?: string;
 }
 
-/**
- * Properies of Input component
- */
 export interface InputProps {
   /**
    * @param autoFocus - MUI TextField autoFocus.
@@ -270,10 +154,6 @@ export interface InputProps {
    * @param inputMask - react-input-mask properties.
    */
   inputMask?: InputMaskOptions;
-  /**
-   * @param disableLeftBorderRadius - if true, left border radius will be set to 0
-   */
-  disableLeftBorderRadius?: boolean;
   /**
    * @param overrideMuiStyles - overrides material ui styles
    */
@@ -412,7 +292,6 @@ const Input = ({
   autoFocus,
   autoComplete,
   disabled,
-  disableLeftBorderRadius,
   id,
   inputRef,
   errorMessage,
@@ -432,25 +311,12 @@ const Input = ({
   tooltipMessage,
   value,
   prefix,
-  overrideMuiStyles,
   currencyInput,
   trimSpacesFromPastedValue,
 }: InputProps) => {
   const textAreaRef = useRef<HTMLInputElement | null>(null);
   const [isFocused, setIsFocused] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-  const [containerClasses] = useState(() => {
-    let container = InputMainContainer;
-    if (icon) {
-      container = withIcon;
-    } else {
-      container = noIcon;
-    }
-    if (disableLeftBorderRadius) {
-      container = NoLeftBorderRadius;
-    }
-    return container;
-  });
 
   const focusTextArea = (): void => {
     if (inputRef && typeof inputRef !== 'function' && (inputRef as any).current) {
@@ -700,11 +566,11 @@ const Input = ({
             }
           >
             <Image
-              src={icon?.src}
+              src={rightIcon.src}
               alt="quantity"
               height="20"
               width="20"
-              color={(error && '#eb0000') || icon.color || '#5a7681'}
+              color={(error && '#eb0000') || icon?.color || '#5a7681'}
             />
           </RightIcon>
         ) : (
@@ -714,9 +580,9 @@ const Input = ({
           <InputTooltip>
             <DAOTooltip
               tooltipStyles={{ borderRadius: '10px' }}
-              backgroundColor="#5a7681"
+              backgroundColor="#333"
               message={tooltipMessage}
-              textColor="#383838"
+              textColor="#eee"
             >
               <HelpOutlineRoundedIcon />
             </DAOTooltip>

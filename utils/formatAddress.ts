@@ -1,4 +1,4 @@
-const formatAddress = (address: string, firstDigits = 6, lastDigits = 5) => {
+const formatAddress = (address: string | undefined, firstDigits = 6, lastDigits = 5) => {
   if (address === null) {
     return '-';
   }
