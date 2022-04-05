@@ -1,4 +1,4 @@
-import React, { useState, FC } from 'react';
+import React, { useState, FC, useEffect } from 'react';
 
 import { useSelector } from 'react-redux';
 import { selectUserAddress, selectIsLoggedIn } from 'redux/slices/user';
@@ -14,7 +14,6 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import AccordionDetails from '@mui/material/AccordionDetails';
 
 import useQueryUdtBalance from 'hooks/useQueryUdtBalance';
-import useCreateLayer2Address from 'hooks/useCreateLayer2Address';
 import { useDCKBTokenHook } from 'hooks/DCKBTokenHook';
 import { dCKBTransferSchema } from 'validators/minorValidators';
 import formatAddress from 'utils/formatAddress';
@@ -81,10 +80,10 @@ interface SwapFormValues {
 
 const SUDT_SYMBOL = 'dCKB';
 
-const BridgeComponent: FC<SwapFormValues> = () => {
+const BridgeComponent: FC = () => {
   const userAddress = useSelector(selectUserAddress);
   const isLoggedIn = useSelector(selectIsLoggedIn);
-  const [depositAddress, setDepositAddress] = useState<string>('');
+  const [depositAddress, setDepositAddress] = useState<any | undefined>('');
   const [queryUdtBalance, setQueryUdtBalance] = useState<string | null>(null);
 
   const [error, setError] = useState<string | null>(null);
@@ -92,23 +91,38 @@ const BridgeComponent: FC<SwapFormValues> = () => {
 
   const [networkOptionField, setNetworkOptionField] = useState([]);
   const [defaultNetwork, setDefaultNetwork] = useState('');
-  const { mintDCKTokens } = useDCKBTokenHook();
-  // useQueryUdtBalance()
-  //   .then(response => setQueryUdtBalance(response))
-  //   .catch(err => setError(err));
+  const [balanceSUDT, setBalanceSUDT] = useState<any>();
+  const { balanceFromWallet, createLayer2Address, mintDCKTokens } = useDCKBTokenHook();
 
-  // useCreateLayer2Address()
-  //   .then(response => setDepositAddress(response))
-  //   .catch(err => setInvalidAddress(err));
+  useEffect((): void => {
+    const fetchWalletBalance = async () => {
+      try {
+        const balances = await balanceFromWallet();
+        setBalanceSUDT(balances);
+        return balances;
+      } catch (error) {
+        console.log('Fetch Wallet Balance error', error);
+        throw error;
+      }
+    };
+    fetchWalletBalance();
+    console.log('BALANCE', balanceSUDT);
+  }, []);
 
-  console.log('queryUdtBalance', queryUdtBalance);
-  console.log('depositAddress', depositAddress);
-  /*
-  TODO
-  */
-  // setDepositAddress(userAddress)
-  const walletBalance = 10001010101;
-  const initialAddress = '0xD173313A51f8fc37BcF67569b463abd89d81844f';
+  useEffect((): void => {
+    const getLayer2Address = async () => {
+      try {
+        const layer2Address = await createLayer2Address();
+        setDepositAddress(layer2Address);
+        return layer2Address;
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    getLayer2Address();
+  }, []);
+
+  const initialAddress = depositAddress;
 
   const initialValues: SwapFormValues = {
     amount: '',
@@ -172,18 +186,10 @@ const BridgeComponent: FC<SwapFormValues> = () => {
           <Form>
             <Box display="flex" height="32px" justifyContent="space-between" alignItems="center">
               FROM:{' '}
-              <Typography variant="body2">
-                <Box
-                  display="flex"
-                  justifyContent="space-between"
-                  alignItems="center"
-                  minWidth="100px"
-                  maxWidth="300px"
-                >
-                  <Image src="/logos/wallet.png" alt="address:" height="15" width="15" />
-                  {formatAddress(userAddress)}
-                </Box>
-              </Typography>
+              <Box display="flex" justifyContent="space-between" alignItems="center" minWidth="100px" maxWidth="300px">
+                <Image src="/logos/wallet.png" alt="address:" height="15" width="15" />
+                <Typography variant="body2">{formatAddress(userAddress) || 'Connect to metamask'}</Typography>
+              </Box>
             </Box>
             <Box display="flex" height="32px">
               <Input
@@ -230,13 +236,13 @@ const BridgeComponent: FC<SwapFormValues> = () => {
             <Box display="flex" height="32px" alignItems="center" pt={8}>
               BALANCE:{' '}
               <Typography variant="body1-bold">
-                {walletBalance ? (
+                {balanceSUDT?.dckbBalance ? (
                   <Box display="flex" alignItems="center" pl={1}>
-                    {`${walletBalance} ${SUDT_SYMBOL}`}
+                    {`${balanceSUDT?.dckbBalance} ${SUDT_SYMBOL}`}
                     <Box pl={5}>
                       <DAOPlainButton
                         onClick={() => {
-                          formik.setFieldValue('amount', walletBalance);
+                          formik.setFieldValue('amount', balanceSUDT?.dckbBalance);
                         }}
                       >
                         <DAOTooltip
@@ -268,7 +274,7 @@ const BridgeComponent: FC<SwapFormValues> = () => {
                   maxWidth="300px"
                 >
                   <Image src="/logos/wallet.png" alt="address:" height="15" width="15" />
-                  {formatAddress(formik.values.destination_address) || ' Enter a destination address'}
+                  {depositAddress ? formatAddress(depositAddress) : ' Enter a destination address'}
                 </Box>
               </Typography>
             </Box>

@@ -16,9 +16,9 @@ import useCheckProvider from 'hooks/useCheckProvider';
 import { selectIsLoggedIn } from 'redux/slices/user';
 import BridgeComponent from 'components/Bridge/Bridge';
 
-const DAOBridgeComponentWithNoSSR = dynamic(() => import('components/DAOBridgeComponent/DAOBridgeComponent'), {
-  ssr: false,
-});
+// const DAOBridgeComponentWithNoSSR = dynamic(() => import('components/DAOBridgeComponent/DAOBridgeComponent'), {
+//   ssr: false,
+// });
 
 interface IBridge {
   handlePreviousStep: () => void;
