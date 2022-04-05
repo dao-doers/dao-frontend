@@ -19,6 +19,8 @@ import { dCKBTransferSchema } from 'validators/minorValidators';
 import formatAddress from 'utils/formatAddress';
 import DAOPlainButton from 'components/DAOPlainButton/DAOPlainButton';
 import DAOTooltip from 'components/DAOTooltip/DAOTooltip';
+import Snackbar from '@mui/material/Snackbar';
+import MuiAlert, { AlertProps } from '@mui/material/Alert';
 
 const Title = styled(Typography)`
   font-weight: 600;
@@ -92,16 +94,20 @@ const BridgeComponent: FC = () => {
   const [networkOptionField, setNetworkOptionField] = useState([]);
   const [defaultNetwork, setDefaultNetwork] = useState('');
   const [balanceSUDT, setBalanceSUDT] = useState<any>();
-  const { balanceFromWallet, createLayer2Address, mintDCKTokens } = useDCKBTokenHook();
+  const { txnInfo, balanceFromWallet, createLayer2Address, mintDCKTokens } = useDCKBTokenHook();
+  const [toast, setToast] = useState(null);
 
+  const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(props, ref) {
+    return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+  });
   useEffect((): void => {
     const fetchWalletBalance = async () => {
       try {
         const balances = await balanceFromWallet();
         setBalanceSUDT(balances);
         return balances;
-      } catch (error) {
-        console.log('Fetch Wallet Balance error', error);
+      } catch (error: any) {
+        setToast(error.message || error.toString());
         throw error;
       }
     };
@@ -115,8 +121,8 @@ const BridgeComponent: FC = () => {
         const layer2Address = await createLayer2Address();
         setDepositAddress(layer2Address);
         return layer2Address;
-      } catch (err) {
-        console.log(err);
+      } catch (error: any) {
+        setToast(error.message || error.toString());
       }
     };
     getLayer2Address();
@@ -132,8 +138,8 @@ const BridgeComponent: FC = () => {
   const onSubmit = async (values: SwapFormValues) => {
     try {
       await mintDCKTokens('dCKB', values.amount, values.destination_address);
-    } catch (err) {
-      console.log(err);
+    } catch (error: any) {
+      setToast(error.message || error.toString());
     }
     console.log({
       amount: values.amount,
@@ -151,8 +157,23 @@ const BridgeComponent: FC = () => {
     return 'Swap now';
   }
 
+  const resetToast = () => {
+    setToast(null);
+  };
+
   return (
     <>
+      <Snackbar
+        open
+        message={toast}
+        onClose={resetToast}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+        autoHideDuration={6000}
+      >
+        <Alert severity="error" sx={{ width: '100%' }}>
+          {toast}
+        </Alert>
+      </Snackbar>
       <Title variant="h2" mb={2}>
         Bridge
       </Title>

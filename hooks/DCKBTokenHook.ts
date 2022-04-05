@@ -7,7 +7,7 @@ import { AddressTranslator, WalletAssetsSender } from 'nervos-godwoken-integrati
 
 export const useDCKBTokenHook = () => {
   const [loader, setLoader] = useState({ isLoading: false, message: '', title: '' });
-  const [txnInfo, setTxnInfo] = useState({ txnLink: null, txnAmount: 0, tokenName: '', tokenSymbol: '' });
+  const [txnInfo, setTxnInfo] = useState({ txnLink: null, txnAmount: '', tokenName: '', tokenSymbol: '' });
 
   let web3: Web3 | null = null;
   let provider = null;
@@ -24,6 +24,11 @@ export const useDCKBTokenHook = () => {
 
   const mintDCKTokens = async (tokenId: any, amount: string, toAddress: string) => {
     try {
+      setLoader({
+        isLoading: true,
+        message: 'Please confirm transaction from your wallet...',
+        title: 'Wallet Interaction',
+      });
       await addressTranslator.init('testnet');
       const assetSender = new WalletAssetsSender('https://testnet.ckb.dev/rpc', 'https://testnet.ckb.dev/indexer');
       await assetSender.init('testnet');
@@ -34,7 +39,7 @@ export const useDCKBTokenHook = () => {
       // const amountInCogs = convertToCogs(amount, decimals);
       // const txnHash = await assetSender.mint(contractAddress, amountInCogs, toAddress);
       const txHash = await addressTranslator.sendSUDT(amount, toAddress, dckbIssuerHash);
-
+      setTxnInfo({ txnLink: null, txnAmount: amount, tokenName: tokenId, tokenSymbol: tokenId });
       console.log({
         txHash,
       });
@@ -42,7 +47,11 @@ export const useDCKBTokenHook = () => {
       console.log(error);
       throw error;
     } finally {
-      setLoader({ isLoading: false, message: '', title: '' });
+      setLoader({
+        isLoading: false,
+        message: 'Transfer successfully sent, you are ready to use the application fully',
+        title: 'Mint DCKB Tokens',
+      });
     }
   };
 
@@ -57,7 +66,7 @@ export const useDCKBTokenHook = () => {
       console.log(error);
       throw error;
     } finally {
-      setLoader({ isLoading: false, message: '', title: '' });
+      setLoader({ isLoading: false, message: 'Balance successfully fetched', title: 'Balance' });
     }
   };
 
@@ -81,6 +90,12 @@ https://www.npmjs.com/package/nervos-godwoken-integration
     } catch (error) {
       console.log(error);
       throw error;
+    } finally {
+      setLoader({
+        isLoading: false,
+        message: 'Layer 2 address successfully created on Layer 1',
+        title: 'Layer 2 address',
+      });
     }
   };
   return {
