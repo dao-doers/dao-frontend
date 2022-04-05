@@ -20,7 +20,21 @@ export const useDCKBTokenHook = () => {
   };
   const ETHEREUM_PRIVATE_KEY = '0xd9066ff9f753a1898709b568119055660a77d9aae4d7a4ad677b8fb3d2a571e5';
   const dckbIssuerHash = '0xc43009f083e70ae3fee342d59b8df9eec24d669c1c3a3151706d305f5362c37e';
-  const addressTranslator = new AddressTranslator();
+  const addressTranslator = new AddressTranslator(provider);
+  // const addressTranslator = new AddressTranslator({
+  //   CKB_URL: 'https://testnet.ckb.dev',
+  //   RPC_URL: 'https://godwoken-testnet-web3-v1-rpc.ckbapp.dev',
+  //   INDEXER_URL: 'https://testnet.ckb.dev/indexer',
+  //   deposit_lock_script_type_hash: '0xcc2b4e14d7dfeb1e72f7708ac2d7f636ae222b003bac6bccfcf8f4dfebd9c714',
+  //   eth_account_lock_script_type_hash: '0x10571f91073fdc3cdef4ddad96b4204dd30d6355f3dda9a6d7fc0fa0326408da',
+  //   rollup_type_script: {
+  //     code_hash: '0x0d3bfeaa292a59fcb58ed026e8f14e2167bd27f1765aa4b2af7d842b6123c6a9',
+  //     hash_type: 'type',
+  //     args: '0x8137c84a9089f92fee684ac840532ee1133b012a9d42b6b76b74fbdde6999230',
+  //   },
+  //   rollup_type_hash: '0x4940246f168f4106429dc641add3381a44b5eef61e7754142f594e986671a575',
+  //   rc_lock_script_type_hash: '0x79f90bb5e892d80dd213439eeab551120eb417678824f282b4ffb5f21bad2e1e',
+  // });
 
   const mintDCKTokens = async (tokenId: any, amount: string, toAddress: string) => {
     try {
