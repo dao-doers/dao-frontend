@@ -7,7 +7,7 @@ import { AddressTranslator, WalletAssetsSender } from 'nervos-godwoken-integrati
 
 export const useDCKBTokenHook = () => {
   const [loader, setLoader] = useState({ isLoading: false, message: '', title: '' });
-  const [txnInfo, setTxnInfo] = useState({ txnLink: null, txnAmount: '', tokenName: '', tokenSymbol: '' });
+  const [txnInfo, setTxnInfo] = useState({ txnLink: '', txnAmount: '', tokenName: '', tokenSymbol: '' });
 
   let web3: Web3 | null = null;
   let provider = null;
@@ -16,7 +16,7 @@ export const useDCKBTokenHook = () => {
   const tokenContractAddress = '0x884541623C1B26A926a5320615F117113765fF81';
 
   const resetTxnInfo = () => {
-    setTxnInfo({ ...txnInfo, txnLink: null });
+    setTxnInfo({ ...txnInfo, txnLink: '' });
   };
   const ETHEREUM_PRIVATE_KEY = '0xd9066ff9f753a1898709b568119055660a77d9aae4d7a4ad677b8fb3d2a571e5';
   const dckbIssuerHash = '0xc43009f083e70ae3fee342d59b8df9eec24d669c1c3a3151706d305f5362c37e';
@@ -39,7 +39,12 @@ export const useDCKBTokenHook = () => {
       // const amountInCogs = convertToCogs(amount, decimals);
       // const txnHash = await assetSender.mint(contractAddress, amountInCogs, toAddress);
       const txHash = await addressTranslator.sendSUDT(amount, toAddress, dckbIssuerHash);
-      setTxnInfo({ txnLink: null, txnAmount: amount, tokenName: tokenId, tokenSymbol: tokenId });
+      setTxnInfo({
+        txnLink: `https://explorer.nervos.org/aggron/${txHash}`,
+        txnAmount: amount,
+        tokenName: tokenId,
+        tokenSymbol: tokenId,
+      });
       console.log({
         txHash,
       });
@@ -86,6 +91,12 @@ https://www.npmjs.com/package/nervos-godwoken-integration
         layer1TxHash = await addressTranslator.createLayer2Address(ethereumAddress);
         console.log(`Deposit to Layer 2 address on Layer 1: \n${layer1TxHash}`);
       }
+      setTxnInfo({
+        txnLink: `https://explorer.nervos.org/aggron/${layer1TxHash}`,
+        txnAmount: '',
+        tokenName: 'layer1TxHash',
+        tokenSymbol: '',
+      });
       return layer1TxHash;
     } catch (error) {
       console.log(error);
