@@ -295,7 +295,9 @@ const BridgeComponent: FC = () => {
                   maxWidth="300px"
                 >
                   <Image src="/logos/wallet.png" alt="address:" height="15" width="15" />
-                  {depositAddress ? formatAddress(depositAddress) : ' Enter a destination address'}
+                  {depositAddress
+                    ? formatAddress(depositAddress)
+                    : formatAddress(formik.values.destination_address) || 'Enter a destination address'}
                 </Box>
               </Typography>
             </Box>
@@ -365,7 +367,7 @@ const BridgeComponent: FC = () => {
                       headerStyles: { color: '#00cc9b' },
                       borderOnFocus: '1px solid #00cc9b',
                     }}
-                    disabled={initialAddress === ''}
+                    disabled={userAddress === ''}
                     tooltipMessage="enter the wallet address you want to send funds, it must be layer 2 wallet address"
                     rightIcon={
                       formik.values.destination_address === initialAddress
