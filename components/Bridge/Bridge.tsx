@@ -22,6 +22,8 @@ import DAOTooltip from 'components/DAOTooltip/DAOTooltip';
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert, { AlertProps } from '@mui/material/Alert';
 
+import ConnectWalletButton from 'components/ConnectWalletButton/ConnectWalletButton';
+
 const Title = styled(Typography)`
   font-weight: 600;
   margin-top: 20px;
@@ -85,6 +87,7 @@ const SUDT_SYMBOL = 'dCKB';
 const BridgeComponent: FC = () => {
   const userAddress = useSelector(selectUserAddress);
   const isLoggedIn = useSelector(selectIsLoggedIn);
+
   const [depositAddress, setDepositAddress] = useState<any | undefined>('');
   const [queryUdtBalance, setQueryUdtBalance] = useState<string | null>(null);
 
@@ -382,6 +385,7 @@ const BridgeComponent: FC = () => {
               </StyledAccordionB>
             </AccordionWrapper>
             <label className="block font-medium text-center">Fee TODO</label>
+            {isLoggedIn ?
             <Box pt={5}>
               <DAOButton
                 variant="gradientOutline"
@@ -393,7 +397,8 @@ const BridgeComponent: FC = () => {
               >
                 {displayErrorsOrSubmit(formik.errors)}
               </DAOButton>
-            </Box>
+            </Box>: <ConnectWalletButton />
+            }
           </Form>
         )}
       </Formik>
