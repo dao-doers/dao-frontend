@@ -79,7 +79,7 @@ const StyledExpandMoreIcon = styled(ExpandMoreIcon)`
 `;
 interface SwapFormValues {
   amount: string;
-  destination_address?: string;
+  destination_address: string;
 }
 
 const SUDT_SYMBOL = 'dCKB';
@@ -88,7 +88,7 @@ const BridgeComponent: FC = () => {
   const userAddress = useSelector(selectUserAddress);
   const isLoggedIn = useSelector(selectIsLoggedIn);
 
-  const [depositAddress, setDepositAddress] = useState<any | undefined>('');
+  const [depositAddress, setDepositAddress] = useState<any | undefined>();
   const [queryUdtBalance, setQueryUdtBalance] = useState<string | null>(null);
 
   const [error, setError] = useState<string | null>(null);
@@ -122,32 +122,23 @@ const BridgeComponent: FC = () => {
     const getLayer2Address = async () => {
       try {
         const layer2Address = await createLayer2Address();
+        if(layer2Address) {
         setDepositAddress(layer2Address);
+        }
         return layer2Address;
       } catch (error: any) {
         setToast(error.message || error.toString());
       }
     };
     getLayer2Address();
-  }, []);
+  }, [depositAddress]);
 
   const initialAddress = depositAddress;
+  console.log(initialAddress)
 
   const initialValues: SwapFormValues = {
     amount: '',
-    destination_address: initialAddress,
-  };
-
-  const onSubmit = async (values: SwapFormValues) => {
-    try {
-      await mintDCKTokens('dCKB', values.amount, values.destination_address);
-    } catch (error: any) {
-      setToast(error.message || error.toString());
-    }
-    console.log({
-      amount: values.amount,
-      destination_address: values.destination_address,
-    });
+    destination_address: initialAddress
   };
 
   function displayErrorsOrSubmit(errors: FormikErrors<SwapFormValues>): string {
@@ -184,7 +175,19 @@ const BridgeComponent: FC = () => {
         validationSchema={dCKBTransferSchema}
         initialValues={initialValues}
         validateOnChange
-        onSubmit={onSubmit}
+        onSubmit={async (values, actions) => {
+          try {
+            await mintDCKTokens('dCKB', values.amount, values.destination_address);
+            actions.setSubmitting(false);
+          } catch (error: any) {
+            setToast(error.message || error.toString());
+            actions.setSubmitting(false);
+          }
+          console.log({
+            amount: values.amount,
+            destination_address: values.destination_address,
+          });
+        }}
         validate={values => {
           console.log(values);
           const errors: FormikErrors<SwapFormValues> = {};
