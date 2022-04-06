@@ -1,16 +1,10 @@
-import Web3 from 'web3';
 import BigNumber from 'bignumber.js/bignumber';
-import PolyjuiceHttpProvider from '@polyjuice-provider/web3';
 
 import abiLibrary from 'lib/abi';
 
-const providerConfig = {
-  web3Url: 'https://godwoken-testnet-web3-rpc.ckbapp.dev',
-};
-
-const provider = new PolyjuiceHttpProvider(providerConfig.web3Url, providerConfig);
-provider.setMultiAbi([abiLibrary.moloch2, abiLibrary.erc20]);
-const web3 = new Web3(provider);
+const daoAddress = process.env.DAO_ADDRESS || '';
+const tributeToken = process.env.TRIBUTE_TOKEN_ADDRESS;
+const paymentToken = process.env.TRIBUTE_TOKEN_ADDRESS;
 
 const getDao = async (address: string) => {
   const dao = await new web3.eth.Contract(abiLibrary.moloch2, address);
@@ -20,7 +14,6 @@ const getDao = async (address: string) => {
 const getReceipt = async (proposal: any, user: string, estimatedGas: number) => {
   let receipt;
   try {
-    // eslint-disable-next-line @typescript-eslint/no-shadow
     receipt = await proposal.send({ from: user, gas: estimatedGas }).on('receipt', (receipt: any) => {
       return receipt;
     });
@@ -31,20 +24,12 @@ const getReceipt = async (proposal: any, user: string, estimatedGas: number) => 
 };
 
 const useCreateProposal = async (
-  /* Wallet information */
   user: string,
-  /* Contract information */
-  library: any,
-  version: number,
-  daoAddress: string,
-  /* Proposal information */
   applicantAddress: string,
   sharesRequested: number,
   lootRequested: number,
   tributeOffered: BigNumber.Value,
-  tributeToken: string | undefined,
   paymentRequested: BigNumber.Value,
-  paymentToken: string | undefined,
   details: { title: any; description: any; link: any },
 ) => {
   const exponentialValue = new BigNumber(10 ** 8);
@@ -52,22 +37,34 @@ const useCreateProposal = async (
   const paymentRequestedToExponential = new BigNumber(paymentRequested).multipliedBy(exponentialValue);
 
   const dao = await getDao(daoAddress);
-  const token = new web3.eth.Contract(abiLibrary.erc20, await dao.methods.depositToken().call());
+  const token = new web3.eth.Contract(abiLibrary.erc20, tributeToken);
 
-  const userBalance = new BigNumber(await token.methods.balanceOf(user).call());
-  const allowance = new BigNumber(await token.methods.allowance(user, daoAddress).call());
-  const tributeOfferedBN = new BigNumber(tributeOfferedToExponential);
-  const requiredAllowance = tributeOfferedBN;
+  // TODO: check if there is existing approval in case if user approved first MM request and rejected second
+  console.log('token whitelist', {
+    a: await dao.methods.tokenWhitelist(tributeToken).call(),
+    daoAddress,
+    existingApproval: await token.methods.allowance(user, daoAddress).call(),
+  });
 
-  if (userBalance.lt(requiredAllowance)) {
-    throw new Error('Not enough funds to pay the tribute.');
-  }
+  const approveTx = await token.methods.approve(daoAddress, tributeOfferedToExponential).send({
+    gasLimit: 6000000,
+    gasPrice: 0,
+    from: user,
+  });
 
-  if (allowance.lt(requiredAllowance)) {
-    await token.methods.approve(daoAddress, requiredAllowance).send({
-      from: user,
-    });
-  }
+  console.log({
+    approveTx,
+  });
+
+  console.log('submitProposal', {
+    applicantAddress,
+    sharesRequested,
+    lootRequested,
+    tributeOfferedToExponential,
+    tributeToken,
+    paymentRequestedToExponential,
+    paymentToken,
+  });
 
   const proposal = await dao.methods.submitProposal(
     applicantAddress,

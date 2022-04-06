@@ -2,14 +2,14 @@ import React, { FC } from 'react';
 
 import styled from '@emotion/styled';
 
+import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
+import AddReactionIcon from '@mui/icons-material/AddReaction';
+import AddTaskIcon from '@mui/icons-material/AddTask';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
-import AddReactionIcon from '@mui/icons-material/AddReaction';
-import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
-import AddTaskIcon from '@mui/icons-material/AddTask';
 
-import Link from 'components/Link';
 import DAOButton from 'components/DAOButton/DAOButton';
+import Link from 'components/Link/Link';
 
 import { APP_ROUTES } from 'utils/routes';
 

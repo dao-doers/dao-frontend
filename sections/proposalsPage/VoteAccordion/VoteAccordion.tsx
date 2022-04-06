@@ -8,21 +8,17 @@ import Accordion from '@mui/material/Accordion';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import PlaylistRemoveIcon from '@mui/icons-material/PlaylistRemove';
+import Typography from '@mui/material/Typography';
 
-import DividerLine from 'components/DividerLine/DividerLine';
-import DAOButton from 'components/DAOButton/DAOButton';
-import DAOTile from 'components/DAOTile/DAOTile';
 import ConnectWalletButton from 'components/ConnectWalletButton/ConnectWalletButton';
 import Counter from 'components/Counter/Counter';
-import TooltipIcon from 'components/TooltipIcon';
-
+import DAOButton from 'components/DAOButton/DAOButton';
+import DAOTile from 'components/DAOTile/DAOTile';
+import DividerLine from 'components/DividerLine/DividerLine';
 import LinearChart from 'components/LinearChart/LinearChart';
-
-import { selectUserAddress, selectIsLoggedIn, selectUserShares } from 'redux/slices/user';
-import { setOpen, setStatus, setMessage } from 'redux/slices/modalTransaction';
+import TooltipIcon from 'components/TooltipIcon';
 
 import useSponsorProposal from 'hooks/useSponsorProposal';
 import useVote from 'hooks/useVote';
@@ -32,6 +28,11 @@ import useProcessProposal from 'hooks/useProcessProposal';
 import FETCH_STATUSES from 'enums/fetchStatuses';
 import PROPOSAL_STATUS from 'enums/proposalStatus';
 import PROCESSING_STATUSES from 'enums/processingStatuses';
+
+import { getMetamaskMessageError } from 'utils/blockchain';
+
+import { selectUserAddress, selectIsLoggedIn, selectUserShares } from 'redux/slices/user';
+import { setOpen, setStatus, setMessage } from 'redux/slices/modalTransaction';
 
 const StyledAccordion = styled(Accordion)`
   margin-top: 10px;
@@ -102,18 +103,31 @@ const VoteAccordion: FC<any> = ({ proposal }) => {
       dispatch(setStatus(PROCESSING_STATUSES.PROCESSING));
       dispatch(setOpen(true));
 
+      // TODO: handle checking proposalDeposit here not inside hook
+      // if (dckbBalance < proposalDeposit) {
+      //   dispatch(setStatus(PROCESSING_STATUSES.ERROR));
+      //   dispatch(setMessage('You have not enough dCKB'));
+      // } else {
       const receipt = await useSponsorProposal(userAddress, daoAddress, proposalId);
 
-      console.log(receipt);
-
-      dispatch(setStatus(PROCESSING_STATUSES.SUCCESS));
-      setSponsorProposalStatus(PROCESSING_STATUSES.SUCCESS);
-      dispatch(
-        setMessage(`Your request has been processed by blockchain network and will be displayed with the block number 
-        ${!Number.isNaN(receipt.blockNumber) && receipt.blockNumber + 1}`),
-      );
+      if (receipt.blockNumber) {
+        dispatch(setStatus(PROCESSING_STATUSES.SUCCESS));
+        dispatch(
+          setMessage(
+            `Your request has been processed by blockchain network and will be displayed with the block number ${
+              receipt.blockNumber + 1
+            }`,
+          ),
+        );
+      }
+      if (receipt.code) {
+        dispatch(setStatus(PROCESSING_STATUSES.ERROR));
+        dispatch(setMessage(getMetamaskMessageError(receipt)));
+      }
+      // }
     } catch (error) {
       dispatch(setStatus(PROCESSING_STATUSES.ERROR));
+      dispatch(setMessage(getMetamaskMessageError(error)));
     }
   };
 
@@ -127,14 +141,29 @@ const VoteAccordion: FC<any> = ({ proposal }) => {
       async response => {
         if (response === true) {
           setNotVotedYet(1);
-          const daoAddress = process.env.DAO_ADDRESS;
           const { proposalIndex } = proposal;
 
           try {
-            await useVote(proposalIndex, vote, userAddress, daoAddress);
-            dispatch(setStatus(PROCESSING_STATUSES.SUCCESS));
+            const receipt = await useVote(proposalIndex, vote, userAddress);
+
+            if (receipt.blockNumber) {
+              setNotVotedYet(2);
+              dispatch(setStatus(PROCESSING_STATUSES.SUCCESS));
+              dispatch(
+                setMessage(
+                  `Your request has been processed by blockchain network and will be displayed with the block number ${
+                    receipt.blockNumber + 1
+                  }`,
+                ),
+              );
+            }
+            if (receipt.code) {
+              dispatch(setStatus(PROCESSING_STATUSES.ERROR));
+              dispatch(setMessage(getMetamaskMessageError(receipt)));
+            }
           } catch (error) {
             dispatch(setStatus(PROCESSING_STATUSES.ERROR));
+            dispatch(setMessage(getMetamaskMessageError(error)));
           }
         } else {
           setNotVotedYet(2);
@@ -153,17 +182,26 @@ const VoteAccordion: FC<any> = ({ proposal }) => {
 
     try {
       const receipt = await useProcessProposal(userAddress, daoAddress, proposalIndex);
-
-      if (receipt.transactionHash) {
-        setProcessProposalStatus(FETCH_STATUSES.SUCCESS);
-        dispatch(setStatus(PROCESSING_STATUSES.SUCCESS));
-      } else {
-        setProcessProposalStatus(FETCH_STATUSES.ERROR);
-        dispatch(setStatus(PROCESSING_STATUSES.ERROR));
-      }
+      console.log(receipt);
+      // if (receipt.blockNumber) {
+      //   dispatch(setStatus(PROCESSING_STATUSES.SUCCESS));
+      //   dispatch(
+      //     setMessage(
+      //       `Your request has been processed by blockchain network and will be displayed with the block number ${
+      //         receipt.blockNumber + 1
+      //       }`,
+      //     ),
+      //   );
+      // }
+      // if (receipt.code) {
+      //   dispatch(setStatus(PROCESSING_STATUSES.ERROR));
+      //   dispatch(setMessage(getMetamaskMessageError(receipt)));
+      // }
     } catch (error) {
+      console.log(error);
       setProcessProposalStatus(FETCH_STATUSES.ERROR);
       dispatch(setStatus(PROCESSING_STATUSES.ERROR));
+      // dispatch(setMessage(getMetamaskMessageError(error)));
     }
   };
 
@@ -194,7 +232,6 @@ const VoteAccordion: FC<any> = ({ proposal }) => {
                 </Typography>
               </DAOTile>
             )}
-
             {sponsorProposalStatus === PROCESSING_STATUSES.SUCCESS && (
               <DAOTile variant="gradientOutline">
                 <Typography align="center" p={1}>
@@ -202,13 +239,12 @@ const VoteAccordion: FC<any> = ({ proposal }) => {
                 </Typography>
               </DAOTile>
             )}
-
             {!isLoggedIn && (
               <Box maxWidth="200px" mx="auto" mt={2}>
                 <ConnectWalletButton />
               </Box>
             )}
-
+            {/* TODO: display button only to guild members */}
             {isLoggedIn && sponsorProposalStatus !== PROCESSING_STATUSES.SUCCESS && (
               <Box maxWidth="200px" mx="auto" mt={2}>
                 <DAOButton variant="gradientOutline" onClick={handleSponsorProposal}>
@@ -234,6 +270,7 @@ const VoteAccordion: FC<any> = ({ proposal }) => {
                     </Box>
                   )}
 
+                  {/* TODO: display button only to guild members */}
                   {isLoggedIn && notVotedYet !== 2 && (
                     <Box display="flex" justifyContent="space-between" mb={3}>
                       <Box width="48%">
@@ -306,6 +343,7 @@ const VoteAccordion: FC<any> = ({ proposal }) => {
                     </Box>
                   )}
 
+                  {/* TODO: display button only to applicant */}
                   {isLoggedIn && processProposalStatus !== FETCH_STATUSES.SUCCESS && (
                     <Box maxWidth="200px" mx="auto" mt={2}>
                       <DAOButton variant="gradientOutline" onClick={handleProcessProposal}>

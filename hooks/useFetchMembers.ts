@@ -1,10 +1,9 @@
 import { useEffect } from 'react';
-import { useQuery } from '@apollo/react-hooks';
 import { useSelector, useDispatch } from 'react-redux';
+import { useQuery } from '@apollo/react-hooks';
+import { gql } from 'apollo-boost';
 
 import { selectUserAddress, selectIsLoggedIn, setUserShares } from 'redux/slices/user';
-
-import { gql } from 'apollo-boost';
 
 const useFetchMembers = () => {
   const dispatch = useDispatch();
@@ -59,24 +58,11 @@ const useFetchMembers = () => {
 
   useEffect(() => {
     if (!loading && data && isLoggedIn) {
-      // TODO: uncomment after new godwoken and dont fetch if unnecessary
-      // const user = fetchMembers.data.members.filter((a: any) => {
-      //   return a.memberAddress === userAddress;
-      // });
-      // if (user[0]) {
-      //   dispatch(setUserShares(user[0].shares));
-      // }
-      // TODO: remove after new godwoken
-      const address = '0xD173313A51f8fc37BcF67569b463abd89d81844f';
-      if (userAddress === address.toLocaleLowerCase()) {
-        const user = data.members.filter((a: any) => {
-          return a.memberAddress === '0x8016dcd1af7c8cceda53e4d2d2cd4e2924e245b6';
-        });
-        if (user[0]) {
-          dispatch(setUserShares(user[0].shares));
-        }
-      } else {
-        dispatch(setUserShares(0));
+      const user = data.members.filter((a: any) => {
+        return a.memberAddress === userAddress;
+      });
+      if (user[0]) {
+        dispatch(setUserShares(user[0].shares));
       }
     }
   }, [loading, data, isLoggedIn]);

@@ -2,10 +2,10 @@ import { FC, ReactElement } from 'react';
 
 import styled from '@emotion/styled';
 
+import Box from '@mui/material/Box';
 import Close from '@mui/icons-material/Close';
 import Dialog from '@mui/material/Dialog';
 import Typography from '@mui/material/Typography';
-import Box from '@mui/material/Box';
 
 interface ModalProps {
   isOpen: boolean;

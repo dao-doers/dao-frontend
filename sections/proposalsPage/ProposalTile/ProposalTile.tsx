@@ -1,5 +1,5 @@
-import { FC, useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
+import { FC, useState, useEffect } from 'react';
 
 import styled from '@emotion/styled';
 
@@ -11,7 +11,7 @@ import Typography from '@mui/material/Typography';
 import TwitterIcon from '@mui/icons-material/Twitter';
 
 import DAOTile from 'components/DAOTile/DAOTile';
-import Link from 'components/Link';
+import Link from 'components/Link/Link';
 
 import DetailsAccordion from 'sections/proposalsPage/DetailsAccordion/DetailsAccordion';
 import VoteAccordion from 'sections/proposalsPage/VoteAccordion/VoteAccordion';

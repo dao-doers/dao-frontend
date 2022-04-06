@@ -5,8 +5,8 @@ import { useSelector } from 'react-redux';
 import styled from '@emotion/styled';
 
 import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
 import PlaylistRemoveIcon from '@mui/icons-material/PlaylistRemove';
+import Typography from '@mui/material/Typography';
 
 import Layout from 'components/Layout/Layout';
 

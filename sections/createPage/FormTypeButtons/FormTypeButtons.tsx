@@ -8,9 +8,9 @@ import DAOTile from 'components/DAOTile/DAOTile';
 
 import CREATE_PROPOSAL_TYPE from 'enums/createProposalType';
 
-import { selectProposalType, setProposalType } from 'redux/slices/createProposal';
-
 import useIsMobile from 'hooks/useIsMobile';
+
+import { selectProposalType, setProposalType } from 'redux/slices/createProposal';
 
 const FormTypeButtons: FC<any> = () => {
   const dispatch = useDispatch();

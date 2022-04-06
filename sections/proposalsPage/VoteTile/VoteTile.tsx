@@ -6,7 +6,7 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 
 import DAOTile from 'components/DAOTile/DAOTile';
-import Link from 'components/Link';
+import Link from 'components/Link/Link';
 
 import formatAddress from 'utils/formatAddress';
 import { formatSeconds } from 'utils/formatDate';
@@ -33,7 +33,6 @@ const TypographySmall = styled(Typography)`
 
 const VoteTile: FC<any> = ({ vote }) => {
   const formatTitle = (textObject: any): any => {
-    // TODO: clean DB bacause returned objects are not same
     if (textObject.includes('title', 2)) {
       return JSON.parse(textObject).title;
     }

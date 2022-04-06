@@ -1,9 +1,9 @@
 import type { NextPage } from 'next';
+import { useRouter } from 'next/router';
 import React, { FC, useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
 import ApolloClient, { InMemoryCache } from 'apollo-boost';
 import { ApolloProvider } from '@apollo/react-hooks';
-import { useSelector } from 'react-redux';
-import { useRouter } from 'next/router';
 
 import Box from '@mui/material/Box';
 
@@ -12,13 +12,11 @@ import Layout from 'components/Layout/Layout';
 import ProposalTile from 'sections/proposalsPage/ProposalTile/ProposalTile';
 import VoteTile from 'sections/proposalsPage/VoteTile/VoteTile';
 
-import config from 'config/config';
-
 import { selectProposalsArray } from 'redux/slices/proposals';
 import { selectVotesArray } from 'redux/slices/votes';
 
 const client = new ApolloClient({
-  uri: config.graph.moloch,
+  uri: process.env.INDEXER_URL,
   cache: new InMemoryCache(),
 });
 

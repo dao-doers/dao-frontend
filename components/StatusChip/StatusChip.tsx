@@ -10,8 +10,9 @@ interface StatusChipProps {
 }
 
 const StyledBox = styled(Box)`
-  border: 1px solid ${({ theme }) => theme.palette.colors.main9};
-  border-radius: 10px;
+  /* border: 1px solid ${({ theme }) => theme.palette.colors.main9}; */
+  border-right: 1px solid ${({ theme }) => theme.palette.colors.main9};
+  /* border-radius: 30px; */
   padding: 5px 20px;
 `;
 

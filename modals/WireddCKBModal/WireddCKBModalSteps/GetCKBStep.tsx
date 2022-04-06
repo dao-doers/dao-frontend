@@ -4,8 +4,8 @@ import styled from '@emotion/styled';
 
 import DAOButton from 'components/DAOButton/DAOButton';
 
-import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
 
 interface GetCKBStepProps {
   handlePreviousStep: () => void;

@@ -5,14 +5,14 @@ import { useRouter } from 'next/router';
 import styled from '@emotion/styled';
 
 import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
 import Close from '@mui/icons-material/Close';
 import IconButton from '@mui/material/IconButton';
+import Typography from '@mui/material/Typography';
 
-import Link from 'components/Link';
 import DAOButton from 'components/DAOButton/DAOButton';
-import ThemeModeSwitch from 'components/ThemeModeSwitch/ThemeModeSwitch';
 import DAOPlainButton from 'components/DAOPlainButton/DAOPlainButton';
+import Link from 'components/Link/Link';
+import ThemeModeSwitch from 'components/ThemeModeSwitch/ThemeModeSwitch';
 
 import useIsMobile from 'hooks/useIsMobile';
 
@@ -27,6 +27,7 @@ import {
   clearSorted,
 } from 'redux/slices/proposals';
 import { setOpen } from 'redux/slices/modalWireddCKB';
+import { setOpen as setOpenUSDTTransfer } from 'redux/slices/modalSUDTTransfer';
 
 interface MenuContentProps {
   setDrawerOpen?: (arg0: false) => void;
@@ -47,6 +48,10 @@ const MenuContent: FC<MenuContentProps> = ({ setDrawerOpen }) => {
 
   const handledCKBModal = () => {
     dispatch(setOpen(true));
+  };
+
+  const handleUSDTTransferModal = () => {
+    dispatch(setOpenUSDTTransfer(true));
   };
 
   const handleClose = () => {
@@ -147,6 +152,12 @@ const MenuContent: FC<MenuContentProps> = ({ setDrawerOpen }) => {
       <Box mx="auto" my={1} sx={{ width: { xs: '60%', md: '100%' } }}>
         <DAOButton variant="gradientOutline" onClick={handledCKBModal}>
           <Typography>Get dCKB</Typography>
+        </DAOButton>
+      </Box>
+
+      <Box mx="auto" my={1} sx={{ width: { xs: '60%', md: '100%' } }}>
+        <DAOButton variant="gradientOutline" onClick={handleUSDTTransferModal}>
+          <Typography>Transfer dCKB</Typography>
         </DAOButton>
       </Box>
 

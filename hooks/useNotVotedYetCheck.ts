@@ -1,15 +1,6 @@
 import Web3 from 'web3';
-import PolyjuiceHttpProvider from '@polyjuice-provider/web3';
-import { AddressTranslator } from 'nervos-godwoken-integration';
 
 import abiLibrary from 'lib/abi';
-
-const providerConfig = {
-  web3Url: 'https://godwoken-testnet-web3-rpc.ckbapp.dev',
-};
-const addressTranslator = new AddressTranslator();
-const provider = new PolyjuiceHttpProvider(providerConfig.web3Url, providerConfig);
-const web3 = new Web3(provider);
 
 const getDao = async (address: string) => {
   const dao = await new web3.eth.Contract(abiLibrary.moloch2, address);
@@ -17,17 +8,19 @@ const getDao = async (address: string) => {
 };
 
 const useNotVotedYetCheck = async (user: string, proposalIndex: any, daoAddress: string) => {
-  const dao = await getDao(daoAddress);
-  const accountPolyAddress = addressTranslator.ethAddressToGodwokenShortAddress(user);
+  if (window.ethereum) {
+    await window.ethereum.request({ method: 'eth_requestAccounts' });
+    window.web3 = new Web3(window.ethereum);
+  }
 
-  const response = await dao.methods
-    .getMemberProposalVote(accountPolyAddress, proposalIndex)
-    .call({}, (err: any, res: any) => {
-      if (err) {
-        return err;
-      }
-      return res;
-    });
+  const dao = await getDao(daoAddress);
+
+  const response = await dao.methods.getMemberProposalVote(user, proposalIndex).call({}, (err: any, res: any) => {
+    if (err) {
+      return err;
+    }
+    return res;
+  });
   return response === 0 || response === '0';
 };
 

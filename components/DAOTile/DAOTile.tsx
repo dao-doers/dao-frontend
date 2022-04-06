@@ -108,18 +108,18 @@ const innerTileVariant = ({ theme, variant }: TileVariantProps & { theme: Theme 
       `;
     case 'blueBackground':
       return css`
-        background: ${theme.palette.colors.col1};
-        color: ${theme.palette.colors.main1};
+        background-color: ${theme.palette.colors.main1};
+        color: ${theme.palette.colors.col1};
       `;
     case 'greenBackground':
       return css`
-        background: ${theme.palette.colors.col2};
-        color: ${theme.palette.colors.main1};
+        background-color: ${theme.palette.colors.main1};
+        color: ${theme.palette.colors.col2};
       `;
     case 'redBackground':
       return css`
-        background: ${theme.palette.colors.col6};
-        color: ${theme.palette.colors.main1};
+        background-color: ${theme.palette.colors.main1};
+        color: ${theme.palette.colors.col6};
       `;
     case 'yellowBackground':
       return css`
