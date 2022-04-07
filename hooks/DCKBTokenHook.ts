@@ -44,6 +44,7 @@ export const useDCKBTokenHook = () => {
         message: 'Please confirm transaction from your wallet...',
         title: 'Wallet Interaction',
       });
+
       await assetSender.init('testnet');
       await assetSender.connectWallet(ETHEREUM_PRIVATE_KEY); // you can also pass private key
       // const contractAddress = web3?.utils.toChecksumAddress(tokenContractAddress);
@@ -75,7 +76,9 @@ export const useDCKBTokenHook = () => {
 
   const balanceFromWallet = async () => {
     try {
+
       await assetSender.init('testnet');
+      await assetSender.connectWallet(ETHEREUM_PRIVATE_KEY);
       const ckbBalance = await assetSender.getConnectedWalletCKBBalance();
       const dckbBalance = await assetSender.getConnectedWalletSUDTBalance(dckbIssuerHash);
 
