@@ -35,6 +35,7 @@ export const useDCKBTokenHook = () => {
     rollup_type_hash: '0x4940246f168f4106429dc641add3381a44b5eef61e7754142f594e986671a575',
     rc_lock_script_type_hash: '0x79f90bb5e892d80dd213439eeab551120eb417678824f282b4ffb5f21bad2e1e',
   });
+  const assetSender = new WalletAssetsSender('https://testnet.ckb.dev/rpc', 'https://testnet.ckb.dev/indexer');
 
   const mintDCKTokens = async (tokenId: any, amount: string, toAddress: string) => {
     try {
@@ -43,8 +44,6 @@ export const useDCKBTokenHook = () => {
         message: 'Please confirm transaction from your wallet...',
         title: 'Wallet Interaction',
       });
-      await addressTranslator.init('testnet');
-      const assetSender = new WalletAssetsSender('https://testnet.ckb.dev/rpc', 'https://testnet.ckb.dev/indexer');
       await assetSender.init('testnet');
       await assetSender.connectWallet(ETHEREUM_PRIVATE_KEY); // you can also pass private key
       // const contractAddress = web3?.utils.toChecksumAddress(tokenContractAddress);
@@ -52,7 +51,7 @@ export const useDCKBTokenHook = () => {
       // const decimals = await contract.methods.decimals().call();
       // const amountInCogs = convertToCogs(amount, decimals);
       // const txnHash = await assetSender.mint(contractAddress, amountInCogs, toAddress);
-      const txHash = await addressTranslator.sendSUDT(amount, toAddress, dckbIssuerHash);
+      const txHash = await assetSender.sendSUDT(amount, toAddress, dckbIssuerHash);
       setTxnInfo({
         txnLink: `https://explorer.nervos.org/aggron/${txHash}`,
         txnAmount: amount,
@@ -76,9 +75,9 @@ export const useDCKBTokenHook = () => {
 
   const balanceFromWallet = async () => {
     try {
-      await addressTranslator.init('testnet');
-      const ckbBalance = await addressTranslator.getConnectedWalletCKBBalance();
-      const dckbBalance = await addressTranslator.getConnectedWalletSUDTBalance(dckbIssuerHash);
+      await assetSender.init('testnet');
+      const ckbBalance = await assetSender.getConnectedWalletCKBBalance();
+      const dckbBalance = await assetSender.getConnectedWalletSUDTBalance(dckbIssuerHash);
 
       return { ckbBalance, dckbBalance };
     } catch (error) {
