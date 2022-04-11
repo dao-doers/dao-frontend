@@ -1,25 +1,26 @@
 import { FC, ReactNode, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
+import Web3 from 'web3';
 
 import styled from '@emotion/styled';
 
-import Container from '@mui/material/Container';
 import Box from '@mui/material/Box';
+import Container from '@mui/material/Container';
 
+import BlockchainStatus from 'components/BlockchainStatus/BlockchainStatus';
 import DesktopMenu from 'components/DesktopMenu/DesktopMenu';
 import Footer from 'components/Footer/Footer';
-import MobileMenu from 'components/MobileMenu/MobileMenu';
-import BlockchainStatus from 'components/BlockchainStatus/BlockchainStatus';
 import LoadingPage from 'components/LoadingPage/LoadingPage';
+import MobileMenu from 'components/MobileMenu/MobileMenu';
 
-import { setTheme } from 'redux/slices/theme';
+import THEME_MODES from 'enums/themeModes';
 
 import useFetchProposals from 'hooks/useFetchProposals';
 import useFetchVotes from 'hooks/useFetchVotes';
 import useMaintainSession from 'hooks/useMaintainSession';
 import useFetchMembers from 'hooks/useFetchMembers';
 
-import THEME_MODES from 'enums/themeModes';
+import { setTheme } from 'redux/slices/theme';
 
 export type LayoutProps = {
   children: ReactNode;
@@ -36,11 +37,18 @@ const StyledBox = styled(Box)`
   display: flex;
 `;
 
+declare global {
+  interface Window {
+    web3: Web3;
+  }
+}
+
 const Layout: FC<LayoutProps> = ({ children }) => {
   const dispatch = useDispatch();
 
   const loadingProposals = useFetchProposals();
   const loadingVotes = useFetchVotes();
+
   useFetchMembers();
   useMaintainSession();
 
@@ -49,6 +57,13 @@ const Layout: FC<LayoutProps> = ({ children }) => {
 
     dispatch(setTheme(theme === THEME_MODES.DARK ? THEME_MODES.DARK : THEME_MODES.LIGHT));
   }, [dispatch]);
+
+  useEffect(async () => {
+    if (window.ethereum) {
+      await window.ethereum.request({ method: 'eth_requestAccounts' });
+      window.web3 = new Web3(window.ethereum);
+    }
+  }, []);
 
   return (
     <StyledContainer>

@@ -7,17 +7,15 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 
 import DAOCircleLoader from 'components/DAOCircleLoader/DAOCircleLoader';
+import RecentActivityStatus from 'components/RecentActivityStatus/RecentActivityStatus';
 import StatusChip from 'components/StatusChip/StatusChip';
 
-import { selectUserAddress, selectIsLoggedIn, selectUserShares } from 'redux/slices/user';
-
 import formatAddress from 'utils/formatAddress';
-import { shannonsToCkb } from 'utils/formatShannons';
 
-import useCheckIndexerStatus from 'hooks/useCheckIndexerStatus';
 import useCheckBalance from 'hooks/useCheckBalance';
+import useCheckIndexerStatus from 'hooks/useCheckIndexerStatus';
 
-import RecentActivityStatus from 'components/RecentActivityStatus/RecentActivityStatus';
+import { selectUserAddress, selectIsLoggedIn, selectUserShares, selectdckbBalance } from 'redux/slices/user';
 
 const StatusWrapper = styled(Box)`
   margin-left: 16px;
@@ -46,10 +44,11 @@ const BlockchainStatusContent: FC = () => {
   const userAddress = useSelector(selectUserAddress);
   const isLoggedIn = useSelector(selectIsLoggedIn);
   const userShares = useSelector(selectUserShares);
+  const dckbBalance = useSelector(selectdckbBalance);
 
   const { molochBlock, layer2Block, molochError, molochLoading, layer2BlockLoading } = useCheckIndexerStatus();
 
-  const { balance, isChecked } = useCheckBalance();
+  const { isChecked } = useCheckBalance();
 
   return (
     <>
@@ -119,7 +118,7 @@ const BlockchainStatusContent: FC = () => {
         <StatusWrapper>
           <StatusChip title="dCKB balance:">
             {isChecked ? (
-              <Typography variant="body1-bold">{shannonsToCkb(balance || 0)}</Typography>
+              <Typography variant="body1-bold">{dckbBalance}</Typography>
             ) : (
               <Box display="flex" alignItems="center">
                 <Box display="flex" alignItems="center" mr={1}>

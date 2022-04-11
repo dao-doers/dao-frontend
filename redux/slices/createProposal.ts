@@ -2,7 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 
 import CREATE_PROPOSAL_TYPE from 'enums/createProposalType';
 
-type ProposalTypeProps = CREATE_PROPOSAL_TYPE.NORMAL | CREATE_PROPOSAL_TYPE.WITH_FUNDING | CREATE_PROPOSAL_TYPE.KICK;
+type ProposalTypeProps = CREATE_PROPOSAL_TYPE;
 
 interface CreateProposalProps {
   proposalType: ProposalTypeProps;

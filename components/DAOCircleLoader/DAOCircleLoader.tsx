@@ -1,4 +1,5 @@
 import { FC } from 'react';
+
 import { useTheme } from '@mui/system';
 
 export type LoaderStatus = 'loading' | 'success' | 'error';

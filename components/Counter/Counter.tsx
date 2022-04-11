@@ -1,7 +1,7 @@
 import { FC, useEffect, useState } from 'react';
 
-import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
 
 import { secondsToHours } from 'utils/formatDate';
 

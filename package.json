@@ -2,7 +2,7 @@
   "name": "nervos-dao",
   "private": true,
   "scripts": {
-    "dev": "next dev -p 3015",
+    "dev": "next dev -p 3025",
     "build": "next build",
     "build-export": "next build && next export",
     "start": "next start",

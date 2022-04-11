@@ -6,13 +6,10 @@ import { useSelector, useDispatch } from 'react-redux';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 
+import ConnectWalletButton from 'components/ConnectWalletButton/ConnectWalletButton';
 import DAOButton from 'components/DAOButton/DAOButton';
 import DAOInput from 'components/DAOInput/DAOInput';
 import TooltipIcon from 'components/TooltipIcon';
-import ConnectWalletButton from 'components/ConnectWalletButton/ConnectWalletButton';
-
-import { setOpen, setStatus, setMessage } from 'redux/slices/modalTransaction';
-import { selectUserAddress, selectIsLoggedIn } from 'redux/slices/user';
 
 import PROCESSING_STATUSES from 'enums/processingStatuses';
 
@@ -21,26 +18,23 @@ import useIsMobile from 'hooks/useIsMobile';
 
 import newProposalSchema from 'validators/newProposalSchema';
 
-import abiLibrary from 'lib/abi';
+import { getMetamaskMessageError } from 'utils/blockchain';
+
+import { setOpen, setStatus, setMessage } from 'redux/slices/modalTransaction';
+import { selectUserAddress, selectIsLoggedIn, selectdckbBalance } from 'redux/slices/user';
 
 const initialValues = {
-  title: '',
-  description: '',
-  link: '',
-  tributeOffered: 0,
+  title: 'test',
+  description: 'test',
+  link: 'https://dziobakwszafie.pl/',
+  tributeOffered: 3333,
 };
-
-const version = 2;
-const daoAddress = process.env.DAO_ADDRESS;
-const lootRequested = 0;
-const tributeToken = process.env.TRIBUTE_TOKEN_ADDRESS;
-const paymentRequested = 0;
-const paymentToken = process.env.TRIBUTE_TOKEN_ADDRESS;
 
 const JoinDaoForm: FC = () => {
   const dispatch = useDispatch();
   const userAddress = useSelector(selectUserAddress);
   const isLoggedIn = useSelector(selectIsLoggedIn);
+  const dckbBalance = useSelector(selectdckbBalance);
 
   const isMobile = useIsMobile('md');
 
@@ -50,33 +44,45 @@ const JoinDaoForm: FC = () => {
       dispatch(setOpen(true));
 
       const modifiedLink = values.link.replace(/(^\w+:|^)\/\//, '');
+      const lootRequested = 0;
+      const paymentRequested = 0;
 
-      const receipt = await useCreateProposal(
-        userAddress,
-        abiLibrary,
-        version,
-        daoAddress as any,
-        userAddress,
-        values.tributeOffered,
-        lootRequested,
-        values.tributeOffered,
-        tributeToken,
-        paymentRequested,
-        paymentToken,
-        /* Details JSON */ {
-          title: values.title,
-          description: values.description,
-          link: modifiedLink,
-        },
-      );
+      if (dckbBalance < values.tributeOffered) {
+        dispatch(setStatus(PROCESSING_STATUSES.ERROR));
+        dispatch(setMessage('You have not enough dCKB'));
+      } else {
+        const receipt = await useCreateProposal(
+          userAddress,
+          userAddress,
+          values.tributeOffered,
+          lootRequested,
+          values.tributeOffered,
+          paymentRequested,
+          {
+            title: values.title,
+            description: values.description,
+            link: modifiedLink,
+          },
+        );
 
-      dispatch(setStatus(PROCESSING_STATUSES.SUCCESS));
-      dispatch(
-        setMessage(`Your request has been processed by blockchain network and will be displayed with the block number 
-      ${!Number.isNaN(receipt.blockNumber) && receipt.blockNumber + 1}`),
-      );
+        if (receipt.blockNumber) {
+          dispatch(setStatus(PROCESSING_STATUSES.SUCCESS));
+          dispatch(
+            setMessage(
+              `Your request has been processed by blockchain network and will be displayed with the block number ${
+                receipt.blockNumber + 1
+              }`,
+            ),
+          );
+        }
+        if (receipt.code) {
+          dispatch(setStatus(PROCESSING_STATUSES.ERROR));
+          dispatch(setMessage(getMetamaskMessageError(receipt)));
+        }
+      }
     } catch (error) {
       dispatch(setStatus(PROCESSING_STATUSES.ERROR));
+      dispatch(setMessage(getMetamaskMessageError(error)));
     }
   };
 

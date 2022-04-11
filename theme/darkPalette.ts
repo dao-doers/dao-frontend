@@ -4,7 +4,7 @@ import common, { RecursivePartial } from './common';
 const colors: Colors = {
   ...common.colors,
   main1: '#000000',
-  main2: '#040404',
+  main2: '#121212',
   main3: '#0C0C0F',
   main4: '#111117',
   main5: '#14131C',

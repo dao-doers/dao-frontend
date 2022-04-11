@@ -1,59 +1,52 @@
 import { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+import Web3 from 'web3';
 
-import useERC20Contract from 'hooks/useERC20Contract';
-import { selectUserAddress, selectIsLoggedIn } from 'redux/slices/user';
+import abiLibrary from 'lib/abi';
 
-import { AddressTranslator } from 'nervos-godwoken-integration';
-// import useEthers from './useEthers';
+import { shannonsToCkb } from 'utils/formatShannons';
+
+import { selectUserAddress, selectIsLoggedIn, setdckbBalance } from 'redux/slices/user';
+
+const daoAddress = process.env.DAO_ADDRESS || '';
+
+const getDao = async (address: string) => {
+  const dao = await new web3.eth.Contract(abiLibrary.moloch2, address);
+  return dao;
+};
 
 const useCheckBalance = () => {
+  const dispatch = useDispatch();
+
   const userAddress = useSelector(selectUserAddress);
   const isLoggedIn = useSelector(selectIsLoggedIn);
 
-  const addressTranslator = new AddressTranslator();
-
-  const [balance, setBalance] = useState(0);
-  // const [ckbBalance, setCkbBalance] = useState<BigInt | null>(null);
-  // const [depositAddress, setDepositAddress] = useState<string | null>(null);
-
   const [isChecked, setChecked] = useState(false);
 
-  // TODO: solve problem with string | undefined
-  // const SUDT_PROXY_CONTRACT_ADDRESS = process.env.SUDT_PROXY_CONTRACT_ADDRESS;
-  const SUDT_PROXY_CONTRACT_ADDRESS = '0xc03da4356b4030f0ec2494c18dcfa426574e10d5';
-  const erc20 = useERC20Contract(SUDT_PROXY_CONTRACT_ADDRESS);
-  // const ethers = useEthers(userAddress);
-
   useEffect(() => {
-    if (isLoggedIn) {
-      const checkBalance = async () => {
-        const polyjuiceAddress = addressTranslator.ethAddressToGodwokenShortAddress(userAddress);
-        const tokenBalance = await erc20?.methods.balanceOf(polyjuiceAddress).call({ from: userAddress });
-        setBalance(tokenBalance);
+    const fetchCkbBalance = async () => {
+      if (window.ethereum) {
+        await window.ethereum.request({ method: 'eth_requestAccounts' });
+        window.web3 = new Web3(window.ethereum);
+      }
+
+      const dao = await getDao(daoAddress);
+
+      const token = new web3.eth.Contract(abiLibrary.erc20, await dao.methods.depositToken().call());
+
+      if (isLoggedIn) {
+        const balance = await token.methods.balanceOf(userAddress).call();
+        if (balance) {
+          dispatch(setdckbBalance(shannonsToCkb(balance)));
+        }
         setChecked(true);
-      };
-      checkBalance();
-    }
-  }, [erc20, userAddress, isLoggedIn]);
+      }
+    };
 
-  // useEffect(() => {
-  //   const fetchCkbBalance = async () => {
-  //     if (isLoggedIn) {
-  //       const CkbBalance = await ethers?.getBalance(userAddress);
-  //       if (CkbBalance) {
-  //         setCkbBalance(CkbBalance?.toBigInt());
-  //       }
-  //       await addressTranslator.init();
-  //       const newDepositAddress = await addressTranslator.getLayer2DepositAddress(userAddress);
-  //       setDepositAddress(newDepositAddress.toCKBAddress().toString());
-  //     }
-  //   };
+    fetchCkbBalance();
+  }, [isLoggedIn, userAddress]);
 
-  //   fetchCkbBalance();
-  // }, [isLoggedIn, userAddress, ethers]);
-
-  return { balance, isChecked };
+  return { isChecked };
 };
 
 export default useCheckBalance;

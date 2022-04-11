@@ -8,6 +8,7 @@ import createProposalReducer from 'redux/slices/createProposal';
 
 import modalTransactionReducer from 'redux/slices/modalTransaction';
 import modalWireddCKBReducer from 'redux/slices/modalWireddCKB';
+import modalSUDTTransferReducer from 'redux/slices/modalSUDTTransfer';
 
 export default configureStore({
   reducer: {
@@ -19,6 +20,7 @@ export default configureStore({
 
     modalTransaction: modalTransactionReducer,
     modalWireddCKB: modalWireddCKBReducer,
+    modalSUDTTransfer: modalSUDTTransferReducer,
   },
   devTools: process.env.MODE !== 'production',
 });

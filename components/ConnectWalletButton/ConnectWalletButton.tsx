@@ -6,11 +6,11 @@ import Box from '@mui/material/Box';
 
 import DAOButton from 'components/DAOButton/DAOButton';
 
-import { setUserAddress, setIsLoggedIn } from 'redux/slices/user';
-
 import { loadWeb3, getMetamaskAddress } from 'utils/blockchain';
 
 import useCheckProvider from 'hooks/useCheckProvider';
+
+import { setUserAddress, setIsLoggedIn } from 'redux/slices/user';
 
 const ConnectWalletButton: FC = () => {
   const dispatch = useDispatch();

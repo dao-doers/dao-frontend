@@ -4,11 +4,7 @@ import PROCESSING_STATUSES from 'enums/processingStatuses';
 
 interface ModalTransactionProps {
   isOpen: boolean;
-  status?:
-    | PROCESSING_STATUSES.ERROR
-    | PROCESSING_STATUSES.PROCESSING
-    | PROCESSING_STATUSES.SUCCESS
-    | PROCESSING_STATUSES.IDLE;
+  status?: PROCESSING_STATUSES;
   message: string;
 }
 
