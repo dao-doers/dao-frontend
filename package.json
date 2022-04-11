@@ -44,6 +44,7 @@
     "date-fns-tz": "^1.1.6",
     "ethers": "^5.5.2",
     "formik": "^2.2.9",
+    "identicon.js": "^2.3.3",
     "moment-mini": "^2.24.0",
     "nervos-bridge": "^1.2.0",
     "nervos-godwoken-integration": "^0.1.1",

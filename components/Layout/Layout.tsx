@@ -7,11 +7,11 @@ import styled from '@emotion/styled';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
 
-import BlockchainStatus from 'components/BlockchainStatus/BlockchainStatus';
-import DesktopMenu from 'components/DesktopMenu/DesktopMenu';
+import BlockchainStatusContent from 'components/BlockchainStatusContent/BlockchainStatusContent';
+import DesktopMenu from 'components/Menu/DesktopMenu/DesktopMenu';
 import Footer from 'components/Footer/Footer';
 import LoadingPage from 'components/LoadingPage/LoadingPage';
-import MobileMenu from 'components/MobileMenu/MobileMenu';
+import MobileMenu from 'components/Menu/MobileMenu/MobileMenu';
 
 import THEME_MODES from 'enums/themeModes';
 
@@ -19,6 +19,7 @@ import useFetchProposals from 'hooks/useFetchProposals';
 import useFetchVotes from 'hooks/useFetchVotes';
 import useMaintainSession from 'hooks/useMaintainSession';
 import useFetchMembers from 'hooks/useFetchMembers';
+import useIsMobile from 'hooks/useIsMobile';
 
 import { setTheme } from 'redux/slices/theme';
 
@@ -45,6 +46,8 @@ declare global {
 
 const Layout: FC<LayoutProps> = ({ children }) => {
   const dispatch = useDispatch();
+
+  const isMobile = useIsMobile('lg');
 
   const loadingProposals = useFetchProposals();
   const loadingVotes = useFetchVotes();
@@ -75,7 +78,7 @@ const Layout: FC<LayoutProps> = ({ children }) => {
         </Box>
 
         <Box width="100%">
-          <BlockchainStatus />
+          {!isMobile && <BlockchainStatusContent />}
           {(loadingProposals.loading || loadingVotes.loading) && <LoadingPage />}
 
           {!loadingProposals.loading && !loadingVotes.loading && children}

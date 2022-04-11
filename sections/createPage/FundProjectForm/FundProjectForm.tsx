@@ -41,7 +41,7 @@ const tributeToken = process.env.TRIBUTE_TOKEN_ADDRESS;
 const paymentToken = process.env.TRIBUTE_TOKEN_ADDRESS;
 
 const TypographyRed = styled(Typography)`
-  color: ${({ theme }) => theme.palette.colors.col6};
+  color: ${({ theme }) => theme.palette.colors.col4};
   font-weight: 600;
 `;
 

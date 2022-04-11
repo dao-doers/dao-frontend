@@ -17,7 +17,7 @@ const Timer = React.memo(({ reset }: { reset: boolean }) => {
     return () => clearInterval(timer as NodeJS.Timeout);
   }, [time]);
 
-  return <Typography variant="body2-bold">{`${moment.duration(time, 'millisecond').humanize()} ago`}</Typography>;
+  return <Typography variant="body1-bold">{`${moment.duration(time, 'millisecond').humanize()} ago`}</Typography>;
 });
 
 export default Timer;

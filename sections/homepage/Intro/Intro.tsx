@@ -19,7 +19,7 @@ const Title = styled(Typography)`
   font-weight: 600;
   margin-top: 75px;
   ${({ theme }) => theme.breakpoints.down('sm')} {
-    margin-top: 0;
+    margin-top: 40px;
     text-align: center;
   }
 `;
