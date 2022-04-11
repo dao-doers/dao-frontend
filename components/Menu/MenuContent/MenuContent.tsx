@@ -44,7 +44,7 @@ const StyledCloseIcon = styled(Close)`
 const MenuContent: FC<MenuContentProps> = ({ setDrawerOpen }) => {
   const dispatch = useDispatch();
   const router = useRouter();
-  const isMobile = useIsMobile('md');
+  const isMobile = useIsMobile('lg');
 
   const handledCKBModal = () => {
     dispatch(setOpen(true));
@@ -93,7 +93,12 @@ const MenuContent: FC<MenuContentProps> = ({ setDrawerOpen }) => {
   };
 
   return (
-    <Box display="flex" flexDirection="column" sx={{ alignItems: { xs: 'center', md: 'flex-start' } }} minHeight="80vh">
+    <Box
+      display="flex"
+      flexDirection="column"
+      sx={{ alignItems: { xs: 'center', lg: 'flex-start' }, px: { md: 3, lg: 0 } }}
+      minHeight="80vh"
+    >
       {isMobile && (
         <Box display="flex" justifyContent="flex-end" width="100%" mt={2} mr={2}>
           <IconButton aria-label="close drawer" onClick={handleClose}>

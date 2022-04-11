@@ -29,7 +29,7 @@ const NavButtonsWrapper = styled(Box)`
 `;
 
 const TypographyRed = styled(Typography)`
-  color: ${({ theme }) => theme.palette.colors.col6};
+  color: ${({ theme }) => theme.palette.colors.col4};
   font-weight: 600;
 `;
 

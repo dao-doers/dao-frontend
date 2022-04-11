@@ -7,11 +7,12 @@ import styled from '@emotion/styled';
 import Box from '@mui/material/Box';
 import Close from '@mui/icons-material/Close';
 import Drawer from '@mui/material/Drawer';
-import IconButton from '@mui/material/IconButton';
 import Menu from '@mui/icons-material/Menu';
 
 import Link from 'components/Link/Link';
-import MenuContent from 'components/MenuContent/MenuContent';
+import MenuContent from 'components/Menu/MenuContent/MenuContent';
+import BlockchainStatusContent from 'components/BlockchainStatusContent/BlockchainStatusContent';
+import DAOPlainButton from 'components/DAOPlainButton/DAOPlainButton';
 
 import THEME_MODES from 'enums/themeModes';
 
@@ -19,10 +20,12 @@ import { selectTheme } from 'redux/slices/theme';
 
 const StyledMenuIcon = styled(Menu)`
   color: ${({ theme }) => theme.palette.text.primary};
+  margin-left: 10px;
 `;
 
 const StyledCloseIcon = styled(Close)`
   color: ${({ theme }) => theme.palette.text.primary};
+  margin-left: 10px;
 `;
 
 const StyledDrawer = styled(Drawer)`
@@ -50,9 +53,9 @@ const MobileMenu: FC = () => {
   };
 
   return (
-    <Box sx={{ display: { xs: 'block', lg: 'none' } }}>
+    <Box sx={{ display: { xs: 'block', lg: 'none' }, mt: { xs: 2, lg: 0 } }}>
       <Box display="flex" justifyContent="space-between" alignItems="center">
-        <Box width="100px" mt={1}>
+        <Box width="100px">
           <Link internal href="/">
             {themeMode === THEME_MODES.DARK ? (
               <Image src="/logos/logo_white.png" alt="header-logo" height="110" width="219" />
@@ -61,15 +64,20 @@ const MobileMenu: FC = () => {
             )}
           </Link>
         </Box>
-        {isDrawerOpen ? (
-          <IconButton aria-label="close drawer" onClick={handleDrawerToggle}>
-            <StyledCloseIcon />
-          </IconButton>
-        ) : (
-          <IconButton aria-label="open drawer" onClick={handleDrawerToggle}>
-            <StyledMenuIcon />
-          </IconButton>
-        )}
+
+        <Box display="flex" alignItems="center">
+          <BlockchainStatusContent />
+
+          {isDrawerOpen ? (
+            <DAOPlainButton aria-label="close drawer" onClick={handleDrawerToggle}>
+              <StyledCloseIcon />
+            </DAOPlainButton>
+          ) : (
+            <DAOPlainButton aria-label="open drawer" onClick={handleDrawerToggle}>
+              <StyledMenuIcon />
+            </DAOPlainButton>
+          )}
+        </Box>
       </Box>
 
       <StyledDrawer
