@@ -27,7 +27,6 @@ const useProcessProposal = async (user: string, daoAddress: any, proposalIndex: 
 
   const estimatedGas = 6000000;
   const receipt = await getReceipt(proposal, user, estimatedGas);
-  console.log(receipt);
 
   return receipt;
 };

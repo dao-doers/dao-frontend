@@ -22,6 +22,7 @@ const CreatePage: FC<NextPage> = () => {
   return (
     <Layout>
       <Box
+        mt={4}
         sx={{
           display: 'flex',
           flexDirection: { xs: 'column', md: 'row' },
