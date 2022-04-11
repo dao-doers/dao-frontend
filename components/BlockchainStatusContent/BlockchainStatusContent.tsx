@@ -42,7 +42,7 @@ const TypographyRed = styled(Typography)`
 const ImageWrapper = styled(Box)`
   width: 40px;
   height: 40px;
-  margin-left: 10px;
+  margin-left: 15px;
 `;
 
 const StyledImage = styled(Image)`

@@ -52,6 +52,10 @@ const TypographyGreen = styled(Typography)`
   color: ${({ theme }) => theme.palette.colors.col2};
 `;
 
+const TypographyRed = styled(Typography)`
+  color: ${({ theme }) => theme.palette.colors.col4};
+`;
+
 const TypographyBlue = styled(Typography)`
   color: ${({ theme }) => theme.palette.colors.col1};
 `;
@@ -218,7 +222,12 @@ const VoteAccordion: FC<any> = ({ proposal }) => {
             <TypographyViolet>Grace Period</TypographyViolet>
           )}
           {proposal.proposalStatus === PROPOSAL_STATUS.PROCEEDING && <TypographyViolet>Proceeding</TypographyViolet>}
-          {proposal.proposalStatus === PROPOSAL_STATUS.FINISHED && <TypographyViolet>Finished</TypographyViolet>}
+          {proposal.proposalStatus === PROPOSAL_STATUS.FINISHED && (
+            <Box display="flex">
+              {proposal.didPass === false && <TypographyRed mr={1.5}>Rejected</TypographyRed>}
+              {proposal.didPass === true && <TypographyGreen mr={1.5}>Approved</TypographyGreen>}
+            </Box>
+          )}
         </Box>
       </StyledAccordionSummary>
 
@@ -374,15 +383,20 @@ const VoteAccordion: FC<any> = ({ proposal }) => {
               Votes:{' '}
             </Typography>
             {proposal.yesVotes + proposal.noVotes > 0 && (
-              <Box width="100%">
-                <Box display="flex" justifyContent="space-between" width="100%" pb={2}>
-                  <TypographyGreen>Agreed: {proposal.yesVotes}</TypographyGreen>
-
-                  <TypographyBlue>Disagreed: {proposal.noVotes}</TypographyBlue>
+              <Box width="100%" pb={2}>
+                <TypographyGreen>
+                  Agreed: {proposal.yesVotes} ( {(proposal.yesVotes / (proposal.yesVotes + proposal.noVotes)) * 100}% )
+                </TypographyGreen>
+                <Box mt={1} mb={2}>
+                  <LinearChart type="agree" main={proposal.yesVotes} all={proposal.yesVotes + proposal.noVotes} />
                 </Box>
 
-                <Box>
-                  <LinearChart agreed={proposal.yesVotes} disagreed={proposal.noVotes} />
+                <TypographyBlue>
+                  Disagreed: {proposal.noVotes} ( {(proposal.noVotes / (proposal.yesVotes + proposal.noVotes)) * 100}
+                  %)
+                </TypographyBlue>
+                <Box mt={1} mb={2}>
+                  <LinearChart type="disagree" main={proposal.noVotes} all={proposal.yesVotes + proposal.noVotes} />
                 </Box>
               </Box>
             )}
@@ -417,15 +431,21 @@ const VoteAccordion: FC<any> = ({ proposal }) => {
                 Votes:{' '}
               </Typography>
               {proposal.yesVotes + proposal.noVotes > 0 && (
-                <Box width="100%">
-                  <Box display="flex" justifyContent="space-between" width="100%" pb={2}>
-                    <TypographyGreen>Agreed: {proposal.yesVotes}</TypographyGreen>
-
-                    <TypographyBlue>Disagreed: {proposal.noVotes}</TypographyBlue>
+                <Box width="100%" pb={2}>
+                  <TypographyGreen>
+                    Agreed: {proposal.yesVotes} ( {(proposal.yesVotes / (proposal.yesVotes + proposal.noVotes)) * 100}%
+                    )
+                  </TypographyGreen>
+                  <Box mt={1} mb={2}>
+                    <LinearChart type="agree" main={proposal.yesVotes} all={proposal.yesVotes + proposal.noVotes} />
                   </Box>
 
-                  <Box>
-                    <LinearChart agreed={proposal.yesVotes} disagreed={proposal.noVotes} />
+                  <TypographyBlue>
+                    Disagreed: {proposal.noVotes} ( {(proposal.noVotes / (proposal.yesVotes + proposal.noVotes)) * 100}
+                    %)
+                  </TypographyBlue>
+                  <Box mt={1} mb={2}>
+                    <LinearChart type="disagree" main={proposal.noVotes} all={proposal.yesVotes + proposal.noVotes} />
                   </Box>
                 </Box>
               )}

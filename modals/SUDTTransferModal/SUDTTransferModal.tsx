@@ -35,6 +35,10 @@ const TypographyGreen = styled(Typography)`
   font-weight: 600;
 `;
 
+const TypographyRed = styled(Typography)`
+  color: ${({ theme }) => theme.palette.colors.col4};
+`;
+
 const initialValues = {
   receiverAddress: '',
   amount: 0,
@@ -66,14 +70,11 @@ const WireddCKBModal: FC = () => {
   return (
     <Modal isOpen={isModalOpen} handleClose={handleModalOpen} title="Transfer dCKB" divider>
       <StyledBox>
-        <Typography variant="subtitle2">Transfer dCKB between accounts on Layer 2</Typography>
-        <Typography>
-          Important! Create account on{' '}
-          <Link href={EXTERNAL_ROUTES.CKB_TOOLS} target="_blank">
-            https://dev.ckb.tools/create-layer2-account
-          </Link>{' '}
-          at first.
-        </Typography>
+        <Typography variant="subtitle2-bold">Transfer dCKB between accounts on Layer 2</Typography>
+        <TypographyRed>Important! Check if both accounts exist on:</TypographyRed>
+        <Link href={EXTERNAL_ROUTES.CKB_TOOLS} target="_blank">
+          https://dev.ckb.tools/create-layer2-account
+        </Link>
 
         <Formik
           validationSchema={transferUSDTModalSchema}
@@ -85,12 +86,13 @@ const WireddCKBModal: FC = () => {
             <Form>
               <Box width="100%">
                 <Box width="100%" my={2}>
-                  <Typography>Sending from: {userAddress}</Typography>
+                  <Typography variant="body1-bold">Transfer From: </Typography>
+                  <Typography>{userAddress}</Typography>
                 </Box>
 
                 <Box width="100%" my={2}>
                   <DAOInput
-                    label="Send To"
+                    label="Transfer To"
                     inputProps={{
                       id: 'receiverAddress',
                       value: formik.values.receiverAddress,

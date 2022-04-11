@@ -24,10 +24,10 @@ import { setOpen, setStatus, setMessage } from 'redux/slices/modalTransaction';
 import { selectUserAddress, selectIsLoggedIn, selectdckbBalance } from 'redux/slices/user';
 
 const initialValues = {
-  title: 'test',
-  description: 'test',
-  link: 'https://dziobakwszafie.pl/',
-  tributeOffered: 3333,
+  title: '',
+  description: '',
+  link: '',
+  tributeOffered: 0,
 };
 
 const JoinDaoForm: FC = () => {

@@ -15,6 +15,10 @@ import { APP_ROUTES } from 'utils/routes';
 const TypographyTitle = styled(Typography)`
   color: ${({ theme }) => theme.palette.colors.main7};
   font-weight: 600;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 1;
+  overflow: hidden;
 `;
 
 const TypographyAgree = styled(Typography)`
@@ -62,8 +66,8 @@ const VoteTile: FC<any> = ({ vote }) => {
 
             <Box width="40%">
               <Typography variant="body1-bold">Voted on:</Typography>
-              {vote.uintVote === 1 && <TypographyAgree>Yes</TypographyAgree>}
-              {vote.uintVote === 2 && <TypographyDisagree>No</TypographyDisagree>}
+              {vote.uintVote === 1 && <TypographyAgree>Agree</TypographyAgree>}
+              {vote.uintVote === 2 && <TypographyDisagree>Disagree</TypographyDisagree>}
             </Box>
           </Box>
         </Box>

@@ -46,6 +46,10 @@ const StyledTwitterIcon = styled(TwitterIcon)`
 const TypographyTitle = styled(Typography)`
   color: ${({ theme }) => theme.palette.colors.main7};
   font-weight: 600;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 1;
+  overflow: hidden;
 `;
 
 const TypographySmall = styled(Typography)`
