@@ -1,4 +1,14 @@
-import React, { FC } from 'react';
+import React, { FC, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import {
+  selectUserAddress,
+  selectIsLoggedIn,
+  selectbalanceSUDT,
+  selectUserAddressLayer2,
+  setUserAddressLayer2,
+  selectUserCKBAddress,
+  setUserCKBAddress,
+} from 'redux/slices/user';
 
 import styled from '@emotion/styled';
 
@@ -6,6 +16,13 @@ import DAOButton from 'components/DAOButton/DAOButton';
 
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
+
+import { useDCKBTokenHook } from 'hooks/DCKBTokenHook';
+import useCheckProvider from 'hooks/useCheckProvider';
+import { setOpen, setMessage, setStatus } from 'redux/slices/modalTransaction';
+
+import PROCESSING_STATUSES from 'enums/processingStatuses';
+import ConnectWalletButton from 'components/ConnectWalletButton/ConnectWalletButton';
 
 interface CreateAccountStepProps {
   handleNextStep: () => void;
@@ -29,6 +46,60 @@ const ButtonWrapper = styled(Box)`
 `;
 
 const CreateAccountStep: FC<CreateAccountStepProps> = ({ handleNextStep }) => {
+  const { createLayer2Address, loaderLayer2Address, txnInfoLayer2Address, connectedWalletAddress } = useDCKBTokenHook();
+  const hasProvider = useCheckProvider();
+
+  const dispatch = useDispatch();
+  const userAddress = useSelector(selectUserAddress);
+  const userCKBAddress = useSelector(selectUserCKBAddress);
+  const isLoggedIn = useSelector(selectIsLoggedIn);
+  const depositAddress = useSelector(selectUserAddressLayer2);
+
+  const BalanceSUDT = useSelector(selectbalanceSUDT);
+  const Layer2Address = useSelector(selectUserAddressLayer2);
+
+  const getLayer2Address = async () => {
+    try {
+      dispatch(setStatus(PROCESSING_STATUSES.PROCESSING));
+      dispatch(setOpen(true));
+      dispatch(setMessage(loaderLayer2Address.message));
+
+      if (hasProvider && userAddress) {
+        const layer2Address = await createLayer2Address();
+
+        dispatch(setUserAddressLayer2(layer2Address));
+        dispatch(setMessage(loaderLayer2Address.message));
+        dispatch(setStatus(PROCESSING_STATUSES.SUCCESS));
+        return layer2Address;
+      }
+    } catch (error: any) {
+      // setDepositAddress(undefined);
+
+      dispatch(setStatus(PROCESSING_STATUSES.ERROR));
+      dispatch(setMessage(loaderLayer2Address.message || error.message || error.toString()));
+      // setToast(error.message || error.toString());
+    }
+  };
+
+  useEffect((): void => {
+    const getConnectedWalletAddress = async () => {
+      try {
+        if (hasProvider && userAddress) {
+          const addresses = await connectedWalletAddress();
+          dispatch(setUserCKBAddress(addresses));
+        }
+      } catch (error: any) {
+        throw error;
+      }
+    };
+    getConnectedWalletAddress();
+    console.log('connectedwalletAddressess', userCKBAddress);
+  }, [hasProvider, userAddress]);
+
+  console.log('BalaceSUDT', BalanceSUDT);
+  console.log('Layer2Address', Layer2Address);
+  console.log('loaderLayer2Address', loaderLayer2Address);
+  console.log('txnInfoLayer2Address', txnInfoLayer2Address);
   return (
     <Box mt={5} mb={4}>
       <StyledBox>
@@ -36,25 +107,29 @@ const CreateAccountStep: FC<CreateAccountStepProps> = ({ handleNextStep }) => {
           <Typography component="h6" variant="h6" paragraph>
             Create account on Nervos Layer 2
           </Typography>
-          <Typography component="h6">
-            You will be taken to an external page where you will be able to create your account address on Layer 2.
-          </Typography>
         </Box>
-        <ButtonWrapper>
-          <DAOButton
-            variant="gradientOutline"
-            onClick={() => window.open('https://dev.ckb.tools/create-layer2-account', '_blank')}
-          >
-            Create account
-          </DAOButton>
-        </ButtonWrapper>
+        {isLoggedIn ? (
+          <ButtonWrapper>
+            <DAOButton variant="gradientOutline" onClick={() => getLayer2Address()}>
+              Create account
+            </DAOButton>
+          </ButtonWrapper>
+        ) : (
+          <ConnectWalletButton />
+        )}
       </StyledBox>
 
       <StyledBox>
         <Box>
-          <Typography component="h6" variant="h6">
-            Already have a Nervos Layer 2 account.
-          </Typography>
+          {depositAddress ? (
+            <Typography component="h6" variant="h6">
+              You already have a Nervos Layer 2 account.
+            </Typography>
+          ) : (
+            <Typography component="h6" variant="h6">
+              You do not have a Nervos Layer 2 account.
+            </Typography>
+          )}
         </Box>
         <ButtonWrapper>
           <DAOButton variant="gradientOutline" onClick={handleNextStep}>
@@ -62,6 +137,16 @@ const CreateAccountStep: FC<CreateAccountStepProps> = ({ handleNextStep }) => {
           </DAOButton>
         </ButtonWrapper>
       </StyledBox>
+      {!depositAddress && (
+        <ButtonWrapper>
+          <Typography component="h6" variant="h6">
+            Your CKB address, (use on faucet site): {userCKBAddress}
+          </Typography>
+          <DAOButton variant="gradientOutline" onClick={() => window.open('https://faucet.nervos.org/', '_blank')}>
+            Layer 1 faucet
+          </DAOButton>
+        </ButtonWrapper>
+      )}
     </Box>
   );
 };

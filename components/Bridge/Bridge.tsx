@@ -1,7 +1,8 @@
 import React, { useState, FC, useEffect } from 'react';
 
-import { useSelector } from 'react-redux';
-import { selectUserAddress, selectIsLoggedIn } from 'redux/slices/user';
+import { useDispatch, useSelector } from 'react-redux';
+import { selectUserAddress, selectIsLoggedIn, setbalanceSUDT, selectUserAddressLayer2 } from 'redux/slices/user';
+import PROCESSING_STATUSES from 'enums/processingStatuses';
 
 import { Formik, Form, FormikErrors } from 'formik';
 import Image from 'next/image';
@@ -13,7 +14,6 @@ import { Accordion, AccordionSummary, Typography } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import AccordionDetails from '@mui/material/AccordionDetails';
 
-import useQueryUdtBalance from 'hooks/useQueryUdtBalance';
 import { useDCKBTokenHook } from 'hooks/DCKBTokenHook';
 import { dCKBTransferSchema } from 'validators/minorValidators';
 import formatAddress from 'utils/formatAddress';
@@ -23,6 +23,8 @@ import Snackbar from '@mui/material/Snackbar';
 import MuiAlert, { AlertProps } from '@mui/material/Alert';
 
 import ConnectWalletButton from 'components/ConnectWalletButton/ConnectWalletButton';
+import useCheckProvider from 'hooks/useCheckProvider';
+import { setMessage, setOpen, setStatus } from 'redux/slices/modalTransaction';
 
 const Title = styled(Typography)`
   font-weight: 600;
@@ -85,19 +87,14 @@ interface SwapFormValues {
 const SUDT_SYMBOL = 'dCKB';
 
 const BridgeComponent: FC = () => {
+  const dispatch = useDispatch();
   const userAddress = useSelector(selectUserAddress);
   const isLoggedIn = useSelector(selectIsLoggedIn);
+  const hasProvider = useCheckProvider();
+  const depositAddress = useSelector(selectUserAddressLayer2);
 
-  const [depositAddress, setDepositAddress] = useState<any | undefined>();
-  const [queryUdtBalance, setQueryUdtBalance] = useState<string | null>(null);
-
-  const [error, setError] = useState<string | null>(null);
-  const [invalidAddress, setInvalidAddress] = useState<string | null>(null);
-
-  const [networkOptionField, setNetworkOptionField] = useState([]);
-  const [defaultNetwork, setDefaultNetwork] = useState('');
   const [balanceSUDT, setBalanceSUDT] = useState<any>();
-  const { txnInfo, balanceFromWallet, createLayer2Address, mintDCKTokens } = useDCKBTokenHook();
+  const { loader, txnInfo, balanceFromWallet, mintDCKTokens } = useDCKBTokenHook();
   const [toast, setToast] = useState(null);
 
   const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(props, ref) {
@@ -106,9 +103,14 @@ const BridgeComponent: FC = () => {
   useEffect((): void => {
     const fetchWalletBalance = async () => {
       try {
-        const balances = await balanceFromWallet();
-        setBalanceSUDT(balances);
-        return balances;
+        if (hasProvider && userAddress) {
+          const balances = await balanceFromWallet();
+          setBalanceSUDT(balances);
+
+          dispatch(setbalanceSUDT(balances));
+
+          return balances;
+        }
       } catch (error: any) {
         setToast(error.message || error.toString());
         throw error;
@@ -116,29 +118,14 @@ const BridgeComponent: FC = () => {
     };
     fetchWalletBalance();
     console.log('BALANCE', balanceSUDT);
-  }, []);
-
-  useEffect((): void => {
-    const getLayer2Address = async () => {
-      try {
-        const layer2Address = await createLayer2Address();
-        if(layer2Address) {
-        setDepositAddress(layer2Address);
-        }
-        return layer2Address;
-      } catch (error: any) {
-        setToast(error.message || error.toString());
-      }
-    };
-    getLayer2Address();
-  }, [depositAddress]);
+  }, [hasProvider, userAddress]);
 
   const initialAddress = depositAddress;
-  console.log(initialAddress)
+  console.log(initialAddress);
 
   const initialValues: SwapFormValues = {
     amount: '',
-    destination_address: initialAddress
+    destination_address: initialAddress,
   };
 
   function displayErrorsOrSubmit(errors: FormikErrors<SwapFormValues>): string {
@@ -177,16 +164,27 @@ const BridgeComponent: FC = () => {
         validateOnChange
         onSubmit={async (values, actions) => {
           try {
+            dispatch(setStatus(PROCESSING_STATUSES.PROCESSING));
+            dispatch(setOpen(true));
+            dispatch(setMessage(loader.message));
+
             await mintDCKTokens('dCKB', values.amount, values.destination_address);
             actions.setSubmitting(false);
+
+            dispatch(setMessage(loader.message));
+            dispatch(setStatus(PROCESSING_STATUSES.SUCCESS));
           } catch (error: any) {
             setToast(error.message || error.toString());
             actions.setSubmitting(false);
+
+            dispatch(setStatus(PROCESSING_STATUSES.ERROR));
+            dispatch(setMessage(loader.message || error.message || error.toString()));
           }
           console.log({
             amount: values.amount,
             destination_address: values.destination_address,
           });
+          console.log(txnInfo)
         }}
         validate={values => {
           console.log(values);
@@ -387,21 +385,23 @@ const BridgeComponent: FC = () => {
                 </StyledAccordionDetails>
               </StyledAccordionB>
             </AccordionWrapper>
-            <label className="block font-medium text-center">Fee TODO</label>
-            {isLoggedIn ?
-            <Box pt={5}>
-              <DAOButton
-                variant="gradientOutline"
-                type="submit"
-                isLoading={formik.isSubmitting}
-                disabled={
-                  formik.errors.amount != null || formik.errors.destination_address != null || formik.isSubmitting
-                }
-              >
-                {displayErrorsOrSubmit(formik.errors)}
-              </DAOButton>
-            </Box>: <ConnectWalletButton />
-            }
+            <Typography>{`Fee: 10000 shanon`}</Typography>
+            {isLoggedIn ? (
+              <Box pt={5}>
+                <DAOButton
+                  variant="gradientOutline"
+                  type="submit"
+                  isLoading={formik.isSubmitting}
+                  disabled={
+                    formik.errors.amount != null || formik.errors.destination_address != null || formik.isSubmitting
+                  }
+                >
+                  {displayErrorsOrSubmit(formik.errors)}
+                </DAOButton>
+              </Box>
+            ) : (
+              <ConnectWalletButton />
+            )}
           </Form>
         )}
       </Formik>

@@ -1,27 +1,25 @@
 /* eslint-disable import/prefer-default-export */
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import { convertToCogs } from 'utils/bignumber';
 import Web3 from 'web3';
 import ERC20_JSON from 'abi/ERC20.json';
-import { AddressTranslator, WalletAssetsSender } from 'nervos-godwoken-integration';
+import { AddressTranslator, IAddressTranslatorConfig, WalletAssetsSender } from 'nervos-godwoken-integration';
 
 export const useDCKBTokenHook = () => {
   const [loader, setLoader] = useState({ isLoading: false, message: '', title: '' });
+  const [loaderLayer2Address, setLoaderLayer2Address] = useState({ isLoading: false, message: '', title: '' });
   const [txnInfo, setTxnInfo] = useState({ txnLink: '', txnAmount: '', tokenName: '', tokenSymbol: '' });
+  const [txnInfoLayer2Address, setTxnInfoLayer2Address] = useState({ txnLink: '', address: '' });
 
-  let web3: Web3 | null = null;
-  let provider = null;
-  provider = window.ethereum;
-  web3 = new Web3(provider);
   const tokenContractAddress = '0x884541623C1B26A926a5320615F117113765fF81';
 
   const resetTxnInfo = () => {
     setTxnInfo({ ...txnInfo, txnLink: '' });
   };
-  const ETHEREUM_PRIVATE_KEY = '0xd9066ff9f753a1898709b568119055660a77d9aae4d7a4ad677b8fb3d2a571e5';
+
   const dckbIssuerHash = '0xc43009f083e70ae3fee342d59b8df9eec24d669c1c3a3151706d305f5362c37e';
-  // const addressTranslator = new AddressTranslator();
-  const addressTranslator = new AddressTranslator({
+
+  const TESTNET_CONFIG: IAddressTranslatorConfig = {
     CKB_URL: 'https://testnet.ckb.dev',
     RPC_URL: 'https://godwoken-testnet-web3-v1-rpc.ckbapp.dev',
     INDEXER_URL: 'https://testnet.ckb.dev/indexer',
@@ -34,7 +32,11 @@ export const useDCKBTokenHook = () => {
     },
     rollup_type_hash: '0x4940246f168f4106429dc641add3381a44b5eef61e7754142f594e986671a575',
     rc_lock_script_type_hash: '0x79f90bb5e892d80dd213439eeab551120eb417678824f282b4ffb5f21bad2e1e',
-  });
+  };
+
+  // const addressTranslator = new AddressTranslator();
+  const addressTranslator = new AddressTranslator(TESTNET_CONFIG);
+
   const assetSender = new WalletAssetsSender('https://testnet.ckb.dev/rpc', 'https://testnet.ckb.dev/indexer');
 
   const mintDCKTokens = async (tokenId: any, amount: string, toAddress: string) => {
@@ -46,7 +48,7 @@ export const useDCKBTokenHook = () => {
       });
 
       await assetSender.init('testnet');
-      await assetSender.connectWallet(ETHEREUM_PRIVATE_KEY); // you can also pass private key
+      await assetSender.connectWallet(); // you can also pass private key
       // const contractAddress = web3?.utils.toChecksumAddress(tokenContractAddress);
       // const contract = new web3?.eth.Contract(ERC20_JSON, contractAddress);
       // const decimals = await contract.methods.decimals().call();
@@ -76,9 +78,8 @@ export const useDCKBTokenHook = () => {
 
   const balanceFromWallet = async () => {
     try {
-
       await assetSender.init('testnet');
-      await assetSender.connectWallet(ETHEREUM_PRIVATE_KEY);
+      await assetSender.connectWallet();
       const ckbBalance = await assetSender.getConnectedWalletCKBBalance();
       const dckbBalance = await assetSender.getConnectedWalletSUDTBalance(dckbIssuerHash);
 
@@ -91,37 +92,80 @@ export const useDCKBTokenHook = () => {
     }
   };
 
+  const connectedWalletAddress = async () => {
+    try {
+      await assetSender.init('testnet');
+      await assetSender.connectWallet();
+      const walletCKBAddress = await assetSender.getConnectedWalletCKBAddress();
+
+      return walletCKBAddress;
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  };
+
+  const fetchConnectedAccountBalance = async (address: any) => {
+    const response = await fetch(TESTNET_CONFIG.RPC_URL, {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        jsonrpc: '2.0',
+        id: 1,
+        method: 'eth_getBalance',
+        params: [address, 'latest'],
+      }),
+      mode: 'cors',
+    });
+
+    const json = await response.json();
+
+    return parseInt(json.result);
+  };
+
   /*
 Deposit to Layer 2 address on Layer 1
 https://www.npmjs.com/package/nervos-godwoken-integration
 */
   const createLayer2Address = async () => {
+    let layer1TxHash;
     try {
-      let layer1TxHash;
+      setLoaderLayer2Address({
+        isLoading: true,
+        message: 'Please confirm transaction from your wallet...',
+        title: 'Wallet Interaction',
+      });
+
       await addressTranslator.init('testnet');
 
-      await addressTranslator.connectWallet(ETHEREUM_PRIVATE_KEY);
+      await addressTranslator.connectWallet();
 
       const ethereumAddress = addressTranslator.getConnectedWalletAddress();
       if (ethereumAddress) {
         layer1TxHash = await addressTranslator.createLayer2Address(ethereumAddress);
         console.log(`Deposit to Layer 2 address on Layer 1: \n${layer1TxHash}`);
       }
-      setTxnInfo({
+      setTxnInfoLayer2Address({
         txnLink: `https://explorer.nervos.org/aggron/${layer1TxHash}`,
-        txnAmount: '',
-        tokenName: 'layer1TxHash',
-        tokenSymbol: '',
+        address: layer1TxHash || '',
       });
       return layer1TxHash;
     } catch (error) {
+      setLoaderLayer2Address({
+        isLoading: false,
+        message: 'You have not created your Layer 2 account, please try again!',
+        title: '',
+      });
       console.log(error);
       throw error;
     } finally {
-      setLoader({
+      setLoaderLayer2Address({
         isLoading: false,
-        message: 'Layer 2 address successfully created on Layer 1',
-        title: 'Layer 2 address',
+        message: 'You have successfully created and funded your Layer 2 account!',
+        title: layer1TxHash || '',
       });
     }
   };
@@ -129,8 +173,12 @@ https://www.npmjs.com/package/nervos-godwoken-integration
     mintDCKTokens,
     createLayer2Address,
     balanceFromWallet,
+    fetchConnectedAccountBalance,
+    connectedWalletAddress,
     loader,
+    loaderLayer2Address,
     txnInfo,
+    txnInfoLayer2Address,
     resetTxnInfo,
   };
 };
