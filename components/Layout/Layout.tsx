@@ -61,11 +61,14 @@ const Layout: FC<LayoutProps> = ({ children }) => {
     dispatch(setTheme(theme === THEME_MODES.DARK ? THEME_MODES.DARK : THEME_MODES.LIGHT));
   }, [dispatch]);
 
-  useEffect(async () => {
-    if (window.ethereum) {
-      await window.ethereum.request({ method: 'eth_requestAccounts' });
-      window.web3 = new Web3(window.ethereum);
-    }
+  useEffect(() => {
+    const checkProvider = async () => {
+      if (window.ethereum) {
+        await (window as any).ethereum.request({ method: 'eth_requestAccounts' });
+        window.web3 = new Web3((window as any).ethereum);
+      }
+    };
+    checkProvider();
   }, []);
 
   return (
