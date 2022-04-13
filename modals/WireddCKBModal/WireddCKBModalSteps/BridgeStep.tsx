@@ -41,13 +41,13 @@ const BridgeStep: FC<IBridge> = ({ handlePreviousStep }) => {
   return (
     <Box mt={5} mb={4}>
       <Box>
-        <Typography component="h6" variant="h6" paragraph>
+        {/* <Typography component="h6" variant="h6" paragraph>
           Transfer dCKB to Layer2
         </Typography>
         <Typography component="h6">
           Please make sure you have sufficient CKB balance in your L1 account before transferring to L2. A minimum
           balance of 471 CKB needs to be maintained after transaction.
-        </Typography>
+        </Typography> */}
         {/* {hasProvider && isLoggedIn ? ( */}
           <Box pb={20}>
             {/* <DAOBridgeComponentWithNoSSR /> */}

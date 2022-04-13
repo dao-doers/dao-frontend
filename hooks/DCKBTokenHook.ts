@@ -8,13 +8,15 @@ import { AddressTranslator, IAddressTranslatorConfig, WalletAssetsSender } from 
 export const useDCKBTokenHook = () => {
   const [loader, setLoader] = useState({ isLoading: false, message: '', title: '' });
   const [loaderLayer2Address, setLoaderLayer2Address] = useState({ isLoading: false, message: '', title: '' });
-  const [txnInfo, setTxnInfo] = useState({ txnLink: '', txnAmount: '', tokenName: '', tokenSymbol: '' });
+  const [loaderBalance, setLoaderBalance] = useState({ isLoading: false, message: '' });
+  const [txnInfo, setTxnInfo] = useState({ txnLink: '', txnAmount: '', tokenSymbol: '' });
   const [txnInfoLayer2Address, setTxnInfoLayer2Address] = useState({ txnLink: '', address: '' });
 
   const tokenContractAddress = '0x884541623C1B26A926a5320615F117113765fF81';
 
   const resetTxnInfo = () => {
     setTxnInfo({ ...txnInfo, txnLink: '' });
+    setTxnInfoLayer2Address({ ...txnInfoLayer2Address, txnLink: '' });
   };
 
   const dckbIssuerHash = '0xc43009f083e70ae3fee342d59b8df9eec24d669c1c3a3151706d305f5362c37e';
@@ -58,7 +60,6 @@ export const useDCKBTokenHook = () => {
       setTxnInfo({
         txnLink: `https://explorer.nervos.org/aggron/${txHash}`,
         txnAmount: amount,
-        tokenName: tokenId,
         tokenSymbol: tokenId,
       });
       console.log({
@@ -66,6 +67,11 @@ export const useDCKBTokenHook = () => {
       });
     } catch (error) {
       console.log(error);
+      setLoader({
+        isLoading: false,
+        message: 'Transfer not sent, please try again!',
+        title: 'Mint DCKB Tokens',
+      });
       throw error;
     } finally {
       setLoader({
@@ -78,6 +84,10 @@ export const useDCKBTokenHook = () => {
 
   const balanceFromWallet = async () => {
     try {
+      setLoaderBalance({
+        isLoading: true,
+        message: 'loading balance...',
+      });
       await assetSender.init('testnet');
       await assetSender.connectWallet();
       const ckbBalance = await assetSender.getConnectedWalletCKBBalance();
@@ -88,7 +98,10 @@ export const useDCKBTokenHook = () => {
       console.log(error);
       throw error;
     } finally {
-      setLoader({ isLoading: false, message: 'Balance successfully fetched', title: 'Balance' });
+      setLoaderBalance({
+        isLoading: false,
+        message: '',
+      });
     }
   };
 
@@ -177,6 +190,7 @@ https://www.npmjs.com/package/nervos-godwoken-integration
     connectedWalletAddress,
     loader,
     loaderLayer2Address,
+    loaderBalance,
     txnInfo,
     txnInfoLayer2Address,
     resetTxnInfo,

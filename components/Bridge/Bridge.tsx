@@ -1,7 +1,13 @@
 import React, { useState, FC, useEffect } from 'react';
 
 import { useDispatch, useSelector } from 'react-redux';
-import { selectUserAddress, selectIsLoggedIn, setbalanceSUDT, selectUserAddressLayer2 } from 'redux/slices/user';
+import {
+  selectUserAddress,
+  selectbalanceSUDT,
+  selectIsLoggedIn,
+  setbalanceSUDT,
+  selectUserAddressLayer2,
+} from 'redux/slices/user';
 import PROCESSING_STATUSES from 'enums/processingStatuses';
 
 import { Formik, Form, FormikErrors } from 'formik';
@@ -84,17 +90,15 @@ interface SwapFormValues {
   destination_address: string;
 }
 
-const SUDT_SYMBOL = 'dCKB';
-
 const BridgeComponent: FC = () => {
   const dispatch = useDispatch();
   const userAddress = useSelector(selectUserAddress);
   const isLoggedIn = useSelector(selectIsLoggedIn);
-  const hasProvider = useCheckProvider();
+  const balanceSUDT = useSelector(selectbalanceSUDT);
   const depositAddress = useSelector(selectUserAddressLayer2);
 
-  const [balanceSUDT, setBalanceSUDT] = useState<any>();
-  const { loader, txnInfo, balanceFromWallet, mintDCKTokens } = useDCKBTokenHook();
+  const hasProvider = useCheckProvider();
+  const { loader, loaderBalance, txnInfo, balanceFromWallet, mintDCKTokens } = useDCKBTokenHook();
   const [toast, setToast] = useState(null);
 
   const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(props, ref) {
@@ -105,10 +109,8 @@ const BridgeComponent: FC = () => {
       try {
         if (hasProvider && userAddress) {
           const balances = await balanceFromWallet();
-          setBalanceSUDT(balances);
 
           dispatch(setbalanceSUDT(balances));
-
           return balances;
         }
       } catch (error: any) {
@@ -166,12 +168,12 @@ const BridgeComponent: FC = () => {
           try {
             dispatch(setStatus(PROCESSING_STATUSES.PROCESSING));
             dispatch(setOpen(true));
-            dispatch(setMessage(loader.message));
+            dispatch(setMessage(`${loader.message}\n${loader.title}`));
 
             await mintDCKTokens('dCKB', values.amount, values.destination_address);
             actions.setSubmitting(false);
 
-            dispatch(setMessage(loader.message));
+            dispatch(setMessage(`${loader.message}\n${txnInfo.txnLink}\n${txnInfo.txnAmount}${txnInfo.tokenSymbol}`));
             dispatch(setStatus(PROCESSING_STATUSES.SUCCESS));
           } catch (error: any) {
             setToast(error.message || error.toString());
@@ -184,7 +186,7 @@ const BridgeComponent: FC = () => {
             amount: values.amount,
             destination_address: values.destination_address,
           });
-          console.log(txnInfo)
+          console.log(txnInfo);
         }}
         validate={values => {
           console.log(values);
@@ -260,33 +262,37 @@ const BridgeComponent: FC = () => {
             </Box>
             <Box display="flex" height="32px" alignItems="center" pt={8}>
               BALANCE:{' '}
-              <Typography variant="body1-bold">
-                {balanceSUDT?.dckbBalance ? (
-                  <Box display="flex" alignItems="center" pl={1}>
-                    {`${balanceSUDT?.dckbBalance} ${SUDT_SYMBOL}`}
-                    <Box pl={5}>
-                      <DAOPlainButton
-                        onClick={() => {
-                          formik.setFieldValue('amount', balanceSUDT?.dckbBalance);
-                        }}
-                      >
-                        <DAOTooltip
-                          tooltipStyles={{ borderRadius: '10px' }}
-                          backgroundColor="#333"
-                          message="use full balance"
-                          textColor="#eee"
+              {!loaderBalance.isLoading ? (
+                <Typography variant="body1-bold">
+                  {balanceSUDT?.dckbBalance ? (
+                    <Box display="flex" alignItems="center" pl={1}>
+                      {`${balanceSUDT?.dckbBalance} ${txnInfo.tokenSymbol}`}
+                      <Box pl={5}>
+                        <DAOPlainButton
+                          onClick={() => {
+                            formik.setFieldValue('amount', balanceSUDT?.dckbBalance);
+                          }}
                         >
-                          USE FULL AMOUNT
-                        </DAOTooltip>
-                      </DAOPlainButton>
+                          <DAOTooltip
+                            tooltipStyles={{ borderRadius: '10px' }}
+                            backgroundColor="#333"
+                            message="use full balance"
+                            textColor="#eee"
+                          >
+                            USE FULL AMOUNT
+                          </DAOTooltip>
+                        </DAOPlainButton>
+                      </Box>
                     </Box>
-                  </Box>
-                ) : (
-                  <span style={{ color: '#eb0000', paddingLeft: '10px' }}>
-                    you do not have dCKB tokens in your account
-                  </span>
-                )}
-              </Typography>
+                  ) : (
+                    <Box pl={1} style={{ color: '#eb0000' }}>
+                      you do not have dCKB tokens in your account
+                    </Box>
+                  )}
+                </Typography>
+              ) : (
+                <Box pl={1}>{loaderBalance.message}</Box>
+              )}
             </Box>
             <Box display="flex" height="32px" justifyContent="space-between" alignItems="center" pt={8} pb={2}>
               TO:{' '}
@@ -328,7 +334,7 @@ const BridgeComponent: FC = () => {
                 // currencyInput={{
                 //   decimalsLimit: 2,
                 //   groupSeparator: '',
-                //   suffix: `\u00a0${SUDT_SYMBOL}`,
+                //   suffix: `\u00a0${txnInfo.tokenSymbol}`,
                 //   allowNegativeValue: false,
                 //   onValueChange: value => {
                 //     const neWValue = parseInt(value, 10);
@@ -385,7 +391,7 @@ const BridgeComponent: FC = () => {
                 </StyledAccordionDetails>
               </StyledAccordionB>
             </AccordionWrapper>
-            <Typography>{`Fee: 10000 shanon`}</Typography>
+            <Typography>Fee: 10000 shanon</Typography>
             {isLoggedIn ? (
               <Box pt={5}>
                 <DAOButton

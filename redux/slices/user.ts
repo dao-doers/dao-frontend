@@ -7,7 +7,7 @@ interface UserSlice {
   isLoggedIn: boolean;
   userShares: number;
   dckbBalance: number;
-  balanceSUDT: number;
+  balanceSUDT: any;
   sessionMaintained: boolean;
 }
 

@@ -62,22 +62,16 @@ const CreateAccountStep: FC<CreateAccountStepProps> = ({ handleNextStep }) => {
     try {
       dispatch(setStatus(PROCESSING_STATUSES.PROCESSING));
       dispatch(setOpen(true));
-      dispatch(setMessage(loaderLayer2Address.message));
+      dispatch(setMessage(`${loaderLayer2Address.message}`));
 
-      if (hasProvider && userAddress) {
-        const layer2Address = await createLayer2Address();
+      const layer2Address = await createLayer2Address();
+      dispatch(setUserAddressLayer2(layer2Address));
 
-        dispatch(setUserAddressLayer2(layer2Address));
-        dispatch(setMessage(loaderLayer2Address.message));
-        dispatch(setStatus(PROCESSING_STATUSES.SUCCESS));
-        return layer2Address;
-      }
+      dispatch(setStatus(PROCESSING_STATUSES.SUCCESS));
+      dispatch(setMessage(`${loaderLayer2Address.message}\n${txnInfoLayer2Address.txnLink}`));
     } catch (error: any) {
-      // setDepositAddress(undefined);
-
       dispatch(setStatus(PROCESSING_STATUSES.ERROR));
       dispatch(setMessage(loaderLayer2Address.message || error.message || error.toString()));
-      // setToast(error.message || error.toString());
     }
   };
 
@@ -103,19 +97,23 @@ const CreateAccountStep: FC<CreateAccountStepProps> = ({ handleNextStep }) => {
   return (
     <Box mt={5} mb={4}>
       <StyledBox>
-        <Box>
-          <Typography component="h6" variant="h6" paragraph>
-            Create account on Nervos Layer 2
-          </Typography>
-        </Box>
-        {isLoggedIn ? (
-          <ButtonWrapper>
-            <DAOButton variant="gradientOutline" onClick={() => getLayer2Address()}>
-              Create account
-            </DAOButton>
-          </ButtonWrapper>
-        ) : (
-          <ConnectWalletButton />
+        {!depositAddress && (
+          <>
+            <Box>
+              <Typography component="h6" variant="h6" paragraph>
+                Create account on Nervos Layer 2
+              </Typography>
+            </Box>
+            <ButtonWrapper>
+              {isLoggedIn ? (
+                <DAOButton variant="gradientOutline" onClick={() => getLayer2Address()}>
+                  Create account
+                </DAOButton>
+              ) : (
+                <ConnectWalletButton />
+              )}
+            </ButtonWrapper>
+          </>
         )}
       </StyledBox>
 
