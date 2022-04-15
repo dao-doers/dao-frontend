@@ -19,9 +19,7 @@ import Typography from '@mui/material/Typography';
 
 import { useDCKBTokenHook } from 'hooks/DCKBTokenHook';
 import useCheckProvider from 'hooks/useCheckProvider';
-import { setOpen, setMessage, setStatus } from 'redux/slices/modalTransaction';
 
-import PROCESSING_STATUSES from 'enums/processingStatuses';
 import ConnectWalletButton from 'components/ConnectWalletButton/ConnectWalletButton';
 
 interface CreateAccountStepProps {
@@ -46,7 +44,7 @@ const ButtonWrapper = styled(Box)`
 `;
 
 const CreateAccountStep: FC<CreateAccountStepProps> = ({ completeStep }) => {
-  const { createLayer2Address, loaderLayer2Address, txnInfoLayer2Address, connectedWalletAddress } = useDCKBTokenHook();
+  const { createLayer2Address, loaderLayer2Address, connectedWalletAddress } = useDCKBTokenHook();
   const hasProvider = useCheckProvider();
 
   const dispatch = useDispatch();
@@ -60,19 +58,11 @@ const CreateAccountStep: FC<CreateAccountStepProps> = ({ completeStep }) => {
 
   const getLayer2Address = async () => {
     try {
-      dispatch(setStatus(PROCESSING_STATUSES.PROCESSING));
-      dispatch(setOpen(true));
-      dispatch(setMessage(`${loaderLayer2Address.message}`));
-
       const layer2Address = await createLayer2Address();
       dispatch(setUserAddressLayer2(layer2Address));
       completeStep(layer2Address);
-
-      dispatch(setStatus(PROCESSING_STATUSES.SUCCESS));
-      dispatch(setMessage(`${loaderLayer2Address.message}\n${txnInfoLayer2Address.txnLink}`));
     } catch (error: any) {
-      dispatch(setStatus(PROCESSING_STATUSES.ERROR));
-      dispatch(setMessage(loaderLayer2Address.message || error.message || error.toString()));
+      console.error(error);
     }
   };
 
@@ -84,7 +74,7 @@ const CreateAccountStep: FC<CreateAccountStepProps> = ({ completeStep }) => {
           dispatch(setUserCKBAddress(addresses));
         }
       } catch (error: any) {
-        throw error;
+        console.error(error);
       }
     };
     getConnectedWalletAddress();
@@ -93,8 +83,7 @@ const CreateAccountStep: FC<CreateAccountStepProps> = ({ completeStep }) => {
 
   console.log('BalaceSUDT', BalanceSUDT);
   console.log('Layer2Address', Layer2Address);
-  console.log('loaderLayer2Address', loaderLayer2Address);
-  console.log('txnInfoLayer2Address', txnInfoLayer2Address);
+  console.log('loaderLayer2Address', loaderLayer2Address);s
   return (
     <Box mt={5} mb={4}>
       <StyledBox>

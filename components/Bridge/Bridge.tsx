@@ -8,7 +8,6 @@ import {
   setbalanceSUDT,
   selectUserAddressLayer2,
 } from 'redux/slices/user';
-import PROCESSING_STATUSES from 'enums/processingStatuses';
 
 import { Formik, Form, FormikErrors, Field } from 'formik';
 import Image from 'next/image';
@@ -30,8 +29,6 @@ import MuiAlert, { AlertProps } from '@mui/material/Alert';
 
 import ConnectWalletButton from 'components/ConnectWalletButton/ConnectWalletButton';
 import useCheckProvider from 'hooks/useCheckProvider';
-import { setMessage, setOpen, setStatus } from 'redux/slices/modalTransaction';
-
 
 const Title = styled(Typography)`
   font-weight: 600;
@@ -103,7 +100,7 @@ const BridgeComponent: FC<IBridgeComponent> = ({ onSubmitCompleteStep }) => {
   const depositAddress = useSelector(selectUserAddressLayer2);
 
   const hasProvider = useCheckProvider();
-  const { loader, loaderBalance, txnInfo, balanceFromWallet, mintDCKTokens } = useDCKBTokenHook();
+  const { loaderBalance, balanceFromWallet, mintDCKTokens } = useDCKBTokenHook();
   const [toast, setToast] = useState(null);
 
   const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(props, ref) {
@@ -171,27 +168,16 @@ const BridgeComponent: FC<IBridgeComponent> = ({ onSubmitCompleteStep }) => {
         validateOnChange
         onSubmit={async (values, actions) => {
           try {
-            dispatch(setStatus(PROCESSING_STATUSES.PROCESSING));
-            dispatch(setOpen(true));
-            dispatch(setMessage(`${loader.message}\n${loader.title}`));
-
             onSubmitCompleteStep(await mintDCKTokens('dCKB', values.amount, values.destinationAddress));
             actions.setSubmitting(false);
-
-            dispatch(setMessage(`${loader.message}\n${txnInfo.txnLink}\n${txnInfo.txnAmount}${txnInfo.tokenSymbol}`));
-            dispatch(setStatus(PROCESSING_STATUSES.SUCCESS));
           } catch (error: any) {
             setToast(error.message || error.toString());
             actions.setSubmitting(false);
-
-            dispatch(setStatus(PROCESSING_STATUSES.ERROR));
-            dispatch(setMessage(loader.message || error.message || error.toString()));
           }
           console.log({
             amount: values.amount,
             destinationAddress: values.destinationAddress,
           });
-          console.log(txnInfo);
         }}
         validate={values => {
           console.log(values);
@@ -241,11 +227,11 @@ const BridgeComponent: FC<IBridgeComponent> = ({ onSubmitCompleteStep }) => {
             </Box>
             <Box display="flex" height="32px" alignItems="center" pt={8}>
               BALANCE:{' '}
-              {!loaderBalance.isLoading ? (
+              {!loaderBalance ? (
                 <Typography variant="body1-bold">
                   {balanceSUDT?.dckbBalance ? (
                     <Box display="flex" alignItems="center" pl={1}>
-                      {`${balanceSUDT?.dckbBalance} ${txnInfo.tokenSymbol}`}
+                      {`${balanceSUDT?.dckbBalance} dCKB`}
                       <Box pl={5}>
                         <DAOPlainButton
                           onClick={() => {
@@ -265,12 +251,12 @@ const BridgeComponent: FC<IBridgeComponent> = ({ onSubmitCompleteStep }) => {
                     </Box>
                   ) : (
                     <Box pl={1} style={{ color: '#eb0000' }}>
-                      {loaderBalance.message}
+                      no balance
                     </Box>
                   )}
                 </Typography>
               ) : (
-                <Box pl={1}>{loaderBalance.message}</Box>
+                <Box pl={1}>no balance</Box>
               )}
             </Box>
             <Box display="flex" height="32px" justifyContent="space-between" alignItems="center" pt={8} pb={2}>

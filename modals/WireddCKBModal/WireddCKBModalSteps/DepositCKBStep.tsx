@@ -51,7 +51,7 @@ const DepositCKBStep: FC<DepositCKBStepProps> = ({ handlePreviousStep, completeS
   const { loaderBalance } = useDCKBTokenHook();
   return (
     <Box mt={5} mb={4}>
-      {!loaderBalance.isLoading ? (
+      {!loaderBalance ? (
         <Box display="flex" alignItems="center" pb={2}>
           <Typography variant="body1-bold" pr={1}>
             dCKB balance:
