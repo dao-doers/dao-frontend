@@ -270,9 +270,7 @@ const BridgeComponent: FC<IBridgeComponent> = ({ onSubmitCompleteStep }) => {
                   maxWidth="300px"
                 >
                   <Image src="/logos/wallet.png" alt="address:" height="15" width="15" />
-                  {depositAddress
-                    ? formatAddress(depositAddress)
-                    : formatAddress(formik.values.destinationAddress) || 'Enter a destination address from nexisdao'}
+                  {formik.values.destinationAddress || 'Enter a destination address from nexisdao'}
                 </Box>
               </Typography>
             </Box>
