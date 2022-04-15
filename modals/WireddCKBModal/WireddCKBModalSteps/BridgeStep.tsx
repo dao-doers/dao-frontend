@@ -1,23 +1,12 @@
-import dynamic from 'next/dynamic';
 import { FC } from 'react';
-import { useSelector } from 'react-redux';
 
 import styled from '@emotion/styled';
 
 import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
 
-import ConnectWalletButton from 'components/ConnectWalletButton/ConnectWalletButton';
 import DAOButton from 'components/DAOButton/DAOButton';
 
-import useCheckProvider from 'hooks/useCheckProvider';
-
-import { selectIsLoggedIn } from 'redux/slices/user';
 import BridgeComponent from 'components/Bridge/Bridge';
-
-// const DAOBridgeComponentWithNoSSR = dynamic(() => import('components/DAOBridgeComponent/DAOBridgeComponent'), {
-//   ssr: false,
-// });
 
 interface IBridge {
   handlePreviousStep: () => void;
@@ -30,37 +19,10 @@ const NavButtonsWrapper = styled(Box)`
   margin-top: 20px;
 `;
 
-const TypographyRed = styled(Typography)`
-  color: ${({ theme }) => theme.palette.colors.col6};
-  font-weight: 600;
-`;
-
 const BridgeStep: FC<IBridge> = ({ handlePreviousStep, completeStep }) => {
-  const hasProvider = useCheckProvider();
-  const isLoggedIn = useSelector(selectIsLoggedIn);
-
   return (
     <Box mt={5} mb={4}>
-      <Box>
-        {/* <Typography component="h6" variant="h6" paragraph>
-          Transfer dCKB to Layer2
-        </Typography>
-        <Typography component="h6">
-          Please make sure you have sufficient CKB balance in your L1 account before transferring to L2. A minimum
-          balance of 471 CKB needs to be maintained after transaction.
-        </Typography> */}
-        {/* {hasProvider && isLoggedIn ? ( */}
-          <Box pb={20}>
-            {/* <DAOBridgeComponentWithNoSSR /> */}
-            <BridgeComponent onSubmitCompleteStep={completeStep} />
-          </Box>
-        {/* ) : (
-          <Box mt={3}>
-            <TypographyRed paragraph>You have to login by metamask to use our beta version Bridge.</TypographyRed>
-            <ConnectWalletButton />
-          </Box>
-        )} */}
-      </Box>
+      <BridgeComponent onSubmitCompleteStep={completeStep} />
 
       <NavButtonsWrapper>
         <Box width="48%">

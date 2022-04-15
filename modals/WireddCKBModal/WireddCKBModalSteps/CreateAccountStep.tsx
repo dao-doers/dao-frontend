@@ -83,7 +83,7 @@ const CreateAccountStep: FC<CreateAccountStepProps> = ({ completeStep }) => {
 
   console.log('BalaceSUDT', BalanceSUDT);
   console.log('Layer2Address', Layer2Address);
-  console.log('loaderLayer2Address', loaderLayer2Address);s
+  console.log('loaderLayer2Address', loaderLayer2Address);
   return (
     <Box mt={5} mb={4}>
       <StyledBox>

@@ -37,7 +37,7 @@ export const useDCKBTokenHook = () => {
   const assetSender = new WalletAssetsSender('https://testnet.ckb.dev/rpc', 'https://testnet.ckb.dev/indexer');
 
   const mintDCKTokens = async (tokenId: any, amount: string, toAddress: string) => {
-    const successMessage = `Transfer successfully minted ${amount} DCKB to ${toAddress}`;
+    const successMessage = `Transfer successfully minted ${amount} ${tokenId} to ${toAddress}`;
     try {
       setLoader(true);
       dispatch(setStatus(PROCESSING_STATUSES.PROCESSING));

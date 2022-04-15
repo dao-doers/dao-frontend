@@ -323,47 +323,10 @@ const BridgeComponent: FC<IBridgeComponent> = ({ onSubmitCompleteStep }) => {
                   <Typography variant="body1-bold">Advanced</Typography>
                 </StyledAccordionSummaryB>
                 <StyledAccordionDetails>
-                  <Field name="editDestinationAddress">
-                    {({ field }: any) => (
-                      <Input
-                        {...field}
-                        icon={{ src: '/logos/wallet.png' }}
-                        id="editDestinationAddress"
-                        name="editDestinationAddress"
-                        type="text"
-                        autoComplete="off"
-                        header="Edit destination address (optional)"
-                        placeholder="Nervos layer 2 adress: e.g 0x123...ab56c"
-                        value={formik.values.destinationAddress}
-                        onChange={formik.handleChange}
-                        customStyles={{
-                          inputColor: '#00D395',
-                          headerStyles: { color: '#00D395' },
-                          borderOnFocus: '1px solid #00D395',
-                        }}
-                        disabled={userAddress === ''}
-                        tooltipMessage="enter the wallet address you want to send funds, it begins with ckt1..."
-                        rightIcon={
-                          formik.values.destinationAddress
-                            ? { src: '/logos/x.svg', tooltipMessage: 'Clear address' }
-                            : undefined
-                        }
-                        rightIconOnClick={() => {
-                          formik.setFieldValue('destinationAddress', '');
-                        }}
-                        error={formik.errors.destinationAddress && true}
-                        errorMessage={formik.errors.destinationAddress}
-                      />
-                    )}
-                  </Field>
+                  <Box pt={2}>
+                    <Typography variant="body1-bold">Fee: 10000 shanon</Typography>
+                  </Box>
                 </StyledAccordionDetails>
-                <Box>
-                  <Typography variant="body1-bold">Full address:</Typography>
-                  <Typography>{formik.values.destinationAddress || 'no address'}</Typography>
-                </Box>
-                <Box pt={2}>
-                  <Typography variant="body1-bold">Fee: 10000 shanon</Typography>
-                </Box>
               </StyledAccordionB>
             </AccordionWrapper>
             {isLoggedIn ? (
