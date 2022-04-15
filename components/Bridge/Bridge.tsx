@@ -10,7 +10,7 @@ import {
 } from 'redux/slices/user';
 import PROCESSING_STATUSES from 'enums/processingStatuses';
 
-import { Formik, Form, FormikErrors } from 'formik';
+import { Formik, Form, FormikErrors, Field } from 'formik';
 import Image from 'next/image';
 import styled from '@emotion/styled';
 import Input from 'components/Input/Input';
@@ -31,6 +31,7 @@ import MuiAlert, { AlertProps } from '@mui/material/Alert';
 import ConnectWalletButton from 'components/ConnectWalletButton/ConnectWalletButton';
 import useCheckProvider from 'hooks/useCheckProvider';
 import { setMessage, setOpen, setStatus } from 'redux/slices/modalTransaction';
+
 
 const Title = styled(Typography)`
   font-weight: 600;
@@ -71,7 +72,7 @@ const StyledAccordionB = styled(Accordion)`
   border-top: none;
   &:before {
     display: none;
-  }
+  },
 `;
 
 const StyledAccordionSummaryB = styled(AccordionSummary)`
@@ -85,12 +86,16 @@ const StyledAccordionDetails = styled(AccordionDetails)`
 const StyledExpandMoreIcon = styled(ExpandMoreIcon)`
   color: ${({ theme }) => theme.palette.text.primary};
 `;
+
+interface IBridgeComponent {
+  onSubmitCompleteStep: (values: any) => void;
+}
 interface SwapFormValues {
   amount: string;
-  destination_address: string;
+  destinationAddress: string;
 }
 
-const BridgeComponent: FC = () => {
+const BridgeComponent: FC<IBridgeComponent> = ({ onSubmitCompleteStep }) => {
   const dispatch = useDispatch();
   const userAddress = useSelector(selectUserAddress);
   const isLoggedIn = useSelector(selectIsLoggedIn);
@@ -122,20 +127,20 @@ const BridgeComponent: FC = () => {
     console.log('BALANCE', balanceSUDT);
   }, [hasProvider, userAddress]);
 
-  const initialAddress = depositAddress;
+  const initialAddress = '';
   console.log(initialAddress);
 
   const initialValues: SwapFormValues = {
     amount: '',
-    destination_address: initialAddress,
+    destinationAddress: initialAddress,
   };
 
   function displayErrorsOrSubmit(errors: FormikErrors<SwapFormValues>): string {
     if (errors.amount) {
       return errors.amount;
     }
-    if (errors.destination_address) {
-      return errors.destination_address;
+    if (errors.destinationAddress) {
+      return errors.destinationAddress;
     }
     return 'Swap now';
   }
@@ -170,7 +175,7 @@ const BridgeComponent: FC = () => {
             dispatch(setOpen(true));
             dispatch(setMessage(`${loader.message}\n${loader.title}`));
 
-            await mintDCKTokens('dCKB', values.amount, values.destination_address);
+            onSubmitCompleteStep(await mintDCKTokens('dCKB', values.amount, values.destinationAddress));
             actions.setSubmitting(false);
 
             dispatch(setMessage(`${loader.message}\n${txnInfo.txnLink}\n${txnInfo.txnAmount}${txnInfo.tokenSymbol}`));
@@ -184,7 +189,7 @@ const BridgeComponent: FC = () => {
           }
           console.log({
             amount: values.amount,
-            destination_address: values.destination_address,
+            destinationAddress: values.destinationAddress,
           });
           console.log(txnInfo);
         }}
@@ -192,21 +197,10 @@ const BridgeComponent: FC = () => {
           console.log(values);
           const errors: FormikErrors<SwapFormValues> = {};
           console.log('errors', errors);
-          const amount = Number(values.amount?.toString()?.replace(',', '.'));
-          if (!amount) {
-            errors.amount = 'Enter an amount';
-          } else if (!/^[0-9]*[.,]?[0-9]*$/i.test(amount.toString())) {
-            errors.amount = 'Invalid amount';
-          } else if (amount < 0) {
-            errors.amount = 'Can not be negative';
-            if (values.destination_address === '') {
-              errors.destination_address = 'Enter a destination address';
-            }
-            // else if (!isValidAddress(values.destination_address, values.network.baseObject)) {
-            //   errors.destination_address = 'Enter a valid destination address';
-            // }
-            return errors;
-          }
+          // else if (!isValidAddress(values.destinationAddress, values.network.baseObject)) {
+          //   errors.destinationAddress = 'Enter a valid destination address';
+          // }
+          return errors;
         }}
       >
         {formik => (
@@ -219,46 +213,31 @@ const BridgeComponent: FC = () => {
               </Box>
             </Box>
             <Box display="flex" height="32px">
-              <Input
-                icon={{ src: '/logos/nervos.svg' }}
-                header="Amount"
-                placeholder="Enter amount..."
-                name="amount"
-                id="amount"
-                type="string"
-                autoComplete="off"
-                value={formik.values.amount}
-                onChange={formik.handleChange}
-                customStyles={{
-                  inputColor: '#00cc9b',
-                  headerStyles: { color: '#00cc9b' },
-                  borderOnFocus: '1px solid #00cc9b',
-                }}
-                inputMask={{
-                  mask: '999 999 999 999',
-                  maskChar: '',
-                }}
-                tooltipMessage="Please make sure you have sufficient CKB balance in your L1 account before transferring to L2. A minimum balance of 471 CKB needs to be maintained after transaction."
-                // currencyInput={{
-                //   decimalsLimit: 2,
-                //   groupSeparator: ' ',
-                //   suffix: `\u00a0${SUDT_SYMBOL}`,
-                //   allowNegativeValue: false,
-                //   onValueChange: value => {
-                //     const neWValue = parseInt(value, 10);
-                //     console.log(neWValue)
-                //     if (value === undefined) {
-                //       formik.setFieldValue('amount', 0);
-                //       return 0;
-                //     }
-                //     formik.setFieldValue('amount', neWValue)
-                //     return value;
-                //   },
-                // }}
-                // error={formik.errors.amount}
-                errorMessage={formik.errors.amount}
-                required
-              />
+              <Field name="amount">
+                {({ field }: any) => (
+                  <Input
+                    {...field}
+                    icon={{ src: '/logos/nervos.svg' }}
+                    header="Amount"
+                    placeholder="Enter amount..."
+                    name="amount"
+                    id="amount"
+                    type="string"
+                    autoComplete="off"
+                    value={formik.values.amount}
+                    onChange={formik.handleChange}
+                    customStyles={{
+                      inputColor: '#00cc9b',
+                      headerStyles: { color: '#00cc9b' },
+                      borderOnFocus: '1px solid #00cc9b',
+                    }}
+                    tooltipMessage="Please make sure you have sufficient CKB balance in your L1 account before transferring to L2. A minimum balance of 471 CKB needs to be maintained after transaction."
+                    error={formik.errors.amount && true}
+                    errorMessage={formik.errors.amount}
+                    required
+                  />
+                )}
+              </Field>
             </Box>
             <Box display="flex" height="32px" alignItems="center" pt={8}>
               BALANCE:{' '}
@@ -286,7 +265,7 @@ const BridgeComponent: FC = () => {
                     </Box>
                   ) : (
                     <Box pl={1} style={{ color: '#eb0000' }}>
-                      you do not have dCKB tokens in your account
+                      {loaderBalance.message}
                     </Box>
                   )}
                 </Typography>
@@ -307,49 +286,45 @@ const BridgeComponent: FC = () => {
                   <Image src="/logos/wallet.png" alt="address:" height="15" width="15" />
                   {depositAddress
                     ? formatAddress(depositAddress)
-                    : formatAddress(formik.values.destination_address) || 'Enter a destination address'}
+                    : formatAddress(formik.values.destinationAddress) || 'Enter a destination address from nexisdao'}
                 </Box>
               </Typography>
             </Box>
             <Box display="flex" height="32px">
-              <Input
-                icon={{ src: '/logos/nervos.svg' }}
-                id="AmountReceive"
-                type="text"
-                autoComplete="off"
-                header="Receive"
-                placeholder="Amount you get"
-                customStyles={{
-                  inputColor: '#00cc9b',
-                  headerStyles: { color: '#00cc9b' },
-                  borderOnFocus: ' 1px solid #00cc9b',
-                }}
-                inputMask={{
-                  mask: '999 999 999 999',
-                  maskChar: '',
-                }}
-                value={formik.values.amount}
-                onChange={formik.handleChange}
-                tooltipMessage="Amount you will get after success!"
-                // currencyInput={{
-                //   decimalsLimit: 2,
-                //   groupSeparator: '',
-                //   suffix: `\u00a0${txnInfo.tokenSymbol}`,
-                //   allowNegativeValue: false,
-                //   onValueChange: value => {
-                //     const neWValue = parseInt(value, 10);
-                //     console.log(neWValue)
-                //     if (value === undefined) {
-                //       formik.setFieldValue('amount', 0);
-                //       return 0;
-                //     }
-                //     formik.setFieldValue('amount', neWValue)
-                //     return value;
-                //   },
-                // }}
-                errorMessage={formik.errors.amount}
-                disabled
-              />
+              <Field name="destinationAddress">
+                {({ field }: any) => (
+                  <Input
+                    {...field}
+                    icon={{ src: '/logos/wallet.png' }}
+                    id="destinationAddress"
+                    name="destinationAddress"
+                    type="text"
+                    autoComplete="off"
+                    header="Destination address"
+                    placeholder="e.g ckt1...jmyvr0v"
+                    value={formik.values.destinationAddress}
+                    onChange={formik.handleChange}
+                    customStyles={{
+                      inputColor: '#00D395',
+                      headerStyles: { color: '#00D395' },
+                      borderOnFocus: '1px solid #00D395',
+                    }}
+                    disabled={userAddress === '' && initialAddress !== ''}
+                    tooltipMessage="enter the wallet address you want to send funds, it begins with ckt1..."
+                    rightIcon={
+                      formik.values.destinationAddress
+                        ? { src: '/logos/x.svg', tooltipMessage: 'Clear address' }
+                        : undefined
+                    }
+                    rightIconOnClick={() => {
+                      formik.setFieldValue('destinationAddress', '');
+                    }}
+                    error={formik.errors.destinationAddress && true}
+                    errorMessage={formik.errors.destinationAddress}
+                    required
+                  />
+                )}
+              </Field>
             </Box>
 
             <AccordionWrapper>
@@ -362,36 +337,49 @@ const BridgeComponent: FC = () => {
                   <Typography variant="body1-bold">Advanced</Typography>
                 </StyledAccordionSummaryB>
                 <StyledAccordionDetails>
-                  <Input
-                    icon={{ src: '/logos/wallet.png' }}
-                    id="destination_address"
-                    name="destination_address"
-                    type="text"
-                    autoComplete="off"
-                    header="Edit destination address (optional)"
-                    placeholder="Nervos layer 2 adress: e.g 0x123...ab56c"
-                    value={formik.values.destination_address}
-                    onChange={formik.handleChange}
-                    customStyles={{
-                      inputColor: '#00cc9b',
-                      headerStyles: { color: '#00cc9b' },
-                      borderOnFocus: '1px solid #00cc9b',
-                    }}
-                    disabled={userAddress === ''}
-                    tooltipMessage="enter the wallet address you want to send funds, it must be layer 2 wallet address"
-                    rightIcon={
-                      formik.values.destination_address === initialAddress
-                        ? { src: '/logos/x.svg', tooltipMessage: 'Clear address' }
-                        : undefined
-                    }
-                    rightIconOnClick={() => {
-                      formik.setFieldValue('destination_address', '');
-                    }}
-                  />
+                  <Field name="editDestinationAddress">
+                    {({ field }: any) => (
+                      <Input
+                        {...field}
+                        icon={{ src: '/logos/wallet.png' }}
+                        id="editDestinationAddress"
+                        name="editDestinationAddress"
+                        type="text"
+                        autoComplete="off"
+                        header="Edit destination address (optional)"
+                        placeholder="Nervos layer 2 adress: e.g 0x123...ab56c"
+                        value={formik.values.destinationAddress}
+                        onChange={formik.handleChange}
+                        customStyles={{
+                          inputColor: '#00D395',
+                          headerStyles: { color: '#00D395' },
+                          borderOnFocus: '1px solid #00D395',
+                        }}
+                        disabled={userAddress === ''}
+                        tooltipMessage="enter the wallet address you want to send funds, it begins with ckt1..."
+                        rightIcon={
+                          formik.values.destinationAddress
+                            ? { src: '/logos/x.svg', tooltipMessage: 'Clear address' }
+                            : undefined
+                        }
+                        rightIconOnClick={() => {
+                          formik.setFieldValue('destinationAddress', '');
+                        }}
+                        error={formik.errors.destinationAddress && true}
+                        errorMessage={formik.errors.destinationAddress}
+                      />
+                    )}
+                  </Field>
                 </StyledAccordionDetails>
+                <Box>
+                  <Typography variant="body1-bold">Full address:</Typography>
+                  <Typography>{formik.values.destinationAddress || 'no address'}</Typography>
+                </Box>
+                <Box pt={2}>
+                  <Typography variant="body1-bold">Fee: 10000 shanon</Typography>
+                </Box>
               </StyledAccordionB>
             </AccordionWrapper>
-            <Typography>Fee: 10000 shanon</Typography>
             {isLoggedIn ? (
               <Box pt={5}>
                 <DAOButton
@@ -399,7 +387,7 @@ const BridgeComponent: FC = () => {
                   type="submit"
                   isLoading={formik.isSubmitting}
                   disabled={
-                    formik.errors.amount != null || formik.errors.destination_address != null || formik.isSubmitting
+                    formik.errors.amount != null || formik.errors.destinationAddress != null || formik.isSubmitting
                   }
                 >
                   {displayErrorsOrSubmit(formik.errors)}

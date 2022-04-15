@@ -95,6 +95,10 @@ export const useDCKBTokenHook = () => {
 
       return { ckbBalance, dckbBalance };
     } catch (error) {
+      setLoaderBalance({
+        isLoading: false,
+        message: 'no balance found',
+      });
       console.log(error);
       throw error;
     } finally {

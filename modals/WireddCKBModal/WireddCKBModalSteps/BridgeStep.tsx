@@ -21,6 +21,7 @@ import BridgeComponent from 'components/Bridge/Bridge';
 
 interface IBridge {
   handlePreviousStep: () => void;
+  completeStep: (form: any) => void;
 }
 
 const NavButtonsWrapper = styled(Box)`
@@ -34,7 +35,7 @@ const TypographyRed = styled(Typography)`
   font-weight: 600;
 `;
 
-const BridgeStep: FC<IBridge> = ({ handlePreviousStep }) => {
+const BridgeStep: FC<IBridge> = ({ handlePreviousStep, completeStep }) => {
   const hasProvider = useCheckProvider();
   const isLoggedIn = useSelector(selectIsLoggedIn);
 
@@ -51,7 +52,7 @@ const BridgeStep: FC<IBridge> = ({ handlePreviousStep }) => {
         {/* {hasProvider && isLoggedIn ? ( */}
           <Box pb={20}>
             {/* <DAOBridgeComponentWithNoSSR /> */}
-            <BridgeComponent />
+            <BridgeComponent onSubmitCompleteStep={completeStep} />
           </Box>
         {/* ) : (
           <Box mt={3}>

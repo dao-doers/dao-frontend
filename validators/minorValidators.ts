@@ -10,4 +10,10 @@ export const dCKBTransferSchema = yup.object({
     // eslint-disable-next-line no-restricted-globals
     .transform(value => (isNaN(value) ? undefined : value))
     .nullable(),
+  destinationAddress: yup
+    .string()
+    .matches(/^ckt.*$/, 'Must be a valid address')
+    .required('Destination address is required')
+    .min(50, 'Must be of the correct length')
+    .nullable(),
 });

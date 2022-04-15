@@ -25,7 +25,7 @@ import PROCESSING_STATUSES from 'enums/processingStatuses';
 import ConnectWalletButton from 'components/ConnectWalletButton/ConnectWalletButton';
 
 interface CreateAccountStepProps {
-  handleNextStep: () => void;
+  completeStep: (form: any) => void;
 }
 
 const StyledBox = styled(Box)`
@@ -45,7 +45,7 @@ const ButtonWrapper = styled(Box)`
   }
 `;
 
-const CreateAccountStep: FC<CreateAccountStepProps> = ({ handleNextStep }) => {
+const CreateAccountStep: FC<CreateAccountStepProps> = ({ completeStep }) => {
   const { createLayer2Address, loaderLayer2Address, txnInfoLayer2Address, connectedWalletAddress } = useDCKBTokenHook();
   const hasProvider = useCheckProvider();
 
@@ -66,6 +66,7 @@ const CreateAccountStep: FC<CreateAccountStepProps> = ({ handleNextStep }) => {
 
       const layer2Address = await createLayer2Address();
       dispatch(setUserAddressLayer2(layer2Address));
+      completeStep(layer2Address);
 
       dispatch(setStatus(PROCESSING_STATUSES.SUCCESS));
       dispatch(setMessage(`${loaderLayer2Address.message}\n${txnInfoLayer2Address.txnLink}`));
@@ -130,7 +131,7 @@ const CreateAccountStep: FC<CreateAccountStepProps> = ({ handleNextStep }) => {
           )}
         </Box>
         <ButtonWrapper>
-          <DAOButton variant="gradientOutline" onClick={handleNextStep}>
+          <DAOButton variant="gradientOutline" onClick={() => completeStep(depositAddress)}>
             Next step
           </DAOButton>
         </ButtonWrapper>
