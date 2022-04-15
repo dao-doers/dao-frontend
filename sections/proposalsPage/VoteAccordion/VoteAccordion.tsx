@@ -52,8 +52,14 @@ const TypographyGreen = styled(Typography)`
   color: ${({ theme }) => theme.palette.colors.col2};
 `;
 
+const TypographyGreenBold = styled(Typography)`
+  color: ${({ theme }) => theme.palette.colors.col2};
+  font-weight: 600;
+`;
+
 const TypographyRed = styled(Typography)`
   color: ${({ theme }) => theme.palette.colors.col4};
+  font-weight: 600;
 `;
 
 const TypographyBlue = styled(Typography)`
@@ -225,7 +231,7 @@ const VoteAccordion: FC<any> = ({ proposal }) => {
           {proposal.proposalStatus === PROPOSAL_STATUS.FINISHED && (
             <Box display="flex">
               {proposal.didPass === false && <TypographyRed mr={1.5}>Rejected</TypographyRed>}
-              {proposal.didPass === true && <TypographyGreen mr={1.5}>Approved</TypographyGreen>}
+              {proposal.didPass === true && <TypographyGreenBold mr={1.5}>Approved</TypographyGreenBold>}
             </Box>
           )}
         </Box>

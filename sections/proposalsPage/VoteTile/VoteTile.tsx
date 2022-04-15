@@ -23,12 +23,10 @@ const TypographyTitle = styled(Typography)`
 
 const TypographyAgree = styled(Typography)`
   color: ${({ theme }) => theme.palette.colors.col2};
-  font-weight: 600;
 `;
 
 const TypographyDisagree = styled(Typography)`
   color: ${({ theme }) => theme.palette.colors.col1};
-  font-weight: 600;
 `;
 
 const TypographySmall = styled(Typography)`
