@@ -1,13 +1,7 @@
 import React, { useState, FC, useEffect } from 'react';
 
 import { useDispatch, useSelector } from 'react-redux';
-import {
-  selectUserAddress,
-  selectbalanceSUDT,
-  selectIsLoggedIn,
-  setbalanceSUDT,
-  selectUserAddressLayer2,
-} from 'redux/slices/user';
+import { selectUserAddress, selectbalanceSUDT, selectIsLoggedIn, setbalanceSUDT } from 'redux/slices/user';
 
 import { Formik, Form, FormikErrors, Field } from 'formik';
 import Image from 'next/image';
@@ -29,6 +23,8 @@ import MuiAlert, { AlertProps } from '@mui/material/Alert';
 
 import ConnectWalletButton from 'components/ConnectWalletButton/ConnectWalletButton';
 import useCheckProvider from 'hooks/useCheckProvider';
+import DAOCircleLoader from 'components/DAOCircleLoader/DAOCircleLoader';
+import { isValueGreaterThanProvided } from 'utils/bignumber';
 
 const Title = styled(Typography)`
   font-weight: 600;
@@ -97,7 +93,6 @@ const BridgeComponent: FC<IBridgeComponent> = ({ onSubmitCompleteStep }) => {
   const userAddress = useSelector(selectUserAddress);
   const isLoggedIn = useSelector(selectIsLoggedIn);
   const balanceSUDT = useSelector(selectbalanceSUDT);
-  const depositAddress = useSelector(selectUserAddressLayer2);
 
   const hasProvider = useCheckProvider();
   const { loaderBalance, balanceFromWallet, mintDCKTokens } = useDCKBTokenHook();
@@ -125,7 +120,6 @@ const BridgeComponent: FC<IBridgeComponent> = ({ onSubmitCompleteStep }) => {
   }, [hasProvider, userAddress]);
 
   const initialAddress = '';
-  console.log(initialAddress);
 
   const initialValues: SwapFormValues = {
     amount: '',
@@ -139,6 +133,7 @@ const BridgeComponent: FC<IBridgeComponent> = ({ onSubmitCompleteStep }) => {
     if (errors.destinationAddress) {
       return errors.destinationAddress;
     }
+
     return 'Swap now';
   }
 
@@ -180,9 +175,15 @@ const BridgeComponent: FC<IBridgeComponent> = ({ onSubmitCompleteStep }) => {
           });
         }}
         validate={values => {
-          console.log(values);
           const errors: FormikErrors<SwapFormValues> = {};
-          console.log('errors', errors);
+          const amount = Number(values.amount?.toString()?.replace(',', '.'));
+          if (isValueGreaterThanProvided(amount, Number(balanceSUDT?.dckbBalance))) {
+            errors.amount = 'insufficient balance';
+          }
+
+          // TODO
+          // check if eth address is valid
+          // it can be done
           // else if (!isValidAddress(values.destinationAddress, values.network.baseObject)) {
           //   errors.destinationAddress = 'Enter a valid destination address';
           // }
@@ -195,7 +196,9 @@ const BridgeComponent: FC<IBridgeComponent> = ({ onSubmitCompleteStep }) => {
               FROM:{' '}
               <Box display="flex" justifyContent="space-between" alignItems="center" minWidth="100px" maxWidth="300px">
                 <Image src="/logos/wallet.png" alt="address:" height="15" width="15" />
-                <Typography variant="body2">{formatAddress(userAddress) || 'Connect to metamask'}</Typography>
+                <Typography variant="body2" paddingLeft={0.5}>
+                  {formatAddress(userAddress) || 'Connect to metamask'}
+                </Typography>
               </Box>
             </Box>
             <Box display="flex" height="32px">
@@ -256,23 +259,19 @@ const BridgeComponent: FC<IBridgeComponent> = ({ onSubmitCompleteStep }) => {
                   )}
                 </Typography>
               ) : (
-                <Box pl={1}>no balance</Box>
+                <Box pl={1} display="flex" alignItems="center">
+                  <DAOCircleLoader size={20} />
+                </Box>
               )}
             </Box>
             <Box display="flex" height="32px" justifyContent="space-between" alignItems="center" pt={8} pb={2}>
               TO:{' '}
-              <Typography variant="body2">
-                <Box
-                  display="flex"
-                  justifyContent="space-between"
-                  alignItems="center"
-                  minWidth="100px"
-                  maxWidth="300px"
-                >
-                  <Image src="/logos/wallet.png" alt="address:" height="15" width="15" />
-                  {formik.values.destinationAddress || 'Enter a destination address from nexisdao'}
-                </Box>
-              </Typography>
+              <Box display="inherit">
+                <Image src="/logos/wallet.png" alt="address:" height="15" width="15" />
+                <Typography variant="body2" paddingLeft={0.5}>
+                  {formatAddress(formik.values.destinationAddress) || 'Enter a destination address from nexisdao'}
+                </Typography>
+              </Box>
             </Box>
             <Box display="flex" height="32px">
               <Field name="destinationAddress">
@@ -334,7 +333,11 @@ const BridgeComponent: FC<IBridgeComponent> = ({ onSubmitCompleteStep }) => {
                   type="submit"
                   isLoading={formik.isSubmitting}
                   disabled={
-                    formik.errors.amount != null || formik.errors.destinationAddress != null || formik.isSubmitting
+                    formik.errors.amount != null ||
+                    formik.errors.destinationAddress != null ||
+                    formik.isSubmitting ||
+                    !isLoggedIn ||
+                    balanceSUDT?.dckbBalance === 0
                   }
                 >
                   {displayErrorsOrSubmit(formik.errors)}

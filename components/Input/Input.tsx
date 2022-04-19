@@ -341,7 +341,7 @@ const Input = ({
       padding: '2px 4px 2px 0px',
       fontSize: '1em',
       fontWeight: 300,
-      color: inputColor || '#474747',
+      color: error ? '#eb0000' : inputColor || '#474747',
       letterSpacing: '1px',
       minHeight: '28px',
     },

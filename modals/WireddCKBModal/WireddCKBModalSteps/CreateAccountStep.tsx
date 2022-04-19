@@ -21,6 +21,7 @@ import { useDCKBTokenHook } from 'hooks/DCKBTokenHook';
 import useCheckProvider from 'hooks/useCheckProvider';
 
 import ConnectWalletButton from 'components/ConnectWalletButton/ConnectWalletButton';
+import formatAddress from 'utils/formatAddress';
 
 interface CreateAccountStepProps {
   completeStep: (form: any) => void;
@@ -30,6 +31,8 @@ const StyledBox = styled(Box)`
   display: flex;
   align-items: center;
   margin-bottom: 25px;
+  display: flex;
+  justify-content: space-between;
   ${({ theme }) => theme.breakpoints.down('sm')} {
     flex-direction: column;
   }
@@ -38,6 +41,8 @@ const StyledBox = styled(Box)`
 const ButtonWrapper = styled(Box)`
   height: 40px;
   min-width: 160px;
+  display: flex;
+  justify-content: flex-end;
   ${({ theme }) => theme.breakpoints.down('sm')} {
     margin-top: 15px;
   }
@@ -108,6 +113,23 @@ const CreateAccountStep: FC<CreateAccountStepProps> = ({ completeStep }) => {
       </StyledBox>
 
       <StyledBox>
+        {!depositAddress && (
+          <>
+            <Box>
+              <Typography component="h6" variant="h6">
+                Your CKB address (use on faucet site) {formatAddress(userCKBAddress)}
+              </Typography>
+            </Box>
+            <ButtonWrapper>
+              <DAOButton variant="gradientOutline" onClick={() => window.open('https://faucet.nervos.org/', '_blank')}>
+                Layer 1 faucet
+              </DAOButton>
+            </ButtonWrapper>
+          </>
+        )}
+      </StyledBox>
+
+      <StyledBox>
         <Box>
           {depositAddress ? (
             <Typography component="h6" variant="h6">
@@ -125,16 +147,6 @@ const CreateAccountStep: FC<CreateAccountStepProps> = ({ completeStep }) => {
           </DAOButton>
         </ButtonWrapper>
       </StyledBox>
-      {!depositAddress && (
-        <ButtonWrapper>
-          <Typography component="h6" variant="h6">
-            Your CKB address, (use on faucet site): {userCKBAddress}
-          </Typography>
-          <DAOButton variant="gradientOutline" onClick={() => window.open('https://faucet.nervos.org/', '_blank')}>
-            Layer 1 faucet
-          </DAOButton>
-        </ButtonWrapper>
-      )}
     </Box>
   );
 };
