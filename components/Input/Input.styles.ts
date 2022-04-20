@@ -28,12 +28,12 @@ export const InputMainContainer = styled.div`
   flex-direction: row;
   justify-content: center;
   overflow: hidden;
-  border: 1px solid #eef2f2;
+  border: 1px solid #00D395;
   padding: 0;
 `;
 
 export const InputIcon = styled.div`
-  background-color: #fff;
+  background-color: tranasparent;
   padding: 1px;
   display: flex;
   align-items: center;
@@ -46,7 +46,7 @@ export const InputIcon = styled.div`
 `;
 
 export const InputRightContainer = styled.div`
-  background-color: #fff;
+  background-color: tranasparent;
   flex-grow: 3;
   box-sizing: border-box;
 `;
@@ -61,6 +61,7 @@ export const InputHeader = styled.div`
 `;
 
 export const RightIcon = styled.div`
+  background-color: tranasparent;
   padding: 1px;
   flex-grow: 1;
   display: flex;
@@ -71,7 +72,6 @@ export const RightIcon = styled.div`
   flex-shrink: 0;
   flex-basis: 50px;
   box-sizing: border-box;
-  background-color: #fff;
   &:hover {
     cursor: pointer;
   }
@@ -89,10 +89,10 @@ export const ShowPasswordIcon = styled(IconButton)`
 `;
 
 export const InputTooltip = styled.div`
+  background-color: tranasparent;
   display: flex;
   align-items: center;
   margin: 0;
-  background-color: #fff;
   cursor: pointer;
   padding-right: 10px;
   color: #383838;

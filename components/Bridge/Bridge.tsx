@@ -1,7 +1,9 @@
-import React, { useState, FC, useEffect } from 'react';
+import React, { FC, useEffect } from 'react';
 
 import { useDispatch, useSelector } from 'react-redux';
 import { selectUserAddress, selectbalanceSUDT, selectIsLoggedIn, setbalanceSUDT } from 'redux/slices/user';
+import PROCESSING_STATUSES from 'enums/processingStatuses';
+import { setMessage, setStatus } from 'redux/slices/modalTransaction';
 
 import { Formik, Form, FormikErrors, Field } from 'formik';
 import Image from 'next/image';
@@ -18,8 +20,6 @@ import { dCKBTransferSchema } from 'validators/minorValidators';
 import formatAddress from 'utils/formatAddress';
 import DAOPlainButton from 'components/DAOPlainButton/DAOPlainButton';
 import DAOTooltip from 'components/DAOTooltip/DAOTooltip';
-import Snackbar from '@mui/material/Snackbar';
-import MuiAlert, { AlertProps } from '@mui/material/Alert';
 
 import ConnectWalletButton from 'components/ConnectWalletButton/ConnectWalletButton';
 import useCheckProvider from 'hooks/useCheckProvider';
@@ -96,11 +96,7 @@ const BridgeComponent: FC<IBridgeComponent> = ({ onSubmitCompleteStep }) => {
 
   const hasProvider = useCheckProvider();
   const { loaderBalance, balanceFromWallet, mintDCKTokens } = useDCKBTokenHook();
-  const [toast, setToast] = useState(null);
 
-  const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(props, ref) {
-    return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
-  });
   useEffect((): void => {
     const fetchWalletBalance = async () => {
       try {
@@ -111,7 +107,7 @@ const BridgeComponent: FC<IBridgeComponent> = ({ onSubmitCompleteStep }) => {
           return balances;
         }
       } catch (error: any) {
-        setToast(error.message || error.toString());
+        console.error(error);
         throw error;
       }
     };
@@ -137,23 +133,8 @@ const BridgeComponent: FC<IBridgeComponent> = ({ onSubmitCompleteStep }) => {
     return 'Swap now';
   }
 
-  const resetToast = () => {
-    setToast(null);
-  };
-
   return (
     <>
-      <Snackbar
-        open
-        message={toast}
-        onClose={resetToast}
-        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
-        autoHideDuration={6000}
-      >
-        <Alert severity="error" sx={{ width: '100%' }}>
-          {toast}
-        </Alert>
-      </Snackbar>
       <Title variant="h2" mb={2}>
         Bridge
       </Title>
@@ -162,12 +143,24 @@ const BridgeComponent: FC<IBridgeComponent> = ({ onSubmitCompleteStep }) => {
         initialValues={initialValues}
         validateOnChange
         onSubmit={async (values, actions) => {
+          const unmaskAmount = values.amount.replace(/[^\d]/g, '');
           try {
-            onSubmitCompleteStep(await mintDCKTokens('dCKB', values.amount, values.destinationAddress));
+            onSubmitCompleteStep(await mintDCKTokens(unmaskAmount, values.destinationAddress));
             actions.setSubmitting(false);
+
+            dispatch(setStatus(PROCESSING_STATUSES.SUCCESS));
+            dispatch(
+              setMessage(
+                `Transfer successfully minted!\n${values.amount} dCKB to destination address \n${values.destinationAddress}\n`,
+              ),
+            );
+
+            actions.resetForm();
           } catch (error: any) {
-            setToast(error.message || error.toString());
             actions.setSubmitting(false);
+
+            dispatch(setStatus(PROCESSING_STATUSES.ERROR));
+            dispatch(setMessage(error.message || error.toString()));
           }
           console.log({
             amount: values.amount,
@@ -207,6 +200,16 @@ const BridgeComponent: FC<IBridgeComponent> = ({ onSubmitCompleteStep }) => {
                   <Input
                     {...field}
                     icon={{ src: '/logos/nervos.svg' }}
+                    rightIcon={
+                      !formik.errors.amount
+                        ? {
+                            customIcon: <DAOPlainButton style={{ color: '#00D395' }}>dCKB</DAOPlainButton>,
+                            tooltipMessage:
+                              'It is minted on the Nexis DAO, Since dCKB is minted on L1 it needs a way of being swapped onto L2',
+                          }
+                        : null
+                    }
+                    inputMask={{ mask: '999 999 999 999 999', maskChar: '' }}
                     header="Amount"
                     placeholder="Enter amount..."
                     name="amount"
@@ -218,7 +221,7 @@ const BridgeComponent: FC<IBridgeComponent> = ({ onSubmitCompleteStep }) => {
                     customStyles={{
                       inputColor: '#00cc9b',
                       headerStyles: { color: '#00cc9b' },
-                      borderOnFocus: '1px solid #00cc9b',
+                      borderOnFocus: '2px solid #00cc9b',
                     }}
                     tooltipMessage="Please make sure you have sufficient CKB balance in your L1 account before transferring to L2. A minimum balance of 471 CKB needs to be maintained after transaction."
                     error={formik.errors.amount && true}
@@ -234,7 +237,7 @@ const BridgeComponent: FC<IBridgeComponent> = ({ onSubmitCompleteStep }) => {
                 <Typography variant="body1-bold">
                   {balanceSUDT?.dckbBalance ? (
                     <Box display="flex" alignItems="center" pl={1}>
-                      {`${balanceSUDT?.dckbBalance} dCKB`}
+                      {`${balanceSUDT?.dckbBalance.replace(/\W/gi, '').replace(/(.{3})/g, '$1 ')} dCKB`}
                       <Box pl={5}>
                         <DAOPlainButton
                           onClick={() => {
@@ -290,7 +293,7 @@ const BridgeComponent: FC<IBridgeComponent> = ({ onSubmitCompleteStep }) => {
                     customStyles={{
                       inputColor: '#00D395',
                       headerStyles: { color: '#00D395' },
-                      borderOnFocus: '1px solid #00D395',
+                      borderOnFocus: '2px solid #00D395',
                     }}
                     disabled={userAddress === '' && initialAddress !== ''}
                     tooltipMessage="enter the wallet address you want to send funds, it begins with ckt1..."
@@ -322,6 +325,9 @@ const BridgeComponent: FC<IBridgeComponent> = ({ onSubmitCompleteStep }) => {
                 <StyledAccordionDetails>
                   <Box pt={2}>
                     <Typography variant="body1-bold">Fee: 10000 shanon</Typography>
+                  </Box>
+                  <Box pt={2}>
+                    <Typography variant="body1-bold">Video (walk through): comming soon</Typography>
                   </Box>
                 </StyledAccordionDetails>
               </StyledAccordionB>

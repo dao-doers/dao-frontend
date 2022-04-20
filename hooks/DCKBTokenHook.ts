@@ -1,5 +1,5 @@
 /* eslint-disable import/prefer-default-export */
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 
 import { AddressTranslator, IAddressTranslatorConfig, WalletAssetsSender } from 'nervos-godwoken-integration';
@@ -10,8 +10,6 @@ export const useDCKBTokenHook = () => {
   const [loader, setLoader] = useState(false);
   const [loaderLayer2Address, setLoaderLayer2Address] = useState(false);
   const [loaderBalance, setLoaderBalance] = useState(false);
-
-  const tokenContractAddress = '0x884541623C1B26A926a5320615F117113765fF81';
 
   const dckbIssuerHash = '0xc43009f083e70ae3fee342d59b8df9eec24d669c1c3a3151706d305f5362c37e';
 
@@ -31,13 +29,11 @@ export const useDCKBTokenHook = () => {
   };
   const dispatch = useDispatch();
 
-  // const addressTranslator = new AddressTranslator();
   const addressTranslator = new AddressTranslator(TESTNET_CONFIG);
 
   const assetSender = new WalletAssetsSender('https://testnet.ckb.dev/rpc', 'https://testnet.ckb.dev/indexer');
 
-  const mintDCKTokens = async (tokenId: any, amount: string, toAddress: string) => {
-    const successMessage = `Transfer successfully minted ${amount} ${tokenId} to ${toAddress}`;
+  const mintDCKTokens = async (amount: string, toAddress: string) => {
     try {
       setLoader(true);
       dispatch(setStatus(PROCESSING_STATUSES.PROCESSING));
@@ -46,21 +42,12 @@ export const useDCKBTokenHook = () => {
 
       await assetSender.init('testnet');
       await assetSender.connectWallet(); // you can also pass private key
-      // const contractAddress = web3?.utils.toChecksumAddress(tokenContractAddress);
-      // const contract = new web3?.eth.Contract(ERC20_JSON, contractAddress);
-      // const decimals = await contract.methods.decimals().call();
-      // const amountInCogs = convertToCogs(amount, decimals);
       await assetSender.sendSUDT(amount, toAddress, dckbIssuerHash);
-
     } catch (error: any) {
       setLoader(false);
-      dispatch(setStatus(PROCESSING_STATUSES.ERROR));
-      dispatch(setMessage('Transfer not sent, please try again!' || error.message || error.toString()));
       throw error;
     } finally {
       setLoader(false);
-      dispatch(setStatus(PROCESSING_STATUSES.SUCCESS));
-      dispatch(setMessage(`${successMessage}`));
     }
   };
 
@@ -75,7 +62,6 @@ export const useDCKBTokenHook = () => {
       return { ckbBalance, dckbBalance };
     } catch (error) {
       setLoaderBalance(false);
-      console.log(error);
       throw error;
     } finally {
       setLoaderBalance(false);
@@ -122,7 +108,6 @@ https://www.npmjs.com/package/nervos-godwoken-integration
 */
   const createLayer2Address = async () => {
     let layer1TxHash;
-    const successMessage = `Address successfully created! https://explorer.nervos.org/aggron/${layer1TxHash}`;
     try {
       setLoaderLayer2Address(true);
       dispatch(setStatus(PROCESSING_STATUSES.PROCESSING));
@@ -146,8 +131,6 @@ https://www.npmjs.com/package/nervos-godwoken-integration
       throw error;
     } finally {
       setLoaderLayer2Address(false);
-      dispatch(setStatus(PROCESSING_STATUSES.SUCCESS));
-      dispatch(setMessage(`${successMessage}`));
     }
   };
   return {

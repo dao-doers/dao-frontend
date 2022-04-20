@@ -1,4 +1,4 @@
-import React, { FC, useEffect } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   selectUserAddress,
@@ -10,18 +10,25 @@ import {
   setUserCKBAddress,
 } from 'redux/slices/user';
 
+import { CopyToClipboard } from 'react-copy-to-clipboard';
+
 import styled from '@emotion/styled';
 
 import DAOButton from 'components/DAOButton/DAOButton';
 
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
+import MuiAlert, { AlertProps } from '@mui/material/Alert';
+import ContentCopyIcon from '@mui/icons-material/ContentCopy';
+import Snackbar from '@mui/material/Snackbar';
 
 import { useDCKBTokenHook } from 'hooks/DCKBTokenHook';
 import useCheckProvider from 'hooks/useCheckProvider';
 
 import ConnectWalletButton from 'components/ConnectWalletButton/ConnectWalletButton';
 import formatAddress from 'utils/formatAddress';
+import PROCESSING_STATUSES from 'enums/processingStatuses';
+import { setMessage, setStatus } from 'redux/slices/modalTransaction';
 
 interface CreateAccountStepProps {
   completeStep: (form: any) => void;
@@ -48,8 +55,19 @@ const ButtonWrapper = styled(Box)`
   }
 `;
 
+const StyledCopyIcon = styled(ContentCopyIcon)`
+  cursor: pointer;
+  font-size: 20px;
+  position: relative;
+  top: 3px;
+`;
+
+const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(props, ref) {
+  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+});
+
 const CreateAccountStep: FC<CreateAccountStepProps> = ({ completeStep }) => {
-  const { createLayer2Address, loaderLayer2Address, connectedWalletAddress } = useDCKBTokenHook();
+  const { createLayer2Address, connectedWalletAddress } = useDCKBTokenHook();
   const hasProvider = useCheckProvider();
 
   const dispatch = useDispatch();
@@ -59,15 +77,28 @@ const CreateAccountStep: FC<CreateAccountStepProps> = ({ completeStep }) => {
   const depositAddress = useSelector(selectUserAddressLayer2);
 
   const BalanceSUDT = useSelector(selectbalanceSUDT);
-  const Layer2Address = useSelector(selectUserAddressLayer2);
+  const [copiedCKBAddress, setCopiedCKBAddress] = useState(false);
+
+  const handleCopyCKBAddress = () => {
+    setCopiedCKBAddress(true);
+    setTimeout(() => {
+      setCopiedCKBAddress(false);
+    }, 2000);
+  };
 
   const getLayer2Address = async () => {
     try {
       const layer2Address = await createLayer2Address();
       dispatch(setUserAddressLayer2(layer2Address));
       completeStep(layer2Address);
+
+      const successMessage = `Address successfully created! https://explorer.nervos.org/aggron/${layer2Address}`;
+
+      dispatch(setStatus(PROCESSING_STATUSES.SUCCESS));
+      dispatch(setMessage(`${successMessage}`));
     } catch (error: any) {
-      console.error(error);
+      dispatch(setStatus(PROCESSING_STATUSES.ERROR));
+      dispatch(setMessage(error.message || error.toString()));
     }
   };
 
@@ -87,8 +118,6 @@ const CreateAccountStep: FC<CreateAccountStepProps> = ({ completeStep }) => {
   }, [hasProvider, userAddress]);
 
   console.log('BalaceSUDT', BalanceSUDT);
-  console.log('Layer2Address', Layer2Address);
-  console.log('loaderLayer2Address', loaderLayer2Address);
   return (
     <Box mt={5} mb={4}>
       <StyledBox>
@@ -115,11 +144,14 @@ const CreateAccountStep: FC<CreateAccountStepProps> = ({ completeStep }) => {
       <StyledBox>
         {!depositAddress && (
           <>
-            <Box>
-              <Typography component="h6" variant="h6">
-                Your CKB address (use on faucet site) {formatAddress(userCKBAddress)}
-              </Typography>
-            </Box>
+            <CopyToClipboard text={userCKBAddress} onCopy={handleCopyCKBAddress}>
+              <Box>
+                <Typography component="h6" variant="h6">
+                  Your CKB address (use on faucet site) {formatAddress(userCKBAddress)}
+                </Typography>
+                <StyledCopyIcon />
+              </Box>
+            </CopyToClipboard>
             <ButtonWrapper>
               <DAOButton variant="gradientOutline" onClick={() => window.open('https://faucet.nervos.org/', '_blank')}>
                 Layer 1 faucet
@@ -147,6 +179,12 @@ const CreateAccountStep: FC<CreateAccountStepProps> = ({ completeStep }) => {
           </DAOButton>
         </ButtonWrapper>
       </StyledBox>
+
+      <Snackbar open={copiedCKBAddress} anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}>
+        <Alert severity="success" sx={{ width: '100%' }}>
+          Address copied!
+        </Alert>
+      </Snackbar>
     </Box>
   );
 };

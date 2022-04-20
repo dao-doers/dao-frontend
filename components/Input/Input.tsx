@@ -33,11 +33,12 @@ import {
 } from './Input.styles';
 
 interface IconProps {
-  src: any;
+  src?: any;
   color?: string;
   role?: string;
   backgroundColor?: string;
-  tooltipMessage?: string
+  tooltipMessage?: string;
+  customIcon?: any;
 }
 
 export interface InputProps {
@@ -353,7 +354,7 @@ const Input = ({
     <InputOuterContainer>
       <InputMainContainer
         style={{
-          border: error ? '1px solid #eb0000' : isFocused ? borderOnFocus : '1px solid #eef2f2',
+          border: error ? '1px solid #eb0000' : isFocused ? borderOnFocus : '1px solid #00D395',
         }}
         onFocus={() => {
           setIsFocused(true);
@@ -562,6 +563,7 @@ const Input = ({
               rightIcon.backgroundColor
                 ? {
                     backgroundColor: rightIcon.backgroundColor,
+                    color: rightIcon.color,
                   }
                 : {}
             }
@@ -572,13 +574,17 @@ const Input = ({
               message={rightIcon.tooltipMessage}
               textColor="#eee"
             >
-              <Image
-                src={rightIcon.src}
-                alt="quantity"
-                height="20"
-                width="20"
-                color={(error && '#eb0000') || icon?.color || '#5a7681'}
-              />
+              {rightIcon.src ? (
+                <Image
+                  src={rightIcon.src}
+                  alt="quantity"
+                  height="20"
+                  width="20"
+                  color={(error && '#eb0000') || icon?.color || '#5a7681'}
+                />
+              ) : (
+                rightIcon.customIcon
+              )}
             </DAOTooltip>
           </RightIcon>
         ) : (

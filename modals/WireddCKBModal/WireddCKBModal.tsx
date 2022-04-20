@@ -12,6 +12,8 @@ import Stepper from 'components/Steper/Stepper';
 import Step from 'components/Steper/Step';
 
 import { selectOpen, setClose } from 'redux/slices/modalWireddCKB';
+import { setOpen, setMessage, setStatus } from 'redux/slices/modalTransaction';
+import PROCESSING_STATUSES from 'enums/processingStatuses';
 
 import CreateAccountStep from './WireddCKBModalSteps/CreateAccountStep';
 import GetCKBStep from './WireddCKBModalSteps/GetCKBStep';
@@ -29,7 +31,6 @@ const StyledBox = styled(Box)`
 const WireddCKBModal: FC = () => {
   const [activeStep, setActiveStep] = useState(0);
   const [completedSteps, setCompletedSteps] = useState([0, 0, 0, 0]);
-  // const [initialRender, setInitialRender] = useState(true);
 
   const dispatch = useDispatch();
   const Layer2Address = useSelector(selectUserAddressLayer2);
@@ -64,20 +65,18 @@ const WireddCKBModal: FC = () => {
     }
   };
 
-  // useEffect(() => {
-  //   if (initialRender) {
-  //     setInitialRender(false);
-  //   } else {
-  //     nextStep(completedSteps);
-  //   }
-  // }, [completedSteps]);
+  const resetSteps = (): void => {
+    if (activeStep !== 0 || completedSteps[0] === 1) {
+      setActiveStep(0);
+      setCompletedSteps([0, 0, 0, 0]);
+    }
+  };
 
   return (
     <Modal isOpen={isModalOpen} handleClose={handleModalOpen} title="Get dCKB" divider>
       <StyledBox>
         <Stepper
-        // IF USER HAS ALREADY SOME STEPS COMPLETED
-
+          // IF USER HAS ALREADY SOME STEPS COMPLETED
           // onStepChange={(active, previous) => {
           //   if (active === 0) {
           //     if (Layer2Address) {
@@ -85,12 +84,16 @@ const WireddCKBModal: FC = () => {
           //     }
           //   } else if (active === 1) {
           //     if (balanceSUDT.ckbBalance > 471) {
-          //       setCompletedSteps([1, 1, 0, 0]);
+          //       setCompletedSteps([0, 1, 0, 0]);
           //     }
           //   } else if (active === 2) {
           //     if (balanceSUDT.dckbBalance > 0) {
-          //       setCompletedSteps([1, 1, 1, 0]);
+          //       setCompletedSteps([0, 0, 1, 0]);
           //     }
+          //   } else if (active === 3) {
+          //     setCompletedSteps([0, 0, 0, 1]);
+          //   } else {
+          //     setCompletedSteps([1, 1, 1, 1]);
           //   }
           // }}
           nonLinear
@@ -98,7 +101,13 @@ const WireddCKBModal: FC = () => {
           activeStep={activeStep}
           completedSteps={completedSteps}
           onComplete={() => {
-            console.log('completed!');
+            dispatch(setOpen(true));
+            dispatch(setStatus(PROCESSING_STATUSES.SUCCESS));
+            dispatch(
+              setMessage(
+                `Congratulation!, you completed all steps!\n${balanceSUDT?.ckbBalance}CKB\n${balanceSUDT?.dckbBalance}dCKB\n`,
+              ),
+            );
           }}
         >
           <Step label="Get Layer 2 address">
@@ -132,6 +141,9 @@ const WireddCKBModal: FC = () => {
               handlePreviousStep={() => previousStep()}
               completeStep={() => {
                 completeStep(completedSteps, setCompletedSteps, false);
+              }}
+              resetSteps={() => {
+                resetSteps();
               }}
             />
           </Step>
