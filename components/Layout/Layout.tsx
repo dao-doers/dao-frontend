@@ -1,5 +1,5 @@
 import { FC, ReactNode, useEffect } from 'react';
-import { useDispatch } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import Web3 from 'web3';
 
 import styled from '@emotion/styled';
@@ -15,13 +15,16 @@ import MobileMenu from 'components/Menu/MobileMenu/MobileMenu';
 
 import THEME_MODES from 'enums/themeModes';
 
-import useFetchProposals from 'hooks/useFetchProposals';
-import useFetchVotes from 'hooks/useFetchVotes';
-import useMaintainSession from 'hooks/useMaintainSession';
-import useFetchMembers from 'hooks/useFetchMembers';
 import useIsMobile from 'hooks/useIsMobile';
+import useMaintainSession from 'hooks/useMaintainSession';
+
+import FETCH_STATUSES from 'enums/fetchStatuses';
 
 import { setTheme } from 'redux/slices/theme';
+
+import { selectFetchStatus as selectProposalsFetchStatus, getProposalsList } from 'redux/slices/proposals';
+import { selectFetchStatus as selectVotesFetchStatus, getVotesList } from 'redux/slices/votes';
+import { getUsersList } from 'redux/slices/user';
 
 export type LayoutProps = {
   children: ReactNode;
@@ -49,10 +52,15 @@ const Layout: FC<LayoutProps> = ({ children }) => {
 
   const isMobile = useIsMobile('lg');
 
-  const loadingProposals = useFetchProposals();
-  const loadingVotes = useFetchVotes();
+  const proposalsFetchStatus = useSelector(selectProposalsFetchStatus);
+  const proposalsVotesStatus = useSelector(selectVotesFetchStatus);
 
-  useFetchMembers();
+  useEffect(() => {
+    dispatch(getProposalsList());
+    dispatch(getVotesList());
+    dispatch(getUsersList());
+  }, []);
+
   useMaintainSession();
 
   useEffect(() => {
@@ -82,9 +90,14 @@ const Layout: FC<LayoutProps> = ({ children }) => {
 
         <Box width="100%">
           {!isMobile && <BlockchainStatusContent />}
-          {(loadingProposals.loading || loadingVotes.loading) && <LoadingPage />}
 
-          {!loadingProposals.loading && !loadingVotes.loading && children}
+          {proposalsFetchStatus === FETCH_STATUSES.LOADING && proposalsVotesStatus === FETCH_STATUSES.LOADING && (
+            <LoadingPage />
+          )}
+
+          {proposalsFetchStatus !== FETCH_STATUSES.LOADING &&
+            proposalsVotesStatus !== FETCH_STATUSES.LOADING &&
+            children}
         </Box>
       </StyledBox>
 

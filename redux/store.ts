@@ -10,6 +10,8 @@ import modalTransactionReducer from 'redux/slices/modalTransaction';
 import modalWireddCKBReducer from 'redux/slices/modalWireddCKB';
 import modalSUDTTransferReducer from 'redux/slices/modalSUDTTransfer';
 
+import apollo from 'config/apollo';
+
 export default configureStore({
   reducer: {
     user: userReducer,
@@ -23,4 +25,10 @@ export default configureStore({
     modalSUDTTransfer: modalSUDTTransferReducer,
   },
   devTools: process.env.MODE !== 'production',
+  middleware: getDefaultMiddleware =>
+    getDefaultMiddleware({
+      thunk: {
+        extraArgument: { apollo },
+      },
+    }),
 });

@@ -1,4 +1,5 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice, AsyncThunkOptions as OriginalAsyncThunkOptions } from '@reduxjs/toolkit';
+import { gql, ApolloClient, NormalizedCacheObject } from '@apollo/client';
 
 import FETCH_STATUSES from 'enums/fetchStatuses';
 
@@ -12,6 +13,36 @@ interface VotesProps {
 interface StateProps {
   votes: VotesProps;
 }
+
+declare module '@reduxjs/toolkit' {
+  export type AsyncThunkOptions = OriginalAsyncThunkOptions & {
+    extra: { apollo: ApolloClient<NormalizedCacheObject> };
+  };
+}
+
+// Get list of all votes
+export const getVotesList = createAsyncThunk('votes/getVotesList', async (userToken, { extra: { apollo } }) => {
+  return apollo.query({
+    query: gql`
+      query addressVotes($first: Int, $skip: Int, $orderBy: String, $orderDirection: String) {
+        votes(first: $first, skip: $skip, orderBy: $orderBy, orderDirection: $orderDirection) {
+          id
+          createdAt
+          uintVote
+          molochAddress
+          memberAddress
+          proposal {
+            details
+            id
+          }
+          member {
+            shares
+          }
+        }
+      }
+    `,
+  });
+});
 
 const votesSlice = createSlice({
   name: 'votes',
@@ -29,6 +60,21 @@ const votesSlice = createSlice({
     setFetchStatus: (state, action) => {
       state.fetchStatus = action.payload;
     },
+  },
+  extraReducers: builder => {
+    // Get list of all votes
+    builder.addCase(getVotesList.fulfilled, (state, action) => {
+      state.votesArray = action.payload.data.votes.slice().sort(function (a: any, b: any) {
+        return -(a.createdAt - b.createdAt);
+      });
+      state.fetchStatus = FETCH_STATUSES.SUCCESS;
+    });
+    builder.addCase(getVotesList.pending, (state, action) => {
+      state.fetchStatus = FETCH_STATUSES.LOADING;
+    });
+    builder.addCase(getVotesList.rejected, (state, action) => {
+      state.fetchStatus = FETCH_STATUSES.ERROR;
+    });
   },
 });
 
