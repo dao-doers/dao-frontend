@@ -13,7 +13,7 @@ import DAOInput from 'components/DAOInput/DAOInput';
 import Link from 'components/Link/Link';
 import Modal from 'components/Modal/Modal';
 
-import useTransferERC20 from 'hooks/useTransferERC20';
+import useHandleTransferERC20 from 'hooks/useHandleTransferERC20';
 
 import { EXTERNAL_ROUTES } from 'utils/routes';
 
@@ -61,7 +61,7 @@ const WireddCKBModal: FC = () => {
     try {
       setMessage('Check transaction status in MetaMask');
 
-      await useTransferERC20(userAddress, values.receiverAddress, values.amount);
+      await useHandleTransferERC20(userAddress, values.receiverAddress, values.amount);
     } catch (error) {
       console.log(error);
     }

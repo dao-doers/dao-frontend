@@ -17,11 +17,13 @@ import THEME_MODES from 'enums/themeModes';
 
 import useIsMobile from 'hooks/useIsMobile';
 import useMaintainSession from 'hooks/useMaintainSession';
+import useTestFunction from 'hooks/useTestFunction';
 
 import FETCH_STATUSES from 'enums/fetchStatuses';
 
-import { setTheme } from 'redux/slices/theme';
+import { loadWeb3 } from 'utils/blockchain';
 
+import { setTheme } from 'redux/slices/theme';
 import { selectFetchStatus as selectProposalsFetchStatus, getProposalsList } from 'redux/slices/proposals';
 import { selectFetchStatus as selectVotesFetchStatus, getVotesList } from 'redux/slices/votes';
 import { getUsersList } from 'redux/slices/user';
@@ -51,7 +53,6 @@ const Layout: FC<LayoutProps> = ({ children }) => {
   const dispatch = useDispatch();
 
   const isMobile = useIsMobile('lg');
-
   const proposalsFetchStatus = useSelector(selectProposalsFetchStatus);
   const proposalsVotesStatus = useSelector(selectVotesFetchStatus);
 
@@ -59,9 +60,11 @@ const Layout: FC<LayoutProps> = ({ children }) => {
     dispatch(getProposalsList());
     dispatch(getVotesList());
     dispatch(getUsersList());
+    loadWeb3();
   }, []);
 
   useMaintainSession();
+  useTestFunction();
 
   useEffect(() => {
     const theme = sessionStorage.getItem('dao-theme');
@@ -69,11 +72,14 @@ const Layout: FC<LayoutProps> = ({ children }) => {
     dispatch(setTheme(theme === THEME_MODES.DARK ? THEME_MODES.DARK : THEME_MODES.LIGHT));
   }, [dispatch]);
 
+  // TODO: is that necessary?
   useEffect(() => {
     const checkProvider = async () => {
       if (window.ethereum) {
         await (window as any).ethereum.request({ method: 'eth_requestAccounts' });
         window.web3 = new Web3((window as any).ethereum);
+      } else {
+        window.web3 = new Web3(process.env.PROVIDER_URL || '');
       }
     };
     checkProvider();

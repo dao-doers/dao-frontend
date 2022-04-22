@@ -20,10 +20,10 @@ import DividerLine from 'components/DividerLine/DividerLine';
 import LinearChart from 'components/LinearChart/LinearChart';
 import TooltipIcon from 'components/TooltipIcon';
 
-import useSponsorProposal from 'hooks/useSponsorProposal';
-import useVote from 'hooks/useVote';
-import useNotVotedYetCheck from 'hooks/useNotVotedYetCheck';
-import useProcessProposal from 'hooks/useProcessProposal';
+import useHandleSponsorProposal from 'hooks/useHandleSponsorProposal';
+import useHandleVote from 'hooks/useHandleVote';
+import useCheckIfVoted from 'hooks/useCheckIfVoted';
+import useHandleProcessProposal from 'hooks/useHandleProcessProposal';
 
 import FETCH_STATUSES from 'enums/fetchStatuses';
 import PROPOSAL_STATUS from 'enums/proposalStatus';
@@ -95,7 +95,7 @@ const VoteAccordion: FC<any> = ({ proposal }) => {
 
   useEffect(() => {
     if (isLoggedIn && userShares > 0 && proposal.proposalIndex !== null) {
-      useNotVotedYetCheck(userAddress, proposal.proposalIndex, process.env.DAO_ADDRESS as any).then(async response => {
+      useCheckIfVoted(userAddress, proposal.proposalIndex, process.env.DAO_ADDRESS as any).then(async response => {
         if (response === true) {
           setNotVotedYet(1);
         } else {
@@ -118,7 +118,7 @@ const VoteAccordion: FC<any> = ({ proposal }) => {
       //   dispatch(setStatus(PROCESSING_STATUSES.ERROR));
       //   dispatch(setMessage('You have not enough dCKB'));
       // } else {
-      const receipt = await useSponsorProposal(userAddress, daoAddress, proposalId);
+      const receipt = await useHandleSponsorProposal(userAddress, daoAddress, proposalId);
 
       if (receipt.blockNumber) {
         dispatch(setStatus(PROCESSING_STATUSES.SUCCESS));
@@ -142,46 +142,44 @@ const VoteAccordion: FC<any> = ({ proposal }) => {
   };
 
   const handleVote = async (vote: number) => {
-    // TODO: improvement - useNotVotedYetCheck should run just right after page render, not just after clicking
+    // TODO: improvement - useCheckIfVoted should run just right after page render, not just after clicking
 
     dispatch(setStatus(PROCESSING_STATUSES.PROCESSING));
     dispatch(setOpen(true));
 
-    await useNotVotedYetCheck(userAddress, proposal.proposalIndex, process.env.DAO_ADDRESS as any).then(
-      async response => {
-        if (response === true) {
-          setNotVotedYet(1);
-          const { proposalIndex } = proposal;
+    await useCheckIfVoted(userAddress, proposal.proposalIndex, process.env.DAO_ADDRESS as any).then(async response => {
+      if (response === true) {
+        setNotVotedYet(1);
+        const { proposalIndex } = proposal;
 
-          try {
-            const receipt = await useVote(proposalIndex, vote, userAddress);
+        try {
+          const receipt = await useHandleVote(proposalIndex, vote, userAddress);
 
-            if (receipt.blockNumber) {
-              setNotVotedYet(2);
-              dispatch(setStatus(PROCESSING_STATUSES.SUCCESS));
-              dispatch(
-                setMessage(
-                  `Your request has been processed by blockchain network and will be displayed with the block number ${
-                    receipt.blockNumber + 1
-                  }`,
-                ),
-              );
-            }
-            if (receipt.code) {
-              dispatch(setStatus(PROCESSING_STATUSES.ERROR));
-              dispatch(setMessage(getMetamaskMessageError(receipt)));
-            }
-          } catch (error) {
-            dispatch(setStatus(PROCESSING_STATUSES.ERROR));
-            dispatch(setMessage(getMetamaskMessageError(error)));
+          if (receipt.blockNumber) {
+            setNotVotedYet(2);
+            dispatch(setStatus(PROCESSING_STATUSES.SUCCESS));
+            dispatch(
+              setMessage(
+                `Your request has been processed by blockchain network and will be displayed with the block number ${
+                  receipt.blockNumber + 1
+                }`,
+              ),
+            );
           }
-        } else {
-          setNotVotedYet(2);
-          dispatch(setMessage('You have already voted!'));
+          if (receipt.code) {
+            dispatch(setStatus(PROCESSING_STATUSES.ERROR));
+            dispatch(setMessage(getMetamaskMessageError(receipt)));
+          }
+        } catch (error) {
           dispatch(setStatus(PROCESSING_STATUSES.ERROR));
+          dispatch(setMessage(getMetamaskMessageError(error)));
         }
-      },
-    );
+      } else {
+        setNotVotedYet(2);
+        dispatch(setMessage('You have already voted!'));
+        dispatch(setStatus(PROCESSING_STATUSES.ERROR));
+      }
+    });
   };
 
   const handleProcessProposal = async () => {
@@ -191,7 +189,7 @@ const VoteAccordion: FC<any> = ({ proposal }) => {
     dispatch(setOpen(true));
 
     try {
-      const receipt = await useProcessProposal(userAddress, daoAddress, proposalIndex);
+      const receipt = await useHandleProcessProposal(userAddress, daoAddress, proposalIndex);
       console.log(receipt);
       // if (receipt.blockNumber) {
       //   dispatch(setStatus(PROCESSING_STATUSES.SUCCESS));

@@ -1,5 +1,3 @@
-import Web3 from 'web3';
-
 import abiLibrary from 'lib/abi';
 
 const getDao = async (address: string) => {
@@ -7,12 +5,7 @@ const getDao = async (address: string) => {
   return dao;
 };
 
-const useNotVotedYetCheck = async (user: string, proposalIndex: any, daoAddress: string) => {
-  if (window.ethereum) {
-    await window.ethereum.request({ method: 'eth_requestAccounts' });
-    window.web3 = new Web3(window.ethereum);
-  }
-
+const useCheckIfVoted = async (user: string, proposalIndex: any, daoAddress: string) => {
   const dao = await getDao(daoAddress);
 
   const response = await dao.methods.getMemberProposalVote(user, proposalIndex).call({}, (err: any, res: any) => {
@@ -24,4 +17,4 @@ const useNotVotedYetCheck = async (user: string, proposalIndex: any, daoAddress:
   return response === 0 || response === '0';
 };
 
-export default useNotVotedYetCheck;
+export default useCheckIfVoted;

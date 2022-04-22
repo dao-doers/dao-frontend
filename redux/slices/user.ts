@@ -20,9 +20,10 @@ declare module '@reduxjs/toolkit' {
 }
 
 // Get list of users
-export const getUsersList = createAsyncThunk('users/getUsersList', async (userToken, { extra: { apollo } }) => {
+export const getUsersList = createAsyncThunk('user/getUsersList', async (userToken, { extra: { apollo } }) => {
   const orderBy = 'createdAt';
   const orderDirection = 'desc';
+
   return apollo.query({
     query: gql`
       query addressVotes($orderBy: String, $orderDirection: String) {
@@ -49,10 +50,6 @@ export const getUsersList = createAsyncThunk('users/getUsersList', async (userTo
         }
       }
     `,
-    notifyOnNetworkStatusChange: true,
-    fetchPolicy: 'cache-and-network',
-    nextFetchPolicy: 'cache-first',
-    errorPolicy: 'ignore',
     variables: { orderBy, orderDirection },
   });
 });
@@ -86,9 +83,12 @@ const userSlice = createSlice({
   extraReducers: builder => {
     // Get list of users
     builder.addCase(getUsersList.fulfilled, (state, action) => {
+      const sessionUserAddress = sessionStorage.getItem('dao-user-address');
+
       const user = action.payload.data.members.filter((a: any) => {
-        return a.memberAddress === state.address;
+        return a.memberAddress === sessionUserAddress;
       });
+
       if (user[0]) {
         state.userShares = Number(user[0].shares);
       }

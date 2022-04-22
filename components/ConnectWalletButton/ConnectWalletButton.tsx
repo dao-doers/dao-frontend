@@ -9,7 +9,7 @@ import Typography from '@mui/material/Typography';
 
 import DAOButton from 'components/DAOButton/DAOButton';
 
-import { loadWeb3, getMetamaskAddress } from 'utils/blockchain';
+import { getMetamaskAddress } from 'utils/blockchain';
 
 import useCheckProvider from 'hooks/useCheckProvider';
 
@@ -31,8 +31,6 @@ const ConnectWalletButton: FC = () => {
   const dAppLink = process.env.APP_URL;
 
   const handleConnectWallet = async () => {
-    await loadWeb3();
-
     const address = await getMetamaskAddress();
     sessionStorage.setItem('dao-user-address', address);
 

@@ -17,7 +17,7 @@ import abiLibrary from 'lib/abi';
 
 import PROCESSING_STATUSES from 'enums/processingStatuses';
 
-import useCreateProposal from 'hooks/useCreateProposal';
+import useHandleCreateProposal from 'hooks/useHandleCreateProposal';
 import useIsMobile from 'hooks/useIsMobile';
 
 import newFundingSchema from 'validators/newFundingSchema';
@@ -60,7 +60,7 @@ const FundProjectForm: FC = () => {
 
       const modifiedLink = values.link.replace(/(^\w+:|^)\/\//, '');
 
-      const receipt = await useCreateProposal(
+      const receipt = await useHandleCreateProposal(
         userAddress,
         abiLibrary,
         version,

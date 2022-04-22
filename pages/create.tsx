@@ -14,7 +14,7 @@ import JoinDaoForm from 'sections/createPage/JoinDaoForm/JoinDaoForm';
 
 import CREATE_PROPOSAL_TYPE from 'enums/createProposalType';
 
-import { selectProposalType } from 'redux/slices/createProposal';
+import { selectProposalType } from 'redux/slices/main';
 
 const CreatePage: FC<NextPage> = () => {
   const proposalType = useSelector(selectProposalType);

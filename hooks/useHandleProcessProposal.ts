@@ -17,7 +17,7 @@ const getReceipt = async (proposal: any, user: string, estimatedGas: number) => 
   return receipt;
 };
 
-const useProcessProposal = async (user: string, daoAddress: any, proposalIndex: number) => {
+const useHandleProcessProposal = async (user: string, daoAddress: any, proposalIndex: number) => {
   const dao = await getDao(daoAddress);
   const proposal = await dao.methods.processProposal(proposalIndex).send({
     gasLimit: 6000000,
@@ -31,4 +31,4 @@ const useProcessProposal = async (user: string, daoAddress: any, proposalIndex: 
   return receipt;
 };
 
-export default useProcessProposal;
+export default useHandleProcessProposal;

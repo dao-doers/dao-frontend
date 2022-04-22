@@ -44,7 +44,7 @@ const RecentActivityStatus = () => {
         </Box>
       </Box>
       <Box ml={0.5}>
-        <DAOPlainButton variant="gradientOutline" onClick={() => handleRefreshPage()}>
+        <DAOPlainButton variant="gradientOutline" onClick={handleRefreshPage}>
           <Tooltip arrow title="Refresh data" placement="bottom">
             {isClicked ? <StyledCheckIcon /> : <StyledSyncIcon />}
           </Tooltip>
