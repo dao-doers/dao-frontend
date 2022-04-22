@@ -7,13 +7,13 @@ const getDao = async (address: string) => {
   return dao;
 };
 
-const useGetterFunction = async () => {
+const useTestFunction = async () => {
   const dao = await getDao(daoAddress);
 
   const token = new web3.eth.Contract(abiLibrary.erc20, '0x884541623C1B26A926a5320615F117113765fF81');
 
-  const receipe = await dao.methods.getTokenCount().call();
+  const receipe = await dao.methods.proposalCount().call();
   console.log(receipe);
 };
 
-export default useGetterFunction;
+export default useTestFunction;

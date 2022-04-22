@@ -4,7 +4,7 @@ import { ckbToShannons } from 'utils/formatShannons';
 
 const tributeToken = process.env.TRIBUTE_TOKEN_ADDRESS;
 
-const useTransferERC20 = async (userAddress, receiverAddress, amount) => {
+const useHandleTransferERC20 = async (userAddress, receiverAddress, amount) => {
   const token = new web3.eth.Contract(abiLibrary.erc20, tributeToken);
 
   await token.methods
@@ -21,4 +21,4 @@ const useTransferERC20 = async (userAddress, receiverAddress, amount) => {
     });
 };
 
-export default useTransferERC20;
+export default useHandleTransferERC20;

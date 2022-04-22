@@ -1,4 +1,5 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice, AsyncThunkOptions as OriginalAsyncThunkOptions } from '@reduxjs/toolkit';
+import { gql, ApolloClient, NormalizedCacheObject } from '@apollo/client';
 
 interface UserSlice {
   address: string;
@@ -11,6 +12,47 @@ interface UserSlice {
 interface StateProps {
   user: UserSlice;
 }
+
+declare module '@reduxjs/toolkit' {
+  export type AsyncThunkOptions = OriginalAsyncThunkOptions & {
+    extra: { apollo: ApolloClient<NormalizedCacheObject> };
+  };
+}
+
+// Get list of users
+export const getUsersList = createAsyncThunk('user/getUsersList', async (userToken, { extra: { apollo } }) => {
+  const orderBy = 'createdAt';
+  const orderDirection = 'desc';
+
+  return apollo.query({
+    query: gql`
+      query addressVotes($orderBy: String, $orderDirection: String) {
+        members(orderBy: $orderBy, orderDirection: $orderDirection) {
+          id
+          createdAt
+          moloch
+          molochAddress
+          memberAddress
+          delegateKey
+          shares
+          loot
+          exists
+          highestIndexYesVote
+          tokenTribute
+          didRagequit
+          votes
+          submissions
+          tokenBalances
+          rageQuits
+          proposedToKick
+          kicked
+          jailed
+        }
+      }
+    `,
+    variables: { orderBy, orderDirection },
+  });
+});
 
 const userSlice = createSlice({
   name: 'user',
@@ -37,6 +79,22 @@ const userSlice = createSlice({
     setSessionMaintained: (state, action) => {
       state.sessionMaintained = action.payload;
     },
+  },
+  extraReducers: builder => {
+    // Get list of users
+    builder.addCase(getUsersList.fulfilled, (state, action) => {
+      const sessionUserAddress = sessionStorage.getItem('dao-user-address');
+
+      const user = action.payload.data.members.filter((a: any) => {
+        return a.memberAddress === sessionUserAddress;
+      });
+
+      if (user[0]) {
+        state.userShares = Number(user[0].shares);
+      }
+    });
+    builder.addCase(getUsersList.pending, (state, action) => {});
+    builder.addCase(getUsersList.rejected, (state, action) => {});
   },
 });
 

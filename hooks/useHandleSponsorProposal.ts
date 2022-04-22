@@ -21,7 +21,7 @@ const getReceipt = async (proposal: any, user: string, estimatedGas: number) => 
   return receipt;
 };
 
-const useSponsorProposal = async (user: string, daoAddress: any, proposalId: string) => {
+const useHandleSponsorProposal = async (user: string, daoAddress: any, proposalId: string) => {
   const dao = await getDao(daoAddress);
   const token = new web3.eth.Contract(abiLibrary.erc20, tributeToken);
 
@@ -56,4 +56,4 @@ const useSponsorProposal = async (user: string, daoAddress: any, proposalId: str
   return receipt;
 };
 
-export default useSponsorProposal;
+export default useHandleSponsorProposal;

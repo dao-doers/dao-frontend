@@ -1,4 +1,5 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice, AsyncThunkOptions as OriginalAsyncThunkOptions } from '@reduxjs/toolkit';
+import { gql, ApolloClient, NormalizedCacheObject } from '@apollo/client';
 
 import FETCH_STATUSES from 'enums/fetchStatuses';
 import PROPOSAL_STATUS from 'enums/proposalStatus';
@@ -18,6 +19,79 @@ interface ProposalProps {
 interface StateProps {
   proposals: ProposalProps;
 }
+
+declare module '@reduxjs/toolkit' {
+  export type AsyncThunkOptions = OriginalAsyncThunkOptions & {
+    extra: { apollo: ApolloClient<NormalizedCacheObject> };
+  };
+}
+
+// Get list of all proposals
+export const getProposalsList = createAsyncThunk(
+  'proposals/getProposalsList',
+  async (userToken, { extra: { apollo } }) => {
+    return apollo.query({
+      query: gql`
+        query addressVotes($first: Int, $skip: Int, $orderBy: String, $orderDirection: String) {
+          proposals(first: $first, skip: $skip, orderBy: $orderBy, orderDirection: $orderDirection) {
+            id
+            createdAt
+            proposalIndex
+            proposalId
+            moloch {
+              id
+            }
+            molochAddress
+            memberAddress
+            delegateKey
+            applicant
+            proposer
+            sponsor
+            sharesRequested
+            lootRequested
+            tributeOffered
+            tributeToken
+            tributeTokenSymbol
+            tributeTokenDecimals
+            paymentRequested
+            paymentToken
+            paymentTokenSymbol
+            paymentTokenDecimals
+            startingPeriod
+            yesVotes
+            noVotes
+            sponsored
+            sponsoredAt
+            processed
+            didPass
+            cancelled
+            aborted
+            whitelist
+            guildkick
+            newMember
+            trade
+            details
+            maxTotalSharesAndLootAtYesVote
+            votes {
+              uintVote
+              id
+              member {
+                id
+                memberAddress
+              }
+            }
+            yesShares
+            noShares
+            votingPeriodStarts
+            votingPeriodEnds
+            gracePeriodEnds
+            molochVersion
+          }
+        }
+      `,
+    });
+  },
+);
 
 const proposalsSlice = createSlice({
   name: 'proposals',
@@ -117,6 +191,67 @@ const proposalsSlice = createSlice({
     clearSorted: state => {
       state.sortedProposalsArray = state.proposalsArray;
     },
+  },
+  extraReducers: builder => {
+    // Get list of all votes
+    builder.addCase(getProposalsList.fulfilled, (state, action) => {
+      const result = action.payload.data.proposals.map((proposal: any) => {
+        const proposals = { ...proposal };
+        if (proposal.sponsored === false && proposal.processed === false) {
+          proposals.proposalStatus = PROPOSAL_STATUS.COLLECTING_FUNDS;
+          proposals.yesVotes = Number(proposal.yesVotes);
+          proposals.noVotes = Number(proposal.noVotes);
+        } else if (
+          proposal.sponsored === true &&
+          currentTime < proposal.votingPeriodEnds &&
+          currentTime < proposal.gracePeriodEnds &&
+          proposal.processed === false
+        ) {
+          proposals.proposalStatus = PROPOSAL_STATUS.VOTING;
+          proposals.yesVotes = Number(proposal.yesVotes);
+          proposals.noVotes = Number(proposal.noVotes);
+        } else if (
+          proposal.sponsored === true &&
+          currentTime > proposal.votingPeriodEnds &&
+          currentTime < proposal.gracePeriodEnds &&
+          proposal.processed === false
+        ) {
+          proposals.proposalStatus = PROPOSAL_STATUS.GRACE_PERIOD;
+          proposals.yesVotes = Number(proposal.yesVotes);
+          proposals.noVotes = Number(proposal.noVotes);
+        } else if (
+          proposal.sponsored === true &&
+          currentTime > proposal.votingPeriodEnds &&
+          currentTime > proposal.gracePeriodEnds &&
+          proposal.processed === false
+        ) {
+          proposals.proposalStatus = PROPOSAL_STATUS.PROCEEDING;
+          proposals.yesVotes = Number(proposal.yesVotes);
+          proposals.noVotes = Number(proposal.noVotes);
+        } else if (proposal.processed === true) {
+          proposals.proposalStatus = PROPOSAL_STATUS.FINISHED;
+          proposals.yesVotes = Number(proposal.yesVotes);
+          proposals.noVotes = Number(proposal.noVotes);
+        } else {
+          return null;
+        }
+        return proposals;
+      });
+
+      state.proposalsArray = result.slice().sort((a: any, b: any) => {
+        return -(a.createdAt - b.createdAt);
+      });
+      state.sortedProposalsArray = result.slice().sort((a: any, b: any) => {
+        return -(a.createdAt - b.createdAt);
+      });
+      state.fetchStatus = FETCH_STATUSES.SUCCESS;
+    });
+    builder.addCase(getProposalsList.pending, (state, action) => {
+      state.fetchStatus = FETCH_STATUSES.LOADING;
+    });
+    builder.addCase(getProposalsList.rejected, (state, action) => {
+      state.fetchStatus = FETCH_STATUSES.ERROR;
+    });
   },
 });
 
