@@ -13,7 +13,7 @@ import { getMetamaskAddress } from 'utils/blockchain';
 
 import useCheckProvider from 'hooks/useCheckProvider';
 
-import { setUserAddress, setIsLoggedIn } from 'redux/slices/user';
+import { setUserAddress, setIsLoggedIn, getUsersList } from 'redux/slices/user';
 
 const TypographyBold = styled(Typography)`
   font-weight: 600;
@@ -36,6 +36,8 @@ const ConnectWalletButton: FC = () => {
 
     dispatch(setUserAddress(address));
     dispatch(setIsLoggedIn(true));
+
+    dispatch(getUsersList());
   };
 
   return hasProvider ? (

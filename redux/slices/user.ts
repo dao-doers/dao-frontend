@@ -83,10 +83,8 @@ const userSlice = createSlice({
   extraReducers: builder => {
     // Get list of users
     builder.addCase(getUsersList.fulfilled, (state, action) => {
-      const sessionUserAddress = sessionStorage.getItem('dao-user-address');
-
       const user = action.payload.data.members.filter((a: any) => {
-        return a.memberAddress === sessionUserAddress;
+        return a.memberAddress === state.address;
       });
 
       if (user[0]) {

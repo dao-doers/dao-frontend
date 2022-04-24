@@ -64,7 +64,7 @@ const Layout: FC<LayoutProps> = ({ children }) => {
   }, []);
 
   useMaintainSession();
-  useTestFunction();
+  // useTestFunction();
 
   useEffect(() => {
     const theme = sessionStorage.getItem('dao-theme');

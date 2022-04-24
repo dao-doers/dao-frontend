@@ -12,7 +12,7 @@ const useTestFunction = async () => {
 
   const token = new web3.eth.Contract(abiLibrary.erc20, '0x884541623C1B26A926a5320615F117113765fF81');
 
-  const receipe = await dao.methods.proposalCount().call();
+  const receipe = await dao.methods.getProposalQueueLength().call();
   console.log(receipe);
 };
 

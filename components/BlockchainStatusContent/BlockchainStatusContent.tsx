@@ -129,20 +129,22 @@ const BlockchainStatusContent: FC = () => {
                 )}
               </StatusChip>
             </MenuItem>
-            <MenuItem onClick={handleClose}>
-              {userShares > 0 && (
+            {userShares > 0 && (
+              <MenuItem onClick={handleClose}>
                 <StatusChip title="Member shares:">
                   <Typography variant="body1-bold">{userShares}</Typography>
                 </StatusChip>
-              )}
-            </MenuItem>
-            <MenuItem onClick={handleClose}>
-              {userShares === 0 && (
+              </MenuItem>
+            )}
+
+            {userShares === 0 && (
+              <MenuItem onClick={handleClose}>
                 <StatusChip title="Member status:">
                   <TypographyRed>Not a member</TypographyRed>
                 </StatusChip>
-              )}
-            </MenuItem>
+              </MenuItem>
+            )}
+
             {isMobile && (
               <MenuItem onClick={handleClose}>
                 <IndexerStatus />
