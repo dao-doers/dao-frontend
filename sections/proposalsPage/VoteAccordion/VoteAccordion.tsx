@@ -109,19 +109,17 @@ const VoteAccordion: FC<any> = ({ proposal }) => {
     const daoAddress = process.env.DAO_ADDRESS;
     const { proposalId } = proposal;
 
+    // TODO: unexpectedly it started throws error despite the receipt is ok
     try {
       dispatch(setStatus(PROCESSING_STATUSES.PROCESSING));
       dispatch(setOpen(true));
 
-      // TODO: handle checking proposalDeposit here not inside hook
-      // if (dckbBalance < proposalDeposit) {
-      //   dispatch(setStatus(PROCESSING_STATUSES.ERROR));
-      //   dispatch(setMessage('You have not enough dCKB'));
-      // } else {
       const receipt = await useHandleSponsorProposal(userAddress, daoAddress, proposalId);
+      console.log(receipt, 'sponsor receipt pre-log');
 
       if (receipt.blockNumber) {
         dispatch(setStatus(PROCESSING_STATUSES.SUCCESS));
+        dispatch(setSponsorProposalStatus(PROCESSING_STATUSES.SUCCESS));
         dispatch(
           setMessage(
             `Your request has been processed by blockchain network and will be displayed with the block number ${
@@ -134,7 +132,6 @@ const VoteAccordion: FC<any> = ({ proposal }) => {
         dispatch(setStatus(PROCESSING_STATUSES.ERROR));
         dispatch(setMessage(getMetamaskMessageError(receipt)));
       }
-      // }
     } catch (error) {
       dispatch(setStatus(PROCESSING_STATUSES.ERROR));
       dispatch(setMessage(getMetamaskMessageError(error)));
@@ -190,26 +187,30 @@ const VoteAccordion: FC<any> = ({ proposal }) => {
 
     try {
       const receipt = await useHandleProcessProposal(userAddress, daoAddress, proposalIndex);
-      console.log(receipt);
-      // if (receipt.blockNumber) {
-      //   dispatch(setStatus(PROCESSING_STATUSES.SUCCESS));
-      //   dispatch(
-      //     setMessage(
-      //       `Your request has been processed by blockchain network and will be displayed with the block number ${
-      //         receipt.blockNumber + 1
-      //       }`,
-      //     ),
-      //   );
-      // }
-      // if (receipt.code) {
-      //   dispatch(setStatus(PROCESSING_STATUSES.ERROR));
-      //   dispatch(setMessage(getMetamaskMessageError(receipt)));
-      // }
-    } catch (error) {
+
+      if (receipt.blockNumber) {
+        dispatch(setStatus(PROCESSING_STATUSES.SUCCESS));
+        dispatch(
+          setMessage(
+            `Your request has been processed by blockchain network and will be displayed with the block number ${
+              receipt.blockNumber + 1
+            }`,
+          ),
+        );
+      }
+
+      if (receipt.code) {
+        dispatch(setStatus(PROCESSING_STATUSES.ERROR));
+        dispatch(setMessage(getMetamaskMessageError(receipt)));
+      }
+    } catch (error: any) {
       console.log(error);
+      if (error.code) {
+        dispatch(setStatus(PROCESSING_STATUSES.ERROR));
+        dispatch(setMessage(getMetamaskMessageError(error)));
+      }
       setProcessProposalStatus(FETCH_STATUSES.ERROR);
       dispatch(setStatus(PROCESSING_STATUSES.ERROR));
-      // dispatch(setMessage(getMetamaskMessageError(error)));
     }
   };
 
@@ -241,7 +242,7 @@ const VoteAccordion: FC<any> = ({ proposal }) => {
             {sponsorProposalStatus !== PROCESSING_STATUSES.SUCCESS && (
               <DAOTile variant="greyOutline">
                 <Typography align="center" p={1}>
-                  This proposal has not been sponsored yet. It can be sponsored by DAO member.
+                  This proposal has not been sponsored yet. It can be sponsored only by DAO member.
                 </Typography>
               </DAOTile>
             )}
@@ -258,7 +259,7 @@ const VoteAccordion: FC<any> = ({ proposal }) => {
               </Box>
             )}
             {/* TODO: display button only to guild members */}
-            {isLoggedIn && sponsorProposalStatus !== PROCESSING_STATUSES.SUCCESS && (
+            {isLoggedIn && sponsorProposalStatus !== PROCESSING_STATUSES.SUCCESS && userShares > 0 && (
               <Box maxWidth="200px" mx="auto" mt={2}>
                 <DAOButton variant="gradientOutline" onClick={handleSponsorProposal}>
                   Sponsor Proposal

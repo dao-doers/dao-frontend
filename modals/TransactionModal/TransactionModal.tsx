@@ -81,7 +81,7 @@ const TransactionModal: FC = () => {
               Error
             </Typography>
             <TypographyGrey variant="subtitle2" align="center">
-              {message.length > 0 ? message : 'Something went wrong'}
+              {message}
             </TypographyGrey>
             <Box width="210px" mx="auto" my={2}>
               <DAOButton variant="gradientOutline" onClick={handleModalOpen}>

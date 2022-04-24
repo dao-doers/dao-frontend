@@ -62,21 +62,12 @@ const FundProjectForm: FC = () => {
 
       const receipt = await useHandleCreateProposal(
         userAddress,
-        abiLibrary,
-        version,
-        daoAddress as any,
-        userAddress,
+        values.applicant,
         values.tributeOffered,
         lootRequested,
         values.tributeOffered,
-        tributeToken,
-        values.tributeOffered,
-        paymentToken,
-        /* Details JSON */ {
-          title: values.title,
-          description: values.description,
-          link: modifiedLink,
-        },
+        values.paymentRequested,
+        { title: values.title, description: values.description, link: modifiedLink },
       );
 
       dispatch(setStatus(PROCESSING_STATUSES.SUCCESS));

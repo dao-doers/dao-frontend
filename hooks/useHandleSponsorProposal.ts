@@ -28,11 +28,11 @@ const useHandleSponsorProposal = async (user: string, daoAddress: any, proposalI
   const proposalDeposit = new BigNumber(await dao.methods.proposalDeposit().call());
 
   // TODO: check if there is existing approval in case if user approved first MM request and rejected second
-  console.log('token whitelist', {
-    a: await dao.methods.tokenWhitelist(tributeToken).call(),
-    daoAddress,
-    existingApproval: await token.methods.allowance(user, daoAddress).call(),
-  });
+  // console.log('token whitelist', {
+  //   a: await dao.methods.tokenWhitelist(tributeToken).call(),
+  //   daoAddress,
+  //   existingApproval: await token.methods.allowance(user, daoAddress).call(),
+  // });
 
   const approveTx = await token.methods.approve(daoAddress, proposalDeposit).send({
     gasLimit: 6000000,
@@ -40,19 +40,10 @@ const useHandleSponsorProposal = async (user: string, daoAddress: any, proposalI
     from: user,
   });
 
-  console.log({
-    approveTx,
-  });
-
-  console.log('sponsorProposal', {
-    proposalId,
-  });
-
   const proposal = await dao.methods.sponsorProposal(proposalId);
 
   const estimatedGas = 6000000;
   const receipt = await getReceipt(proposal, user, estimatedGas);
-  console.log(receipt);
   return receipt;
 };
 

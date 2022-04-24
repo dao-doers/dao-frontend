@@ -5,10 +5,11 @@ const getDao = async (address: string) => {
   return dao;
 };
 
+// TODO: TypeError: proposal.send is not a function
 const getReceipt = async (proposal: any, user: string, estimatedGas: number) => {
   let receipt;
   try {
-    receipt = await proposal.send({ from: user, gas: estimatedGas }).on('receipt', (receipt: any) => {
+    receipt = await proposal.call({ from: user, gas: estimatedGas }).on('receipt', (receipt: any) => {
       return receipt;
     });
   } catch (err) {
@@ -19,15 +20,19 @@ const getReceipt = async (proposal: any, user: string, estimatedGas: number) => 
 
 const useHandleProcessProposal = async (user: string, daoAddress: any, proposalIndex: number) => {
   const dao = await getDao(daoAddress);
-  const proposal = await dao.methods.processProposal(proposalIndex).send({
-    gasLimit: 6000000,
-    gasPrice: 0,
-    from: user,
-  });
 
-  const estimatedGas = 6000000;
-  const receipt = await getReceipt(proposal, user, estimatedGas);
+  const receipt = await dao.methods
+    .processProposal(proposalIndex)
+    .send({
+      gasLimit: 6000000,
+      gasPrice: 0,
+      from: user,
+    })
+    .on('receipt', (receipt: any) => {
+      return receipt;
+    });
 
+  // const receipt = await getReceipt(proposal, user, estimatedGas);
   return receipt;
 };
 

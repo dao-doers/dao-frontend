@@ -16,7 +16,7 @@ export const loadWeb3 = async () => {
       sessionStorage.removeItem('dao-user-address');
     });
 
-    console.log((window as any).ethereum.networkVersion);
+    // console.log((window as any).ethereum.networkVersion);
 
     // TODO: get that data from env
     if ((window as any).ethereum.networkVersion !== '0x315db00000006') {
