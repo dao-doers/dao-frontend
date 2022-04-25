@@ -34,6 +34,10 @@ export const useDCKBTokenHook = () => {
   const assetSender = new WalletAssetsSender('https://testnet.ckb.dev/rpc', 'https://testnet.ckb.dev/indexer');
 
   const mintDCKTokens = async (amount: string, toAddress: string) => {
+    console.log({
+      amount,
+      destinationAddress: toAddress,
+    });
     try {
       setLoader(true);
       dispatch(setStatus(PROCESSING_STATUSES.PROCESSING));

@@ -105,6 +105,7 @@ const BridgeComponent: FC<IBridgeComponent> = ({ onSubmitCompleteStep }) => {
   const hasProvider = useCheckProvider();
   const { loaderBalance, balanceFromWallet, mintDCKTokens, fetchConnectedAccountLayer2Address } = useDCKBTokenHook();
 
+  // eslint-disable-next-line consistent-return
   const fetchWalletBalance = async () => {
     try {
       if (hasProvider && userAddress) {
@@ -185,10 +186,6 @@ const BridgeComponent: FC<IBridgeComponent> = ({ onSubmitCompleteStep }) => {
             dispatch(setStatus(PROCESSING_STATUSES.ERROR));
             dispatch(setMessage(error.message || error.toString()));
           }
-          console.log({
-            amount: values.amount,
-            destinationAddress: values.destinationAddress,
-          });
         }}
         validate={values => {
           const errors: FormikErrors<SwapFormValues> = {};
@@ -196,13 +193,6 @@ const BridgeComponent: FC<IBridgeComponent> = ({ onSubmitCompleteStep }) => {
           if (isValueGreaterThanProvided(amount, Number(balanceSUDT?.dckbBalance))) {
             errors.amount = 'insufficient balance';
           }
-
-          // TODO
-          // check if eth address is valid
-          // it can be done
-          // else if (!isValidAddress(values.destinationAddress, values.network.baseObject)) {
-          //   errors.destinationAddress = 'Enter a valid destination address';
-          // }
           return errors;
         }}
       >

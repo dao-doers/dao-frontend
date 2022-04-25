@@ -59,7 +59,7 @@ const GetCKBStep: FC<GetCKBStepProps> = ({ handlePreviousStep, completeStep }) =
           <TypographyGreen>
             {balanceSUDT.ckbBalance > 471
               ? balanceSUDT.ckbBalance
-              : 'you don\'t have enough CKB in your wallet, get some from faucet'}
+              : 'you don not have enough CKB in your wallet, get some from faucet'}
           </TypographyGreen>
         </Box>
       ) : (
