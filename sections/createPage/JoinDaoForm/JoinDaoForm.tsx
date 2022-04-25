@@ -13,7 +13,7 @@ import TooltipIcon from 'components/TooltipIcon';
 
 import PROCESSING_STATUSES from 'enums/processingStatuses';
 
-import useCreateProposal from 'hooks/useCreateProposal';
+import useHandleCreateProposal from 'hooks/useHandleCreateProposal';
 import useIsMobile from 'hooks/useIsMobile';
 
 import newProposalSchema from 'validators/newProposalSchema';
@@ -24,10 +24,10 @@ import { setOpen, setStatus, setMessage } from 'redux/slices/modalTransaction';
 import { selectUserAddress, selectIsLoggedIn, selectdckbBalance } from 'redux/slices/user';
 
 const initialValues = {
-  title: 'test',
-  description: 'test',
-  link: 'https://dziobakwszafie.pl/',
-  tributeOffered: 3333,
+  title: '',
+  description: '',
+  link: '',
+  tributeOffered: 0,
 };
 
 const JoinDaoForm: FC = () => {
@@ -51,7 +51,7 @@ const JoinDaoForm: FC = () => {
         dispatch(setStatus(PROCESSING_STATUSES.ERROR));
         dispatch(setMessage('You have not enough dCKB'));
       } else {
-        const receipt = await useCreateProposal(
+        const receipt = await useHandleCreateProposal(
           userAddress,
           userAddress,
           values.tributeOffered,

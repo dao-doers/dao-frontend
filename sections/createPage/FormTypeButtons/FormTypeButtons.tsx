@@ -10,7 +10,7 @@ import CREATE_PROPOSAL_TYPE from 'enums/createProposalType';
 
 import useIsMobile from 'hooks/useIsMobile';
 
-import { selectProposalType, setProposalType } from 'redux/slices/createProposal';
+import { selectProposalType, setProposalType } from 'redux/slices/main';
 
 const FormTypeButtons: FC<any> = () => {
   const dispatch = useDispatch();

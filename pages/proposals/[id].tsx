@@ -37,7 +37,7 @@ const Swap: FC<NextPage> = () => {
   return (
     <ApolloProvider client={client as any}>
       <Layout>
-        <Box display="flex" justifyContent="space-between" width="100%">
+        <Box display="flex" justifyContent="space-between" width="100%" sx={{ mt: { xs: 2, md: 10 } }}>
           <Box sx={{ width: { xs: '100%', md: '63%' } }}>
             {Object.keys(chosenProposal).length > 0 && <ProposalTile proposal={chosenProposal} />}
           </Box>

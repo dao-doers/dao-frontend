@@ -4,7 +4,7 @@ import store from 'redux/store';
 import { setUserAddress, setIsLoggedIn, setUserShares } from 'redux/slices/user';
 
 export const loadWeb3 = async () => {
-  if (window.web3) {
+  if (window.ethereum) {
     window.ethereum.on('chainChanged', () => {
       console.log('chainChanged');
     });
@@ -15,6 +15,30 @@ export const loadWeb3 = async () => {
       store.dispatch(setUserShares(0));
       sessionStorage.removeItem('dao-user-address');
     });
+
+    // console.log((window as any).ethereum.networkVersion);
+
+    // TODO: get that data from env
+    if ((window as any).ethereum.networkVersion !== '0x315db00000006') {
+      const data = [
+        {
+          chainId: '0x315db00000006',
+          chainName: 'Godwoken V1 Testnet',
+          nativeCurrency: {
+            name: 'CKB',
+            symbol: 'CKB',
+            decimals: 18,
+          },
+          rpcUrls: ['https://godwoken-testnet-web3-v1-rpc.ckbapp.dev'],
+          blockExplorerUrls: ['https://v1.aggron.gwscan.com'],
+        },
+      ];
+      /* eslint-disable */
+      const tx = await window.ethereum.request({ method: 'wallet_addEthereumChain', params: data }).catch();
+      if (tx) {
+        console.log(tx);
+      }
+    }
   } else {
     console.log('Non-Ethereum browser detected. You should consider trying MetaMask!');
   }

@@ -1,8 +1,7 @@
 import type { AppProps } from 'next/app';
 import Web3 from 'web3';
-import { ApolloProvider } from '@apollo/react-hooks';
-import ApolloClient, { InMemoryCache } from 'apollo-boost';
 import { Provider } from 'react-redux';
+import { ApolloProvider } from '@apollo/client';
 
 import CssBaseline from '@mui/material/CssBaseline';
 import { CacheProvider } from '@emotion/react';
@@ -10,15 +9,11 @@ import { CacheProvider } from '@emotion/react';
 import ModalsContainer from 'components/ModalsContainer/ModalsContainer';
 
 import store from 'redux/store';
+import apollo from 'config/apollo';
 
 import { GlobalThemeProvider } from 'theme';
 
 import createEmotionCache from '../createEmotionCache';
-
-const client = new ApolloClient({
-  uri: process.env.INDEXER_URL,
-  cache: new InMemoryCache(),
-});
 
 declare global {
   interface Window {
@@ -34,7 +29,7 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
       <Provider store={store}>
         <GlobalThemeProvider>
           <CssBaseline />
-          <ApolloProvider client={client as any}>
+          <ApolloProvider client={apollo}>
             <ModalsContainer />
             <Component {...pageProps} />
           </ApolloProvider>

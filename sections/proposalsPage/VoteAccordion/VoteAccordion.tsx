@@ -20,10 +20,10 @@ import DividerLine from 'components/DividerLine/DividerLine';
 import LinearChart from 'components/LinearChart/LinearChart';
 import TooltipIcon from 'components/TooltipIcon';
 
-import useSponsorProposal from 'hooks/useSponsorProposal';
-import useVote from 'hooks/useVote';
-import useNotVotedYetCheck from 'hooks/useNotVotedYetCheck';
-import useProcessProposal from 'hooks/useProcessProposal';
+import useHandleSponsorProposal from 'hooks/useHandleSponsorProposal';
+import useHandleVote from 'hooks/useHandleVote';
+import useCheckIfVoted from 'hooks/useCheckIfVoted';
+import useHandleProcessProposal from 'hooks/useHandleProcessProposal';
 
 import FETCH_STATUSES from 'enums/fetchStatuses';
 import PROPOSAL_STATUS from 'enums/proposalStatus';
@@ -50,6 +50,16 @@ const StyledAccordionSummary = styled(AccordionSummary)`
 
 const TypographyGreen = styled(Typography)`
   color: ${({ theme }) => theme.palette.colors.col2};
+`;
+
+const TypographyGreenBold = styled(Typography)`
+  color: ${({ theme }) => theme.palette.colors.col2};
+  font-weight: 600;
+`;
+
+const TypographyRed = styled(Typography)`
+  color: ${({ theme }) => theme.palette.colors.col4};
+  font-weight: 600;
 `;
 
 const TypographyBlue = styled(Typography)`
@@ -85,7 +95,7 @@ const VoteAccordion: FC<any> = ({ proposal }) => {
 
   useEffect(() => {
     if (isLoggedIn && userShares > 0 && proposal.proposalIndex !== null) {
-      useNotVotedYetCheck(userAddress, proposal.proposalIndex, process.env.DAO_ADDRESS as any).then(async response => {
+      useCheckIfVoted(userAddress, proposal.proposalIndex, process.env.DAO_ADDRESS as any).then(async response => {
         if (response === true) {
           setNotVotedYet(1);
         } else {
@@ -99,19 +109,17 @@ const VoteAccordion: FC<any> = ({ proposal }) => {
     const daoAddress = process.env.DAO_ADDRESS;
     const { proposalId } = proposal;
 
+    // TODO: unexpectedly it started throws error despite the receipt is ok
     try {
       dispatch(setStatus(PROCESSING_STATUSES.PROCESSING));
       dispatch(setOpen(true));
 
-      // TODO: handle checking proposalDeposit here not inside hook
-      // if (dckbBalance < proposalDeposit) {
-      //   dispatch(setStatus(PROCESSING_STATUSES.ERROR));
-      //   dispatch(setMessage('You have not enough dCKB'));
-      // } else {
-      const receipt = await useSponsorProposal(userAddress, daoAddress, proposalId);
+      const receipt = await useHandleSponsorProposal(userAddress, daoAddress, proposalId);
+      console.log(receipt, 'sponsor receipt pre-log');
 
       if (receipt.blockNumber) {
         dispatch(setStatus(PROCESSING_STATUSES.SUCCESS));
+        dispatch(setSponsorProposalStatus(PROCESSING_STATUSES.SUCCESS));
         dispatch(
           setMessage(
             `Your request has been processed by blockchain network and will be displayed with the block number ${
@@ -124,7 +132,6 @@ const VoteAccordion: FC<any> = ({ proposal }) => {
         dispatch(setStatus(PROCESSING_STATUSES.ERROR));
         dispatch(setMessage(getMetamaskMessageError(receipt)));
       }
-      // }
     } catch (error) {
       dispatch(setStatus(PROCESSING_STATUSES.ERROR));
       dispatch(setMessage(getMetamaskMessageError(error)));
@@ -132,46 +139,44 @@ const VoteAccordion: FC<any> = ({ proposal }) => {
   };
 
   const handleVote = async (vote: number) => {
-    // TODO: improvement - useNotVotedYetCheck should run just right after page render, not just after clicking
+    // TODO: improvement - useCheckIfVoted should run just right after page render, not just after clicking
 
     dispatch(setStatus(PROCESSING_STATUSES.PROCESSING));
     dispatch(setOpen(true));
 
-    await useNotVotedYetCheck(userAddress, proposal.proposalIndex, process.env.DAO_ADDRESS as any).then(
-      async response => {
-        if (response === true) {
-          setNotVotedYet(1);
-          const { proposalIndex } = proposal;
+    await useCheckIfVoted(userAddress, proposal.proposalIndex, process.env.DAO_ADDRESS as any).then(async response => {
+      if (response === true) {
+        setNotVotedYet(1);
+        const { proposalIndex } = proposal;
 
-          try {
-            const receipt = await useVote(proposalIndex, vote, userAddress);
+        try {
+          const receipt = await useHandleVote(proposalIndex, vote, userAddress);
 
-            if (receipt.blockNumber) {
-              setNotVotedYet(2);
-              dispatch(setStatus(PROCESSING_STATUSES.SUCCESS));
-              dispatch(
-                setMessage(
-                  `Your request has been processed by blockchain network and will be displayed with the block number ${
-                    receipt.blockNumber + 1
-                  }`,
-                ),
-              );
-            }
-            if (receipt.code) {
-              dispatch(setStatus(PROCESSING_STATUSES.ERROR));
-              dispatch(setMessage(getMetamaskMessageError(receipt)));
-            }
-          } catch (error) {
-            dispatch(setStatus(PROCESSING_STATUSES.ERROR));
-            dispatch(setMessage(getMetamaskMessageError(error)));
+          if (receipt.blockNumber) {
+            setNotVotedYet(2);
+            dispatch(setStatus(PROCESSING_STATUSES.SUCCESS));
+            dispatch(
+              setMessage(
+                `Your request has been processed by blockchain network and will be displayed with the block number ${
+                  receipt.blockNumber + 1
+                }`,
+              ),
+            );
           }
-        } else {
-          setNotVotedYet(2);
-          dispatch(setMessage('You have already voted!'));
+          if (receipt.code) {
+            dispatch(setStatus(PROCESSING_STATUSES.ERROR));
+            dispatch(setMessage(getMetamaskMessageError(receipt)));
+          }
+        } catch (error) {
           dispatch(setStatus(PROCESSING_STATUSES.ERROR));
+          dispatch(setMessage(getMetamaskMessageError(error)));
         }
-      },
-    );
+      } else {
+        setNotVotedYet(2);
+        dispatch(setMessage('You have already voted!'));
+        dispatch(setStatus(PROCESSING_STATUSES.ERROR));
+      }
+    });
   };
 
   const handleProcessProposal = async () => {
@@ -181,27 +186,31 @@ const VoteAccordion: FC<any> = ({ proposal }) => {
     dispatch(setOpen(true));
 
     try {
-      const receipt = await useProcessProposal(userAddress, daoAddress, proposalIndex);
-      console.log(receipt);
-      // if (receipt.blockNumber) {
-      //   dispatch(setStatus(PROCESSING_STATUSES.SUCCESS));
-      //   dispatch(
-      //     setMessage(
-      //       `Your request has been processed by blockchain network and will be displayed with the block number ${
-      //         receipt.blockNumber + 1
-      //       }`,
-      //     ),
-      //   );
-      // }
-      // if (receipt.code) {
-      //   dispatch(setStatus(PROCESSING_STATUSES.ERROR));
-      //   dispatch(setMessage(getMetamaskMessageError(receipt)));
-      // }
-    } catch (error) {
+      const receipt = await useHandleProcessProposal(userAddress, daoAddress, proposalIndex);
+
+      if (receipt.blockNumber) {
+        dispatch(setStatus(PROCESSING_STATUSES.SUCCESS));
+        dispatch(
+          setMessage(
+            `Your request has been processed by blockchain network and will be displayed with the block number ${
+              receipt.blockNumber + 1
+            }`,
+          ),
+        );
+      }
+
+      if (receipt.code) {
+        dispatch(setStatus(PROCESSING_STATUSES.ERROR));
+        dispatch(setMessage(getMetamaskMessageError(receipt)));
+      }
+    } catch (error: any) {
       console.log(error);
+      if (error.code) {
+        dispatch(setStatus(PROCESSING_STATUSES.ERROR));
+        dispatch(setMessage(getMetamaskMessageError(error)));
+      }
       setProcessProposalStatus(FETCH_STATUSES.ERROR);
       dispatch(setStatus(PROCESSING_STATUSES.ERROR));
-      // dispatch(setMessage(getMetamaskMessageError(error)));
     }
   };
 
@@ -218,7 +227,12 @@ const VoteAccordion: FC<any> = ({ proposal }) => {
             <TypographyViolet>Grace Period</TypographyViolet>
           )}
           {proposal.proposalStatus === PROPOSAL_STATUS.PROCEEDING && <TypographyViolet>Proceeding</TypographyViolet>}
-          {proposal.proposalStatus === PROPOSAL_STATUS.FINISHED && <TypographyViolet>Finished</TypographyViolet>}
+          {proposal.proposalStatus === PROPOSAL_STATUS.FINISHED && (
+            <Box display="flex">
+              {proposal.didPass === false && <TypographyRed mr={1.5}>Rejected</TypographyRed>}
+              {proposal.didPass === true && <TypographyGreenBold mr={1.5}>Approved</TypographyGreenBold>}
+            </Box>
+          )}
         </Box>
       </StyledAccordionSummary>
 
@@ -228,7 +242,7 @@ const VoteAccordion: FC<any> = ({ proposal }) => {
             {sponsorProposalStatus !== PROCESSING_STATUSES.SUCCESS && (
               <DAOTile variant="greyOutline">
                 <Typography align="center" p={1}>
-                  This proposal has not been sponsored yet. It can be sponsored by DAO member.
+                  This proposal has not been sponsored yet. It can be sponsored only by DAO member.
                 </Typography>
               </DAOTile>
             )}
@@ -245,7 +259,7 @@ const VoteAccordion: FC<any> = ({ proposal }) => {
               </Box>
             )}
             {/* TODO: display button only to guild members */}
-            {isLoggedIn && sponsorProposalStatus !== PROCESSING_STATUSES.SUCCESS && (
+            {isLoggedIn && sponsorProposalStatus !== PROCESSING_STATUSES.SUCCESS && userShares > 0 && (
               <Box maxWidth="200px" mx="auto" mt={2}>
                 <DAOButton variant="gradientOutline" onClick={handleSponsorProposal}>
                   Sponsor Proposal
@@ -374,15 +388,20 @@ const VoteAccordion: FC<any> = ({ proposal }) => {
               Votes:{' '}
             </Typography>
             {proposal.yesVotes + proposal.noVotes > 0 && (
-              <Box width="100%">
-                <Box display="flex" justifyContent="space-between" width="100%" pb={2}>
-                  <TypographyGreen>Agreed: {proposal.yesVotes}</TypographyGreen>
-
-                  <TypographyBlue>Disagreed: {proposal.noVotes}</TypographyBlue>
+              <Box width="100%" pb={2}>
+                <TypographyGreen>
+                  Agreed: {proposal.yesVotes} ( {(proposal.yesVotes / (proposal.yesVotes + proposal.noVotes)) * 100}% )
+                </TypographyGreen>
+                <Box mt={1} mb={2}>
+                  <LinearChart type="agree" main={proposal.yesVotes} all={proposal.yesVotes + proposal.noVotes} />
                 </Box>
 
-                <Box>
-                  <LinearChart agreed={proposal.yesVotes} disagreed={proposal.noVotes} />
+                <TypographyBlue>
+                  Disagreed: {proposal.noVotes} ( {(proposal.noVotes / (proposal.yesVotes + proposal.noVotes)) * 100}
+                  %)
+                </TypographyBlue>
+                <Box mt={1} mb={2}>
+                  <LinearChart type="disagree" main={proposal.noVotes} all={proposal.yesVotes + proposal.noVotes} />
                 </Box>
               </Box>
             )}
@@ -417,15 +436,21 @@ const VoteAccordion: FC<any> = ({ proposal }) => {
                 Votes:{' '}
               </Typography>
               {proposal.yesVotes + proposal.noVotes > 0 && (
-                <Box width="100%">
-                  <Box display="flex" justifyContent="space-between" width="100%" pb={2}>
-                    <TypographyGreen>Agreed: {proposal.yesVotes}</TypographyGreen>
-
-                    <TypographyBlue>Disagreed: {proposal.noVotes}</TypographyBlue>
+                <Box width="100%" pb={2}>
+                  <TypographyGreen>
+                    Agreed: {proposal.yesVotes} ( {(proposal.yesVotes / (proposal.yesVotes + proposal.noVotes)) * 100}%
+                    )
+                  </TypographyGreen>
+                  <Box mt={1} mb={2}>
+                    <LinearChart type="agree" main={proposal.yesVotes} all={proposal.yesVotes + proposal.noVotes} />
                   </Box>
 
-                  <Box>
-                    <LinearChart agreed={proposal.yesVotes} disagreed={proposal.noVotes} />
+                  <TypographyBlue>
+                    Disagreed: {proposal.noVotes} ( {(proposal.noVotes / (proposal.yesVotes + proposal.noVotes)) * 100}
+                    %)
+                  </TypographyBlue>
+                  <Box mt={1} mb={2}>
+                    <LinearChart type="disagree" main={proposal.noVotes} all={proposal.yesVotes + proposal.noVotes} />
                   </Box>
                 </Box>
               )}

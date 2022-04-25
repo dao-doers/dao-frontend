@@ -59,7 +59,7 @@ const Title = styled(Typography)`
 `;
 
 const About: FC = () => {
-  const isMobile = useIsMobile('md');
+  const isMobile = useIsMobile('lg');
 
   return (
     <Box mb={8}>
@@ -74,10 +74,10 @@ const About: FC = () => {
           </Typography>
 
           {isMobile && (
-            <Box mx="auto" mb={1} mt={5} sx={{ width: { xs: '60%', md: '100%' } }}>
+            <Box mx="auto" mb={1} mt={5}>
               <Link internal href={APP_ROUTES.CREATE}>
                 <DAOButton variant="gradientOutline">
-                  <Typography>Create proposal</Typography>
+                  <Typography noWrap>Create proposal</Typography>
                 </DAOButton>
               </Link>
             </Box>

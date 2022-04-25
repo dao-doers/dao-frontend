@@ -1,5 +1,5 @@
 import { FC, ReactNode, useEffect } from 'react';
-import { useDispatch } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import Web3 from 'web3';
 
 import styled from '@emotion/styled';
@@ -7,20 +7,26 @@ import styled from '@emotion/styled';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
 
-import BlockchainStatus from 'components/BlockchainStatus/BlockchainStatus';
-import DesktopMenu from 'components/DesktopMenu/DesktopMenu';
+import BlockchainStatusContent from 'components/BlockchainStatusContent/BlockchainStatusContent';
+import DesktopMenu from 'components/Menu/DesktopMenu/DesktopMenu';
 import Footer from 'components/Footer/Footer';
 import LoadingPage from 'components/LoadingPage/LoadingPage';
-import MobileMenu from 'components/MobileMenu/MobileMenu';
+import MobileMenu from 'components/Menu/MobileMenu/MobileMenu';
 
 import THEME_MODES from 'enums/themeModes';
 
-import useFetchProposals from 'hooks/useFetchProposals';
-import useFetchVotes from 'hooks/useFetchVotes';
+import useIsMobile from 'hooks/useIsMobile';
 import useMaintainSession from 'hooks/useMaintainSession';
-import useFetchMembers from 'hooks/useFetchMembers';
+import useTestFunction from 'hooks/useTestFunction';
+
+import FETCH_STATUSES from 'enums/fetchStatuses';
+
+import { loadWeb3 } from 'utils/blockchain';
 
 import { setTheme } from 'redux/slices/theme';
+import { selectFetchStatus as selectProposalsFetchStatus, getProposalsList } from 'redux/slices/proposals';
+import { selectFetchStatus as selectVotesFetchStatus, getVotesList } from 'redux/slices/votes';
+import { getUsersList } from 'redux/slices/user';
 
 export type LayoutProps = {
   children: ReactNode;
@@ -46,11 +52,19 @@ declare global {
 const Layout: FC<LayoutProps> = ({ children }) => {
   const dispatch = useDispatch();
 
-  const loadingProposals = useFetchProposals();
-  const loadingVotes = useFetchVotes();
+  const isMobile = useIsMobile('lg');
+  const proposalsFetchStatus = useSelector(selectProposalsFetchStatus);
+  const proposalsVotesStatus = useSelector(selectVotesFetchStatus);
 
-  useFetchMembers();
+  useEffect(() => {
+    dispatch(getProposalsList());
+    dispatch(getVotesList());
+    dispatch(getUsersList());
+    loadWeb3();
+  }, []);
+
   useMaintainSession();
+  // useTestFunction();
 
   useEffect(() => {
     const theme = sessionStorage.getItem('dao-theme');
@@ -58,11 +72,17 @@ const Layout: FC<LayoutProps> = ({ children }) => {
     dispatch(setTheme(theme === THEME_MODES.DARK ? THEME_MODES.DARK : THEME_MODES.LIGHT));
   }, [dispatch]);
 
-  useEffect(async () => {
-    if (window.ethereum) {
-      await window.ethereum.request({ method: 'eth_requestAccounts' });
-      window.web3 = new Web3(window.ethereum);
-    }
+  // TODO: is that necessary?
+  useEffect(() => {
+    const checkProvider = async () => {
+      if (window.ethereum) {
+        await (window as any).ethereum.request({ method: 'eth_requestAccounts' });
+        window.web3 = new Web3((window as any).ethereum);
+      } else {
+        window.web3 = new Web3(process.env.PROVIDER_URL || '');
+      }
+    };
+    checkProvider();
   }, []);
 
   return (
@@ -75,10 +95,15 @@ const Layout: FC<LayoutProps> = ({ children }) => {
         </Box>
 
         <Box width="100%">
-          <BlockchainStatus />
-          {(loadingProposals.loading || loadingVotes.loading) && <LoadingPage />}
+          {!isMobile && <BlockchainStatusContent />}
 
-          {!loadingProposals.loading && !loadingVotes.loading && children}
+          {proposalsFetchStatus === FETCH_STATUSES.LOADING && proposalsVotesStatus === FETCH_STATUSES.LOADING && (
+            <LoadingPage />
+          )}
+
+          {proposalsFetchStatus !== FETCH_STATUSES.LOADING &&
+            proposalsVotesStatus !== FETCH_STATUSES.LOADING &&
+            children}
         </Box>
       </StyledBox>
 

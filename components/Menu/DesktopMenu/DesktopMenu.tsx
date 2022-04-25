@@ -7,7 +7,7 @@ import styled from '@emotion/styled';
 import Box from '@mui/material/Box';
 
 import Link from 'components/Link/Link';
-import MenuContent from 'components/MenuContent/MenuContent';
+import MenuContent from 'components/Menu/MenuContent/MenuContent';
 
 import THEME_MODES from 'enums/themeModes';
 

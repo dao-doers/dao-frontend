@@ -21,18 +21,18 @@ const getReceipt = async (proposal: any, user: string, estimatedGas: number) => 
   return receipt;
 };
 
-const useSponsorProposal = async (user: string, daoAddress: any, proposalId: string) => {
+const useHandleSponsorProposal = async (user: string, daoAddress: any, proposalId: string) => {
   const dao = await getDao(daoAddress);
   const token = new web3.eth.Contract(abiLibrary.erc20, tributeToken);
 
   const proposalDeposit = new BigNumber(await dao.methods.proposalDeposit().call());
 
   // TODO: check if there is existing approval in case if user approved first MM request and rejected second
-  console.log('token whitelist', {
-    a: await dao.methods.tokenWhitelist(tributeToken).call(),
-    daoAddress,
-    existingApproval: await token.methods.allowance(user, daoAddress).call(),
-  });
+  // console.log('token whitelist', {
+  //   a: await dao.methods.tokenWhitelist(tributeToken).call(),
+  //   daoAddress,
+  //   existingApproval: await token.methods.allowance(user, daoAddress).call(),
+  // });
 
   const approveTx = await token.methods.approve(daoAddress, proposalDeposit).send({
     gasLimit: 6000000,
@@ -40,20 +40,11 @@ const useSponsorProposal = async (user: string, daoAddress: any, proposalId: str
     from: user,
   });
 
-  console.log({
-    approveTx,
-  });
-
-  console.log('sponsorProposal', {
-    proposalId,
-  });
-
   const proposal = await dao.methods.sponsorProposal(proposalId);
 
   const estimatedGas = 6000000;
   const receipt = await getReceipt(proposal, user, estimatedGas);
-  console.log(receipt);
   return receipt;
 };
 
-export default useSponsorProposal;
+export default useHandleSponsorProposal;

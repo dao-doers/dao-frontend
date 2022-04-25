@@ -23,7 +23,7 @@ const getReceipt = async (proposal: any, user: string, estimatedGas: number) => 
   return receipt;
 };
 
-const useCreateProposal = async (
+const useHandleCreateProposal = async (
   user: string,
   applicantAddress: string,
   sharesRequested: number,
@@ -83,4 +83,4 @@ const useCreateProposal = async (
   return receipt;
 };
 
-export default useCreateProposal;
+export default useHandleCreateProposal;

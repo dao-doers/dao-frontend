@@ -11,9 +11,7 @@ import Tooltip from '@mui/material/Tooltip';
 import DAOPlainButton from 'components/DAOPlainButton/DAOPlainButton';
 import Timer from 'components/Timer/Timer';
 
-import useFetchProposals from 'hooks/useFetchProposals';
-
-import { setProposals } from 'redux/slices/proposals';
+import { getProposalsList } from 'redux/slices/proposals';
 
 const StyledSyncIcon = styled(SyncIcon)`
   font-size: 17px;
@@ -27,13 +25,11 @@ const StyledCheckIcon = styled(CheckIcon)`
 
 const RecentActivityStatus = () => {
   const dispatch = useDispatch();
-  const refetchProposal = useFetchProposals();
 
   const [isClicked, setClicked] = useState(false);
 
-  const refetch = () => {
-    refetchProposal.refetch();
-    dispatch(setProposals(refetchProposal.data.proposals));
+  const handleRefreshPage = () => {
+    dispatch(getProposalsList());
     setClicked(true);
     setTimeout(() => {
       setClicked(false);
@@ -44,11 +40,11 @@ const RecentActivityStatus = () => {
     <Box display="flex" alignSelf="flex-start" justifyContent="flex-start">
       <Box>
         <Box>
-          <Timer reset={refetchProposal.loading} />
+          <Timer reset={isClicked} />
         </Box>
       </Box>
       <Box ml={0.5}>
-        <DAOPlainButton variant="gradientOutline" onClick={refetch}>
+        <DAOPlainButton variant="gradientOutline" onClick={handleRefreshPage}>
           <Tooltip arrow title="Refresh data" placement="bottom">
             {isClicked ? <StyledCheckIcon /> : <StyledSyncIcon />}
           </Tooltip>

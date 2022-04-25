@@ -15,7 +15,7 @@ import { selectProposalStatus, setProposalStatus } from 'redux/slices/proposals'
 
 import FETCH_STATUSES from 'enums/fetchStatuses';
 
-import useGuildKick from 'hooks/useGuildKick';
+import useHandleGuildKick from 'hooks/useHandleGuildKick';
 
 import guildKickSchema from 'validators/guildKickSchema';
 
@@ -52,7 +52,7 @@ const GuildKickForm: FC = () => {
     // if (!notNull(title.value, description.value, link.value)) return;
     // if (!memberToKick.validated) return;
 
-    await useGuildKick(
+    await useHandleGuildKick(
       /* Wallet information */ user,
       /* Contract information */ abiLibrary,
       version,

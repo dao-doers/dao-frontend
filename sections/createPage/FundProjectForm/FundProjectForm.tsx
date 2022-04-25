@@ -17,7 +17,7 @@ import abiLibrary from 'lib/abi';
 
 import PROCESSING_STATUSES from 'enums/processingStatuses';
 
-import useCreateProposal from 'hooks/useCreateProposal';
+import useHandleCreateProposal from 'hooks/useHandleCreateProposal';
 import useIsMobile from 'hooks/useIsMobile';
 
 import newFundingSchema from 'validators/newFundingSchema';
@@ -41,7 +41,7 @@ const tributeToken = process.env.TRIBUTE_TOKEN_ADDRESS;
 const paymentToken = process.env.TRIBUTE_TOKEN_ADDRESS;
 
 const TypographyRed = styled(Typography)`
-  color: ${({ theme }) => theme.palette.colors.col6};
+  color: ${({ theme }) => theme.palette.colors.col4};
   font-weight: 600;
 `;
 
@@ -60,23 +60,14 @@ const FundProjectForm: FC = () => {
 
       const modifiedLink = values.link.replace(/(^\w+:|^)\/\//, '');
 
-      const receipt = await useCreateProposal(
+      const receipt = await useHandleCreateProposal(
         userAddress,
-        abiLibrary,
-        version,
-        daoAddress as any,
-        userAddress,
+        values.applicant,
         values.tributeOffered,
         lootRequested,
         values.tributeOffered,
-        tributeToken,
-        values.tributeOffered,
-        paymentToken,
-        /* Details JSON */ {
-          title: values.title,
-          description: values.description,
-          link: modifiedLink,
-        },
+        values.paymentRequested,
+        { title: values.title, description: values.description, link: modifiedLink },
       );
 
       dispatch(setStatus(PROCESSING_STATUSES.SUCCESS));
