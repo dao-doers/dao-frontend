@@ -12,6 +12,7 @@ export const useDCKBTokenHook = () => {
   const [loaderBalance, setLoaderBalance] = useState(false);
 
   const dckbIssuerHash = '0xc43009f083e70ae3fee342d59b8df9eec24d669c1c3a3151706d305f5362c37e';
+  const additionalCKB = (85 * 10 ** 8).toString(); // additional CKB capacity is required so resulting transaction output contains at least 400 CKB
 
   const TESTNET_CONFIG: IAddressTranslatorConfig = {
     CKB_URL: 'https://testnet.ckb.dev',
@@ -30,7 +31,6 @@ export const useDCKBTokenHook = () => {
   const dispatch = useDispatch();
 
   const addressTranslator = new AddressTranslator(TESTNET_CONFIG);
-
   const assetSender = new WalletAssetsSender('https://testnet.ckb.dev/rpc', 'https://testnet.ckb.dev/indexer');
 
   const mintDCKTokens = async (amount: string, toAddress: string) => {
@@ -42,7 +42,7 @@ export const useDCKBTokenHook = () => {
 
       await assetSender.init('testnet');
       await assetSender.connectWallet(); // you can also pass private key
-      await assetSender.sendSUDT(amount, toAddress, dckbIssuerHash);
+      await assetSender.sendSUDT(amount, toAddress, dckbIssuerHash, additionalCKB);
     } catch (error: any) {
       setLoader(false);
       throw error;
@@ -81,32 +81,26 @@ export const useDCKBTokenHook = () => {
     }
   };
 
-  const fetchConnectedAccountBalance = async (address: any) => {
-    const response = await fetch(TESTNET_CONFIG.RPC_URL, {
-      method: 'POST',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        jsonrpc: '2.0',
-        id: 1,
-        method: 'eth_getBalance',
-        params: [address, 'latest'],
-      }),
-      mode: 'cors',
-    });
+  const fetchConnectedAccountLayer2Address = async (ethAddress: string) => {
+    try {
+      setLoaderLayer2Address(true);
+      await addressTranslator.init('testnet');
 
-    const json = await response.json();
-
-    return parseInt(json.result);
+      const accountLayer2Address = await addressTranslator.getLayer2DepositAddress(ethAddress);
+      return accountLayer2Address;
+    } catch (error: any) {
+      setLoaderLayer2Address(false);
+      throw error;
+    } finally {
+      setLoaderLayer2Address(false);
+    }
   };
 
   /*
 Deposit to Layer 2 address on Layer 1
 https://www.npmjs.com/package/nervos-godwoken-integration
 */
-  const createLayer2Address = async () => {
+  const createLayer2Address = async (ethAddress: string) => {
     let layer1TxHash;
     try {
       setLoaderLayer2Address(true);
@@ -118,11 +112,8 @@ https://www.npmjs.com/package/nervos-godwoken-integration
 
       await addressTranslator.connectWallet();
 
-      const ethereumAddress = addressTranslator.getConnectedWalletAddress();
-      if (ethereumAddress) {
-        layer1TxHash = await addressTranslator.createLayer2Address(ethereumAddress);
-        console.log(`Deposit to Layer 2 address on Layer 1: \n${layer1TxHash}`);
-      }
+      layer1TxHash = await addressTranslator.createLayer2Address(ethAddress);
+      console.log(`Deposit to Layer 2 address on Layer 1: \n${layer1TxHash}`);
       return layer1TxHash;
     } catch (error: any) {
       setLoaderLayer2Address(false);
@@ -133,11 +124,12 @@ https://www.npmjs.com/package/nervos-godwoken-integration
       setLoaderLayer2Address(false);
     }
   };
+
   return {
     mintDCKTokens,
     createLayer2Address,
     balanceFromWallet,
-    fetchConnectedAccountBalance,
+    fetchConnectedAccountLayer2Address,
     connectedWalletAddress,
     loader,
     loaderLayer2Address,

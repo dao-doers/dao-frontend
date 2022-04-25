@@ -1,7 +1,14 @@
 import React, { FC, useEffect } from 'react';
 
 import { useDispatch, useSelector } from 'react-redux';
-import { selectUserAddress, selectbalanceSUDT, selectIsLoggedIn, setbalanceSUDT } from 'redux/slices/user';
+import {
+  selectUserAddress,
+  selectbalanceSUDT,
+  selectIsLoggedIn,
+  setbalanceSUDT,
+  selectUserAddressLayer2,
+  setUserAddressLayer2,
+} from 'redux/slices/user';
 import PROCESSING_STATUSES from 'enums/processingStatuses';
 import { setMessage, setStatus } from 'redux/slices/modalTransaction';
 
@@ -93,30 +100,46 @@ const BridgeComponent: FC<IBridgeComponent> = ({ onSubmitCompleteStep }) => {
   const userAddress = useSelector(selectUserAddress);
   const isLoggedIn = useSelector(selectIsLoggedIn);
   const balanceSUDT = useSelector(selectbalanceSUDT);
+  const depositAddress = useSelector(selectUserAddressLayer2);
 
   const hasProvider = useCheckProvider();
-  const { loaderBalance, balanceFromWallet, mintDCKTokens } = useDCKBTokenHook();
+  const { loaderBalance, balanceFromWallet, mintDCKTokens, fetchConnectedAccountLayer2Address } = useDCKBTokenHook();
+
+  const fetchWalletBalance = async () => {
+    try {
+      if (hasProvider && userAddress) {
+        const balances = await balanceFromWallet();
+
+        dispatch(setbalanceSUDT(balances));
+        return balances;
+      }
+    } catch (error: any) {
+      console.error(error);
+      throw error;
+    }
+  };
+
+  const getLayer2Address = async () => {
+    try {
+      const layer2Address = await fetchConnectedAccountLayer2Address(userAddress);
+      dispatch(setUserAddressLayer2(layer2Address));
+
+      console.log('LAYER2 ADDRESS', layer2Address);
+    } catch (error: any) {
+      console.error(error);
+      throw error;
+    }
+  };
 
   useEffect((): void => {
-    const fetchWalletBalance = async () => {
-      try {
-        if (hasProvider && userAddress) {
-          const balances = await balanceFromWallet();
-
-          dispatch(setbalanceSUDT(balances));
-          return balances;
-        }
-      } catch (error: any) {
-        console.error(error);
-        throw error;
-      }
-    };
     fetchWalletBalance();
-    console.log('BALANCE', balanceSUDT);
   }, [hasProvider, userAddress]);
 
-  const initialAddress = '';
+  useEffect((): void => {
+    getLayer2Address();
+  }, [hasProvider, userAddress]);
 
+  const initialAddress = depositAddress;
   const initialValues: SwapFormValues = {
     amount: '',
     destinationAddress: initialAddress,
@@ -272,7 +295,7 @@ const BridgeComponent: FC<IBridgeComponent> = ({ onSubmitCompleteStep }) => {
               <Box display="inherit">
                 <Image src="/logos/wallet.png" alt="address:" height="15" width="15" />
                 <Typography variant="body2" paddingLeft={0.5}>
-                  {formatAddress(formik.values.destinationAddress) || 'Enter a destination address from nexisdao'}
+                  {formatAddress(formik.values.destinationAddress) || 'Enter a destination address'}
                 </Typography>
               </Box>
             </Box>
@@ -287,7 +310,7 @@ const BridgeComponent: FC<IBridgeComponent> = ({ onSubmitCompleteStep }) => {
                     type="text"
                     autoComplete="off"
                     header="Destination address"
-                    placeholder="e.g ckt1...jmyvr0v"
+                    placeholder="e.g 0x123...ab56c"
                     value={formik.values.destinationAddress}
                     onChange={formik.handleChange}
                     customStyles={{
@@ -296,7 +319,7 @@ const BridgeComponent: FC<IBridgeComponent> = ({ onSubmitCompleteStep }) => {
                       borderOnFocus: '2px solid #00D395',
                     }}
                     disabled={userAddress === '' && initialAddress !== ''}
-                    tooltipMessage="enter the wallet address you want to send funds, it begins with ckt1..."
+                    tooltipMessage="enter the wallet address you want to send funds, it must be layer 2 wallet address"
                     rightIcon={
                       formik.values.destinationAddress
                         ? { src: '/logos/x.svg', tooltipMessage: 'Clear address' }

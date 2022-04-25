@@ -86,7 +86,7 @@ const CustomStepConnector = withStyles({
 // Styles for StepLabel.
 const CustomStepLabel = withStyles({
   completed: {
-    color: '#00D395 !important',
+    color: '#212030 !important',
   },
   active: {
     color: '#212030 !important',
@@ -122,7 +122,7 @@ const CustomStepButton = withStyles({
 // Styles for StepIcons.
 const iconStyles = makeStyles({
   root: {
-    color: 'var(--default-lighter)',
+    color: '#00D395',
     display: 'flex',
     alignItems: 'center',
     height: 24,

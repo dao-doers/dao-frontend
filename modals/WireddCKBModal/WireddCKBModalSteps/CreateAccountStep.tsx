@@ -88,7 +88,7 @@ const CreateAccountStep: FC<CreateAccountStepProps> = ({ completeStep }) => {
 
   const getLayer2Address = async () => {
     try {
-      const layer2Address = await createLayer2Address();
+      const layer2Address = await createLayer2Address(userAddress);
       dispatch(setUserAddressLayer2(layer2Address));
       completeStep(layer2Address);
 
