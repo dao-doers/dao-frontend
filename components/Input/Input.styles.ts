@@ -28,12 +28,12 @@ export const InputMainContainer = styled.div`
   flex-direction: row;
   justify-content: center;
   overflow: hidden;
-  border: 1px solid #00D395;
+  border: 1px solid #00d395;
   padding: 0;
 `;
 
 export const InputIcon = styled.div`
-  background-color: tranasparent;
+  background-color: transparent;
   padding: 1px;
   display: flex;
   align-items: center;
@@ -46,7 +46,7 @@ export const InputIcon = styled.div`
 `;
 
 export const InputRightContainer = styled.div`
-  background-color: tranasparent;
+  background-color: transparent;
   flex-grow: 3;
   box-sizing: border-box;
 `;
@@ -61,7 +61,7 @@ export const InputHeader = styled.div`
 `;
 
 export const RightIcon = styled.div`
-  background-color: tranasparent;
+  background-color: transparent;
   padding: 1px;
   flex-grow: 1;
   display: flex;
@@ -89,7 +89,7 @@ export const ShowPasswordIcon = styled(IconButton)`
 `;
 
 export const InputTooltip = styled.div`
-  background-color: tranasparent;
+  background-color: transparent;
   display: flex;
   align-items: center;
   margin: 0;
