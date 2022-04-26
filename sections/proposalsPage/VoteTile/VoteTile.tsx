@@ -26,7 +26,7 @@ const TypographyAgree = styled(Typography)`
 `;
 
 const TypographyDisagree = styled(Typography)`
-  color: ${({ theme }) => theme.palette.colors.col1};
+  color: ${({ theme }) => theme.palette.colors.col4};
 `;
 
 const TypographySmall = styled(Typography)`

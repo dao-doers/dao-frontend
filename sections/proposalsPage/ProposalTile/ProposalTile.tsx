@@ -36,7 +36,7 @@ const StyledLanguageIcon = styled(LanguageIcon)`
 `;
 
 const StyledTwitterIcon = styled(TwitterIcon)`
-  color: ${({ theme }) => theme.palette.colors.col1};
+  color: #2ea5e8;
   cursor: pointer;
   ${({ theme }) => theme.breakpoints.down('sm')} {
     font-size: 20px;

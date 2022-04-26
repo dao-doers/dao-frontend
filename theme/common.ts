@@ -94,8 +94,8 @@ const colors: CommonColors = {
 
 const gradients: Gradients = {
   grad1: linearGradient('45deg', '#ED2391', '#2EA5E8'),
-  // grad2: linearGradient('145deg', '#FE0291', '#05E8FC'),
-  grad2: linearGradient('45deg', '#2EA5E8', '#00D395'),
+  grad2: linearGradient('145deg', '#FE0291', '#05E8FC'),
+  // grad2: linearGradient('45deg', '#2EA5E8', '#00D395'),
 };
 
 const buttons: CommonButtonsColors = {

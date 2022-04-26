@@ -75,11 +75,11 @@ const palette: RecursivePartial<Palette> = {
     disagreeVariant: {
       basic: {
         background: colors.main1,
-        text: colors.col1,
-        border: colors.col1,
+        text: colors.col4,
+        border: colors.col4,
       },
       hover: {
-        background: colors.col1,
+        background: colors.col4,
         text: colors.white,
         border: colors.main2,
       },

@@ -35,7 +35,7 @@ const DAOCircleLoader: FC<DAOCircleLoaderProps> = ({ size = 135, status = 'loadi
       <defs>
         <linearGradient id="linearColors" x1="0" y1="0" x2="1" y2="1">
           <stop offset="20%" stopColor={theme.palette.colors.col1} />
-          <stop offset="90%" stopColor={theme.palette.colors.col2} />
+          <stop offset="90%" stopColor={theme.palette.colors.col5} />
         </linearGradient>
         <mask id="mask">
           <path d={PATHS.LOADER_ARC} fill="#fff">

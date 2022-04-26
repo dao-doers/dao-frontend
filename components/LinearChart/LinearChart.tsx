@@ -24,7 +24,7 @@ const DisagreeLinearProgress = styled(LinearProgress)(({ theme }) => ({
   },
   [`& .${linearProgressClasses.bar}`]: {
     borderRadius: 5,
-    backgroundColor: theme.palette.colors.col1,
+    backgroundColor: theme.palette.colors.col4,
   },
 }));
 

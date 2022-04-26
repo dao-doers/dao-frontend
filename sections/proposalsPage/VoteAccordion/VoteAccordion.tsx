@@ -48,7 +48,7 @@ const StyledAccordionSummary = styled(AccordionSummary)`
   padding: 0;
 `;
 
-const TypographyGreen = styled(Typography)`
+const TypographyAgree = styled(Typography)`
   color: ${({ theme }) => theme.palette.colors.col2};
 `;
 
@@ -57,16 +57,16 @@ const TypographyGreenBold = styled(Typography)`
   font-weight: 600;
 `;
 
-const TypographyRed = styled(Typography)`
+const TypographyRedBold = styled(Typography)`
   color: ${({ theme }) => theme.palette.colors.col4};
   font-weight: 600;
 `;
 
-const TypographyBlue = styled(Typography)`
-  color: ${({ theme }) => theme.palette.colors.col1};
+const TypographyDisagree = styled(Typography)`
+  color: ${({ theme }) => theme.palette.colors.col4};
 `;
 
-const TypographyViolet = styled(Typography)`
+const GradientTypography = styled(Typography)`
   font-weight: 600;
   margin-right: 10px;
   background: ${({ theme }) => theme.palette.gradients.grad2};
@@ -115,7 +115,6 @@ const VoteAccordion: FC<any> = ({ proposal }) => {
       dispatch(setOpen(true));
 
       const receipt = await useHandleSponsorProposal(userAddress, daoAddress, proposalId);
-      console.log(receipt, 'sponsor receipt pre-log');
 
       if (receipt.blockNumber) {
         dispatch(setStatus(PROCESSING_STATUSES.SUCCESS));
@@ -128,13 +127,13 @@ const VoteAccordion: FC<any> = ({ proposal }) => {
           ),
         );
       }
-      if (receipt.code) {
-        dispatch(setStatus(PROCESSING_STATUSES.ERROR));
-        dispatch(setMessage(getMetamaskMessageError(receipt)));
-      }
     } catch (error) {
+      if (error.code) {
+        dispatch(setStatus(PROCESSING_STATUSES.ERROR));
+        dispatch(setMessage(getMetamaskMessageError(error)));
+      }
+      setProcessProposalStatus(FETCH_STATUSES.ERROR);
       dispatch(setStatus(PROCESSING_STATUSES.ERROR));
-      dispatch(setMessage(getMetamaskMessageError(error)));
     }
   };
 
@@ -163,13 +162,13 @@ const VoteAccordion: FC<any> = ({ proposal }) => {
               ),
             );
           }
-          if (receipt.code) {
-            dispatch(setStatus(PROCESSING_STATUSES.ERROR));
-            dispatch(setMessage(getMetamaskMessageError(receipt)));
-          }
         } catch (error) {
+          if (error.code) {
+            dispatch(setStatus(PROCESSING_STATUSES.ERROR));
+            dispatch(setMessage(getMetamaskMessageError(error)));
+          }
+          setProcessProposalStatus(FETCH_STATUSES.ERROR);
           dispatch(setStatus(PROCESSING_STATUSES.ERROR));
-          dispatch(setMessage(getMetamaskMessageError(error)));
         }
       } else {
         setNotVotedYet(2);
@@ -198,13 +197,7 @@ const VoteAccordion: FC<any> = ({ proposal }) => {
           ),
         );
       }
-
-      if (receipt.code) {
-        dispatch(setStatus(PROCESSING_STATUSES.ERROR));
-        dispatch(setMessage(getMetamaskMessageError(receipt)));
-      }
     } catch (error: any) {
-      console.log(error);
       if (error.code) {
         dispatch(setStatus(PROCESSING_STATUSES.ERROR));
         dispatch(setMessage(getMetamaskMessageError(error)));
@@ -220,16 +213,18 @@ const VoteAccordion: FC<any> = ({ proposal }) => {
         <Box display="flex" justifyContent="space-between" alignItems="center" width="100%">
           <Typography variant="subtitle2-bold">Vote Section</Typography>
           {proposal.proposalStatus === PROPOSAL_STATUS.COLLECTING_FUNDS && (
-            <TypographyViolet>Collecting Funds</TypographyViolet>
+            <GradientTypography>Collecting Funds</GradientTypography>
           )}
-          {proposal.proposalStatus === PROPOSAL_STATUS.VOTING && <TypographyViolet>Voting</TypographyViolet>}
+          {proposal.proposalStatus === PROPOSAL_STATUS.VOTING && <GradientTypography>Voting</GradientTypography>}
           {proposal.proposalStatus === PROPOSAL_STATUS.GRACE_PERIOD && (
-            <TypographyViolet>Grace Period</TypographyViolet>
+            <GradientTypography>Grace Period</GradientTypography>
           )}
-          {proposal.proposalStatus === PROPOSAL_STATUS.PROCEEDING && <TypographyViolet>Proceeding</TypographyViolet>}
+          {proposal.proposalStatus === PROPOSAL_STATUS.PROCEEDING && (
+            <GradientTypography>Proceeding</GradientTypography>
+          )}
           {proposal.proposalStatus === PROPOSAL_STATUS.FINISHED && (
             <Box display="flex">
-              {proposal.didPass === false && <TypographyRed mr={1.5}>Rejected</TypographyRed>}
+              {proposal.didPass === false && <TypographyRedBold mr={1.5}>Rejected</TypographyRedBold>}
               {proposal.didPass === true && <TypographyGreenBold mr={1.5}>Approved</TypographyGreenBold>}
             </Box>
           )}
@@ -327,17 +322,20 @@ const VoteAccordion: FC<any> = ({ proposal }) => {
 
               {currentTime > proposal.votingPeriodEnds && currentTime > proposal.gracePeriodEnds && (
                 <>
-                  <DAOTile variant="greyOutline">
-                    <Typography align="center" p={1}>
-                      To finish the whole process, proposal needs to be processed.
-                    </Typography>
-                  </DAOTile>
+                  {processProposalStatus === FETCH_STATUSES.IDLE && (
+                    <DAOTile variant="greyOutline">
+                      <Typography align="center" p={1}>
+                        To finish the whole process, proposal needs to be processed.
+                      </Typography>
+                    </DAOTile>
+                  )}
 
                   {processProposalStatus === FETCH_STATUSES.ERROR && (
                     <Box mt={1}>
                       <DAOTile variant="redOutline">
                         <Typography align="center" p={1}>
-                          Proposal is not ready to be processed by blockchain network.
+                          Proposal is not ready to be processed by blockchain network or it is been proceeding right
+                          now.
                         </Typography>
                       </DAOTile>
                     </Box>
@@ -346,7 +344,7 @@ const VoteAccordion: FC<any> = ({ proposal }) => {
                   {processProposalStatus === FETCH_STATUSES.SUCCESS && (
                     <DAOTile variant="gradientOutline">
                       <Typography align="center" p={1}>
-                        Proposal has been processed by blockchain network.
+                        Proposal is been proceeding.
                       </Typography>
                     </DAOTile>
                   )}
@@ -389,17 +387,17 @@ const VoteAccordion: FC<any> = ({ proposal }) => {
             </Typography>
             {proposal.yesVotes + proposal.noVotes > 0 && (
               <Box width="100%" pb={2}>
-                <TypographyGreen>
+                <TypographyAgree>
                   Agreed: {proposal.yesVotes} ( {(proposal.yesVotes / (proposal.yesVotes + proposal.noVotes)) * 100}% )
-                </TypographyGreen>
+                </TypographyAgree>
                 <Box mt={1} mb={2}>
                   <LinearChart type="agree" main={proposal.yesVotes} all={proposal.yesVotes + proposal.noVotes} />
                 </Box>
 
-                <TypographyBlue>
+                <TypographyDisagree>
                   Disagreed: {proposal.noVotes} ( {(proposal.noVotes / (proposal.yesVotes + proposal.noVotes)) * 100}
                   %)
-                </TypographyBlue>
+                </TypographyDisagree>
                 <Box mt={1} mb={2}>
                   <LinearChart type="disagree" main={proposal.noVotes} all={proposal.yesVotes + proposal.noVotes} />
                 </Box>
@@ -437,18 +435,18 @@ const VoteAccordion: FC<any> = ({ proposal }) => {
               </Typography>
               {proposal.yesVotes + proposal.noVotes > 0 && (
                 <Box width="100%" pb={2}>
-                  <TypographyGreen>
+                  <TypographyAgree>
                     Agreed: {proposal.yesVotes} ( {(proposal.yesVotes / (proposal.yesVotes + proposal.noVotes)) * 100}%
                     )
-                  </TypographyGreen>
+                  </TypographyAgree>
                   <Box mt={1} mb={2}>
                     <LinearChart type="agree" main={proposal.yesVotes} all={proposal.yesVotes + proposal.noVotes} />
                   </Box>
 
-                  <TypographyBlue>
+                  <TypographyDisagree>
                     Disagreed: {proposal.noVotes} ( {(proposal.noVotes / (proposal.yesVotes + proposal.noVotes)) * 100}
                     %)
-                  </TypographyBlue>
+                  </TypographyDisagree>
                   <Box mt={1} mb={2}>
                     <LinearChart type="disagree" main={proposal.noVotes} all={proposal.yesVotes + proposal.noVotes} />
                   </Box>
