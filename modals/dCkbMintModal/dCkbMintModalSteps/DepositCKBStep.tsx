@@ -22,8 +22,10 @@ const StyledBox = styled(Box)`
   display: flex;
   align-items: center;
   margin-bottom: 25px;
+  justify-content: space-between;
   ${({ theme }) => theme.breakpoints.down('sm')} {
     flex-direction: column;
+    align-items: flex-start;
   }
 `;
 

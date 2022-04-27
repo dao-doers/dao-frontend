@@ -42,20 +42,19 @@ const StyledBox = styled(Box)`
   display: flex;
   align-items: center;
   margin-bottom: 25px;
-  display: flex;
   justify-content: space-between;
   ${({ theme }) => theme.breakpoints.down('sm')} {
     flex-direction: column;
+    align-items: flex-start;
   }
 `;
 
 const ButtonWrapper = styled(Box)`
   height: 40px;
   min-width: 160px;
-  display: flex;
-  justify-content: flex-end;
   ${({ theme }) => theme.breakpoints.down('sm')} {
-    margin-top: 15px;
+    margin-top: 20px;
+    width: 100%;
   }
 `;
 
