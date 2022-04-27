@@ -1,7 +1,7 @@
 /* eslint-disable consistent-return */
 import store from 'redux/store';
 
-import { setUserAddress, setIsLoggedIn, setUserShares } from 'redux/slices/user';
+import { clearUser } from 'redux/slices/user';
 
 export const loadWeb3 = async () => {
   if (window.ethereum) {
@@ -10,9 +10,7 @@ export const loadWeb3 = async () => {
     });
     window.ethereum.on('accountsChanged', () => {
       console.log('accountChanged');
-      store.dispatch(setIsLoggedIn(false));
-      store.dispatch(setUserAddress(''));
-      store.dispatch(setUserShares(0));
+      store.dispatch(clearUser());
       sessionStorage.removeItem('dao-user-address');
     });
 

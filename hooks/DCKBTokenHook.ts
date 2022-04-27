@@ -85,7 +85,7 @@ export const useDCKBTokenHook = () => {
     }
   };
 
-  const fetchConnectedAccountLayer2Address = async (ethAddress: string) => {
+  const getLayer2Address = async (ethAddress: string) => {
     try {
       setLoaderLayer2Address(true);
       await addressTranslator.init('testnet');
@@ -104,7 +104,7 @@ export const useDCKBTokenHook = () => {
 Deposit to Layer 2 address on Layer 1
 https://www.npmjs.com/package/nervos-godwoken-integration
 */
-  const createLayer2Address = async (ethAddress: string) => {
+  const createLayer2Account = async (ethAddress: string) => {
     let layer1TxHash;
     try {
       setLoaderLayer2Address(true);
@@ -131,9 +131,9 @@ https://www.npmjs.com/package/nervos-godwoken-integration
 
   return {
     mintDCKTokens,
-    createLayer2Address,
+    createLayer2Account,
     balanceFromWallet,
-    fetchConnectedAccountLayer2Address,
+    getLayer2Address,
     connectedWalletAddress,
     loader,
     loaderLayer2Address,

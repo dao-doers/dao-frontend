@@ -57,18 +57,20 @@ export const getUsersList = createAsyncThunk('user/getUsersList', async (userTok
   });
 });
 
+const initialstate = {
+  address: '',
+  cktLayer1Address: '',
+  cktLayer2Address: '',
+  isLoggedIn: false,
+  dckbBalance: 0,
+  balanceSUDT: 0,
+  userShares: 0,
+  sessionMaintained: false,
+};
+
 const userSlice = createSlice({
   name: 'user',
-  initialState: {
-    address: '',
-    cktLayer1Address: '',
-    cktLayer2Address: '',
-    isLoggedIn: false,
-    dckbBalance: 0,
-    balanceSUDT: 0,
-    userShares: 0,
-    sessionMaintained: false,
-  },
+  initialState: initialstate,
   reducers: {
     setUserAddress: (state, action) => {
       state.address = action.payload;
@@ -94,6 +96,7 @@ const userSlice = createSlice({
     setSessionMaintained: (state, action) => {
       state.sessionMaintained = action.payload;
     },
+    clearUser: () => initialstate,
   },
   extraReducers: builder => {
     // Get list of users
@@ -129,6 +132,7 @@ export const {
   setbalanceSUDT,
   setUserShares,
   setSessionMaintained,
+  clearUser,
 } = userSlice.actions;
 
 export default userSlice.reducer;

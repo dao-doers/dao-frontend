@@ -25,7 +25,6 @@ import { setMessage, setStatus } from 'redux/slices/modalTransaction';
 import {
   selectUserAddress,
   selectIsLoggedIn,
-  selectbalanceSUDT,
   selectCktLayer2Address,
   setCktLayer2Address,
   selectCktLayer1Address,
@@ -86,21 +85,34 @@ const CreateAccountStep: FC<CreateAccountStepProps> = ({ completeStep }) => {
   const cktLayer2Address = useSelector(selectCktLayer2Address);
   const isLoggedIn = useSelector(selectIsLoggedIn);
 
+  const hasProvider = useCheckProvider();
+  const { createLayer2Account, connectedWalletAddress, getLayer2Address } = useDCKBTokenHook();
+
   const [copiedCKBAddress, setCopiedCKBAddress] = useState(false);
 
-  const { createLayer2Address, connectedWalletAddress } = useDCKBTokenHook();
-  const hasProvider = useCheckProvider();
-
-  const handleCopyCKBAddress = () => {
-    setCopiedCKBAddress(true);
-    setTimeout(() => {
-      setCopiedCKBAddress(false);
-    }, 2000);
+  const runGetLayer1Address = async () => {
+    try {
+      if (hasProvider && userAddress) {
+        const addresses = await connectedWalletAddress();
+        dispatch(setCktLayer1Address(addresses));
+      }
+    } catch (error: any) {
+      console.error(error);
+    }
   };
 
-  const getLayer2Address = async () => {
+  const runGetLayer2Address = async () => {
     try {
-      const layer2Address = await createLayer2Address(userAddress);
+      const layer2Address = await getLayer2Address(userAddress);
+      dispatch(setCktLayer2Address(layer2Address));
+    } catch (error: any) {
+      // TODO: display error in some way
+    }
+  };
+
+  const handleCreateLayer2Account = async () => {
+    try {
+      const layer2Address = await createLayer2Account(userAddress);
       dispatch(setCktLayer2Address(layer2Address));
       completeStep(layer2Address);
 
@@ -115,20 +127,16 @@ const CreateAccountStep: FC<CreateAccountStepProps> = ({ completeStep }) => {
   };
 
   useEffect((): void => {
-    const getConnectedWalletAddress = async () => {
-      try {
-        if (hasProvider && userAddress) {
-          const addresses = await connectedWalletAddress();
-          console.log(addresses, 'connectedWalletAddress');
-
-          dispatch(setCktLayer1Address(addresses));
-        }
-      } catch (error: any) {
-        console.error(error);
-      }
-    };
-    getConnectedWalletAddress();
+    runGetLayer1Address();
+    runGetLayer2Address();
   }, [hasProvider, userAddress]);
+
+  const handleCopyCKBAddress = () => {
+    setCopiedCKBAddress(true);
+    setTimeout(() => {
+      setCopiedCKBAddress(false);
+    }, 2000);
+  };
 
   return (
     <Box mt={5} mb={4}>
@@ -143,7 +151,7 @@ const CreateAccountStep: FC<CreateAccountStepProps> = ({ completeStep }) => {
             </Box>
             <ButtonWrapper>
               {isLoggedIn ? (
-                <DAOButton variant="gradientOutline" onClick={() => getLayer2Address()}>
+                <DAOButton variant="gradientOutline" onClick={() => handleCreateLayer2Account()}>
                   Create account
                 </DAOButton>
               ) : (
@@ -180,7 +188,7 @@ const CreateAccountStep: FC<CreateAccountStepProps> = ({ completeStep }) => {
         {cktLayer2Address && (
           <Box>
             <Typography component="h6" variant="h6">
-              You have a Nervos Layer 2 account.
+              You already have a Nervos Layer 2 account.
             </Typography>
             <Typography>Here is your address: {formatAddress(cktLayer2Address)}</Typography>
           </Box>
