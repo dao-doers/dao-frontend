@@ -7,7 +7,7 @@ import ConnectWalletButton from 'components/ConnectWalletButton/ConnectWalletBut
 
 const LoginStep: FC = () => {
   return (
-    <Box mt={5} mb={4}>
+    <Box mt={2} mb={4}>
       <Typography component="h6" variant="h6" mb={4}>
         You must connect your wallet at first
       </Typography>
