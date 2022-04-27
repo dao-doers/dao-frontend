@@ -1,7 +1,7 @@
 import { FC, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { selectUserAddressLayer2, selectbalanceSUDT } from 'redux/slices/user';
+import { selectUserLayer2Address, selectbalanceSUDT } from 'redux/slices/user';
 
 import styled from '@emotion/styled';
 
@@ -11,14 +11,15 @@ import Modal from 'components/Modal/Modal';
 import Stepper from 'components/Steper/Stepper';
 import Step from 'components/Steper/Step';
 
-import { selectOpen, setClose } from 'redux/slices/modalWireddCKB';
-import { setOpen, setMessage, setStatus } from 'redux/slices/modalTransaction';
 import PROCESSING_STATUSES from 'enums/processingStatuses';
 
-import CreateAccountStep from './WireddCKBModalSteps/CreateAccountStep';
-import GetCKBStep from './WireddCKBModalSteps/GetCKBStep';
-import DepositCKBStep from './WireddCKBModalSteps/DepositCKBStep';
-import BridgeStep from './WireddCKBModalSteps/BridgeStep';
+import { selectOpen, setClose } from 'redux/slices/modaldCkbMint';
+import { setOpen, setMessage, setStatus } from 'redux/slices/modalTransaction';
+
+import CreateAccountStep from './dCkbMintModalSteps/CreateAccountStep';
+import GetCKBStep from './dCkbMintModalSteps/GetCKBStep';
+import DepositCKBStep from './dCkbMintModalSteps/DepositCKBStep';
+import BridgeStep from './dCkbMintModalSteps/BridgeStep';
 
 const StyledBox = styled(Box)`
   width: 100%;
@@ -28,12 +29,12 @@ const StyledBox = styled(Box)`
   }
 `;
 
-const WireddCKBModal: FC = () => {
+const DCkbMintModal: FC = () => {
   const [activeStep, setActiveStep] = useState(0);
   const [completedSteps, setCompletedSteps] = useState([0, 0, 0, 0]);
 
   const dispatch = useDispatch();
-  const Layer2Address = useSelector(selectUserAddressLayer2);
+  const Layer2Address = useSelector(selectUserLayer2Address);
   const balanceSUDT = useSelector(selectbalanceSUDT);
   const isModalOpen = useSelector(selectOpen);
 
@@ -153,4 +154,4 @@ const WireddCKBModal: FC = () => {
   );
 };
 
-export default WireddCKBModal;
+export default DCkbMintModal;

@@ -19,7 +19,7 @@ import { EXTERNAL_ROUTES } from 'utils/routes';
 
 import transferUSDTModalSchema from 'validators/transferUSDTModalSchema';
 
-import { selectOpen, setClose } from 'redux/slices/modalSUDTTransfer';
+import { selectOpen, setClose } from 'redux/slices/modaldCkbTransfer';
 import { selectUserAddress, selectIsLoggedIn } from 'redux/slices/user';
 
 const StyledBox = styled(Box)`
@@ -44,7 +44,7 @@ const initialValues = {
   amount: 0,
 };
 
-const WireddCKBModal: FC = () => {
+const DCkbTransferModal: FC = () => {
   const dispatch = useDispatch();
 
   const userAddress = useSelector(selectUserAddress);
@@ -140,4 +140,4 @@ const WireddCKBModal: FC = () => {
   );
 };
 
-export default WireddCKBModal;
+export default DCkbTransferModal;

@@ -6,8 +6,8 @@ import {
   selectbalanceSUDT,
   selectIsLoggedIn,
   setbalanceSUDT,
-  selectUserAddressLayer2,
-  setUserAddressLayer2,
+  selectUserLayer2Address,
+  setUserLayer2Address,
 } from 'redux/slices/user';
 import PROCESSING_STATUSES from 'enums/processingStatuses';
 import { setMessage, setStatus } from 'redux/slices/modalTransaction';
@@ -100,7 +100,7 @@ const BridgeComponent: FC<IBridgeComponent> = ({ onSubmitCompleteStep }) => {
   const userAddress = useSelector(selectUserAddress);
   const isLoggedIn = useSelector(selectIsLoggedIn);
   const balanceSUDT = useSelector(selectbalanceSUDT);
-  const depositAddress = useSelector(selectUserAddressLayer2);
+  const depositAddress = useSelector(selectUserLayer2Address);
 
   const hasProvider = useCheckProvider();
   const { loaderBalance, balanceFromWallet, mintDCKTokens, fetchConnectedAccountLayer2Address } = useDCKBTokenHook();
@@ -123,7 +123,7 @@ const BridgeComponent: FC<IBridgeComponent> = ({ onSubmitCompleteStep }) => {
   const getLayer2Address = async () => {
     try {
       const layer2Address = await fetchConnectedAccountLayer2Address(userAddress);
-      dispatch(setUserAddressLayer2(layer2Address));
+      dispatch(setUserLayer2Address(layer2Address));
 
       console.log('LAYER2 ADDRESS', layer2Address);
     } catch (error: any) {

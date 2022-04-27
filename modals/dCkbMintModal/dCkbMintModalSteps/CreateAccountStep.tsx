@@ -1,20 +1,8 @@
 import React, { FC, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import {
-  selectUserAddress,
-  selectIsLoggedIn,
-  selectbalanceSUDT,
-  selectUserAddressLayer2,
-  setUserAddressLayer2,
-  selectUserCKBAddress,
-  setUserCKBAddress,
-} from 'redux/slices/user';
-
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 
 import styled from '@emotion/styled';
-
-import DAOButton from 'components/DAOButton/DAOButton';
 
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
@@ -22,13 +10,27 @@ import MuiAlert, { AlertProps } from '@mui/material/Alert';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import Snackbar from '@mui/material/Snackbar';
 
+import DAOButton from 'components/DAOButton/DAOButton';
+import ConnectWalletButton from 'components/ConnectWalletButton/ConnectWalletButton';
+
 import { useDCKBTokenHook } from 'hooks/DCKBTokenHook';
 import useCheckProvider from 'hooks/useCheckProvider';
 
-import ConnectWalletButton from 'components/ConnectWalletButton/ConnectWalletButton';
 import formatAddress from 'utils/formatAddress';
+
 import PROCESSING_STATUSES from 'enums/processingStatuses';
+
 import { setMessage, setStatus } from 'redux/slices/modalTransaction';
+
+import {
+  selectUserAddress,
+  selectIsLoggedIn,
+  selectbalanceSUDT,
+  selectUserLayer2Address,
+  setUserLayer2Address,
+  selectUserCKBAddress,
+  setUserCKBAddress,
+} from 'redux/slices/user';
 
 interface CreateAccountStepProps {
   completeStep: (form: any) => void;
@@ -74,7 +76,7 @@ const CreateAccountStep: FC<CreateAccountStepProps> = ({ completeStep }) => {
   const userAddress = useSelector(selectUserAddress);
   const userCKBAddress = useSelector(selectUserCKBAddress);
   const isLoggedIn = useSelector(selectIsLoggedIn);
-  const depositAddress = useSelector(selectUserAddressLayer2);
+  const depositAddress = useSelector(selectUserLayer2Address);
 
   const BalanceSUDT = useSelector(selectbalanceSUDT);
   const [copiedCKBAddress, setCopiedCKBAddress] = useState(false);
@@ -89,13 +91,13 @@ const CreateAccountStep: FC<CreateAccountStepProps> = ({ completeStep }) => {
   const getLayer2Address = async () => {
     try {
       const layer2Address = await createLayer2Address(userAddress);
-      dispatch(setUserAddressLayer2(layer2Address));
+      dispatch(setUserLayer2Address(layer2Address));
       completeStep(layer2Address);
 
       const successMessage = `Address successfully created! https://explorer.nervos.org/aggron/${layer2Address}`;
 
       dispatch(setStatus(PROCESSING_STATUSES.SUCCESS));
-      dispatch(setMessage(`${successMessage}`));
+      dispatch(setMessage(successMessage));
     } catch (error: any) {
       dispatch(setStatus(PROCESSING_STATUSES.ERROR));
       dispatch(setMessage(error.message || error.toString()));
@@ -114,10 +116,8 @@ const CreateAccountStep: FC<CreateAccountStepProps> = ({ completeStep }) => {
       }
     };
     getConnectedWalletAddress();
-    console.log('connectedwalletAddressess', userCKBAddress);
   }, [hasProvider, userAddress]);
 
-  console.log('BalaceSUDT', BalanceSUDT);
   return (
     <Box mt={5} mb={4}>
       <StyledBox>

@@ -4,7 +4,7 @@ import { gql, ApolloClient, NormalizedCacheObject } from '@apollo/client';
 interface UserSlice {
   address: string;
   ckbAddress: string;
-  addressLayer2: string;
+  layer2Address: string;
   isLoggedIn: boolean;
   userShares: number;
   dckbBalance: number;
@@ -62,7 +62,7 @@ const userSlice = createSlice({
   initialState: {
     address: '',
     ckbAddress: '',
-    addressLayer2: '',
+    layer2Address: '',
     isLoggedIn: false,
     dckbBalance: 0,
     balanceSUDT: 0,
@@ -76,8 +76,8 @@ const userSlice = createSlice({
     setUserCKBAddress: (state, action) => {
       state.ckbAddress = action.payload;
     },
-    setUserAddressLayer2: (state, action) => {
-      state.addressLayer2 = action.payload;
+    setUserLayer2Address: (state, action) => {
+      state.layer2Address = action.payload;
     },
     setIsLoggedIn: (state, action) => {
       state.isLoggedIn = action.payload;
@@ -113,7 +113,7 @@ const userSlice = createSlice({
 
 export const selectUserAddress = (state: StateProps) => state.user.address;
 export const selectUserCKBAddress = (state: StateProps) => state.user.ckbAddress;
-export const selectUserAddressLayer2 = (state: StateProps) => state.user.addressLayer2;
+export const selectUserLayer2Address = (state: StateProps) => state.user.layer2Address;
 export const selectIsLoggedIn = (state: StateProps) => state.user.isLoggedIn;
 export const selectdckbBalance = (state: StateProps) => state.user.dckbBalance;
 export const selectbalanceSUDT = (state: StateProps) => state.user.balanceSUDT;
@@ -123,7 +123,7 @@ export const selectessionMaintained = (state: StateProps) => state.user.sessionM
 export const {
   setUserAddress,
   setUserCKBAddress,
-  setUserAddressLayer2,
+  setUserLayer2Address,
   setIsLoggedIn,
   setdckbBalance,
   setbalanceSUDT,
