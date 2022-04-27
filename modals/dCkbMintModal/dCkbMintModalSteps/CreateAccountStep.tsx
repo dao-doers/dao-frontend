@@ -26,11 +26,12 @@ import {
   selectUserAddress,
   selectIsLoggedIn,
   selectbalanceSUDT,
-  selectUserLayer2Address,
-  setUserLayer2Address,
-  selectUserCKBAddress,
-  setUserCKBAddress,
+  selectCktLayer2Address,
+  setCktLayer2Address,
+  selectCktLayer1Address,
+  setCktLayer1Address,
 } from 'redux/slices/user';
+import APP_MODES from 'enums/appModes';
 
 interface CreateAccountStepProps {
   completeStep: (form: any) => void;
@@ -59,9 +60,18 @@ const ButtonWrapper = styled(Box)`
 
 const StyledCopyIcon = styled(ContentCopyIcon)`
   cursor: pointer;
-  font-size: 20px;
-  position: relative;
-  top: 3px;
+  font-size: 18px;
+  color: ${({ theme }) => theme.palette.colors.col1};
+  margin-left: 5px;
+`;
+
+const TypographyBlue = styled(Typography)`
+  color: ${({ theme }) => theme.palette.colors.col1};
+`;
+
+const NavButtonsWrapper = styled(Box)`
+  display: flex;
+  justify-content: space-between;
 `;
 
 const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(props, ref) {
@@ -69,17 +79,17 @@ const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(props,
 });
 
 const CreateAccountStep: FC<CreateAccountStepProps> = ({ completeStep }) => {
+  const dispatch = useDispatch();
+
+  const userAddress = useSelector(selectUserAddress);
+  const cktLayer1Address = useSelector(selectCktLayer1Address);
+  const cktLayer2Address = useSelector(selectCktLayer2Address);
+  const isLoggedIn = useSelector(selectIsLoggedIn);
+
+  const [copiedCKBAddress, setCopiedCKBAddress] = useState(false);
+
   const { createLayer2Address, connectedWalletAddress } = useDCKBTokenHook();
   const hasProvider = useCheckProvider();
-
-  const dispatch = useDispatch();
-  const userAddress = useSelector(selectUserAddress);
-  const userCKBAddress = useSelector(selectUserCKBAddress);
-  const isLoggedIn = useSelector(selectIsLoggedIn);
-  const depositAddress = useSelector(selectUserLayer2Address);
-
-  const BalanceSUDT = useSelector(selectbalanceSUDT);
-  const [copiedCKBAddress, setCopiedCKBAddress] = useState(false);
 
   const handleCopyCKBAddress = () => {
     setCopiedCKBAddress(true);
@@ -91,7 +101,7 @@ const CreateAccountStep: FC<CreateAccountStepProps> = ({ completeStep }) => {
   const getLayer2Address = async () => {
     try {
       const layer2Address = await createLayer2Address(userAddress);
-      dispatch(setUserLayer2Address(layer2Address));
+      dispatch(setCktLayer2Address(layer2Address));
       completeStep(layer2Address);
 
       const successMessage = `Address successfully created! https://explorer.nervos.org/aggron/${layer2Address}`;
@@ -109,7 +119,9 @@ const CreateAccountStep: FC<CreateAccountStepProps> = ({ completeStep }) => {
       try {
         if (hasProvider && userAddress) {
           const addresses = await connectedWalletAddress();
-          dispatch(setUserCKBAddress(addresses));
+          console.log(addresses, 'connectedWalletAddress');
+
+          dispatch(setCktLayer1Address(addresses));
         }
       } catch (error: any) {
         console.error(error);
@@ -121,12 +133,13 @@ const CreateAccountStep: FC<CreateAccountStepProps> = ({ completeStep }) => {
   return (
     <Box mt={5} mb={4}>
       <StyledBox>
-        {!depositAddress && (
+        {!cktLayer2Address && (
           <>
             <Box>
-              <Typography component="h6" variant="h6" paragraph>
+              <Typography component="h6" variant="h6">
                 Create account on Nervos Layer 2
               </Typography>
+              <Typography>You must have at least 462 CKB on your Layer 1 account to create Layer 2 account.</Typography>
             </Box>
             <ButtonWrapper>
               {isLoggedIn ? (
@@ -142,16 +155,20 @@ const CreateAccountStep: FC<CreateAccountStepProps> = ({ completeStep }) => {
       </StyledBox>
 
       <StyledBox>
-        {!depositAddress && (
+        {!cktLayer2Address && process.env.MODE === APP_MODES.DEV && (
           <>
-            <CopyToClipboard text={userCKBAddress} onCopy={handleCopyCKBAddress}>
-              <Box>
-                <Typography component="h6" variant="h6">
-                  Your CKB address (use on faucet site) {formatAddress(userCKBAddress)}
-                </Typography>
-                <StyledCopyIcon />
-              </Box>
-            </CopyToClipboard>
+            <Box>
+              <Typography component="h6" variant="h6">
+                Use Nervos Faucet to get free CKB
+              </Typography>
+              <Typography>Paste this address on faucet site:</Typography>
+              <CopyToClipboard text={cktLayer1Address} onCopy={handleCopyCKBAddress}>
+                <Box display="flex" alignItems="center" sx={{ cursor: 'pointer' }}>
+                  <TypographyBlue>{formatAddress(cktLayer1Address)}</TypographyBlue>
+                  <StyledCopyIcon />
+                </Box>
+              </CopyToClipboard>
+            </Box>
             <ButtonWrapper>
               <DAOButton variant="gradientOutline" onClick={() => window.open('https://faucet.nervos.org/', '_blank')}>
                 Layer 1 faucet
@@ -159,26 +176,25 @@ const CreateAccountStep: FC<CreateAccountStepProps> = ({ completeStep }) => {
             </ButtonWrapper>
           </>
         )}
+
+        {cktLayer2Address && (
+          <Box>
+            <Typography component="h6" variant="h6">
+              You have a Nervos Layer 2 account.
+            </Typography>
+            <Typography>Here is your address: {formatAddress(cktLayer2Address)}</Typography>
+          </Box>
+        )}
       </StyledBox>
 
-      <StyledBox>
-        <Box>
-          {depositAddress ? (
-            <Typography component="h6" variant="h6">
-              You already have a Nervos Layer 2 account.
-            </Typography>
-          ) : (
-            <Typography component="h6" variant="h6">
-              You do not have a Nervos Layer 2 account.
-            </Typography>
-          )}
-        </Box>
-        <ButtonWrapper>
-          <DAOButton variant="gradientOutline" onClick={() => completeStep(depositAddress)}>
+      <NavButtonsWrapper>
+        <div />
+        <Box width="48%">
+          <DAOButton variant="gradientOutline" onClick={() => completeStep(cktLayer2Address)}>
             Next step
           </DAOButton>
-        </ButtonWrapper>
-      </StyledBox>
+        </Box>
+      </NavButtonsWrapper>
 
       <Snackbar open={copiedCKBAddress} anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}>
         <Alert severity="success" sx={{ width: '100%' }}>

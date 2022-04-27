@@ -1,7 +1,7 @@
 import { FC, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { selectUserLayer2Address, selectbalanceSUDT } from 'redux/slices/user';
+import { selectCktLayer2Address, selectbalanceSUDT } from 'redux/slices/user';
 
 import styled from '@emotion/styled';
 
@@ -34,7 +34,7 @@ const DCkbMintModal: FC = () => {
   const [completedSteps, setCompletedSteps] = useState([0, 0, 0, 0]);
 
   const dispatch = useDispatch();
-  const Layer2Address = useSelector(selectUserLayer2Address);
+  const Layer2Address = useSelector(selectCktLayer2Address);
   const balanceSUDT = useSelector(selectbalanceSUDT);
   const isModalOpen = useSelector(selectOpen);
 

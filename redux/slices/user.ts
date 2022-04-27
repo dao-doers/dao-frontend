@@ -3,8 +3,8 @@ import { gql, ApolloClient, NormalizedCacheObject } from '@apollo/client';
 
 interface UserSlice {
   address: string;
-  ckbAddress: string;
-  layer2Address: string;
+  cktLayer1Address: string;
+  cktLayer2Address: string;
   isLoggedIn: boolean;
   userShares: number;
   dckbBalance: number;
@@ -61,8 +61,8 @@ const userSlice = createSlice({
   name: 'user',
   initialState: {
     address: '',
-    ckbAddress: '',
-    layer2Address: '',
+    cktLayer1Address: '',
+    cktLayer2Address: '',
     isLoggedIn: false,
     dckbBalance: 0,
     balanceSUDT: 0,
@@ -73,11 +73,11 @@ const userSlice = createSlice({
     setUserAddress: (state, action) => {
       state.address = action.payload;
     },
-    setUserCKBAddress: (state, action) => {
-      state.ckbAddress = action.payload;
+    setCktLayer1Address: (state, action) => {
+      state.cktLayer1Address = action.payload;
     },
-    setUserLayer2Address: (state, action) => {
-      state.layer2Address = action.payload;
+    setCktLayer2Address: (state, action) => {
+      state.cktLayer2Address = action.payload;
     },
     setIsLoggedIn: (state, action) => {
       state.isLoggedIn = action.payload;
@@ -112,8 +112,8 @@ const userSlice = createSlice({
 });
 
 export const selectUserAddress = (state: StateProps) => state.user.address;
-export const selectUserCKBAddress = (state: StateProps) => state.user.ckbAddress;
-export const selectUserLayer2Address = (state: StateProps) => state.user.layer2Address;
+export const selectCktLayer1Address = (state: StateProps) => state.user.cktLayer1Address;
+export const selectCktLayer2Address = (state: StateProps) => state.user.cktLayer2Address;
 export const selectIsLoggedIn = (state: StateProps) => state.user.isLoggedIn;
 export const selectdckbBalance = (state: StateProps) => state.user.dckbBalance;
 export const selectbalanceSUDT = (state: StateProps) => state.user.balanceSUDT;
@@ -122,8 +122,8 @@ export const selectessionMaintained = (state: StateProps) => state.user.sessionM
 
 export const {
   setUserAddress,
-  setUserCKBAddress,
-  setUserLayer2Address,
+  setCktLayer1Address,
+  setCktLayer2Address,
   setIsLoggedIn,
   setdckbBalance,
   setbalanceSUDT,
