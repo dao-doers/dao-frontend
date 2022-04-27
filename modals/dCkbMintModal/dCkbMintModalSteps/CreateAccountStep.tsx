@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState } from 'react';
+import React, { FC, useEffect, useState, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 
@@ -17,20 +17,22 @@ import { useDCKBTokenHook } from 'hooks/DCKBTokenHook';
 import useCheckProvider from 'hooks/useCheckProvider';
 
 import formatAddress from 'utils/formatAddress';
+import { EXTERNAL_ROUTES } from 'utils/routes';
 
 import PROCESSING_STATUSES from 'enums/processingStatuses';
+import APP_MODES from 'enums/appModes';
 
 import { setMessage, setStatus } from 'redux/slices/modalTransaction';
-
 import {
   selectUserAddress,
   selectIsLoggedIn,
-  selectCktLayer2Address,
-  setCktLayer2Address,
   selectCktLayer1Address,
+  selectCktLayer2Address,
+  selectckbBalance,
   setCktLayer1Address,
+  setCktLayer2Address,
+  setckbBalance,
 } from 'redux/slices/user';
-import APP_MODES from 'enums/appModes';
 
 interface CreateAccountStepProps {
   completeStep: (form: any) => void;
@@ -83,12 +85,34 @@ const CreateAccountStep: FC<CreateAccountStepProps> = ({ completeStep }) => {
   const userAddress = useSelector(selectUserAddress);
   const cktLayer1Address = useSelector(selectCktLayer1Address);
   const cktLayer2Address = useSelector(selectCktLayer2Address);
+  const ckbBalance = useSelector(selectckbBalance);
   const isLoggedIn = useSelector(selectIsLoggedIn);
 
   const hasProvider = useCheckProvider();
   const { createLayer2Account, connectedWalletAddress, getLayer2Address } = useDCKBTokenHook();
 
   const [copiedCKBAddress, setCopiedCKBAddress] = useState(false);
+
+  const runCheckLayer2CKBAccountBalance = useCallback(async () => {
+    const response = await fetch(process.env.PROVIDER_URL || '', {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        jsonrpc: '2.0',
+        id: 1,
+        method: 'eth_getBalance',
+        params: [userAddress, 'latest'],
+      }),
+      mode: 'cors',
+    });
+
+    const json = await response.json();
+    // eslint-disable-next-line radix
+    dispatch(setckbBalance(parseInt(json.result)));
+  }, [userAddress]);
 
   const runGetLayer1Address = async () => {
     try {
@@ -97,7 +121,7 @@ const CreateAccountStep: FC<CreateAccountStepProps> = ({ completeStep }) => {
         dispatch(setCktLayer1Address(addresses));
       }
     } catch (error: any) {
-      console.error(error);
+      // TODO: display error in some way
     }
   };
 
@@ -116,7 +140,7 @@ const CreateAccountStep: FC<CreateAccountStepProps> = ({ completeStep }) => {
       dispatch(setCktLayer2Address(layer2Address));
       completeStep(layer2Address);
 
-      const successMessage = `Address successfully created! https://explorer.nervos.org/aggron/${layer2Address}`;
+      const successMessage = `Address successfully created! ${process.env.EXPLORER}/${layer2Address}`;
 
       dispatch(setStatus(PROCESSING_STATUSES.SUCCESS));
       dispatch(setMessage(successMessage));
@@ -128,10 +152,16 @@ const CreateAccountStep: FC<CreateAccountStepProps> = ({ completeStep }) => {
 
   useEffect((): void => {
     runGetLayer1Address();
-    runGetLayer2Address();
+    runCheckLayer2CKBAccountBalance();
   }, [hasProvider, userAddress]);
 
-  const handleCopyCKBAddress = () => {
+  useEffect((): void => {
+    if (ckbBalance > 0) {
+      runGetLayer2Address();
+    }
+  }, [ckbBalance]);
+
+  const handleCopy = () => {
     setCopiedCKBAddress(true);
     setTimeout(() => {
       setCopiedCKBAddress(false);
@@ -141,7 +171,7 @@ const CreateAccountStep: FC<CreateAccountStepProps> = ({ completeStep }) => {
   return (
     <Box mt={5} mb={4}>
       <StyledBox>
-        {!cktLayer2Address && (
+        {ckbBalance === 0 && (
           <>
             <Box>
               <Typography component="h6" variant="h6">
@@ -163,14 +193,14 @@ const CreateAccountStep: FC<CreateAccountStepProps> = ({ completeStep }) => {
       </StyledBox>
 
       <StyledBox>
-        {!cktLayer2Address && process.env.MODE === APP_MODES.DEV && (
+        {ckbBalance === 0 && process.env.MODE === APP_MODES.DEV && (
           <>
             <Box>
               <Typography component="h6" variant="h6">
                 Use Nervos Faucet to get free CKB
               </Typography>
               <Typography>Paste this address on faucet site:</Typography>
-              <CopyToClipboard text={cktLayer1Address} onCopy={handleCopyCKBAddress}>
+              <CopyToClipboard text={cktLayer1Address} onCopy={handleCopy}>
                 <Box display="flex" alignItems="center" sx={{ cursor: 'pointer' }}>
                   <TypographyBlue>{formatAddress(cktLayer1Address)}</TypographyBlue>
                   <StyledCopyIcon />
@@ -178,19 +208,25 @@ const CreateAccountStep: FC<CreateAccountStepProps> = ({ completeStep }) => {
               </CopyToClipboard>
             </Box>
             <ButtonWrapper>
-              <DAOButton variant="gradientOutline" onClick={() => window.open('https://faucet.nervos.org/', '_blank')}>
+              <DAOButton variant="gradientOutline" onClick={() => window.open(EXTERNAL_ROUTES.NERVOS_FAUCET, '_blank')}>
                 Layer 1 faucet
               </DAOButton>
             </ButtonWrapper>
           </>
         )}
 
-        {cktLayer2Address && (
+        {ckbBalance > 0 && (
           <Box>
             <Typography component="h6" variant="h6">
               You already have a Nervos Layer 2 account.
             </Typography>
-            <Typography>Here is your address: {formatAddress(cktLayer2Address)}</Typography>
+            <CopyToClipboard text={cktLayer2Address} onCopy={handleCopy}>
+              <Box display="flex" alignItems="center" sx={{ cursor: 'pointer' }}>
+                <Typography mr={1}>Here is your address:</Typography>
+                <TypographyBlue>{formatAddress(cktLayer2Address)}</TypographyBlue>
+                <StyledCopyIcon />
+              </Box>
+            </CopyToClipboard>
           </Box>
         )}
       </StyledBox>

@@ -103,7 +103,7 @@ const BridgeComponent: FC<IBridgeComponent> = ({ onSubmitCompleteStep }) => {
   const depositAddress = useSelector(selectCktLayer2Address);
 
   const hasProvider = useCheckProvider();
-  const { loaderBalance, balanceFromWallet, mintDCKTokens, fetchConnectedAccountLayer2Address } = useDCKBTokenHook();
+  const { loaderBalance, balanceFromWallet, mintDCKTokens } = useDCKBTokenHook();
 
   // eslint-disable-next-line consistent-return
   const fetchWalletBalance = async () => {
@@ -120,24 +120,8 @@ const BridgeComponent: FC<IBridgeComponent> = ({ onSubmitCompleteStep }) => {
     }
   };
 
-  const getLayer2Address = async () => {
-    try {
-      const layer2Address = await fetchConnectedAccountLayer2Address(userAddress);
-      dispatch(setCktLayer2Address(layer2Address));
-
-      console.log('LAYER2 ADDRESS', layer2Address);
-    } catch (error: any) {
-      console.error(error);
-      throw error;
-    }
-  };
-
   useEffect((): void => {
     fetchWalletBalance();
-  }, [hasProvider, userAddress]);
-
-  useEffect((): void => {
-    getLayer2Address();
   }, [hasProvider, userAddress]);
 
   const initialAddress = depositAddress;

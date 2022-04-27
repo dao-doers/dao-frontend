@@ -8,6 +8,7 @@ interface UserSlice {
   isLoggedIn: boolean;
   userShares: number;
   dckbBalance: number;
+  ckbBalance: number;
   balanceSUDT: any;
   sessionMaintained: boolean;
 }
@@ -63,6 +64,7 @@ const initialstate = {
   cktLayer2Address: '',
   isLoggedIn: false,
   dckbBalance: 0,
+  ckbBalance: 0,
   balanceSUDT: 0,
   userShares: 0,
   sessionMaintained: false,
@@ -86,6 +88,9 @@ const userSlice = createSlice({
     },
     setdckbBalance: (state, action) => {
       state.dckbBalance = action.payload;
+    },
+    setckbBalance: (state, action) => {
+      state.ckbBalance = action.payload;
     },
     setbalanceSUDT: (state, action) => {
       state.balanceSUDT = action.payload;
@@ -119,6 +124,7 @@ export const selectCktLayer1Address = (state: StateProps) => state.user.cktLayer
 export const selectCktLayer2Address = (state: StateProps) => state.user.cktLayer2Address;
 export const selectIsLoggedIn = (state: StateProps) => state.user.isLoggedIn;
 export const selectdckbBalance = (state: StateProps) => state.user.dckbBalance;
+export const selectckbBalance = (state: StateProps) => state.user.ckbBalance;
 export const selectbalanceSUDT = (state: StateProps) => state.user.balanceSUDT;
 export const selectUserShares = (state: StateProps) => state.user.userShares;
 export const selectessionMaintained = (state: StateProps) => state.user.sessionMaintained;
@@ -129,6 +135,7 @@ export const {
   setCktLayer2Address,
   setIsLoggedIn,
   setdckbBalance,
+  setckbBalance,
   setbalanceSUDT,
   setUserShares,
   setSessionMaintained,

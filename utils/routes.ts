@@ -7,4 +7,5 @@ export const API_ROUTES = {};
 
 export const EXTERNAL_ROUTES = {
   CKB_TOOLS: 'https://dev.ckb.tools/create-layer2-account',
+  NERVOS_FAUCET: 'https://faucet.nervos.org',
 };
