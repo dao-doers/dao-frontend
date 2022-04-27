@@ -1,17 +1,16 @@
 import React, { FC } from 'react';
 import { useSelector } from 'react-redux';
 
-import { selectbalanceSUDT } from 'redux/slices/user';
-
 import styled from '@emotion/styled';
-
-import DAOButton from 'components/DAOButton/DAOButton';
 
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
-import { useDCKBTokenHook } from 'hooks/DCKBTokenHook';
-import DAOCircleLoader from 'components/DAOCircleLoader/DAOCircleLoader';
-import DividerLine from 'components/DividerLine/DividerLine';
+
+import DAOButton from 'components/DAOButton/DAOButton';
+
+import { EXTERNAL_ROUTES } from 'utils/routes';
+
+import { selectbalanceSUDT } from 'redux/slices/user';
 
 interface GetCKBStepProps {
   handlePreviousStep: () => void;
@@ -41,35 +40,14 @@ const NavButtonsWrapper = styled(Box)`
   justify-content: space-between;
 `;
 
-const TypographyGreen = styled(Typography)`
-  color: ${({ theme }) => theme.palette.colors.col2};
-  font-weight: 600;
-`;
-
 const GetCKBStep: FC<GetCKBStepProps> = ({ handlePreviousStep, completeStep }) => {
   const balanceSUDT = useSelector(selectbalanceSUDT);
-  const { loaderBalance } = useDCKBTokenHook();
   return (
     <Box mt={5} mb={4}>
-      {!loaderBalance ? (
-        <Box display="flex" alignItems="center" pb={2}>
-          <Typography variant="body1-bold" pr={1}>
-            CKB balance:
-          </Typography>
-          <TypographyGreen>
-            {balanceSUDT.ckbBalance > 471
-              ? balanceSUDT.ckbBalance
-              : 'you don not have enough CKB in your wallet, get some from faucet'}
-          </TypographyGreen>
-        </Box>
-      ) : (
-        <DAOCircleLoader size={20} />
-      )}
-      <DividerLine />
       <StyledBox>
         <Box>
-          <Typography component="h6" variant="h6" paragraph>
-            Get your Layer 1 address
+          <Typography component="h6" variant="h6">
+            Get Portal Wallet Layer 1 address
           </Typography>
           <Typography component="h6">
             Go to NexisDAO and connect with metamask. Next, copy CKB address (ckt...xxx) from top left of swap box.
@@ -87,7 +65,7 @@ const GetCKBStep: FC<GetCKBStepProps> = ({ handlePreviousStep, completeStep }) =
 
       <StyledBox>
         <Box>
-          <Typography component="h6" variant="h6" paragraph>
+          <Typography component="h6" variant="h6">
             Get CKB from Layer 1
           </Typography>
           <Typography component="h6">
@@ -95,7 +73,7 @@ const GetCKBStep: FC<GetCKBStepProps> = ({ handlePreviousStep, completeStep }) =
           </Typography>
         </Box>
         <ButtonWrapper>
-          <DAOButton variant="gradientOutline" onClick={() => window.open('https://faucet.nervos.org/', '_blank')}>
+          <DAOButton variant="gradientOutline" onClick={() => window.open(EXTERNAL_ROUTES.NERVOS_FAUCET, '_blank')}>
             Layer 1 faucet
           </DAOButton>
         </ButtonWrapper>

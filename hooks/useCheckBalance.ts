@@ -4,8 +4,6 @@ import Web3 from 'web3';
 
 import abiLibrary from 'lib/abi';
 
-import { shannonsToCkb } from 'utils/formatShannons';
-
 import { selectUserAddress, selectIsLoggedIn, setdckbBalance } from 'redux/slices/user';
 
 const daoAddress = process.env.DAO_ADDRESS || '';
@@ -39,7 +37,7 @@ const useCheckBalance = () => {
       if (isLoggedIn) {
         const balance = await token.methods.balanceOf(userAddress).call();
         if (balance) {
-          dispatch(setdckbBalance(shannonsToCkb(balance)));
+          dispatch(setdckbBalance(balance));
         }
         setChecked(true);
       }

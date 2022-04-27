@@ -1,6 +1,8 @@
 import { createAsyncThunk, createSlice, AsyncThunkOptions as OriginalAsyncThunkOptions } from '@reduxjs/toolkit';
 import { gql, ApolloClient, NormalizedCacheObject } from '@apollo/client';
 
+import { shannonsToCkb } from 'utils/formatShannons';
+
 interface UserSlice {
   address: string;
   cktLayer1Address: string;
@@ -87,10 +89,10 @@ const userSlice = createSlice({
       state.isLoggedIn = action.payload;
     },
     setdckbBalance: (state, action) => {
-      state.dckbBalance = action.payload;
+      state.dckbBalance = shannonsToCkb(action.payload);
     },
     setckbBalance: (state, action) => {
-      state.ckbBalance = action.payload;
+      state.ckbBalance = shannonsToCkb(action.payload);
     },
     setbalanceSUDT: (state, action) => {
       state.balanceSUDT = action.payload;

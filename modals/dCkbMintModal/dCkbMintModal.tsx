@@ -17,7 +17,7 @@ import { selectCktLayer2Address, selectbalanceSUDT, selectIsLoggedIn } from 'red
 
 import CreateAccountStep from './dCkbMintModalSteps/CreateAccountStep';
 import GetCKBStep from './dCkbMintModalSteps/GetCKBStep';
-import DepositCKBStep from './dCkbMintModalSteps/DepositCKBStep';
+import ReceivedCKBStep from './dCkbMintModalSteps/ReceivedCKBStep';
 import BridgeStep from './dCkbMintModalSteps/BridgeStep';
 import LoginStep from './dCkbMintModalSteps/LoginStep';
 
@@ -133,7 +133,7 @@ const DCkbMintModal: FC = () => {
             </Step>
 
             <Step label="Receive dCKB">
-              <DepositCKBStep
+              <ReceivedCKBStep
                 handlePreviousStep={() => previousStep()}
                 completeStep={() => {
                   completeStep(completedSteps, setCompletedSteps, true);
