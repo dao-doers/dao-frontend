@@ -5,25 +5,21 @@ import { ethers } from 'ethers';
 import abiLibrary from 'lib/abi';
 
 import { selectUserAddress, selectIsLoggedIn, setdckbBalance } from 'redux/slices/user';
+import { selectProvider } from 'redux/slices/main';
 
 const daoAddress = process.env.DAO_ADDRESS || '';
 
 const useCheckBalance = () => {
   const dispatch = useDispatch();
 
+  const provider = useSelector(selectProvider);
   const userAddress = useSelector(selectUserAddress);
   const isLoggedIn = useSelector(selectIsLoggedIn);
 
   const [isChecked, setChecked] = useState(false);
-  const [provider, setProvider] = useState(new ethers.providers.JsonRpcProvider(process.env.PROVIDER_URL || ''));
 
   useEffect(() => {
     const fetchCkbBalance = async () => {
-      if (window.ethereum) {
-        await (window as any).ethereum.request({ method: 'eth_requestAccounts' });
-        setProvider(new ethers.providers.Web3Provider(window.ethereum as any));
-      }
-
       const dao = await new ethers.Contract(daoAddress, abiLibrary.moloch2, provider);
 
       const contractTokenAddress = await dao.depositToken();

@@ -1,14 +1,16 @@
+import { useSelector } from 'react-redux';
+import { ethers } from 'ethers';
+
 import abiLibrary from 'lib/abi';
 
-const getDao = async (address: string) => {
-  const dao = await new web3.eth.Contract(abiLibrary.moloch2, address);
-  return dao;
-};
+import { selectProvider } from 'redux/slices/main';
 
 const useCheckIfVoted = async (user: string, proposalIndex: any, daoAddress: string) => {
-  const dao = await getDao(daoAddress);
+  const provider = useSelector(selectProvider);
 
-  const response = await dao.methods.getMemberProposalVote(user, proposalIndex).call({}, (err: any, res: any) => {
+  const dao = await new ethers.Contract(daoAddress, abiLibrary.moloch2, provider);
+
+  const response = await dao.getMemberProposalVote(user, proposalIndex).call({}, (err: any, res: any) => {
     if (err) {
       return err;
     }

@@ -64,7 +64,7 @@ const About: FC = () => {
   return (
     <Box mb={8}>
       <Title variant="h3-bold" paragraph>
-        How does it works
+        How does it work
       </Title>
       <ColumnsWrapper>
         <ColumnWrapper>

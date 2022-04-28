@@ -1,6 +1,7 @@
 import { FC, ReactNode, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import Web3 from 'web3';
+import { ethers } from 'ethers';
 
 import styled from '@emotion/styled';
 
@@ -27,6 +28,7 @@ import { setTheme } from 'redux/slices/theme';
 import { selectFetchStatus as selectProposalsFetchStatus, getProposalsList } from 'redux/slices/proposals';
 import { selectFetchStatus as selectVotesFetchStatus, getVotesList } from 'redux/slices/votes';
 import { getUsersList } from 'redux/slices/user';
+import { setProvider } from 'redux/slices/main';
 
 export type LayoutProps = {
   children: ReactNode;
@@ -77,9 +79,7 @@ const Layout: FC<LayoutProps> = ({ children }) => {
     const checkProvider = async () => {
       if (window.ethereum) {
         await (window as any).ethereum.request({ method: 'eth_requestAccounts' });
-        window.web3 = new Web3((window as any).ethereum);
-      } else {
-        window.web3 = new Web3(process.env.PROVIDER_URL || '');
+        dispatch(setProvider(new ethers.providers.Web3Provider(window.ethereum as any)));
       }
     };
     checkProvider();
