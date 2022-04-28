@@ -11,6 +11,7 @@ module.exports = {
     INDEXER_URL: process.env.NEXT_PUBLIC_INDEXER_URL,
     MODE: process.env.NEXT_PUBLIC_MODE,
     EXPLORER: process.env.NEXT_PUBLIC_EXPLORER,
+    NEXIS_DAO: process.env.NEXT_PUBLIC_NEXIS_DAO,
   },
   images: {
     loader: 'akamai',

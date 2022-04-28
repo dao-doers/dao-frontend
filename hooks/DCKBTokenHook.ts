@@ -33,7 +33,7 @@ export const useDCKBTokenHook = () => {
   const addressTranslator = new AddressTranslator(TESTNET_CONFIG);
   const assetSender = new WalletAssetsSender('https://testnet.ckb.dev/rpc', 'https://testnet.ckb.dev/indexer');
 
-  const mintDCKTokens = async (amount: string, toAddress: string) => {
+  const mintDCKBTokens = async (amount: string, toAddress: string) => {
     console.log({
       amount,
       destinationAddress: toAddress,
@@ -130,7 +130,7 @@ https://www.npmjs.com/package/nervos-godwoken-integration
   };
 
   return {
-    mintDCKTokens,
+    mintDCKBTokens,
     createLayer2Account,
     balanceFromWallet,
     getLayer2Address,

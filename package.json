@@ -37,7 +37,6 @@
     "add": "^2.0.6",
     "apollo": "^2.33.9",
     "apollo-boost": "^0.4.9",
-    "bignumber": "^1.1.0",
     "bignumber.js": "^9.0.2",
     "chart.js": "^3.7.0",
     "date-fns": "^2.24.0",

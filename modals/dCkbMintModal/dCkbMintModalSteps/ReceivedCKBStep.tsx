@@ -13,7 +13,7 @@ import DividerLine from 'components/DividerLine/DividerLine';
 
 interface ReceivedCKBStepProps {
   handlePreviousStep: () => void;
-  completeStep: (form: any) => void;
+  completeStep: () => void;
 }
 
 const StyledBox = styled(Box)`
@@ -56,10 +56,7 @@ const ReceivedCKBStep: FC<ReceivedCKBStepProps> = ({ handlePreviousStep, complet
           </Typography>
         </Box>
         <ButtonWrapper>
-          <DAOButton
-            variant="gradientOutline"
-            onClick={() => window.open('https://aggron.nexisdao.com/dckb', '_blank')}
-          >
+          <DAOButton variant="gradientOutline" onClick={() => window.open(process.env.NEXIS_DAO, '_blank')}>
             Nexis DAO
           </DAOButton>
         </ButtonWrapper>

@@ -2,6 +2,8 @@ import { createAsyncThunk, createSlice, AsyncThunkOptions as OriginalAsyncThunkO
 import { gql, ApolloClient, NormalizedCacheObject } from '@apollo/client';
 
 import { shannonsToCkb } from 'utils/formatShannons';
+import BigNumber from 'bignumber.js';
+import numbro from 'numbro';
 
 interface UserSlice {
   address: string;
@@ -89,7 +91,7 @@ const userSlice = createSlice({
       state.isLoggedIn = action.payload;
     },
     setdckbBalance: (state, action) => {
-      state.dckbBalance = shannonsToCkb(action.payload);
+      state.dckbBalance = numbro(new BigNumber(action.payload).dividedBy(10 ** 8).toNumber()).format('0.[00]');
     },
     setckbBalance: (state, action) => {
       state.ckbBalance = shannonsToCkb(action.payload);

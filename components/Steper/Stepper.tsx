@@ -73,7 +73,7 @@ const CustomStepConnector = withStyles({
   },
   completed: {
     '& $line': {
-      borderColor: '#00D395',
+      borderColor: '#ED2391',
     },
   },
   line: {
@@ -122,7 +122,7 @@ const CustomStepButton = withStyles({
 // Styles for StepIcons.
 const iconStyles = makeStyles({
   root: {
-    color: '#00D395',
+    color: '#ED2391',
     display: 'flex',
     alignItems: 'center',
     height: 24,

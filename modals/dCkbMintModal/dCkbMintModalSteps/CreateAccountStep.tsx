@@ -35,7 +35,7 @@ import {
 } from 'redux/slices/user';
 
 interface CreateAccountStepProps {
-  completeStep: (form: any) => void;
+  completeStep: () => void;
 }
 
 const StyledBox = styled(Box)`
@@ -137,7 +137,6 @@ const CreateAccountStep: FC<CreateAccountStepProps> = ({ completeStep }) => {
     try {
       const layer2Address = await createLayer2Account(userAddress);
       dispatch(setCktLayer2Address(layer2Address));
-      completeStep(layer2Address);
 
       const successMessage = `Address successfully created! ${process.env.EXPLORER}/${layer2Address}`;
 
@@ -233,7 +232,7 @@ const CreateAccountStep: FC<CreateAccountStepProps> = ({ completeStep }) => {
       <NavButtonsWrapper>
         <div />
         <Box width="48%">
-          <DAOButton variant="gradientOutline" onClick={() => completeStep(cktLayer2Address)}>
+          <DAOButton variant="gradientOutline" onClick={() => completeStep()}>
             Next step
           </DAOButton>
         </Box>
