@@ -1,13 +1,11 @@
 import { useState, useEffect } from 'react';
-import Web3 from 'web3';
 import { gql } from 'apollo-boost';
-
 import { useQuery } from '@apollo/react-hooks';
+import { useSelector } from 'react-redux';
+
+import { selectProvider } from 'redux/slices/main';
+
 import { useInterval } from './useInterval';
-
-const web3 = new Web3(process.env.PROVIDER_URL || '');
-
-export const getBlockNumber = () => web3.eth.getBlockNumber();
 
 export const GET_BLOCK = gql`
   {
@@ -20,9 +18,13 @@ export const GET_BLOCK = gql`
 `;
 
 const useCheckIndexerStatus = () => {
+  const provider = useSelector(selectProvider);
+
   const [molochBlock, setMolochBlock] = useState();
   const [layer2Block, setLayer2Block] = useState();
   const [layer2BlockLoading, setLayer2BlockLoading] = useState(false);
+
+  const getBlockNumber = () => provider.getBlockNumber();
 
   const { loading: molochLoading, error: molochError, data: molochBlockData } = useQuery(GET_BLOCK, {
     fetchPolicy: 'cache-and-network',

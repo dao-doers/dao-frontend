@@ -1,84 +1,59 @@
-import BigNumber from 'bignumber.js/bignumber';
+import { ethers } from 'ethers';
 
 import abiLibrary from 'lib/abi';
 
 const daoAddress = process.env.DAO_ADDRESS || '';
-const tributeToken = process.env.TRIBUTE_TOKEN_ADDRESS;
-const paymentToken = process.env.TRIBUTE_TOKEN_ADDRESS;
-
-const getDao = async (address: string) => {
-  const dao = await new web3.eth.Contract(abiLibrary.moloch2, address);
-  return dao;
-};
-
-const getReceipt = async (proposal: any, user: string, estimatedGas: number) => {
-  let receipt;
-  try {
-    receipt = await proposal.send({ from: user, gas: estimatedGas }).on('receipt', (receipt: any) => {
-      return receipt;
-    });
-  } catch (err) {
-    receipt = err;
-  }
-  return receipt;
-};
+const tributeToken = process.env.TRIBUTE_TOKEN_ADDRESS || '';
+const paymentToken = process.env.TRIBUTE_TOKEN_ADDRESS || '';
 
 const useHandleCreateProposal = async (
-  user: string,
+  provider: any,
+  proposalCreator: string,
   applicantAddress: string,
   sharesRequested: number,
   lootRequested: number,
-  tributeOffered: BigNumber.Value,
-  paymentRequested: BigNumber.Value,
-  details: { title: any; description: any; link: any },
+  tributeOffered: number,
+  paymentRequested: number,
+  details: { title: string; description: string; link: string },
 ) => {
-  const exponentialValue = new BigNumber(10 ** 8);
-  const tributeOfferedToExponential = new BigNumber(tributeOffered).multipliedBy(exponentialValue);
-  const paymentRequestedToExponential = new BigNumber(paymentRequested).multipliedBy(exponentialValue);
+  const sharesRequestedBigNumber = ethers.BigNumber.from(sharesRequested);
+  const lootRequestedBigNumber = ethers.BigNumber.from(lootRequested);
+  // TODO: find out why in aproval metamask we can see 1e-8 dCKB while transaction takes 1dCKB from account
+  const tributeOfferedBigNumber = ethers.BigNumber.from(tributeOffered);
+  const paymentRequestedBigNumber = ethers.BigNumber.from(paymentRequested);
 
-  const dao = await getDao(daoAddress);
-  const token = new web3.eth.Contract(abiLibrary.erc20, tributeToken);
+  const signer = provider.getSigner();
+  const dao = await new ethers.Contract(daoAddress, abiLibrary.moloch2, signer);
+  const token = await new ethers.Contract(tributeToken, abiLibrary.erc20, signer);
 
-  // TODO: check if there is existing approval in case if user approved first MM request and rejected second
+  // TODO: check if there is existing approval in case if proposalCreator approved first MM request and rejected second
   console.log('token whitelist', {
-    a: await dao.methods.tokenWhitelist(tributeToken).call(),
+    a: await dao.tokenWhitelist(tributeToken),
     daoAddress,
-    existingApproval: await token.methods.allowance(user, daoAddress).call(),
+    existingApproval: await token.allowance(proposalCreator, daoAddress),
   });
 
-  const approveTx = await token.methods.approve(daoAddress, tributeOfferedToExponential).send({
-    gasLimit: 6000000,
-    gasPrice: 0,
-    from: user,
+  await token.approve(daoAddress, tributeOfferedBigNumber);
+
+  console.log('token whitelist 2', {
+    a: await dao.tokenWhitelist(tributeToken),
+    daoAddress,
+    existingApproval: await token.allowance(proposalCreator, daoAddress),
   });
 
-  console.log({
-    approveTx,
-  });
-
-  console.log('submitProposal', {
+  const tx = await dao.submitProposal(
     applicantAddress,
-    sharesRequested,
-    lootRequested,
-    tributeOfferedToExponential,
+    sharesRequestedBigNumber,
+    lootRequestedBigNumber,
+    tributeOfferedBigNumber,
     tributeToken,
-    paymentRequestedToExponential,
-    paymentToken,
-  });
-
-  const proposal = await dao.methods.submitProposal(
-    applicantAddress,
-    sharesRequested,
-    lootRequested,
-    tributeOfferedToExponential,
-    tributeToken,
-    paymentRequestedToExponential,
+    paymentRequestedBigNumber,
     paymentToken,
     `{"title": "${details.title}", "description": "${details.description}", "link": "${details.link}"}`,
   );
 
-  const estimatedGas = 6000000;
-  const receipt = await getReceipt(proposal, user, estimatedGas);
+  console.log(tx);
+  const receipt = await tx.wait();
   console.log(receipt);
   return receipt;
 };

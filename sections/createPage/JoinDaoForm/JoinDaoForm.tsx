@@ -20,8 +20,11 @@ import newProposalSchema from 'validators/newProposalSchema';
 
 import { getMetamaskMessageError } from 'utils/blockchain';
 
+import config from 'config/config';
+
 import { setOpen, setStatus, setMessage } from 'redux/slices/modalTransaction';
 import { selectUserAddress, selectIsLoggedIn, selectdckbBalance } from 'redux/slices/user';
+import { selectProvider } from 'redux/slices/main';
 
 const initialValues = {
   title: '',
@@ -32,6 +35,8 @@ const initialValues = {
 
 const JoinDaoForm: FC = () => {
   const dispatch = useDispatch();
+
+  const provider = useSelector(selectProvider);
   const userAddress = useSelector(selectUserAddress);
   const isLoggedIn = useSelector(selectIsLoggedIn);
   const dckbBalance = useSelector(selectdckbBalance);
@@ -42,9 +47,12 @@ const JoinDaoForm: FC = () => {
     try {
       dispatch(setStatus(PROCESSING_STATUSES.PROCESSING));
       dispatch(setOpen(true));
-
       const modifiedLink = values.link.replace(/(^\w+:|^)\/\//, '');
+      const proposalCreator = userAddress;
+      const applicantAddress = userAddress;
+      const sharesRequested = values.tributeOffered * config.general.tribute_sharesRatio;
       const lootRequested = 0;
+      const { tributeOffered } = values;
       const paymentRequested = 0;
 
       if (dckbBalance < values.tributeOffered) {
@@ -52,11 +60,12 @@ const JoinDaoForm: FC = () => {
         dispatch(setMessage('You have not enough dCKB'));
       } else {
         const receipt = await useHandleCreateProposal(
-          userAddress,
-          userAddress,
-          values.tributeOffered,
+          provider,
+          proposalCreator,
+          applicantAddress,
+          sharesRequested,
           lootRequested,
-          values.tributeOffered,
+          tributeOffered,
           paymentRequested,
           {
             title: values.title,
@@ -81,6 +90,7 @@ const JoinDaoForm: FC = () => {
         }
       }
     } catch (error) {
+      console.log(error);
       dispatch(setStatus(PROCESSING_STATUSES.ERROR));
       dispatch(setMessage(getMetamaskMessageError(error)));
     }
@@ -170,7 +180,7 @@ const JoinDaoForm: FC = () => {
                 </Typography>
 
                 <Box display="flex" width="100%" mb={2}>
-                  <Typography>Tribute Token:</Typography>
+                  <Typography>Tribute :</Typography>
                   <Typography variant="body1-bold" mx={1}>
                     {new Intl.NumberFormat('en-US').format(
                       // eslint-disable-next-line no-restricted-globals
@@ -188,9 +198,10 @@ const JoinDaoForm: FC = () => {
                 <Box display="flex" width="100%" mb={2}>
                   <Typography>Shares Requested: </Typography>
                   <Typography variant="body1-bold" mx={1}>
+                    {/* TODO: create function to format numbers and prevent nan */}
+                    {/* TODO: add process.env.TRIBUTE_SHARES_RATIO here */}
                     {new Intl.NumberFormat('en-US').format(
-                      // eslint-disable-next-line no-restricted-globals
-                      isNaN(formik.values.tributeOffered) ? 0 : formik.values.tributeOffered,
+                      formik.values.tributeOffered * config.general.tribute_sharesRatio,
                     )}
                   </Typography>
                   <TooltipIcon>
