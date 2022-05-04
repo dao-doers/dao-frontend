@@ -47,6 +47,7 @@ const JoinDaoForm: FC = () => {
     try {
       dispatch(setStatus(PROCESSING_STATUSES.PROCESSING));
       dispatch(setOpen(true));
+
       const modifiedLink = values.link.replace(/(^\w+:|^)\/\//, '');
       const proposalCreator = userAddress;
       const applicantAddress = userAddress;

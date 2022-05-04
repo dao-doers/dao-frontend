@@ -27,19 +27,13 @@ const useHandleCreateProposal = async (
   const token = await new ethers.Contract(tributeToken, abiLibrary.erc20, signer);
 
   // TODO: check if there is existing approval in case if proposalCreator approved first MM request and rejected second
-  console.log('token whitelist', {
-    a: await dao.tokenWhitelist(tributeToken),
-    daoAddress,
-    existingApproval: await token.allowance(proposalCreator, daoAddress),
-  });
+  // console.log('token whitelist', {
+  //   a: await dao.tokenWhitelist(tributeToken),
+  //   daoAddress,
+  //   existingApproval: await token.allowance(proposalCreator, daoAddress),
+  // });
 
   await token.approve(daoAddress, tributeOfferedBigNumber);
-
-  console.log('token whitelist 2', {
-    a: await dao.tokenWhitelist(tributeToken),
-    daoAddress,
-    existingApproval: await token.allowance(proposalCreator, daoAddress),
-  });
 
   const tx = await dao.submitProposal(
     applicantAddress,
@@ -52,9 +46,7 @@ const useHandleCreateProposal = async (
     `{"title": "${details.title}", "description": "${details.description}", "link": "${details.link}"}`,
   );
 
-  console.log(tx);
   const receipt = await tx.wait();
-  console.log(receipt);
   return receipt;
 };
 

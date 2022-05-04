@@ -24,6 +24,7 @@ import useHandleSponsorProposal from 'hooks/useHandleSponsorProposal';
 import useHandleVote from 'hooks/useHandleVote';
 import useCheckIfVoted from 'hooks/useCheckIfVoted';
 import useHandleProcessProposal from 'hooks/useHandleProcessProposal';
+import useWithdraw from 'hooks/useWithdraw';
 
 import FETCH_STATUSES from 'enums/fetchStatuses';
 import PROPOSAL_STATUS from 'enums/proposalStatus';
@@ -31,6 +32,7 @@ import PROCESSING_STATUSES from 'enums/processingStatuses';
 
 import { getMetamaskMessageError } from 'utils/blockchain';
 
+import { selectProvider } from 'redux/slices/main';
 import { selectUserAddress, selectIsLoggedIn, selectUserShares } from 'redux/slices/user';
 import { setOpen, setStatus, setMessage } from 'redux/slices/modalTransaction';
 
@@ -82,6 +84,7 @@ const StyledExpandMoreIcon = styled(ExpandMoreIcon)`
 const VoteAccordion: FC<any> = ({ proposal }) => {
   const dispatch = useDispatch();
 
+  const provider = useSelector(selectProvider);
   const userAddress = useSelector(selectUserAddress);
   const isLoggedIn = useSelector(selectIsLoggedIn);
   const userShares = useSelector(selectUserShares);
@@ -95,13 +98,15 @@ const VoteAccordion: FC<any> = ({ proposal }) => {
 
   useEffect(() => {
     if (isLoggedIn && userShares > 0 && proposal.proposalIndex !== null) {
-      useCheckIfVoted(userAddress, proposal.proposalIndex, process.env.DAO_ADDRESS as any).then(async response => {
-        if (response === true) {
-          setNotVotedYet(1);
-        } else {
-          setNotVotedYet(2);
-        }
-      });
+      useCheckIfVoted(provider, userAddress, proposal.proposalIndex, process.env.DAO_ADDRESS as any).then(
+        async response => {
+          if (response === true) {
+            setNotVotedYet(1);
+          } else {
+            setNotVotedYet(2);
+          }
+        },
+      );
     }
   }, [userAddress, isLoggedIn, proposal, process.env.DAO_ADDRESS]);
 
@@ -186,6 +191,34 @@ const VoteAccordion: FC<any> = ({ proposal }) => {
 
     try {
       const receipt = await useHandleProcessProposal(userAddress, daoAddress, proposalIndex);
+
+      if (receipt.blockNumber) {
+        dispatch(setStatus(PROCESSING_STATUSES.SUCCESS));
+        dispatch(
+          setMessage(
+            `Your request has been processed by blockchain network and will be displayed with the block number ${
+              receipt.blockNumber + 1
+            }`,
+          ),
+        );
+      }
+    } catch (error: any) {
+      if (error.code) {
+        dispatch(setStatus(PROCESSING_STATUSES.ERROR));
+        dispatch(setMessage(getMetamaskMessageError(error)));
+      }
+      setProcessProposalStatus(FETCH_STATUSES.ERROR);
+      dispatch(setStatus(PROCESSING_STATUSES.ERROR));
+    }
+  };
+
+  const handleWithdraw = async () => {
+    dispatch(setStatus(PROCESSING_STATUSES.PROCESSING));
+    dispatch(setOpen(true));
+
+    try {
+      // TODO: must add flag or something after withraw has been done
+      const receipt = await useWithdraw(provider, proposal.paymentRequested);
 
       if (receipt.blockNumber) {
         dispatch(setStatus(PROCESSING_STATUSES.SUCCESS));
@@ -415,11 +448,14 @@ const VoteAccordion: FC<any> = ({ proposal }) => {
         {proposal.proposalStatus === PROPOSAL_STATUS.FINISHED && (
           <>
             {proposal.didPass === true && (
-              <DAOTile variant="greenBackground">
-                <Typography align="center" p={1}>
-                  Proposal has been approved.
-                </Typography>
-              </DAOTile>
+              <>
+                <DAOTile variant="greenBackground">
+                  <Typography align="center" p={1}>
+                    Proposal has been approved.
+                  </Typography>
+                </DAOTile>
+                {userAddress === proposal.applicant && <DAOButton onClick={handleWithdraw}>Withdraw funds</DAOButton>}
+              </>
             )}
             {proposal.didPass === false && (
               <DAOTile variant="redBackground">
