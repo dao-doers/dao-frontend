@@ -56,7 +56,7 @@ const JoinDaoForm: FC = () => {
       const { tributeOffered } = values;
       const paymentRequested = 0;
 
-      if (dckbBalance < values.tributeOffered) {
+      if (Number(dckbBalance) < values.tributeOffered) {
         dispatch(setStatus(PROCESSING_STATUSES.ERROR));
         dispatch(setMessage('You have not enough dCKB'));
       } else {
@@ -168,6 +168,7 @@ const JoinDaoForm: FC = () => {
                       placeholder: 'e.g. 10',
                       value: formik.values.tributeOffered,
                       onChange: formik.handleChange,
+                      type: 'number',
                     }}
                     formControlProps={{
                       fullWidth: true,

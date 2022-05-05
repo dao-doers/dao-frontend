@@ -22,6 +22,7 @@ import PROCESSING_STATUSES from 'enums/processingStatuses';
 
 import transferModalSchema from 'validators/transferModalSchema';
 
+import { selectProvider } from 'redux/slices/main';
 import { selectOpen, setClose } from 'redux/slices/modaldCkbTransfer';
 import { selectUserAddress, selectIsLoggedIn, selectdckbBalance } from 'redux/slices/user';
 import { setOpen, setMessage, setStatus } from 'redux/slices/modalTransaction';
@@ -46,6 +47,7 @@ const initialValues = {
 const DCkbTransferModal: FC = () => {
   const dispatch = useDispatch();
 
+  const provider = useSelector(selectProvider);
   const userAddress = useSelector(selectUserAddress);
   const isLoggedIn = useSelector(selectIsLoggedIn);
   const isModalOpen = useSelector(selectOpen);
@@ -60,7 +62,7 @@ const DCkbTransferModal: FC = () => {
       dispatch(setOpen(true));
       dispatch(setStatus(PROCESSING_STATUSES.PROCESSING));
 
-      await useHandleTransferERC20(userAddress, values.receiverAddress, values.amount);
+      await useHandleTransferERC20(provider, values.receiverAddress, values.amount);
       dispatch(setStatus(PROCESSING_STATUSES.SUCCESS));
     } catch (error: any) {
       dispatch(setStatus(PROCESSING_STATUSES.ERROR));

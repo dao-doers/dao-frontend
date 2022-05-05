@@ -24,7 +24,7 @@ import useHandleSponsorProposal from 'hooks/useHandleSponsorProposal';
 import useHandleVote from 'hooks/useHandleVote';
 import useCheckIfVoted from 'hooks/useCheckIfVoted';
 import useHandleProcessProposal from 'hooks/useHandleProcessProposal';
-import useWithdraw from 'hooks/useWithdraw';
+import useHandleWithdraw from 'hooks/useHandleWithdraw';
 
 import FETCH_STATUSES from 'enums/fetchStatuses';
 import PROPOSAL_STATUS from 'enums/proposalStatus';
@@ -90,7 +90,7 @@ const VoteAccordion: FC<any> = ({ proposal }) => {
   const userShares = useSelector(selectUserShares);
 
   const [sponsorProposalStatus, setSponsorProposalStatus] = useState(PROCESSING_STATUSES.IDLE);
-  // 0 means idle state, 1 means user can vote, 2 means user already voted
+  // 0 means idle state, 1 means user can vote, 2 means user already voted, 3 means user just voted
   const [notVotedYet, setNotVotedYet] = useState(0);
   const [processProposalStatus, setProcessProposalStatus] = useState(FETCH_STATUSES.IDLE);
 
@@ -111,7 +111,6 @@ const VoteAccordion: FC<any> = ({ proposal }) => {
   }, [userAddress, isLoggedIn, proposal, process.env.DAO_ADDRESS]);
 
   const handleSponsorProposal = async () => {
-    const daoAddress = process.env.DAO_ADDRESS;
     const { proposalId } = proposal;
 
     // TODO: unexpectedly it started throws error despite the receipt is ok
@@ -119,11 +118,10 @@ const VoteAccordion: FC<any> = ({ proposal }) => {
       dispatch(setStatus(PROCESSING_STATUSES.PROCESSING));
       dispatch(setOpen(true));
 
-      const receipt = await useHandleSponsorProposal(userAddress, daoAddress, proposalId);
-
+      const receipt = await useHandleSponsorProposal(provider, proposalId);
       if (receipt.blockNumber) {
         dispatch(setStatus(PROCESSING_STATUSES.SUCCESS));
-        dispatch(setSponsorProposalStatus(PROCESSING_STATUSES.SUCCESS));
+        setSponsorProposalStatus(PROCESSING_STATUSES.SUCCESS);
         dispatch(
           setMessage(
             `Your request has been processed by blockchain network and will be displayed with the block number ${
@@ -133,6 +131,7 @@ const VoteAccordion: FC<any> = ({ proposal }) => {
         );
       }
     } catch (error) {
+      console.log(error);
       if (error.code) {
         dispatch(setStatus(PROCESSING_STATUSES.ERROR));
         dispatch(setMessage(getMetamaskMessageError(error)));
@@ -148,49 +147,50 @@ const VoteAccordion: FC<any> = ({ proposal }) => {
     dispatch(setStatus(PROCESSING_STATUSES.PROCESSING));
     dispatch(setOpen(true));
 
-    await useCheckIfVoted(userAddress, proposal.proposalIndex, process.env.DAO_ADDRESS as any).then(async response => {
-      if (response === true) {
-        setNotVotedYet(1);
-        const { proposalIndex } = proposal;
+    await useCheckIfVoted(provider, userAddress, proposal.proposalIndex, process.env.DAO_ADDRESS as any).then(
+      async response => {
+        if (response === true) {
+          setNotVotedYet(1);
+          const { proposalIndex } = proposal;
 
-        try {
-          const receipt = await useHandleVote(proposalIndex, vote, userAddress);
+          try {
+            const receipt = await useHandleVote(provider, proposalIndex, vote, userAddress);
 
-          if (receipt.blockNumber) {
-            setNotVotedYet(2);
-            dispatch(setStatus(PROCESSING_STATUSES.SUCCESS));
-            dispatch(
-              setMessage(
-                `Your request has been processed by blockchain network and will be displayed with the block number ${
-                  receipt.blockNumber + 1
-                }`,
-              ),
-            );
-          }
-        } catch (error) {
-          if (error.code) {
+            if (receipt.blockNumber) {
+              setNotVotedYet(3);
+              dispatch(setStatus(PROCESSING_STATUSES.SUCCESS));
+              dispatch(
+                setMessage(
+                  `Your request has been processed by blockchain network and will be displayed with the block number ${
+                    receipt.blockNumber + 1
+                  }`,
+                ),
+              );
+            }
+          } catch (error) {
+            if (error.code) {
+              dispatch(setStatus(PROCESSING_STATUSES.ERROR));
+              dispatch(setMessage(getMetamaskMessageError(error)));
+            }
+            setProcessProposalStatus(FETCH_STATUSES.ERROR);
             dispatch(setStatus(PROCESSING_STATUSES.ERROR));
-            dispatch(setMessage(getMetamaskMessageError(error)));
           }
-          setProcessProposalStatus(FETCH_STATUSES.ERROR);
+        } else {
+          setNotVotedYet(2);
+          dispatch(setMessage('You have already voted!'));
           dispatch(setStatus(PROCESSING_STATUSES.ERROR));
         }
-      } else {
-        setNotVotedYet(2);
-        dispatch(setMessage('You have already voted!'));
-        dispatch(setStatus(PROCESSING_STATUSES.ERROR));
-      }
-    });
+      },
+    );
   };
 
   const handleProcessProposal = async () => {
-    const daoAddress = process.env.DAO_ADDRESS;
     const { proposalIndex } = proposal;
     dispatch(setStatus(PROCESSING_STATUSES.PROCESSING));
     dispatch(setOpen(true));
 
     try {
-      const receipt = await useHandleProcessProposal(userAddress, daoAddress, proposalIndex);
+      const receipt = await useHandleProcessProposal(provider, proposalIndex);
 
       if (receipt.blockNumber) {
         dispatch(setStatus(PROCESSING_STATUSES.SUCCESS));
@@ -203,6 +203,7 @@ const VoteAccordion: FC<any> = ({ proposal }) => {
         );
       }
     } catch (error: any) {
+      console.log(error);
       if (error.code) {
         dispatch(setStatus(PROCESSING_STATUSES.ERROR));
         dispatch(setMessage(getMetamaskMessageError(error)));
@@ -218,7 +219,7 @@ const VoteAccordion: FC<any> = ({ proposal }) => {
 
     try {
       // TODO: must add flag or something after withraw has been done
-      const receipt = await useWithdraw(provider, proposal.paymentRequested);
+      const receipt = await useHandleWithdraw(provider, proposal.paymentRequested);
 
       if (receipt.blockNumber) {
         dispatch(setStatus(PROCESSING_STATUSES.SUCCESS));
@@ -231,6 +232,8 @@ const VoteAccordion: FC<any> = ({ proposal }) => {
         );
       }
     } catch (error: any) {
+      console.log(error);
+
       if (error.code) {
         dispatch(setStatus(PROCESSING_STATUSES.ERROR));
         dispatch(setMessage(getMetamaskMessageError(error)));
@@ -313,7 +316,7 @@ const VoteAccordion: FC<any> = ({ proposal }) => {
                   )}
 
                   {/* TODO: display button only to guild members */}
-                  {isLoggedIn && notVotedYet !== 2 && (
+                  {isLoggedIn && notVotedYet < 2 && (
                     <Box display="flex" justifyContent="space-between" mb={3}>
                       <Box width="48%">
                         <DAOButton variant="agreeVariant" onClick={() => handleVote(1)}>
@@ -332,6 +335,14 @@ const VoteAccordion: FC<any> = ({ proposal }) => {
                     <DAOTile variant="redOutline">
                       <Typography align="center" p={1}>
                         You have already voted!
+                      </Typography>
+                    </DAOTile>
+                  )}
+
+                  {notVotedYet === 3 && (
+                    <DAOTile variant="gradientOutline">
+                      <Typography align="center" p={1}>
+                        You have successfully voted!
                       </Typography>
                     </DAOTile>
                   )}
@@ -454,7 +465,13 @@ const VoteAccordion: FC<any> = ({ proposal }) => {
                     Proposal has been approved.
                   </Typography>
                 </DAOTile>
-                {userAddress === proposal.applicant && <DAOButton onClick={handleWithdraw}>Withdraw funds</DAOButton>}
+                {userAddress === proposal.applicant && (
+                  <Box maxWidth="200px" mx="auto" mt={2}>
+                    <DAOButton variant="gradientOutline" onClick={handleWithdraw}>
+                      Withdraw funds
+                    </DAOButton>
+                  </Box>
+                )}
               </>
             )}
             {proposal.didPass === false && (

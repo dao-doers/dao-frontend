@@ -82,7 +82,7 @@ export const getMetamaskMessageError = error => {
       case -32602:
         return 'Invalid method parameters';
       case -32603:
-        return 'Internal JSON-RPC error, check token approve before transfer';
+        return 'Internal JSON-RPC error, check token approve before transfer or reset your metamask';
       case -32000:
         return 'Missing or invalid parameters';
       case -32001:

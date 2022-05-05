@@ -1,4 +1,5 @@
 import { createAsyncThunk, createSlice, AsyncThunkOptions as OriginalAsyncThunkOptions } from '@reduxjs/toolkit';
+
 import { gql, ApolloClient, NormalizedCacheObject } from '@apollo/client';
 
 import FETCH_STATUSES from 'enums/fetchStatuses';
@@ -29,7 +30,7 @@ declare module '@reduxjs/toolkit' {
 // Get list of all proposals
 export const getProposalsList = createAsyncThunk(
   'proposals/getProposalsList',
-  async (userToken, { extra: { apollo } }) => {
+  async (userToken: any, { extra: { apollo } }) => {
     return apollo.query({
       query: gql`
         query addressVotes($first: Int, $skip: Int, $orderBy: String, $orderDirection: String) {
@@ -246,10 +247,10 @@ const proposalsSlice = createSlice({
       });
       state.fetchStatus = FETCH_STATUSES.SUCCESS;
     });
-    builder.addCase(getProposalsList.pending, (state, action) => {
+    builder.addCase(getProposalsList.pending, state => {
       state.fetchStatus = FETCH_STATUSES.LOADING;
     });
-    builder.addCase(getProposalsList.rejected, (state, action) => {
+    builder.addCase(getProposalsList.rejected, state => {
       state.fetchStatus = FETCH_STATUSES.ERROR;
     });
   },

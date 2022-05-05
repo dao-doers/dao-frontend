@@ -59,7 +59,7 @@ const TypographySmall = styled(Typography)`
 const TypographyDescription = styled(Typography)`
   display: -webkit-box;
   -webkit-box-orient: vertical;
-  -webkit-line-clamp: 3;
+  -webkit-line-clamp: 1;
   overflow: hidden;
 `;
 
@@ -134,7 +134,7 @@ const ProposalTile: FC<any> = ({ proposal }) => {
             </Box>
           </Box>
 
-          {router.pathname.includes('create') ? (
+          {router.pathname.includes('proposals') ? (
             <Typography variant="subtitle2" paragraph>
               {formattedDescr}
             </Typography>

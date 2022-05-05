@@ -88,23 +88,21 @@ const DetailsAccordion: FC<any> = ({ proposal }) => {
       </StyledAccordionSummary>
       <StyledAccordionDetails>
         <Box display="flex" justifyContent="flex-start" flexWrap="wrap">
-          {proposal.sponsored && (
-            <Box sx={{ width: { xs: '48%', xl: '30%' } }} mb={2} mx="1%">
-              <DAOTile variant="gradientOutline" width="100%" height="100px">
-                <Box>
-                  <Typography variant="body2" align="center" gutterBottom>
-                    Created by
-                  </Typography>
-                  <CopyToClipboard text={proposal.sponsor} onCopy={handleCopySponsoredAddress}>
-                    <Box display="flex" justifyContent="center">
-                      <TypographyCursor align="center">{formatAddress(proposal.proposer, 5, 5)}</TypographyCursor>
-                      <StyledCopyIcon />
-                    </Box>
-                  </CopyToClipboard>
-                </Box>
-              </DAOTile>
-            </Box>
-          )}
+          <Box sx={{ width: { xs: '48%', xl: '30%' } }} mb={2} mx="1%">
+            <DAOTile variant="gradientOutline" width="100%" height="100px">
+              <Box>
+                <Typography variant="body2" align="center" gutterBottom>
+                  Created by
+                </Typography>
+                <CopyToClipboard text={proposal.sponsor} onCopy={handleCopySponsoredAddress}>
+                  <Box display="flex" justifyContent="center">
+                    <TypographyCursor align="center">{formatAddress(proposal.proposer, 5, 5)}</TypographyCursor>
+                    <StyledCopyIcon />
+                  </Box>
+                </CopyToClipboard>
+              </Box>
+            </DAOTile>
+          </Box>
 
           {proposal.sponsored && (
             <Box sx={{ width: { xs: '48%', xl: '30%' } }} mb={2} mx="1%">
@@ -165,7 +163,7 @@ const DetailsAccordion: FC<any> = ({ proposal }) => {
                     Tribute to DAO
                   </Typography>
                   <Typography variant="body1-bold">
-                    {shannonsToCkb(proposal.tributeOffered)} {proposal.tributeTokenSymbol}
+                    {proposal.tributeOffered} {proposal.tributeTokenSymbol}
                   </Typography>
                 </Box>
               </DAOTile>
@@ -180,7 +178,7 @@ const DetailsAccordion: FC<any> = ({ proposal }) => {
                     Payment Requested
                   </Typography>
                   <Typography variant="body1-bold">
-                    {shannonsToCkb(proposal.paymentRequested)} {proposal.paymentTokenSymbol}
+                    {proposal.paymentRequested} {proposal.paymentTokenSymbol}
                   </Typography>
                 </Box>
               </DAOTile>

@@ -1,25 +1,17 @@
+import { ethers } from 'ethers';
+
 import abiLibrary from 'lib/abi';
 
-const getDao = async (address: string) => {
-  const dao = await new web3.eth.Contract(abiLibrary.moloch2, address);
-  return dao;
-};
+const daoAddress = process.env.DAO_ADDRESS || '';
 
-const useHandleProcessProposal = async (user: string, daoAddress: any, proposalIndex: number) => {
-  const dao = await getDao(daoAddress);
+const useHandleProcessProposal = async (provider: any, proposalIndex: number) => {
+  const signer = provider.getSigner();
+  const dao = await new ethers.Contract(daoAddress, abiLibrary.moloch2, signer);
 
-  const responce = await dao.methods
-    .processProposal(proposalIndex)
-    .send({
-      gasLimit: 6000000,
-      gasPrice: 0,
-      from: user,
-    })
-    .on('receipt', (receipt: any) => {
-      return receipt;
-    });
+  const tx = await dao.processProposal(proposalIndex);
 
-  return responce;
+  const receipt = await tx.wait();
+  return receipt;
 };
 
 export default useHandleProcessProposal;

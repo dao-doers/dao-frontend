@@ -64,9 +64,9 @@ const FundProjectForm: FC = () => {
       const sharesRequested = values.tributeOffered * config.general.tribute_sharesRatio;
       const lootRequested = 0;
       const { tributeOffered } = values;
-      const paymentRequested = 0;
+      const { paymentRequested } = values;
 
-      if (dckbBalance < values.tributeOffered) {
+      if (Number(dckbBalance) < values.tributeOffered) {
         dispatch(setStatus(PROCESSING_STATUSES.ERROR));
         dispatch(setMessage('You have not enough dCKB'));
       } else {

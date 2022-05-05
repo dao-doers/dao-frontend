@@ -67,12 +67,7 @@ const ReceivedCKBStep: FC<ReceivedCKBStepProps> = ({ handlePreviousStep, complet
           <DAOButton onClick={handlePreviousStep}>Previous step</DAOButton>
         </Box>
         <Box width="48%">
-          <DAOButton
-            variant="gradientOutline"
-            onClick={() => {
-              completeStep(balanceSUDT.ckbBalance);
-            }}
-          >
+          <DAOButton variant="gradientOutline" onClick={() => completeStep()}>
             Next step
           </DAOButton>
         </Box>
