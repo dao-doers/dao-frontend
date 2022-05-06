@@ -1,6 +1,6 @@
-import { createAsyncThunk, createSlice, AsyncThunkOptions as OriginalAsyncThunkOptions } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
-import { gql, ApolloClient, NormalizedCacheObject } from '@apollo/client';
+import { gql } from '@apollo/client';
 
 import FETCH_STATUSES from 'enums/fetchStatuses';
 import PROPOSAL_STATUS from 'enums/proposalStatus';
@@ -19,12 +19,6 @@ interface ProposalProps {
 
 interface StateProps {
   proposals: ProposalProps;
-}
-
-declare module '@reduxjs/toolkit' {
-  export type AsyncThunkOptions = OriginalAsyncThunkOptions & {
-    extra: { apollo: ApolloClient<NormalizedCacheObject> };
-  };
 }
 
 // Get list of all proposals

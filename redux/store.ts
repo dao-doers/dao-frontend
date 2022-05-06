@@ -12,7 +12,7 @@ import modaldCkbTransferReducer from 'redux/slices/modaldCkbTransfer';
 
 import apollo from 'config/apollo';
 
-export default configureStore({
+const store = configureStore({
   reducer: {
     main: mainReducer,
     user: userReducer,
@@ -32,3 +32,7 @@ export default configureStore({
       },
     }),
 });
+
+export type Store = ReturnType<typeof store.getState>;
+
+export default store;
