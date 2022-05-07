@@ -49,7 +49,7 @@ const DAOInput: FC<DAOInputProps> = ({ label, formControlProps, inputProps, erro
               {label}
             </TypographyGrey>
             {tootltip && (
-              <TooltipIcon helpIcon>
+              <TooltipIcon>
                 <Typography variant="body2">{tootltip}</Typography>
               </TooltipIcon>
             )}

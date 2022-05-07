@@ -118,7 +118,7 @@ const BlockchainStatusContent: FC = () => {
             <MenuItem onClick={handleClose}>
               <StatusChip title="dCKB balance:">
                 {isChecked ? (
-                  <Typography variant="body1-bold">{dckbBalance}</Typography>
+                  <Typography variant="body1-bold">{dckbBalance.toFixed(2)}</Typography>
                 ) : (
                   <Box display="flex" alignItems="center">
                     <Box display="flex" alignItems="center" mr={1}>

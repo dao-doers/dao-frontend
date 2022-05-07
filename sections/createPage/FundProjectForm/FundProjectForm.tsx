@@ -66,7 +66,7 @@ const FundProjectForm: FC = () => {
       const { tributeOffered } = values;
       const { paymentRequested } = values;
 
-      if (Number(dckbBalance) < values.tributeOffered) {
+      if (dckbBalance < values.tributeOffered) {
         dispatch(setStatus(PROCESSING_STATUSES.ERROR));
         dispatch(setMessage('You have not enough dCKB'));
       } else {

@@ -130,8 +130,7 @@ const VoteAccordion: FC<any> = ({ proposal }) => {
           ),
         );
       }
-    } catch (error) {
-      console.log(error);
+    } catch (error: any) {
       if (error.code) {
         dispatch(setStatus(PROCESSING_STATUSES.ERROR));
         dispatch(setMessage(getMetamaskMessageError(error)));
@@ -167,7 +166,7 @@ const VoteAccordion: FC<any> = ({ proposal }) => {
                 ),
               );
             }
-          } catch (error) {
+          } catch (error: any) {
             if (error.code) {
               dispatch(setStatus(PROCESSING_STATUSES.ERROR));
               dispatch(setMessage(getMetamaskMessageError(error)));

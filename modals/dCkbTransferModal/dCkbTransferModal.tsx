@@ -103,7 +103,7 @@ const DCkbTransferModal: FC = () => {
                   <Typography variant="body1" mb={1}>
                     Current dCKB Layer 2 balance
                   </Typography>
-                  <Typography variant="body1-bold">{dckbBalance}</Typography>
+                  <Typography variant="body1-bold">{dckbBalance.toFixed(2)}</Typography>
                 </Box>
 
                 <Box width="100%" my={2}>
