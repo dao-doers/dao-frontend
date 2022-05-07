@@ -5,7 +5,7 @@ import styled from '@emotion/styled';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 
-import Link from 'components/Link';
+import Link from 'components/Link/Link';
 
 const TypographyGrey = styled(Typography)`
   color: ${({ theme }) => theme.palette.colors.main6};

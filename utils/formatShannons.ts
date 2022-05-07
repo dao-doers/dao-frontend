@@ -4,7 +4,7 @@ import numbro from 'numbro';
 
 export const shannonsToCkb = (shannons: number) => {
   const ckb = numbro(new BigNumber(shannons).dividedBy(10 ** 8).toNumber()).format('0.[00]');
-  return ckb;
+  return Number(ckb);
 };
 
 export const ckbToShannons = (ckb: number) => {

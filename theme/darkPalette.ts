@@ -4,14 +4,14 @@ import common, { RecursivePartial } from './common';
 const colors: Colors = {
   ...common.colors,
   main1: '#000000',
-  main2: '#040404',
+  main2: '#030303',
   main3: '#0C0C0F',
   main4: '#111117',
   main5: '#14131C',
   main6: '#737373',
   main7: '#e8e8e8',
   main8: 'rgba(66, 68, 90, 0.3)',
-  main9: 'rgba(240, 240, 240, 0.15)',
+  main9: '#FFFFFF',
 };
 
 const palette: RecursivePartial<Palette> = {
@@ -75,11 +75,11 @@ const palette: RecursivePartial<Palette> = {
     disagreeVariant: {
       basic: {
         background: colors.main1,
-        text: colors.col1,
-        border: colors.col1,
+        text: colors.col4,
+        border: colors.col4,
       },
       hover: {
-        background: colors.col1,
+        background: colors.col4,
         text: colors.white,
         border: colors.main2,
       },
@@ -96,7 +96,7 @@ const palette: RecursivePartial<Palette> = {
     disabled: colors.main6,
   },
   error: {
-    main: colors.col6,
+    main: colors.col4,
   },
   success: {
     main: colors.col2,

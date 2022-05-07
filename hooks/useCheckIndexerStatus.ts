@@ -1,32 +1,11 @@
 import { useState, useEffect } from 'react';
-import Web3 from 'web3';
 import { gql } from 'apollo-boost';
-
 import { useQuery } from '@apollo/react-hooks';
+import { useSelector } from 'react-redux';
+
+import { selectProvider } from 'redux/slices/main';
+
 import { useInterval } from './useInterval';
-
-// TODO: change to import "" from ""
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const { PolyjuiceAccounts, PolyjuiceHttpProvider } = require('@polyjuice-provider/web3');
-
-const providerConfig = {
-  web3Url: process.env.PROVIDER_CONFIG_WEB3_URL,
-};
-
-const provider = new PolyjuiceHttpProvider(providerConfig.web3Url, providerConfig);
-let polyjuiceAccounts;
-let web3: Web3;
-
-if (typeof window !== 'undefined') {
-  polyjuiceAccounts = new PolyjuiceAccounts(providerConfig);
-
-  web3 = new Web3(provider);
-
-  web3.eth.accounts = polyjuiceAccounts;
-  (web3.eth.Contract as any).setProvider(provider, web3.eth.accounts);
-}
-
-export const getBlockNumber = () => web3.eth.getBlockNumber();
 
 export const GET_BLOCK = gql`
   {
@@ -39,9 +18,13 @@ export const GET_BLOCK = gql`
 `;
 
 const useCheckIndexerStatus = () => {
+  const provider = useSelector(selectProvider);
+
   const [molochBlock, setMolochBlock] = useState();
   const [layer2Block, setLayer2Block] = useState();
   const [layer2BlockLoading, setLayer2BlockLoading] = useState(false);
+
+  const getBlockNumber = () => provider.getBlockNumber();
 
   const { loading: molochLoading, error: molochError, data: molochBlockData } = useQuery(GET_BLOCK, {
     fetchPolicy: 'cache-and-network',
@@ -72,7 +55,7 @@ const useCheckIndexerStatus = () => {
     setLatestBlockFromLayer2();
   }, 10 * 3000);
 
-  return { molochBlock, layer2Block, molochError, molochLoading, layer2BlockLoading, provider };
+  return { molochBlock, layer2Block, molochError, molochLoading, layer2BlockLoading };
 };
 
 export default useCheckIndexerStatus;

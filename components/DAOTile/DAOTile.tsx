@@ -49,7 +49,7 @@ const tileVariant = ({ theme, variant }: TileVariantProps & { theme: Theme }) =>
       `;
     case 'redOutline':
       return css`
-        background: ${theme.palette.colors.col6};
+        background: ${theme.palette.colors.col4};
         padding: 1px;
       `;
     case 'greyShadow':
@@ -72,12 +72,12 @@ const tileVariant = ({ theme, variant }: TileVariantProps & { theme: Theme }) =>
       `;
     case 'redBackground':
       return css`
-        background: ${theme.palette.colors.col6};
+        background: ${theme.palette.colors.col4};
         padding: 1px;
       `;
     case 'yellowBackground':
       return css`
-        background: ${theme.palette.colors.col4};
+        background: ${theme.palette.colors.col3};
         padding: 1px;
       `;
     default:
@@ -108,22 +108,22 @@ const innerTileVariant = ({ theme, variant }: TileVariantProps & { theme: Theme 
       `;
     case 'blueBackground':
       return css`
-        background: ${theme.palette.colors.col1};
-        color: ${theme.palette.colors.main1};
+        background-color: ${theme.palette.colors.main1};
+        color: ${theme.palette.colors.col1};
       `;
     case 'greenBackground':
       return css`
-        background: ${theme.palette.colors.col2};
-        color: ${theme.palette.colors.main1};
+        background-color: ${theme.palette.colors.main1};
+        color: ${theme.palette.colors.col2};
       `;
     case 'redBackground':
       return css`
-        background: ${theme.palette.colors.col6};
-        color: ${theme.palette.colors.main1};
+        background-color: ${theme.palette.colors.main1};
+        color: ${theme.palette.colors.col4};
       `;
     case 'yellowBackground':
       return css`
-        background: ${theme.palette.colors.col4};
+        background: ${theme.palette.colors.col3};
         color: ${theme.palette.colors.main1};
       `;
     default:

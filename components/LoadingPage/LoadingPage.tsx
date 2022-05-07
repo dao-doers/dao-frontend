@@ -1,14 +1,14 @@
-import { FC } from 'react';
 import Image from 'next/image';
+import { FC } from 'react';
 import { useSelector } from 'react-redux';
 
 import styled from '@emotion/styled';
 
 import Box from '@mui/material/Box';
 
-import { selectTheme } from 'redux/slices/theme';
-
 import THEME_MODES from 'enums/themeModes';
+
+import { selectTheme } from 'redux/slices/theme';
 
 const StyledImage = styled(Image)`
   transform: scale(1);

@@ -8,30 +8,33 @@ import Accordion from '@mui/material/Accordion';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import PlaylistRemoveIcon from '@mui/icons-material/PlaylistRemove';
+import Typography from '@mui/material/Typography';
 
-import DividerLine from 'components/DividerLine/DividerLine';
-import DAOButton from 'components/DAOButton/DAOButton';
-import DAOTile from 'components/DAOTile/DAOTile';
 import ConnectWalletButton from 'components/ConnectWalletButton/ConnectWalletButton';
 import Counter from 'components/Counter/Counter';
+import DAOButton from 'components/DAOButton/DAOButton';
+import DAOTile from 'components/DAOTile/DAOTile';
+import DividerLine from 'components/DividerLine/DividerLine';
+import LinearChart from 'components/LinearChart/LinearChart';
 import TooltipIcon from 'components/TooltipIcon';
 
-import LinearChart from 'components/LinearChart/LinearChart';
-
-import { selectUserAddress, selectIsLoggedIn, selectUserShares } from 'redux/slices/user';
-import { setOpen, setStatus, setMessage } from 'redux/slices/modalTransaction';
-
-import useSponsorProposal from 'hooks/useSponsorProposal';
-import useVote from 'hooks/useVote';
-import useNotVotedYetCheck from 'hooks/useNotVotedYetCheck';
-import useProcessProposal from 'hooks/useProcessProposal';
+import useHandleSponsorProposal from 'hooks/useHandleSponsorProposal';
+import useHandleVote from 'hooks/useHandleVote';
+import useCheckIfVoted from 'hooks/useCheckIfVoted';
+import useHandleProcessProposal from 'hooks/useHandleProcessProposal';
+import useHandleWithdraw from 'hooks/useHandleWithdraw';
 
 import FETCH_STATUSES from 'enums/fetchStatuses';
 import PROPOSAL_STATUS from 'enums/proposalStatus';
 import PROCESSING_STATUSES from 'enums/processingStatuses';
+
+import { getMetamaskMessageError } from 'utils/blockchain';
+
+import { selectProvider } from 'redux/slices/main';
+import { selectUserAddress, selectIsLoggedIn, selectUserShares } from 'redux/slices/user';
+import { setOpen, setStatus, setMessage } from 'redux/slices/modalTransaction';
 
 const StyledAccordion = styled(Accordion)`
   margin-top: 10px;
@@ -47,15 +50,25 @@ const StyledAccordionSummary = styled(AccordionSummary)`
   padding: 0;
 `;
 
-const TypographyGreen = styled(Typography)`
+const TypographyAgree = styled(Typography)`
   color: ${({ theme }) => theme.palette.colors.col2};
 `;
 
-const TypographyBlue = styled(Typography)`
-  color: ${({ theme }) => theme.palette.colors.col1};
+const TypographyGreenBold = styled(Typography)`
+  color: ${({ theme }) => theme.palette.colors.col2};
+  font-weight: 600;
 `;
 
-const TypographyViolet = styled(Typography)`
+const TypographyRedBold = styled(Typography)`
+  color: ${({ theme }) => theme.palette.colors.col4};
+  font-weight: 600;
+`;
+
+const TypographyDisagree = styled(Typography)`
+  color: ${({ theme }) => theme.palette.colors.col4};
+`;
+
+const GradientTypography = styled(Typography)`
   font-weight: 600;
   margin-right: 10px;
   background: ${({ theme }) => theme.palette.gradients.grad2};
@@ -71,12 +84,13 @@ const StyledExpandMoreIcon = styled(ExpandMoreIcon)`
 const VoteAccordion: FC<any> = ({ proposal }) => {
   const dispatch = useDispatch();
 
+  const provider = useSelector(selectProvider);
   const userAddress = useSelector(selectUserAddress);
   const isLoggedIn = useSelector(selectIsLoggedIn);
   const userShares = useSelector(selectUserShares);
 
   const [sponsorProposalStatus, setSponsorProposalStatus] = useState(PROCESSING_STATUSES.IDLE);
-  // 0 means idle state, 1 means user can vote, 2 means user already voted
+  // 0 means idle state, 1 means user can vote, 2 means user already voted, 3 means user just voted
   const [notVotedYet, setNotVotedYet] = useState(0);
   const [processProposalStatus, setProcessProposalStatus] = useState(FETCH_STATUSES.IDLE);
 
@@ -84,56 +98,80 @@ const VoteAccordion: FC<any> = ({ proposal }) => {
 
   useEffect(() => {
     if (isLoggedIn && userShares > 0 && proposal.proposalIndex !== null) {
-      useNotVotedYetCheck(userAddress, proposal.proposalIndex, process.env.DAO_ADDRESS as any).then(async response => {
-        if (response === true) {
-          setNotVotedYet(1);
-        } else {
-          setNotVotedYet(2);
-        }
-      });
+      useCheckIfVoted(provider, userAddress, proposal.proposalIndex, process.env.DAO_ADDRESS as any).then(
+        async response => {
+          if (response === true) {
+            setNotVotedYet(1);
+          } else {
+            setNotVotedYet(2);
+          }
+        },
+      );
     }
   }, [userAddress, isLoggedIn, proposal, process.env.DAO_ADDRESS]);
 
   const handleSponsorProposal = async () => {
-    const daoAddress = process.env.DAO_ADDRESS;
     const { proposalId } = proposal;
 
+    // TODO: unexpectedly it started throws error despite the receipt is ok
     try {
       dispatch(setStatus(PROCESSING_STATUSES.PROCESSING));
       dispatch(setOpen(true));
 
-      const receipt = await useSponsorProposal(userAddress, daoAddress, proposalId);
-
-      console.log(receipt);
-
-      dispatch(setStatus(PROCESSING_STATUSES.SUCCESS));
-      setSponsorProposalStatus(PROCESSING_STATUSES.SUCCESS);
-      dispatch(
-        setMessage(`Your request has been processed by blockchain network and will be displayed with the block number 
-        ${!Number.isNaN(receipt.blockNumber) && receipt.blockNumber + 1}`),
-      );
-    } catch (error) {
+      const receipt = await useHandleSponsorProposal(provider, proposalId);
+      if (receipt.blockNumber) {
+        dispatch(setStatus(PROCESSING_STATUSES.SUCCESS));
+        setSponsorProposalStatus(PROCESSING_STATUSES.SUCCESS);
+        dispatch(
+          setMessage(
+            `Your request has been processed by blockchain network and will be displayed with the block number ${
+              receipt.blockNumber + 1
+            }`,
+          ),
+        );
+      }
+    } catch (error: any) {
+      if (error.code) {
+        dispatch(setStatus(PROCESSING_STATUSES.ERROR));
+        dispatch(setMessage(getMetamaskMessageError(error)));
+      }
+      setProcessProposalStatus(FETCH_STATUSES.ERROR);
       dispatch(setStatus(PROCESSING_STATUSES.ERROR));
     }
   };
 
   const handleVote = async (vote: number) => {
-    // TODO: improvement - useNotVotedYetCheck should run just right after page render, not just after clicking
+    // TODO: improvement - useCheckIfVoted should run just right after page render, not just after clicking
 
     dispatch(setStatus(PROCESSING_STATUSES.PROCESSING));
     dispatch(setOpen(true));
 
-    await useNotVotedYetCheck(userAddress, proposal.proposalIndex, process.env.DAO_ADDRESS as any).then(
+    await useCheckIfVoted(provider, userAddress, proposal.proposalIndex, process.env.DAO_ADDRESS as any).then(
       async response => {
         if (response === true) {
           setNotVotedYet(1);
-          const daoAddress = process.env.DAO_ADDRESS;
           const { proposalIndex } = proposal;
 
           try {
-            await useVote(proposalIndex, vote, userAddress, daoAddress);
-            dispatch(setStatus(PROCESSING_STATUSES.SUCCESS));
-          } catch (error) {
+            const receipt = await useHandleVote(provider, proposalIndex, vote);
+
+            if (receipt.blockNumber) {
+              setNotVotedYet(3);
+              dispatch(setStatus(PROCESSING_STATUSES.SUCCESS));
+              dispatch(
+                setMessage(
+                  `Your request has been processed by blockchain network and will be displayed with the block number ${
+                    receipt.blockNumber + 1
+                  }`,
+                ),
+              );
+            }
+          } catch (error: any) {
+            if (error.code) {
+              dispatch(setStatus(PROCESSING_STATUSES.ERROR));
+              dispatch(setMessage(getMetamaskMessageError(error)));
+            }
+            setProcessProposalStatus(FETCH_STATUSES.ERROR);
             dispatch(setStatus(PROCESSING_STATUSES.ERROR));
           }
         } else {
@@ -146,22 +184,59 @@ const VoteAccordion: FC<any> = ({ proposal }) => {
   };
 
   const handleProcessProposal = async () => {
-    const daoAddress = process.env.DAO_ADDRESS;
     const { proposalIndex } = proposal;
     dispatch(setStatus(PROCESSING_STATUSES.PROCESSING));
     dispatch(setOpen(true));
 
     try {
-      const receipt = await useProcessProposal(userAddress, daoAddress, proposalIndex);
+      const receipt = await useHandleProcessProposal(provider, proposalIndex);
 
-      if (receipt.transactionHash) {
-        setProcessProposalStatus(FETCH_STATUSES.SUCCESS);
+      if (receipt.blockNumber) {
         dispatch(setStatus(PROCESSING_STATUSES.SUCCESS));
-      } else {
-        setProcessProposalStatus(FETCH_STATUSES.ERROR);
-        dispatch(setStatus(PROCESSING_STATUSES.ERROR));
+        dispatch(
+          setMessage(
+            `Your request has been processed by blockchain network and will be displayed with the block number ${
+              receipt.blockNumber + 1
+            }`,
+          ),
+        );
       }
-    } catch (error) {
+    } catch (error: any) {
+      console.log(error);
+      if (error.code) {
+        dispatch(setStatus(PROCESSING_STATUSES.ERROR));
+        dispatch(setMessage(getMetamaskMessageError(error)));
+      }
+      setProcessProposalStatus(FETCH_STATUSES.ERROR);
+      dispatch(setStatus(PROCESSING_STATUSES.ERROR));
+    }
+  };
+
+  const handleWithdraw = async () => {
+    dispatch(setStatus(PROCESSING_STATUSES.PROCESSING));
+    dispatch(setOpen(true));
+
+    try {
+      // TODO: must add flag or something after withraw has been done
+      const receipt = await useHandleWithdraw(provider, proposal.paymentRequested);
+
+      if (receipt.blockNumber) {
+        dispatch(setStatus(PROCESSING_STATUSES.SUCCESS));
+        dispatch(
+          setMessage(
+            `Your request has been processed by blockchain network and will be displayed with the block number ${
+              receipt.blockNumber + 1
+            }`,
+          ),
+        );
+      }
+    } catch (error: any) {
+      console.log(error);
+
+      if (error.code) {
+        dispatch(setStatus(PROCESSING_STATUSES.ERROR));
+        dispatch(setMessage(getMetamaskMessageError(error)));
+      }
       setProcessProposalStatus(FETCH_STATUSES.ERROR);
       dispatch(setStatus(PROCESSING_STATUSES.ERROR));
     }
@@ -173,14 +248,21 @@ const VoteAccordion: FC<any> = ({ proposal }) => {
         <Box display="flex" justifyContent="space-between" alignItems="center" width="100%">
           <Typography variant="subtitle2-bold">Vote Section</Typography>
           {proposal.proposalStatus === PROPOSAL_STATUS.COLLECTING_FUNDS && (
-            <TypographyViolet>Collecting Funds</TypographyViolet>
+            <GradientTypography>Collecting Funds</GradientTypography>
           )}
-          {proposal.proposalStatus === PROPOSAL_STATUS.VOTING && <TypographyViolet>Voting</TypographyViolet>}
+          {proposal.proposalStatus === PROPOSAL_STATUS.VOTING && <GradientTypography>Voting</GradientTypography>}
           {proposal.proposalStatus === PROPOSAL_STATUS.GRACE_PERIOD && (
-            <TypographyViolet>Grace Period</TypographyViolet>
+            <GradientTypography>Grace Period</GradientTypography>
           )}
-          {proposal.proposalStatus === PROPOSAL_STATUS.PROCEEDING && <TypographyViolet>Proceeding</TypographyViolet>}
-          {proposal.proposalStatus === PROPOSAL_STATUS.FINISHED && <TypographyViolet>Finished</TypographyViolet>}
+          {proposal.proposalStatus === PROPOSAL_STATUS.PROCEEDING && (
+            <GradientTypography>Proceeding</GradientTypography>
+          )}
+          {proposal.proposalStatus === PROPOSAL_STATUS.FINISHED && (
+            <Box display="flex">
+              {proposal.didPass === false && <TypographyRedBold mr={1.5}>Rejected</TypographyRedBold>}
+              {proposal.didPass === true && <TypographyGreenBold mr={1.5}>Approved</TypographyGreenBold>}
+            </Box>
+          )}
         </Box>
       </StyledAccordionSummary>
 
@@ -190,11 +272,10 @@ const VoteAccordion: FC<any> = ({ proposal }) => {
             {sponsorProposalStatus !== PROCESSING_STATUSES.SUCCESS && (
               <DAOTile variant="greyOutline">
                 <Typography align="center" p={1}>
-                  This proposal has not been sponsored yet. It can be sponsored by DAO member.
+                  This proposal has not been sponsored yet. It can be sponsored only by DAO member.
                 </Typography>
               </DAOTile>
             )}
-
             {sponsorProposalStatus === PROCESSING_STATUSES.SUCCESS && (
               <DAOTile variant="gradientOutline">
                 <Typography align="center" p={1}>
@@ -202,14 +283,13 @@ const VoteAccordion: FC<any> = ({ proposal }) => {
                 </Typography>
               </DAOTile>
             )}
-
             {!isLoggedIn && (
               <Box maxWidth="200px" mx="auto" mt={2}>
                 <ConnectWalletButton />
               </Box>
             )}
-
-            {isLoggedIn && sponsorProposalStatus !== PROCESSING_STATUSES.SUCCESS && (
+            {/* TODO: display button only to guild members */}
+            {isLoggedIn && sponsorProposalStatus !== PROCESSING_STATUSES.SUCCESS && userShares > 0 && (
               <Box maxWidth="200px" mx="auto" mt={2}>
                 <DAOButton variant="gradientOutline" onClick={handleSponsorProposal}>
                   Sponsor Proposal
@@ -234,7 +314,8 @@ const VoteAccordion: FC<any> = ({ proposal }) => {
                     </Box>
                   )}
 
-                  {isLoggedIn && notVotedYet !== 2 && (
+                  {/* TODO: display button only to guild members */}
+                  {isLoggedIn && notVotedYet < 2 && (
                     <Box display="flex" justifyContent="space-between" mb={3}>
                       <Box width="48%">
                         <DAOButton variant="agreeVariant" onClick={() => handleVote(1)}>
@@ -253,6 +334,14 @@ const VoteAccordion: FC<any> = ({ proposal }) => {
                     <DAOTile variant="redOutline">
                       <Typography align="center" p={1}>
                         You have already voted!
+                      </Typography>
+                    </DAOTile>
+                  )}
+
+                  {notVotedYet === 3 && (
+                    <DAOTile variant="gradientOutline">
+                      <Typography align="center" p={1}>
+                        You have successfully voted!
                       </Typography>
                     </DAOTile>
                   )}
@@ -276,17 +365,20 @@ const VoteAccordion: FC<any> = ({ proposal }) => {
 
               {currentTime > proposal.votingPeriodEnds && currentTime > proposal.gracePeriodEnds && (
                 <>
-                  <DAOTile variant="greyOutline">
-                    <Typography align="center" p={1}>
-                      To finish the whole process, proposal needs to be processed.
-                    </Typography>
-                  </DAOTile>
+                  {processProposalStatus === FETCH_STATUSES.IDLE && (
+                    <DAOTile variant="greyOutline">
+                      <Typography align="center" p={1}>
+                        To finish the whole process, proposal needs to be processed.
+                      </Typography>
+                    </DAOTile>
+                  )}
 
                   {processProposalStatus === FETCH_STATUSES.ERROR && (
                     <Box mt={1}>
                       <DAOTile variant="redOutline">
                         <Typography align="center" p={1}>
-                          Proposal is not ready to be processed by blockchain network.
+                          Proposal is not ready to be processed by blockchain network or it is been proceeding right
+                          now.
                         </Typography>
                       </DAOTile>
                     </Box>
@@ -295,7 +387,7 @@ const VoteAccordion: FC<any> = ({ proposal }) => {
                   {processProposalStatus === FETCH_STATUSES.SUCCESS && (
                     <DAOTile variant="gradientOutline">
                       <Typography align="center" p={1}>
-                        Proposal has been processed by blockchain network.
+                        Proposal is been proceeding.
                       </Typography>
                     </DAOTile>
                   )}
@@ -306,6 +398,7 @@ const VoteAccordion: FC<any> = ({ proposal }) => {
                     </Box>
                   )}
 
+                  {/* TODO: display button only to applicant */}
                   {isLoggedIn && processProposalStatus !== FETCH_STATUSES.SUCCESS && (
                     <Box maxWidth="200px" mx="auto" mt={2}>
                       <DAOButton variant="gradientOutline" onClick={handleProcessProposal}>
@@ -336,15 +429,20 @@ const VoteAccordion: FC<any> = ({ proposal }) => {
               Votes:{' '}
             </Typography>
             {proposal.yesVotes + proposal.noVotes > 0 && (
-              <Box width="100%">
-                <Box display="flex" justifyContent="space-between" width="100%" pb={2}>
-                  <TypographyGreen>Agreed: {proposal.yesVotes}</TypographyGreen>
-
-                  <TypographyBlue>Disagreed: {proposal.noVotes}</TypographyBlue>
+              <Box width="100%" pb={2}>
+                <TypographyAgree>
+                  Agreed: {proposal.yesVotes} ( {(proposal.yesVotes / (proposal.yesVotes + proposal.noVotes)) * 100}% )
+                </TypographyAgree>
+                <Box mt={1} mb={2}>
+                  <LinearChart type="agree" main={proposal.yesVotes} all={proposal.yesVotes + proposal.noVotes} />
                 </Box>
 
-                <Box>
-                  <LinearChart agreed={proposal.yesVotes} disagreed={proposal.noVotes} />
+                <TypographyDisagree>
+                  Disagreed: {proposal.noVotes} ( {(proposal.noVotes / (proposal.yesVotes + proposal.noVotes)) * 100}
+                  %)
+                </TypographyDisagree>
+                <Box mt={1} mb={2}>
+                  <LinearChart type="disagree" main={proposal.noVotes} all={proposal.yesVotes + proposal.noVotes} />
                 </Box>
               </Box>
             )}
@@ -360,11 +458,20 @@ const VoteAccordion: FC<any> = ({ proposal }) => {
         {proposal.proposalStatus === PROPOSAL_STATUS.FINISHED && (
           <>
             {proposal.didPass === true && (
-              <DAOTile variant="greenBackground">
-                <Typography align="center" p={1}>
-                  Proposal has been approved.
-                </Typography>
-              </DAOTile>
+              <>
+                <DAOTile variant="greenBackground">
+                  <Typography align="center" p={1}>
+                    Proposal has been approved.
+                  </Typography>
+                </DAOTile>
+                {userAddress === proposal.applicant && (
+                  <Box maxWidth="200px" mx="auto" mt={2}>
+                    <DAOButton variant="gradientOutline" onClick={handleWithdraw}>
+                      Withdraw funds
+                    </DAOButton>
+                  </Box>
+                )}
+              </>
             )}
             {proposal.didPass === false && (
               <DAOTile variant="redBackground">
@@ -379,15 +486,21 @@ const VoteAccordion: FC<any> = ({ proposal }) => {
                 Votes:{' '}
               </Typography>
               {proposal.yesVotes + proposal.noVotes > 0 && (
-                <Box width="100%">
-                  <Box display="flex" justifyContent="space-between" width="100%" pb={2}>
-                    <TypographyGreen>Agreed: {proposal.yesVotes}</TypographyGreen>
-
-                    <TypographyBlue>Disagreed: {proposal.noVotes}</TypographyBlue>
+                <Box width="100%" pb={2}>
+                  <TypographyAgree>
+                    Agreed: {proposal.yesVotes} ( {(proposal.yesVotes / (proposal.yesVotes + proposal.noVotes)) * 100}%
+                    )
+                  </TypographyAgree>
+                  <Box mt={1} mb={2}>
+                    <LinearChart type="agree" main={proposal.yesVotes} all={proposal.yesVotes + proposal.noVotes} />
                   </Box>
 
-                  <Box>
-                    <LinearChart agreed={proposal.yesVotes} disagreed={proposal.noVotes} />
+                  <TypographyDisagree>
+                    Disagreed: {proposal.noVotes} ( {(proposal.noVotes / (proposal.yesVotes + proposal.noVotes)) * 100}
+                    %)
+                  </TypographyDisagree>
+                  <Box mt={1} mb={2}>
+                    <LinearChart type="disagree" main={proposal.noVotes} all={proposal.yesVotes + proposal.noVotes} />
                   </Box>
                 </Box>
               )}

@@ -2,14 +2,14 @@ import React, { FC } from 'react';
 
 import styled from '@emotion/styled';
 
+import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
+import AddReactionIcon from '@mui/icons-material/AddReaction';
+import AddTaskIcon from '@mui/icons-material/AddTask';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
-import AddReactionIcon from '@mui/icons-material/AddReaction';
-import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
-import AddTaskIcon from '@mui/icons-material/AddTask';
 
-import Link from 'components/Link';
 import DAOButton from 'components/DAOButton/DAOButton';
+import Link from 'components/Link/Link';
 
 import { APP_ROUTES } from 'utils/routes';
 
@@ -59,12 +59,12 @@ const Title = styled(Typography)`
 `;
 
 const About: FC = () => {
-  const isMobile = useIsMobile('md');
+  const isMobile = useIsMobile('lg');
 
   return (
     <Box mb={8}>
       <Title variant="h3-bold" paragraph>
-        How does it works
+        How does it work
       </Title>
       <ColumnsWrapper>
         <ColumnWrapper>
@@ -74,10 +74,10 @@ const About: FC = () => {
           </Typography>
 
           {isMobile && (
-            <Box mx="auto" mb={1} mt={5} sx={{ width: { xs: '60%', md: '100%' } }}>
+            <Box mx="auto" mb={1} mt={5}>
               <Link internal href={APP_ROUTES.CREATE}>
                 <DAOButton variant="gradientOutline">
-                  <Typography>Create proposal</Typography>
+                  <Typography noWrap>Create proposal</Typography>
                 </DAOButton>
               </Link>
             </Box>

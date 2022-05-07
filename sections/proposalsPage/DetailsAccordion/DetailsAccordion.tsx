@@ -7,17 +7,16 @@ import Accordion from '@mui/material/Accordion';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import Box from '@mui/material/Box';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import Typography from '@mui/material/Typography';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import MuiAlert, { AlertProps } from '@mui/material/Alert';
+import Snackbar from '@mui/material/Snackbar';
+import Typography from '@mui/material/Typography';
 
 import DAOTile from 'components/DAOTile/DAOTile';
 
 import formatAddress from 'utils/formatAddress';
 import { shannonsToCkb } from 'utils/formatShannons';
-
-import Snackbar from '@mui/material/Snackbar';
-import MuiAlert, { AlertProps } from '@mui/material/Alert';
 
 const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
@@ -89,23 +88,21 @@ const DetailsAccordion: FC<any> = ({ proposal }) => {
       </StyledAccordionSummary>
       <StyledAccordionDetails>
         <Box display="flex" justifyContent="flex-start" flexWrap="wrap">
-          {proposal.sponsored && (
-            <Box sx={{ width: { xs: '48%', xl: '30%' } }} mb={2} mx="1%">
-              <DAOTile variant="gradientOutline" width="100%" height="100px">
-                <Box>
-                  <Typography variant="body2" align="center" gutterBottom>
-                    Created by
-                  </Typography>
-                  <CopyToClipboard text={proposal.sponsor} onCopy={handleCopySponsoredAddress}>
-                    <Box display="flex" justifyContent="center">
-                      <TypographyCursor align="center">{formatAddress(proposal.proposer, 5, 5)}</TypographyCursor>
-                      <StyledCopyIcon />
-                    </Box>
-                  </CopyToClipboard>
-                </Box>
-              </DAOTile>
-            </Box>
-          )}
+          <Box sx={{ width: { xs: '48%', xl: '30%' } }} mb={2} mx="1%">
+            <DAOTile variant="gradientOutline" width="100%" height="100px">
+              <Box>
+                <Typography variant="body2" align="center" gutterBottom>
+                  Created by
+                </Typography>
+                <CopyToClipboard text={proposal.sponsor} onCopy={handleCopySponsoredAddress}>
+                  <Box display="flex" justifyContent="center">
+                    <TypographyCursor align="center">{formatAddress(proposal.proposer, 5, 5)}</TypographyCursor>
+                    <StyledCopyIcon />
+                  </Box>
+                </CopyToClipboard>
+              </Box>
+            </DAOTile>
+          </Box>
 
           {proposal.sponsored && (
             <Box sx={{ width: { xs: '48%', xl: '30%' } }} mb={2} mx="1%">
@@ -166,7 +163,7 @@ const DetailsAccordion: FC<any> = ({ proposal }) => {
                     Tribute to DAO
                   </Typography>
                   <Typography variant="body1-bold">
-                    {shannonsToCkb(proposal.tributeOffered)} {proposal.tributeTokenSymbol}
+                    {proposal.tributeOffered} {proposal.tributeTokenSymbol}
                   </Typography>
                 </Box>
               </DAOTile>
@@ -181,7 +178,7 @@ const DetailsAccordion: FC<any> = ({ proposal }) => {
                     Payment Requested
                   </Typography>
                   <Typography variant="body1-bold">
-                    {shannonsToCkb(proposal.paymentRequested)} {proposal.paymentTokenSymbol}
+                    {proposal.paymentRequested} {proposal.paymentTokenSymbol}
                   </Typography>
                 </Box>
               </DAOTile>

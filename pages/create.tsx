@@ -8,13 +8,13 @@ import Typography from '@mui/material/Typography';
 import Layout from 'components/Layout/Layout';
 
 import FormTypeButtons from 'sections/createPage/FormTypeButtons/FormTypeButtons';
-import JoinDaoForm from 'sections/createPage/JoinDaoForm/JoinDaoForm';
 import FundProjectForm from 'sections/createPage/FundProjectForm/FundProjectForm';
 import GuildKickForm from 'sections/createPage/GuildKickForm/GuildKickForm';
-
-import { selectProposalType } from 'redux/slices/createProposal';
+import JoinDaoForm from 'sections/createPage/JoinDaoForm/JoinDaoForm';
 
 import CREATE_PROPOSAL_TYPE from 'enums/createProposalType';
+
+import { selectProposalType } from 'redux/slices/main';
 
 const CreatePage: FC<NextPage> = () => {
   const proposalType = useSelector(selectProposalType);
@@ -22,6 +22,7 @@ const CreatePage: FC<NextPage> = () => {
   return (
     <Layout>
       <Box
+        mt={4}
         sx={{
           display: 'flex',
           flexDirection: { xs: 'column', md: 'row' },

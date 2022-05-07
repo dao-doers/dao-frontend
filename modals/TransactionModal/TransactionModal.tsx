@@ -6,13 +6,13 @@ import styled from '@emotion/styled';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 
-import Modal from 'components/Modal/Modal';
-import DAOCircleLoader from 'components/DAOCircleLoader/DAOCircleLoader';
 import DAOButton from 'components/DAOButton/DAOButton';
-
-import { selectOpen, selectStatus, selectMessage, setClose } from 'redux/slices/modalTransaction';
+import DAOCircleLoader from 'components/DAOCircleLoader/DAOCircleLoader';
+import Modal from 'components/Modal/Modal';
 
 import PROCESSING_STATUSES, { mapToLoader } from 'enums/processingStatuses';
+
+import { selectOpen, selectStatus, selectMessage, setClose } from 'redux/slices/modalTransaction';
 
 const StyledBox = styled(Box)`
   width: 420px;
@@ -78,10 +78,10 @@ const TransactionModal: FC = () => {
         {status === PROCESSING_STATUSES.ERROR && (
           <>
             <Typography component="h5" variant="h5" align="center" paragraph>
-              {message.length > 0 ? message : 'Something went wrong'}
+              Error
             </Typography>
             <TypographyGrey variant="subtitle2" align="center">
-              {message.length === 0 ? 'Please try again' : ''}
+              {message}
             </TypographyGrey>
             <Box width="210px" mx="auto" my={2}>
               <DAOButton variant="gradientOutline" onClick={handleModalOpen}>

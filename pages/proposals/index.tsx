@@ -5,8 +5,8 @@ import { useSelector } from 'react-redux';
 import styled from '@emotion/styled';
 
 import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
 import PlaylistRemoveIcon from '@mui/icons-material/PlaylistRemove';
+import Typography from '@mui/material/Typography';
 
 import Layout from 'components/Layout/Layout';
 
@@ -32,7 +32,7 @@ const HomePage: FC<NextPage> = () => {
 
   return (
     <Layout>
-      <Box display="flex" justifyContent="space-between" width="100%">
+      <Box display="flex" justifyContent="space-between" width="100%" sx={{ mt: { xs: 2, md: 10 } }}>
         <Box sx={{ width: { xs: '100%', md: '63%' } }}>
           {sortedProposalsArray.length === 0 && (
             <Box display="flex" flexDirection="column" alignItems="center">

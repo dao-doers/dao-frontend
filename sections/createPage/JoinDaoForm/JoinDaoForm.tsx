@@ -6,22 +6,25 @@ import { useSelector, useDispatch } from 'react-redux';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 
+import ConnectWalletButton from 'components/ConnectWalletButton/ConnectWalletButton';
 import DAOButton from 'components/DAOButton/DAOButton';
 import DAOInput from 'components/DAOInput/DAOInput';
 import TooltipIcon from 'components/TooltipIcon';
-import ConnectWalletButton from 'components/ConnectWalletButton/ConnectWalletButton';
-
-import { setOpen, setStatus, setMessage } from 'redux/slices/modalTransaction';
-import { selectUserAddress, selectIsLoggedIn } from 'redux/slices/user';
 
 import PROCESSING_STATUSES from 'enums/processingStatuses';
 
-import useCreateProposal from 'hooks/useCreateProposal';
+import useHandleCreateProposal from 'hooks/useHandleCreateProposal';
 import useIsMobile from 'hooks/useIsMobile';
 
 import newProposalSchema from 'validators/newProposalSchema';
 
-import abiLibrary from 'lib/abi';
+import { getMetamaskMessageError } from 'utils/blockchain';
+
+import config from 'config/config';
+
+import { setOpen, setStatus, setMessage } from 'redux/slices/modalTransaction';
+import { selectUserAddress, selectIsLoggedIn, selectdckbBalance } from 'redux/slices/user';
+import { selectProvider } from 'redux/slices/main';
 
 const initialValues = {
   title: '',
@@ -30,17 +33,13 @@ const initialValues = {
   tributeOffered: 0,
 };
 
-const version = 2;
-const daoAddress = process.env.DAO_ADDRESS;
-const lootRequested = 0;
-const tributeToken = process.env.TRIBUTE_TOKEN_ADDRESS;
-const paymentRequested = 0;
-const paymentToken = process.env.TRIBUTE_TOKEN_ADDRESS;
-
 const JoinDaoForm: FC = () => {
   const dispatch = useDispatch();
+
+  const provider = useSelector(selectProvider);
   const userAddress = useSelector(selectUserAddress);
   const isLoggedIn = useSelector(selectIsLoggedIn);
+  const dckbBalance = useSelector(selectdckbBalance);
 
   const isMobile = useIsMobile('md');
 
@@ -50,33 +49,51 @@ const JoinDaoForm: FC = () => {
       dispatch(setOpen(true));
 
       const modifiedLink = values.link.replace(/(^\w+:|^)\/\//, '');
+      const proposalCreator = userAddress;
+      const applicantAddress = userAddress;
+      const sharesRequested = values.tributeOffered * config.general.tribute_sharesRatio;
+      const lootRequested = 0;
+      const { tributeOffered } = values;
+      const paymentRequested = 0;
 
-      const receipt = await useCreateProposal(
-        userAddress,
-        abiLibrary,
-        version,
-        daoAddress as any,
-        userAddress,
-        values.tributeOffered,
-        lootRequested,
-        values.tributeOffered,
-        tributeToken,
-        paymentRequested,
-        paymentToken,
-        /* Details JSON */ {
-          title: values.title,
-          description: values.description,
-          link: modifiedLink,
-        },
-      );
+      if (dckbBalance < values.tributeOffered) {
+        dispatch(setStatus(PROCESSING_STATUSES.ERROR));
+        dispatch(setMessage('You have not enough dCKB'));
+      } else {
+        const receipt = await useHandleCreateProposal(
+          provider,
+          proposalCreator,
+          applicantAddress,
+          sharesRequested,
+          lootRequested,
+          tributeOffered,
+          paymentRequested,
+          {
+            title: values.title,
+            description: values.description,
+            link: modifiedLink,
+          },
+        );
 
-      dispatch(setStatus(PROCESSING_STATUSES.SUCCESS));
-      dispatch(
-        setMessage(`Your request has been processed by blockchain network and will be displayed with the block number 
-      ${!Number.isNaN(receipt.blockNumber) && receipt.blockNumber + 1}`),
-      );
+        if (receipt.blockNumber) {
+          dispatch(setStatus(PROCESSING_STATUSES.SUCCESS));
+          dispatch(
+            setMessage(
+              `Your request has been processed by blockchain network and will be displayed with the block number ${
+                receipt.blockNumber + 1
+              }`,
+            ),
+          );
+        }
+        if (receipt.code) {
+          dispatch(setStatus(PROCESSING_STATUSES.ERROR));
+          dispatch(setMessage(getMetamaskMessageError(receipt)));
+        }
+      }
     } catch (error) {
+      console.log(error);
       dispatch(setStatus(PROCESSING_STATUSES.ERROR));
+      dispatch(setMessage(getMetamaskMessageError(error)));
     }
   };
 
@@ -151,6 +168,7 @@ const JoinDaoForm: FC = () => {
                       placeholder: 'e.g. 10',
                       value: formik.values.tributeOffered,
                       onChange: formik.handleChange,
+                      type: 'number',
                     }}
                     formControlProps={{
                       fullWidth: true,
@@ -164,7 +182,7 @@ const JoinDaoForm: FC = () => {
                 </Typography>
 
                 <Box display="flex" width="100%" mb={2}>
-                  <Typography>Tribute Token:</Typography>
+                  <Typography>Tribute :</Typography>
                   <Typography variant="body1-bold" mx={1}>
                     {new Intl.NumberFormat('en-US').format(
                       // eslint-disable-next-line no-restricted-globals
@@ -182,9 +200,10 @@ const JoinDaoForm: FC = () => {
                 <Box display="flex" width="100%" mb={2}>
                   <Typography>Shares Requested: </Typography>
                   <Typography variant="body1-bold" mx={1}>
+                    {/* TODO: create function to format numbers and prevent nan */}
+                    {/* TODO: add process.env.TRIBUTE_SHARES_RATIO here */}
                     {new Intl.NumberFormat('en-US').format(
-                      // eslint-disable-next-line no-restricted-globals
-                      isNaN(formik.values.tributeOffered) ? 0 : formik.values.tributeOffered,
+                      formik.values.tributeOffered * config.general.tribute_sharesRatio,
                     )}
                   </Typography>
                   <TooltipIcon>

@@ -2,12 +2,13 @@ import { FC } from 'react';
 
 import { styled } from '@mui/material/styles';
 import LinearProgress, { linearProgressClasses } from '@mui/material/LinearProgress';
+import Box from '@mui/material/Box';
 
-const BorderLinearProgress = styled(LinearProgress)(({ theme }) => ({
+const AgreeLinearProgress = styled(LinearProgress)(({ theme }) => ({
   height: 5,
   borderRadius: 5,
   [`&.${linearProgressClasses.colorPrimary}`]: {
-    backgroundColor: theme.palette.colors.col1,
+    backgroundColor: theme.palette.colors.main6,
   },
   [`& .${linearProgressClasses.bar}`]: {
     borderRadius: 5,
@@ -15,13 +16,31 @@ const BorderLinearProgress = styled(LinearProgress)(({ theme }) => ({
   },
 }));
 
+const DisagreeLinearProgress = styled(LinearProgress)(({ theme }) => ({
+  height: 5,
+  borderRadius: 5,
+  [`&.${linearProgressClasses.colorPrimary}`]: {
+    backgroundColor: theme.palette.colors.main6,
+  },
+  [`& .${linearProgressClasses.bar}`]: {
+    borderRadius: 5,
+    backgroundColor: theme.palette.colors.col4,
+  },
+}));
+
 interface LinearChartProps {
-  agreed: number;
-  disagreed: number;
+  main: number;
+  all: number;
+  type: 'agree' | 'disagree';
 }
 
-const LinearChart: FC<LinearChartProps> = ({ agreed, disagreed }) => {
-  return <BorderLinearProgress variant="determinate" value={(agreed / (agreed + disagreed)) * 100} />;
+const LinearChart: FC<LinearChartProps> = ({ main, all, type }) => {
+  return (
+    <Box>
+      {type === 'agree' && <AgreeLinearProgress variant="determinate" value={(main / all) * 100} />}
+      {type === 'disagree' && <DisagreeLinearProgress variant="determinate" value={(main / all) * 100} />}
+    </Box>
+  );
 };
 
 export default LinearChart;

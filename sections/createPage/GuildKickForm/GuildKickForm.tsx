@@ -15,11 +15,11 @@ import { selectProposalStatus, setProposalStatus } from 'redux/slices/proposals'
 
 import FETCH_STATUSES from 'enums/fetchStatuses';
 
-import useGuildKick from 'hooks/useGuildKick';
+import useHandleGuildKick from 'hooks/useHandleGuildKick';
 
 import guildKickSchema from 'validators/guildKickSchema';
 
-import abiLibrary from 'lib/abi';
+import { selectProvider } from 'redux/slices/main';
 
 const StyledBox = styled(Box)`
   width: 100%;
@@ -34,16 +34,12 @@ const initialValues = {
 
 const GuildKickForm: FC = () => {
   const dispatch = useDispatch();
+
+  const provider = useSelector(selectProvider);
   const sendProposalStatus = useSelector(selectProposalStatus);
 
   const onSubmit = async (values: any) => {
     dispatch(setProposalStatus(FETCH_STATUSES.LOADING));
-
-    // MOCKED -----------------------------
-    const user = '0xD173313A51f8fc37BcF67569b463abd89d81844f'; // @TODO replace to user connected with wallet
-    const version = 2;
-    const daoAddress = process.env.NEXT_PUBLIC_DAO_ADDRESS as string;
-    // MOCKED -----------------------------
 
     /* send link without http or https */
     // const modifiedLink = link.value.replace(/(^\w+:|^)\/\//, '');
@@ -52,14 +48,11 @@ const GuildKickForm: FC = () => {
     // if (!notNull(title.value, description.value, link.value)) return;
     // if (!memberToKick.validated) return;
 
-    await useGuildKick(
-      /* Wallet information */ user,
-      /* Contract information */ abiLibrary,
-      version,
-      daoAddress,
-      /* Proposal information */ values.memberToKick,
-      /* Details JSON */ { title: values.title, description: values.description, link: values.link } as any,
-    );
+    await useHandleGuildKick(provider, values.memberToKick, {
+      title: values.title,
+      description: values.description,
+      link: values.link,
+    } as any);
 
     setTimeout(() => dispatch(setProposalStatus(FETCH_STATUSES.SUCCESS)), 1000);
   };

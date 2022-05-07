@@ -1,5 +1,5 @@
-import { FC, useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
+import { FC, useState, useEffect } from 'react';
 
 import styled from '@emotion/styled';
 
@@ -11,7 +11,7 @@ import Typography from '@mui/material/Typography';
 import TwitterIcon from '@mui/icons-material/Twitter';
 
 import DAOTile from 'components/DAOTile/DAOTile';
-import Link from 'components/Link';
+import Link from 'components/Link/Link';
 
 import DetailsAccordion from 'sections/proposalsPage/DetailsAccordion/DetailsAccordion';
 import VoteAccordion from 'sections/proposalsPage/VoteAccordion/VoteAccordion';
@@ -36,7 +36,7 @@ const StyledLanguageIcon = styled(LanguageIcon)`
 `;
 
 const StyledTwitterIcon = styled(TwitterIcon)`
-  color: ${({ theme }) => theme.palette.colors.col1};
+  color: #2ea5e8;
   cursor: pointer;
   ${({ theme }) => theme.breakpoints.down('sm')} {
     font-size: 20px;
@@ -46,6 +46,10 @@ const StyledTwitterIcon = styled(TwitterIcon)`
 const TypographyTitle = styled(Typography)`
   color: ${({ theme }) => theme.palette.colors.main7};
   font-weight: 600;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 1;
+  overflow: hidden;
 `;
 
 const TypographySmall = styled(Typography)`
@@ -55,7 +59,7 @@ const TypographySmall = styled(Typography)`
 const TypographyDescription = styled(Typography)`
   display: -webkit-box;
   -webkit-box-orient: vertical;
-  -webkit-line-clamp: 3;
+  -webkit-line-clamp: 1;
   overflow: hidden;
 `;
 
@@ -130,7 +134,7 @@ const ProposalTile: FC<any> = ({ proposal }) => {
             </Box>
           </Box>
 
-          {router.pathname.includes('create') ? (
+          {router.pathname.includes('proposals') ? (
             <Typography variant="subtitle2" paragraph>
               {formattedDescr}
             </Typography>

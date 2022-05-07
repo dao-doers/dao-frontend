@@ -1,4 +1,4 @@
-import { Gradients, CommonColors, CommonButtonsColors } from '@mui/material/styles';
+import { Gradients, CommonColors, CommonButtonsColors, Colors } from '@mui/material/styles';
 import { Theme as MuiTheme } from '@mui/material/styles/createTheme';
 import { linearGradient } from '../utils/gradients';
 
@@ -10,8 +10,6 @@ declare module '@mui/material/styles' {
   interface Gradients {
     grad1: string;
     grad2: string;
-    grad3: string;
-    grad4: string;
   }
 
   interface CommonColors {
@@ -22,8 +20,6 @@ declare module '@mui/material/styles' {
     col3: string;
     col4: string;
     col5: string;
-    col6: string;
-    col7: string;
   }
 
   interface Colors extends CommonColors {
@@ -91,19 +87,15 @@ const colors: CommonColors = {
   black: '#000000',
   col1: '#2EA5E8',
   col2: '#00D395',
-  col3: '#F2C94C',
-  col4: '#fdbb2d',
+  col3: '#fdbb2d',
+  col4: '#DA0037',
   col5: '#ED2391',
-  col6: '#FE003E',
-  col7: '#b21f1f',
 };
 
 const gradients: Gradients = {
   grad1: linearGradient('45deg', '#ED2391', '#2EA5E8'),
-  // grad2: linearGradient('145deg', '#FE0291', '#05E8FC'),
-  grad2: linearGradient('45deg', '#2EA5E8', '#00D395'),
-  grad3: linearGradient('45deg', '#FAFAFA', '#FFFFFF'),
-  grad4: linearGradient('45deg', '#111117', '#040404'),
+  grad2: linearGradient('145deg', '#FE0291', '#05E8FC'),
+  // grad2: linearGradient('45deg', '#2EA5E8', '#00D395'),
 };
 
 const buttons: CommonButtonsColors = {

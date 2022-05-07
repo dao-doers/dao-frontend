@@ -1,13 +1,15 @@
 import { FC } from 'react';
 
 import TransactionModal from 'modals/TransactionModal/TransactionModal';
-import WireddCKBModal from 'modals/WireddCKBModal/WireddCKBModal';
+import DCkbMintModal from 'modals/dCkbMintModal/dCkbMintModal';
+import DCkbTransferModal from 'modals/dCkbTransferModal/dCkbTransferModal';
 
 const ModalsContainer: FC = () => {
   return (
     <>
       <TransactionModal />
-      <WireddCKBModal />
+      <DCkbMintModal />
+      <DCkbTransferModal />
     </>
   );
 };

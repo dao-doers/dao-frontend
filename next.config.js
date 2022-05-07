@@ -7,8 +7,11 @@ module.exports = {
     DAO_ADDRESS: process.env.NEXT_PUBLIC_DAO_ADDRESS,
     TRIBUTE_TOKEN_ADDRESS: process.env.NEXT_PUBLIC_TRIBUTE_TOKEN_ADDRESS,
     SUDT_PROXY_CONTRACT_ADDRESS: process.env.NEXT_PUBLIC_SUDT_PROXY_CONTRACT_ADDRESS,
-    PROVIDER_CONFIG_WEB3_URL: process.env.NEXT_PUBLIC_PROVIDER_CONFIG_WEB3_URL,
+    PROVIDER_URL: process.env.NEXT_PUBLIC_PROVIDER_URL,
+    INDEXER_URL: process.env.NEXT_PUBLIC_INDEXER_URL,
     MODE: process.env.NEXT_PUBLIC_MODE,
+    EXPLORER: process.env.NEXT_PUBLIC_EXPLORER,
+    NEXIS_DAO: process.env.NEXT_PUBLIC_NEXIS_DAO,
   },
   images: {
     loader: 'akamai',
@@ -26,5 +29,18 @@ module.exports = {
         ],
       },
     ];
+  },
+  webpack: config => {
+    (config.resolve = {
+      ...config.resolve,
+      fallback: {
+        fs: false,
+        path: false,
+        os: false,
+      },
+    }),
+      (config.resolve.alias.https = 'https-browserify'),
+      (config.resolve.alias.http = 'http-browserify');
+    return config;
   },
 };
