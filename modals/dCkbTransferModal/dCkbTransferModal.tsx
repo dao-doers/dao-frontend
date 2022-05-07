@@ -1,4 +1,4 @@
-import { FC, useState } from 'react';
+import { FC } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Formik, Form } from 'formik';
 
@@ -62,6 +62,7 @@ const DCkbTransferModal: FC = () => {
       dispatch(setOpen(true));
       dispatch(setStatus(PROCESSING_STATUSES.PROCESSING));
 
+      // eslint-disable-next-line react-hooks/rules-of-hooks
       await useHandleTransferERC20(provider, values.receiverAddress, values.amount);
       dispatch(setStatus(PROCESSING_STATUSES.SUCCESS));
     } catch (error: any) {

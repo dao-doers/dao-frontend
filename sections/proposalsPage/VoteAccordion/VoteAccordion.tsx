@@ -153,7 +153,7 @@ const VoteAccordion: FC<any> = ({ proposal }) => {
           const { proposalIndex } = proposal;
 
           try {
-            const receipt = await useHandleVote(provider, proposalIndex, vote, userAddress);
+            const receipt = await useHandleVote(provider, proposalIndex, vote);
 
             if (receipt.blockNumber) {
               setNotVotedYet(3);

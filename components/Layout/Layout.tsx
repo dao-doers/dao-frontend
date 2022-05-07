@@ -18,7 +18,7 @@ import THEME_MODES from 'enums/themeModes';
 
 import useIsMobile from 'hooks/useIsMobile';
 import useMaintainSession from 'hooks/useMaintainSession';
-import useTestFunction from 'hooks/useTestFunction';
+// import useTestFunction from 'hooks/useTestFunction';
 
 import FETCH_STATUSES from 'enums/fetchStatuses';
 

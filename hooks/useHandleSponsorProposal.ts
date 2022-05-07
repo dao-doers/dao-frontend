@@ -1,5 +1,4 @@
 import { ethers } from 'ethers';
-import BigNumber from 'bignumber.js/bignumber';
 
 import abiLibrary from 'lib/abi';
 

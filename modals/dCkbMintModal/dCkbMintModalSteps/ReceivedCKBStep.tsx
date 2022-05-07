@@ -1,7 +1,4 @@
 import React, { FC } from 'react';
-import { useSelector } from 'react-redux';
-
-import { selectbalanceSUDT } from 'redux/slices/user';
 
 import styled from '@emotion/styled';
 
@@ -42,7 +39,6 @@ const NavButtonsWrapper = styled(Box)`
 `;
 
 const ReceivedCKBStep: FC<ReceivedCKBStepProps> = ({ handlePreviousStep, completeStep }) => {
-  const balanceSUDT = useSelector(selectbalanceSUDT);
   return (
     <Box mt={5} mb={4}>
       <DividerLine />

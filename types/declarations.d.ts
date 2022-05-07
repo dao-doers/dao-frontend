@@ -1,6 +1,6 @@
 import { AsyncThunkPayloadCreator } from '@reduxjs/toolkit';
-import { State } from './redux/store';
-import { Apollo } from './config/apollo';
+import { State } from 'redux/store';
+import { Apollo } from 'config/apollo';
 
 declare module '@reduxjs/toolkit' {
   type AsyncThunkConfig = {
@@ -19,7 +19,7 @@ declare module '@reduxjs/toolkit' {
       extra: {
         apollo: Apollo;
       };
-    },
+    }
   >(
     typePrefix: string,
     payloadCreator: AsyncThunkPayloadCreator<Returned, ThunkArg, ThunkApiConfig>,
