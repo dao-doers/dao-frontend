@@ -7,12 +7,12 @@ import proposalsReducer from 'redux/slices/proposals';
 import votesReducer from 'redux/slices/votes';
 
 import modalTransactionReducer from 'redux/slices/modalTransaction';
-import modalWireddCKBReducer from 'redux/slices/modalWireddCKB';
-import modalSUDTTransferReducer from 'redux/slices/modalSUDTTransfer';
+import modaldCkbMintReducer from 'redux/slices/modaldCkbMint';
+import modaldCkbTransferReducer from 'redux/slices/modaldCkbTransfer';
 
 import apollo from 'config/apollo';
 
-export default configureStore({
+const store = configureStore({
   reducer: {
     main: mainReducer,
     user: userReducer,
@@ -21,8 +21,8 @@ export default configureStore({
     votes: votesReducer,
 
     modalTransaction: modalTransactionReducer,
-    modalWireddCKB: modalWireddCKBReducer,
-    modalSUDTTransfer: modalSUDTTransferReducer,
+    modaldCkbMint: modaldCkbMintReducer,
+    modaldCkbTransfer: modaldCkbTransferReducer,
   },
   devTools: process.env.MODE !== 'production',
   middleware: getDefaultMiddleware =>
@@ -32,3 +32,7 @@ export default configureStore({
       },
     }),
 });
+
+export type Store = ReturnType<typeof store.getState>;
+
+export default store;

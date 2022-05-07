@@ -10,6 +10,8 @@ module.exports = {
     PROVIDER_URL: process.env.NEXT_PUBLIC_PROVIDER_URL,
     INDEXER_URL: process.env.NEXT_PUBLIC_INDEXER_URL,
     MODE: process.env.NEXT_PUBLIC_MODE,
+    EXPLORER: process.env.NEXT_PUBLIC_EXPLORER,
+    NEXIS_DAO: process.env.NEXT_PUBLIC_NEXIS_DAO,
   },
   images: {
     loader: 'akamai',
@@ -27,5 +29,18 @@ module.exports = {
         ],
       },
     ];
+  },
+  webpack: config => {
+    (config.resolve = {
+      ...config.resolve,
+      fallback: {
+        fs: false,
+        path: false,
+        os: false,
+      },
+    }),
+      (config.resolve.alias.https = 'https-browserify'),
+      (config.resolve.alias.http = 'http-browserify');
+    return config;
   },
 };

@@ -1,22 +1,20 @@
 /* eslint-disable consistent-return */
 import store from 'redux/store';
 
-import { setUserAddress, setIsLoggedIn, setUserShares } from 'redux/slices/user';
+import { clearUser } from 'redux/slices/user';
+
+// TODO: remove (window as any)
 
 export const loadWeb3 = async () => {
   if (window.ethereum) {
-    window.ethereum.on('chainChanged', () => {
+    (window as any).ethereum.on('chainChanged', () => {
       console.log('chainChanged');
     });
-    window.ethereum.on('accountsChanged', () => {
+    (window as any).ethereum.on('accountsChanged', () => {
       console.log('accountChanged');
-      store.dispatch(setIsLoggedIn(false));
-      store.dispatch(setUserAddress(''));
-      store.dispatch(setUserShares(0));
+      store.dispatch(clearUser());
       sessionStorage.removeItem('dao-user-address');
     });
-
-    // console.log((window as any).ethereum.networkVersion);
 
     // TODO: get that data from env
     if ((window as any).ethereum.networkVersion !== '0x315db00000006') {
@@ -34,7 +32,7 @@ export const loadWeb3 = async () => {
         },
       ];
       /* eslint-disable */
-      const tx = await window.ethereum.request({ method: 'wallet_addEthereumChain', params: data }).catch();
+      const tx = await (window as any).ethereum.request({ method: 'wallet_addEthereumChain', params: data }).catch();
       if (tx) {
         console.log(tx);
       }
@@ -48,7 +46,7 @@ export const getMetamaskAddress = async () => {
   // eslint-disable-next-line no-useless-catch
   try {
     if (window.ethereum) {
-      const accounts = await window.ethereum.request({
+      const accounts = await (window as any).ethereum.request({
         method: 'eth_requestAccounts',
       });
 
@@ -62,7 +60,7 @@ export const getMetamaskAddress = async () => {
 
 //base on https://eips.ethereum.org/EIPS/eip-1474#error-codes
 //base on https://eips.ethereum.org/EIPS/eip-1193#provider-errors
-export const getMetamaskMessageError = error => {
+export const getMetamaskMessageError = (error: any) => {
   if ('code' in error) {
     switch (error.code) {
       case 4001:
@@ -84,7 +82,7 @@ export const getMetamaskMessageError = error => {
       case -32602:
         return 'Invalid method parameters';
       case -32603:
-        return 'Internal JSON-RPC error, check token approve before transfer';
+        return 'Internal JSON-RPC error, check token approve before transfer or reset your metamask';
       case -32000:
         return 'Missing or invalid parameters';
       case -32001:

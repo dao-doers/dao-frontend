@@ -6,18 +6,21 @@ import DAOButton from 'components/DAOButton/DAOButton';
 
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
+import DividerLine from 'components/DividerLine/DividerLine';
 
-interface DepositCKBStepProps {
+interface ReceivedCKBStepProps {
   handlePreviousStep: () => void;
-  handleNextStep: () => void;
+  completeStep: () => void;
 }
 
 const StyledBox = styled(Box)`
   display: flex;
   align-items: center;
   margin-bottom: 25px;
+  justify-content: space-between;
   ${({ theme }) => theme.breakpoints.down('sm')} {
     flex-direction: column;
+    align-items: flex-start;
   }
 `;
 
@@ -35,9 +38,10 @@ const NavButtonsWrapper = styled(Box)`
   justify-content: space-between;
 `;
 
-const DepositCKBStep: FC<DepositCKBStepProps> = ({ handlePreviousStep, handleNextStep }) => {
+const ReceivedCKBStep: FC<ReceivedCKBStepProps> = ({ handlePreviousStep, completeStep }) => {
   return (
     <Box mt={5} mb={4}>
+      <DividerLine />
       <StyledBox>
         <Box>
           <Typography component="h6" variant="h6" paragraph>
@@ -48,10 +52,7 @@ const DepositCKBStep: FC<DepositCKBStepProps> = ({ handlePreviousStep, handleNex
           </Typography>
         </Box>
         <ButtonWrapper>
-          <DAOButton
-            variant="gradientOutline"
-            onClick={() => window.open('https://aggron.nexisdao.com/dckb', '_blank')}
-          >
+          <DAOButton variant="gradientOutline" onClick={() => window.open(process.env.NEXIS_DAO, '_blank')}>
             Nexis DAO
           </DAOButton>
         </ButtonWrapper>
@@ -62,7 +63,7 @@ const DepositCKBStep: FC<DepositCKBStepProps> = ({ handlePreviousStep, handleNex
           <DAOButton onClick={handlePreviousStep}>Previous step</DAOButton>
         </Box>
         <Box width="48%">
-          <DAOButton variant="gradientOutline" onClick={handleNextStep}>
+          <DAOButton variant="gradientOutline" onClick={() => completeStep()}>
             Next step
           </DAOButton>
         </Box>
@@ -71,4 +72,4 @@ const DepositCKBStep: FC<DepositCKBStepProps> = ({ handlePreviousStep, handleNex
   );
 };
 
-export default DepositCKBStep;
+export default ReceivedCKBStep;

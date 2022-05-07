@@ -1,19 +1,29 @@
+import { ethers } from 'ethers';
+import { useSelector } from 'react-redux';
+
 import abiLibrary from 'lib/abi';
 
-const daoAddress = process.env.DAO_ADDRESS || '';
+import { selectProvider } from 'redux/slices/main';
 
-const getDao = async (address: string) => {
-  const dao = await new web3.eth.Contract(abiLibrary.moloch2, address);
-  return dao;
-};
+const daoAddress = process.env.DAO_ADDRESS || '';
+const tributeToken = process.env.TRIBUTE_TOKEN_ADDRESS || '';
 
 const useTestFunction = async () => {
-  const dao = await getDao(daoAddress);
+  const provider = useSelector(selectProvider);
 
-  const token = new web3.eth.Contract(abiLibrary.erc20, '0x884541623C1B26A926a5320615F117113765fF81');
+  const signer = provider.getSigner();
+  const dao = await new ethers.Contract(daoAddress, abiLibrary.moloch2, signer);
+  const token = await new ethers.Contract(tributeToken, abiLibrary.erc20, signer);
 
-  const receipe = await dao.methods.getProposalQueueLength().call();
-  console.log(receipe);
+  const receipt = await dao.getUserTokenBalance(
+    '0x000000000000000000000000000000000000babe',
+    '0x884541623C1B26A926a5320615F117113765fF81',
+  );
+
+  // const receipt = await tx.wait();
+  console.log(receipt);
+
+  return receipt;
 };
 
 export default useTestFunction;

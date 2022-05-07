@@ -1,23 +1,18 @@
 import { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import Web3 from 'web3';
+import { ethers } from 'ethers';
 
 import abiLibrary from 'lib/abi';
 
-import { shannonsToCkb } from 'utils/formatShannons';
-
 import { selectUserAddress, selectIsLoggedIn, setdckbBalance } from 'redux/slices/user';
+import { selectProvider } from 'redux/slices/main';
 
 const daoAddress = process.env.DAO_ADDRESS || '';
-
-const getDao = async (address: string) => {
-  const dao = await new web3.eth.Contract(abiLibrary.moloch2, address);
-  return dao;
-};
 
 const useCheckBalance = () => {
   const dispatch = useDispatch();
 
+  const provider = useSelector(selectProvider);
   const userAddress = useSelector(selectUserAddress);
   const isLoggedIn = useSelector(selectIsLoggedIn);
 
@@ -25,21 +20,16 @@ const useCheckBalance = () => {
 
   useEffect(() => {
     const fetchCkbBalance = async () => {
-      if (window.ethereum) {
-        await window.ethereum.request({ method: 'eth_requestAccounts' });
-        window.web3 = new Web3(window.ethereum);
-      } else {
-        window.web3 = new Web3(process.env.PROVIDER_URL || '');
-      }
+      const dao = await new ethers.Contract(daoAddress, abiLibrary.moloch2, provider);
 
-      const dao = await getDao(daoAddress);
-
-      const token = new web3.eth.Contract(abiLibrary.erc20, await dao.methods.depositToken().call());
+      const contractTokenAddress = await dao.depositToken();
+      const token = new ethers.Contract(contractTokenAddress, abiLibrary.erc20, provider);
 
       if (isLoggedIn) {
-        const balance = await token.methods.balanceOf(userAddress).call();
+        const balance = await token.balanceOf(userAddress);
         if (balance) {
-          dispatch(setdckbBalance(shannonsToCkb(balance)));
+          // eslint-disable-next-line no-underscore-dangle
+          dispatch(setdckbBalance(balance._hex));
         }
         setChecked(true);
       }

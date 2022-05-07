@@ -36,7 +36,7 @@ const StyledLanguageIcon = styled(LanguageIcon)`
 `;
 
 const StyledTwitterIcon = styled(TwitterIcon)`
-  color: ${({ theme }) => theme.palette.colors.col1};
+  color: #2ea5e8;
   cursor: pointer;
   ${({ theme }) => theme.breakpoints.down('sm')} {
     font-size: 20px;
@@ -59,7 +59,7 @@ const TypographySmall = styled(Typography)`
 const TypographyDescription = styled(Typography)`
   display: -webkit-box;
   -webkit-box-orient: vertical;
-  -webkit-line-clamp: 3;
+  -webkit-line-clamp: 1;
   overflow: hidden;
 `;
 
@@ -134,7 +134,7 @@ const ProposalTile: FC<any> = ({ proposal }) => {
             </Box>
           </Box>
 
-          {router.pathname.includes('create') ? (
+          {router.pathname.includes('proposals') ? (
             <Typography variant="subtitle2" paragraph>
               {formattedDescr}
             </Typography>

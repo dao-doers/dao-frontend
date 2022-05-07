@@ -1,5 +1,6 @@
-import { createAsyncThunk, createSlice, AsyncThunkOptions as OriginalAsyncThunkOptions } from '@reduxjs/toolkit';
-import { gql, ApolloClient, NormalizedCacheObject } from '@apollo/client';
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+
+import { gql } from '@apollo/client';
 
 import FETCH_STATUSES from 'enums/fetchStatuses';
 
@@ -12,12 +13,6 @@ interface VotesProps {
 
 interface StateProps {
   votes: VotesProps;
-}
-
-declare module '@reduxjs/toolkit' {
-  export type AsyncThunkOptions = OriginalAsyncThunkOptions & {
-    extra: { apollo: ApolloClient<NormalizedCacheObject> };
-  };
 }
 
 // Get list of all votes

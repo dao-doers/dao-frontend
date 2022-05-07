@@ -2,14 +2,16 @@ import React, { FC } from 'react';
 
 import styled from '@emotion/styled';
 
-import DAOButton from 'components/DAOButton/DAOButton';
-
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 
+import DAOButton from 'components/DAOButton/DAOButton';
+
+import { EXTERNAL_ROUTES } from 'utils/routes';
+
 interface GetCKBStepProps {
   handlePreviousStep: () => void;
-  handleNextStep: () => void;
+  completeStep: () => void;
 }
 
 const StyledBox = styled(Box)`
@@ -35,23 +37,20 @@ const NavButtonsWrapper = styled(Box)`
   justify-content: space-between;
 `;
 
-const GetCKBStep: FC<GetCKBStepProps> = ({ handlePreviousStep, handleNextStep }) => {
+const GetCKBStep: FC<GetCKBStepProps> = ({ handlePreviousStep, completeStep }) => {
   return (
     <Box mt={5} mb={4}>
       <StyledBox>
         <Box>
-          <Typography component="h6" variant="h6" paragraph>
-            Get your Layer 1 address
+          <Typography component="h6" variant="h6">
+            Get Portal Wallet Layer 1 address
           </Typography>
           <Typography component="h6">
             Go to NexisDAO and connect with metamask. Next, copy CKB address (ckt...xxx) from top left of swap box.
           </Typography>
         </Box>
         <ButtonWrapper>
-          <DAOButton
-            variant="gradientOutline"
-            onClick={() => window.open('https://aggron.nexisdao.com/dckb', '_blank')}
-          >
+          <DAOButton variant="gradientOutline" onClick={() => window.open(process.env.NEXIS_DAO, '_blank')}>
             Nexis DAO
           </DAOButton>
         </ButtonWrapper>
@@ -59,7 +58,7 @@ const GetCKBStep: FC<GetCKBStepProps> = ({ handlePreviousStep, handleNextStep })
 
       <StyledBox>
         <Box>
-          <Typography component="h6" variant="h6" paragraph>
+          <Typography component="h6" variant="h6">
             Get CKB from Layer 1
           </Typography>
           <Typography component="h6">
@@ -67,7 +66,7 @@ const GetCKBStep: FC<GetCKBStepProps> = ({ handlePreviousStep, handleNextStep })
           </Typography>
         </Box>
         <ButtonWrapper>
-          <DAOButton variant="gradientOutline" onClick={() => window.open('https://faucet.nervos.org/', '_blank')}>
+          <DAOButton variant="gradientOutline" onClick={() => window.open(EXTERNAL_ROUTES.NERVOS_FAUCET, '_blank')}>
             Layer 1 faucet
           </DAOButton>
         </ButtonWrapper>
@@ -78,7 +77,7 @@ const GetCKBStep: FC<GetCKBStepProps> = ({ handlePreviousStep, handleNextStep })
           <DAOButton onClick={handlePreviousStep}>Previous step</DAOButton>
         </Box>
         <Box width="48%">
-          <DAOButton variant="gradientOutline" onClick={handleNextStep}>
+          <DAOButton variant="gradientOutline" onClick={() => completeStep()}>
             Next step
           </DAOButton>
         </Box>

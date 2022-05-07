@@ -1,19 +1,11 @@
+import { ethers } from 'ethers';
+
 import abiLibrary from 'lib/abi';
 
-const getDao = async (address: string) => {
-  const dao = await new web3.eth.Contract(abiLibrary.moloch2, address);
-  return dao;
-};
+const useCheckIfVoted = async (provider: any, user: string, proposalIndex: any, daoAddress: string) => {
+  const dao = await new ethers.Contract(daoAddress, abiLibrary.moloch2, provider);
 
-const useCheckIfVoted = async (user: string, proposalIndex: any, daoAddress: string) => {
-  const dao = await getDao(daoAddress);
-
-  const response = await dao.methods.getMemberProposalVote(user, proposalIndex).call({}, (err: any, res: any) => {
-    if (err) {
-      return err;
-    }
-    return res;
-  });
+  const response = await dao.getMemberProposalVote(user, proposalIndex);
   return response === 0 || response === '0';
 };
 

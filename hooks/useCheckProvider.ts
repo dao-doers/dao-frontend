@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import detectEthereumProvider from '@metamask/detect-provider';
 
 const useCheckProvider = () => {
-  const [hasProvider, setHasProvider] = useState(false);
+  const [hasProvider, setHasProvider] = useState<boolean | undefined>(false);
 
   useEffect(() => {
     const setProvider = async () => {

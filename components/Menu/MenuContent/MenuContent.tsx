@@ -26,8 +26,8 @@ import {
   setFinishedProposals,
   clearSorted,
 } from 'redux/slices/proposals';
-import { setOpen } from 'redux/slices/modalWireddCKB';
-import { setOpen as setOpenUSDTTransfer } from 'redux/slices/modalSUDTTransfer';
+import { setOpen } from 'redux/slices/modaldCkbMint';
+import { setOpen as setOpendCkbTransfer } from 'redux/slices/modaldCkbTransfer';
 
 interface MenuContentProps {
   setDrawerOpen?: (arg0: false) => void;
@@ -51,7 +51,7 @@ const MenuContent: FC<MenuContentProps> = ({ setDrawerOpen }) => {
   };
 
   const handleUSDTTransferModal = () => {
-    dispatch(setOpenUSDTTransfer(true));
+    dispatch(setOpendCkbTransfer(true));
   };
 
   const handleClose = () => {
