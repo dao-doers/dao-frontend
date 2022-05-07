@@ -60,6 +60,10 @@ const MenuContent: FC<MenuContentProps> = ({ setDrawerOpen }) => {
     }
   };
 
+  const handlePushToCreate = () => {
+    router.push(APP_ROUTES.CREATE);
+  };
+
   const handleClick = (value: number) => {
     if (router.pathname !== '/proposals') {
       router.push('/proposals');
@@ -149,7 +153,7 @@ const MenuContent: FC<MenuContentProps> = ({ setDrawerOpen }) => {
       </Box>
 
       <Box mx="auto" mb={1} mt={5} sx={{ width: { xs: '60%', md: '100%' } }}>
-        <DAOButton variant="gradientOutline" href={APP_ROUTES.CREATE}>
+        <DAOButton variant="gradientOutline" onClick={handlePushToCreate}>
           <Typography>Create proposal</Typography>
         </DAOButton>
       </Box>
