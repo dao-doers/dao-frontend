@@ -25,7 +25,7 @@ import useHandleVote from 'hooks/useHandleVote';
 import useCheckIfVoted from 'hooks/useCheckIfVoted';
 import useHandleProcessProposal from 'hooks/useHandleProcessProposal';
 import useHandleWithdraw from 'hooks/useHandleWithdraw';
-import useHandleGuildKick from 'hooks/useHandleGuildKick';
+import useHandleProcessKick from 'hooks/useHandleProcessKick';
 
 import FETCH_STATUSES from 'enums/fetchStatuses';
 import PROPOSAL_STATUS from 'enums/proposalStatus';
@@ -219,7 +219,7 @@ const VoteAccordion: FC<any> = ({ proposal }) => {
     dispatch(setOpen(true));
 
     try {
-      const receipt = await useHandleGuildKick(provider, proposalIndex);
+      const receipt = await useHandleProcessKick(provider, proposalIndex);
 
       if (receipt.blockNumber) {
         dispatch(setStatus(PROCESSING_STATUSES.SUCCESS));
