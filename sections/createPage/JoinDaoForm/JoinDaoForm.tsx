@@ -22,9 +22,9 @@ import { getMetamaskMessageError } from 'utils/blockchain';
 
 import config from 'config/config';
 
-import { setOpen, setStatus, setMessage } from 'redux/slices/modalTransaction';
-import { selectUserAddress, selectIsLoggedIn, selectdckbBalance } from 'redux/slices/user';
 import { selectProvider } from 'redux/slices/main';
+import { selectUserAddress, selectIsLoggedIn, selectdckbBalance } from 'redux/slices/user';
+import { setOpen, setStatus, setMessage } from 'redux/slices/modalTransaction';
 
 const initialValues = {
   title: '',

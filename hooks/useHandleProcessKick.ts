@@ -1,11 +1,10 @@
-// TODO: we gonna need that in future - not tested
 import { ethers } from 'ethers';
 
 import abiLibrary from 'lib/abi';
 
 const daoAddress = process.env.DAO_ADDRESS || '';
 
-const useHandleGuildKick = async (provider: any, proposalIndex: number) => {
+const useHandleProcessKick = async (provider: any, proposalIndex: number) => {
   const signer = provider.getSigner();
   const dao = await new ethers.Contract(daoAddress, abiLibrary.moloch2, signer);
 
@@ -15,4 +14,4 @@ const useHandleGuildKick = async (provider: any, proposalIndex: number) => {
   return receipt;
 };
 
-export default useHandleGuildKick;
+export default useHandleProcessKick;

@@ -25,6 +25,7 @@ import useHandleVote from 'hooks/useHandleVote';
 import useCheckIfVoted from 'hooks/useCheckIfVoted';
 import useHandleProcessProposal from 'hooks/useHandleProcessProposal';
 import useHandleWithdraw from 'hooks/useHandleWithdraw';
+import useHandleGuildKick from 'hooks/useHandleGuildKick';
 
 import FETCH_STATUSES from 'enums/fetchStatuses';
 import PROPOSAL_STATUS from 'enums/proposalStatus';
@@ -190,6 +191,35 @@ const VoteAccordion: FC<any> = ({ proposal }) => {
 
     try {
       const receipt = await useHandleProcessProposal(provider, proposalIndex);
+
+      if (receipt.blockNumber) {
+        dispatch(setStatus(PROCESSING_STATUSES.SUCCESS));
+        dispatch(
+          setMessage(
+            `Your request has been processed by blockchain network and will be displayed with the block number ${
+              receipt.blockNumber + 1
+            }`,
+          ),
+        );
+      }
+    } catch (error: any) {
+      console.log(error);
+      if (error.code) {
+        dispatch(setStatus(PROCESSING_STATUSES.ERROR));
+        dispatch(setMessage(getMetamaskMessageError(error)));
+      }
+      setProcessProposalStatus(FETCH_STATUSES.ERROR);
+      dispatch(setStatus(PROCESSING_STATUSES.ERROR));
+    }
+  };
+
+  const handleProcessKick = async () => {
+    const { proposalIndex } = proposal;
+    dispatch(setStatus(PROCESSING_STATUSES.PROCESSING));
+    dispatch(setOpen(true));
+
+    try {
+      const receipt = await useHandleGuildKick(provider, proposalIndex);
 
       if (receipt.blockNumber) {
         dispatch(setStatus(PROCESSING_STATUSES.SUCCESS));
@@ -403,6 +433,15 @@ const VoteAccordion: FC<any> = ({ proposal }) => {
                     <Box maxWidth="200px" mx="auto" mt={2}>
                       <DAOButton variant="gradientOutline" onClick={handleProcessProposal}>
                         Process Proposal
+                      </DAOButton>
+                    </Box>
+                  )}
+
+                  {/* TODO: display only if kick */}
+                  {isLoggedIn && processProposalStatus !== FETCH_STATUSES.SUCCESS && (
+                    <Box maxWidth="200px" mx="auto" mt={2}>
+                      <DAOButton variant="gradientOutline" onClick={handleProcessKick}>
+                        Process Guild Kick
                       </DAOButton>
                     </Box>
                   )}
