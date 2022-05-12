@@ -9,9 +9,8 @@ import PlaylistRemoveIcon from '@mui/icons-material/PlaylistRemove';
 import Typography from '@mui/material/Typography';
 
 import Layout from 'components/Layout/Layout';
-
-import ProposalTile from 'sections/proposalsPage/ProposalTile/ProposalTile';
-import VoteTile from 'sections/proposalsPage/VoteTile/VoteTile';
+import VoteTile from 'components/VoteTile/VoteTile';
+import ProposalTile from 'components/ProposalTile/ProposalTile';
 
 import { selectSortedProposalsArray } from 'redux/slices/proposals';
 import { selectVotesArray } from 'redux/slices/votes';

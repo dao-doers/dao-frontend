@@ -20,7 +20,6 @@ import DividerLine from 'components/DividerLine/DividerLine';
 import LinearChart from 'components/LinearChart/LinearChart';
 import TooltipIcon from 'components/TooltipIcon';
 
-import useHandleSponsorProposal from 'hooks/useHandleSponsorProposal';
 import useHandleVote from 'hooks/useHandleVote';
 import useCheckIfVoted from 'hooks/useCheckIfVoted';
 import useHandleProcessProposal from 'hooks/useHandleProcessProposal';
@@ -36,6 +35,8 @@ import { getMetamaskMessageError } from 'utils/blockchain';
 import { selectProvider } from 'redux/slices/main';
 import { selectUserAddress, selectIsLoggedIn, selectUserShares } from 'redux/slices/user';
 import { setOpen, setStatus, setMessage } from 'redux/slices/modalTransaction';
+
+import SponsorPhase from './SponsorPhase/SponsorPhase';
 
 const StyledAccordion = styled(Accordion)`
   margin-top: 10px;
@@ -90,7 +91,6 @@ const VoteAccordion: FC<any> = ({ proposal }) => {
   const isLoggedIn = useSelector(selectIsLoggedIn);
   const userShares = useSelector(selectUserShares);
 
-  const [sponsorProposalStatus, setSponsorProposalStatus] = useState(PROCESSING_STATUSES.IDLE);
   // 0 means idle state, 1 means user can vote, 2 means user already voted, 3 means user just voted
   const [notVotedYet, setNotVotedYet] = useState(0);
   const [processProposalStatus, setProcessProposalStatus] = useState(FETCH_STATUSES.IDLE);
@@ -110,36 +110,6 @@ const VoteAccordion: FC<any> = ({ proposal }) => {
       );
     }
   }, [userAddress, isLoggedIn, proposal, process.env.DAO_ADDRESS]);
-
-  const handleSponsorProposal = async () => {
-    const { proposalId } = proposal;
-
-    // TODO: unexpectedly it started throws error despite the receipt is ok
-    try {
-      dispatch(setStatus(PROCESSING_STATUSES.PROCESSING));
-      dispatch(setOpen(true));
-
-      const receipt = await useHandleSponsorProposal(provider, proposalId);
-      if (receipt.blockNumber) {
-        dispatch(setStatus(PROCESSING_STATUSES.SUCCESS));
-        setSponsorProposalStatus(PROCESSING_STATUSES.SUCCESS);
-        dispatch(
-          setMessage(
-            `Your request has been processed by blockchain network and will be displayed with the block number ${
-              receipt.blockNumber + 1
-            }`,
-          ),
-        );
-      }
-    } catch (error: any) {
-      if (error.code) {
-        dispatch(setStatus(PROCESSING_STATUSES.ERROR));
-        dispatch(setMessage(getMetamaskMessageError(error)));
-      }
-      setProcessProposalStatus(FETCH_STATUSES.ERROR);
-      dispatch(setStatus(PROCESSING_STATUSES.ERROR));
-    }
-  };
 
   const handleVote = async (vote: number) => {
     // TODO: improvement - useCheckIfVoted should run just right after page render, not just after clicking
@@ -298,35 +268,7 @@ const VoteAccordion: FC<any> = ({ proposal }) => {
 
       <AccordionDetails>
         {proposal.proposalStatus === PROPOSAL_STATUS.COLLECTING_FUNDS && (
-          <Box>
-            {sponsorProposalStatus !== PROCESSING_STATUSES.SUCCESS && (
-              <DAOTile variant="greyOutline">
-                <Typography align="center" p={1}>
-                  This proposal has not been sponsored yet. It can be sponsored only by DAO member.
-                </Typography>
-              </DAOTile>
-            )}
-            {sponsorProposalStatus === PROCESSING_STATUSES.SUCCESS && (
-              <DAOTile variant="gradientOutline">
-                <Typography align="center" p={1}>
-                  You have successfully sponsored this proposal!
-                </Typography>
-              </DAOTile>
-            )}
-            {!isLoggedIn && (
-              <Box maxWidth="200px" mx="auto" mt={2}>
-                <ConnectWalletButton />
-              </Box>
-            )}
-            {/* TODO: display button only to guild members */}
-            {isLoggedIn && sponsorProposalStatus !== PROCESSING_STATUSES.SUCCESS && userShares > 0 && (
-              <Box maxWidth="200px" mx="auto" mt={2}>
-                <DAOButton variant="gradientOutline" onClick={handleSponsorProposal}>
-                  Sponsor Proposal
-                </DAOButton>
-              </Box>
-            )}
-          </Box>
+          <SponsorPhase proposalId={proposal.proposalId} />
         )}
 
         {(proposal.proposalStatus === PROPOSAL_STATUS.VOTING ||
@@ -361,7 +303,7 @@ const VoteAccordion: FC<any> = ({ proposal }) => {
                   )}
 
                   {notVotedYet === 2 && (
-                    <DAOTile variant="redOutline">
+                    <DAOTile variant="errorBox">
                       <Typography align="center" p={1}>
                         You have already voted!
                       </Typography>
@@ -396,7 +338,7 @@ const VoteAccordion: FC<any> = ({ proposal }) => {
               {currentTime > proposal.votingPeriodEnds && currentTime > proposal.gracePeriodEnds && (
                 <>
                   {processProposalStatus === FETCH_STATUSES.IDLE && (
-                    <DAOTile variant="greyOutline">
+                    <DAOTile>
                       <Typography align="center" p={1}>
                         To finish the whole process, proposal needs to be processed.
                       </Typography>
@@ -405,7 +347,7 @@ const VoteAccordion: FC<any> = ({ proposal }) => {
 
                   {processProposalStatus === FETCH_STATUSES.ERROR && (
                     <Box mt={1}>
-                      <DAOTile variant="redOutline">
+                      <DAOTile variant="errorBox">
                         <Typography align="center" p={1}>
                           Proposal is not ready to be processed by blockchain network or it is been proceeding right
                           now.
@@ -498,7 +440,7 @@ const VoteAccordion: FC<any> = ({ proposal }) => {
           <>
             {proposal.didPass === true && (
               <>
-                <DAOTile variant="greenBackground">
+                <DAOTile variant="successBox">
                   <Typography align="center" p={1}>
                     Proposal has been approved.
                   </Typography>
@@ -513,7 +455,7 @@ const VoteAccordion: FC<any> = ({ proposal }) => {
               </>
             )}
             {proposal.didPass === false && (
-              <DAOTile variant="redBackground">
+              <DAOTile variant="errorBox">
                 <Typography align="center" p={1}>
                   Proposal has been rejected.
                 </Typography>

@@ -9,7 +9,7 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import PlaylistRemoveIcon from '@mui/icons-material/PlaylistRemove';
 
-import ProposalTile from 'sections/proposalsPage/ProposalTile/ProposalTile';
+import ProposalTile from 'components/ProposalTile/ProposalTile';
 
 import useIsMobile from 'hooks/useIsMobile';
 

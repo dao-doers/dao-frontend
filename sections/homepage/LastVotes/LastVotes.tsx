@@ -9,7 +9,7 @@ import Box from '@mui/material/Box';
 import PlaylistRemoveIcon from '@mui/icons-material/PlaylistRemove';
 import Typography from '@mui/material/Typography';
 
-import VoteTile from 'sections/proposalsPage/VoteTile/VoteTile';
+import VoteTile from 'components/VoteTile/VoteTile';
 
 import useIsMobile from 'hooks/useIsMobile';
 

@@ -13,11 +13,11 @@ import TwitterIcon from '@mui/icons-material/Twitter';
 import DAOTile from 'components/DAOTile/DAOTile';
 import Link from 'components/Link/Link';
 
-import DetailsAccordion from 'sections/proposalsPage/DetailsAccordion/DetailsAccordion';
-import VoteAccordion from 'sections/proposalsPage/VoteAccordion/VoteAccordion';
-
 import { formatSeconds } from 'utils/formatDate';
 import { APP_ROUTES } from 'utils/routes';
+
+import DetailsAccordion from './DetailsAccordion/DetailsAccordion';
+import VoteAccordion from './VoteAccordion/VoteAccordion';
 
 const StyledExitToAppIcon = styled(ExitToAppIcon)`
   cursor: pointer;

@@ -6,31 +6,13 @@ import { css } from '@emotion/react';
 import { Theme } from '@mui/system';
 
 interface TileVariantProps {
-  variant?:
-    | 'gradientOutline'
-    | 'greyOutline'
-    | 'redOutline'
-    | 'greyShadow'
-    | 'blueBackground'
-    | 'greenBackground'
-    | 'redBackground'
-    | 'yellowBackground'
-    | null;
+  variant?: 'gradientOutline' | 'greyShadow' | 'successBox' | 'errorBox' | null;
   theme: Theme;
 }
 
 export type DAOTileProps = {
   children: ReactElement;
-  variant?:
-    | 'gradientOutline'
-    | 'greyOutline'
-    | 'redOutline'
-    | 'greyShadow'
-    | 'blueBackground'
-    | 'greenBackground'
-    | 'redBackground'
-    | 'yellowBackground'
-    | null;
+  variant?: 'gradientOutline' | 'greyShadow' | 'successBox' | 'errorBox' | null;
   width?: string;
   height?: string;
 };
@@ -42,16 +24,6 @@ const tileVariant = ({ theme, variant }: TileVariantProps & { theme: Theme }) =>
         background: ${theme.palette.gradients.grad2};
         padding: 1px;
       `;
-    case 'greyOutline':
-      return css`
-        background: ${theme.palette.colors.main6};
-        padding: 1px;
-      `;
-    case 'redOutline':
-      return css`
-        background: ${theme.palette.colors.col4};
-        padding: 1px;
-      `;
     case 'greyShadow':
       return css`
         box-shadow: 0px 0px 24px 0px ${theme.palette.colors.main8};
@@ -60,29 +32,19 @@ const tileVariant = ({ theme, variant }: TileVariantProps & { theme: Theme }) =>
           box-shadow: none;
         }
       `;
-    case 'blueBackground':
-      return css`
-        background: ${theme.palette.colors.col1};
-        padding: 1px;
-      `;
-    case 'greenBackground':
+    case 'successBox':
       return css`
         background: ${theme.palette.colors.col2};
         padding: 1px;
       `;
-    case 'redBackground':
+    case 'errorBox':
       return css`
         background: ${theme.palette.colors.col4};
         padding: 1px;
       `;
-    case 'yellowBackground':
-      return css`
-        background: ${theme.palette.colors.col3};
-        padding: 1px;
-      `;
     default:
       return css`
-        background: ${theme.palette.colors.main4};
+        background: ${theme.palette.colors.main6};
         padding: 1px;
       `;
   }
@@ -94,41 +56,23 @@ const innerTileVariant = ({ theme, variant }: TileVariantProps & { theme: Theme 
       return css`
         background-color: ${theme.palette.colors.main1};
       `;
-    case 'greyOutline':
-      return css`
-        background-color: ${theme.palette.colors.main2};
-      `;
-    case 'redOutline':
-      return css`
-        background-color: ${theme.palette.colors.main1};
-      `;
     case 'greyShadow':
       return css`
         background-color: 'transparent';
       `;
-    case 'blueBackground':
-      return css`
-        background-color: ${theme.palette.colors.main1};
-        color: ${theme.palette.colors.col1};
-      `;
-    case 'greenBackground':
+    case 'successBox':
       return css`
         background-color: ${theme.palette.colors.main1};
         color: ${theme.palette.colors.col2};
       `;
-    case 'redBackground':
+    case 'errorBox':
       return css`
         background-color: ${theme.palette.colors.main1};
         color: ${theme.palette.colors.col4};
       `;
-    case 'yellowBackground':
-      return css`
-        background: ${theme.palette.colors.col3};
-        color: ${theme.palette.colors.main1};
-      `;
     default:
       return css`
-        background-color: ${theme.palette.colors.main4};
+        background-color: ${theme.palette.colors.main2};
       `;
   }
 };
@@ -137,7 +81,7 @@ const Tile = styled.div<DAOTileProps>`
   ${tileVariant};
   height: ${({ height }) => height || '100%'};
   width: ${({ width }) => width || '100%'};
-  border-radius: 10px;
+  border-radius: 20px;
 `;
 
 const InnerTile = styled.div<DAOTileProps>`
@@ -148,7 +92,7 @@ const InnerTile = styled.div<DAOTileProps>`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  border-radius: 8px;
+  border-radius: 18px;
   position: relative;
 `;
 
