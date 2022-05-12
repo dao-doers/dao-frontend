@@ -94,7 +94,7 @@ const StyledDAOButton = styled(Button)<DAOButtonProps>`
   font-weight: 600;
   text-transform: none;
   padding: 2px;
-  border-radius: 9px;
+  border-radius: 20px;
   transition: background 250ms ease-in-out;
 `;
 
@@ -107,7 +107,7 @@ const InnerButton = styled.div<DAOButtonProps>`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  border-radius: 7px;
+  border-radius: 18px;
   transition: background 250ms ease-in-out;
 `;
 

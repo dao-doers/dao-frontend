@@ -14,9 +14,9 @@ import THEME_MODES from 'enums/themeModes';
 import { selectTheme } from 'redux/slices/theme';
 
 const MainBox = styled(Box)`
-  width: 15vw;
+  width: 200px;
   height: 100%;
-  padding-right: 30px;
+  margin-right: 50px;
 `;
 
 const DesktopMenu: FC = () => {
