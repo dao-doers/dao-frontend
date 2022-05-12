@@ -9,7 +9,6 @@ import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import Box from '@mui/material/Box';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import PlaylistRemoveIcon from '@mui/icons-material/PlaylistRemove';
 import Typography from '@mui/material/Typography';
 
 import ConnectWalletButton from 'components/ConnectWalletButton/ConnectWalletButton';
@@ -17,7 +16,6 @@ import Counter from 'components/Counter/Counter';
 import DAOButton from 'components/DAOButton/DAOButton';
 import DAOTile from 'components/DAOTile/DAOTile';
 import DividerLine from 'components/DividerLine/DividerLine';
-import LinearChart from 'components/LinearChart/LinearChart';
 import TooltipIcon from 'components/TooltipIcon';
 
 import useHandleVote from 'hooks/useHandleVote';
@@ -37,6 +35,7 @@ import { selectUserAddress, selectIsLoggedIn, selectUserShares } from 'redux/sli
 import { setOpen, setStatus, setMessage } from 'redux/slices/modalTransaction';
 
 import SponsorPhase from './SponsorPhase/SponsorPhase';
+import VotesLinearCharts from './VotesLinearCharts/VotesLinearCharts';
 
 const StyledAccordion = styled(Accordion)`
   margin-top: 10px;
@@ -52,10 +51,6 @@ const StyledAccordionSummary = styled(AccordionSummary)`
   padding: 0;
 `;
 
-const TypographyAgree = styled(Typography)`
-  color: ${({ theme }) => theme.palette.colors.col2};
-`;
-
 const TypographyGreenBold = styled(Typography)`
   color: ${({ theme }) => theme.palette.colors.col2};
   font-weight: 600;
@@ -64,10 +59,6 @@ const TypographyGreenBold = styled(Typography)`
 const TypographyRedBold = styled(Typography)`
   color: ${({ theme }) => theme.palette.colors.col4};
   font-weight: 600;
-`;
-
-const TypographyDisagree = styled(Typography)`
-  color: ${({ theme }) => theme.palette.colors.col4};
 `;
 
 const GradientTypography = styled(Typography)`
@@ -406,33 +397,7 @@ const VoteAccordion: FC<any> = ({ proposal }) => {
               </Box>
             )}
 
-            <Typography variant="subtitle2-bold" paragraph>
-              Votes:{' '}
-            </Typography>
-            {proposal.yesVotes + proposal.noVotes > 0 && (
-              <Box width="100%" pb={2}>
-                <TypographyAgree>
-                  Agreed: {proposal.yesVotes} ( {(proposal.yesVotes / (proposal.yesVotes + proposal.noVotes)) * 100}% )
-                </TypographyAgree>
-                <Box mt={1} mb={2}>
-                  <LinearChart type="agree" main={proposal.yesVotes} all={proposal.yesVotes + proposal.noVotes} />
-                </Box>
-
-                <TypographyDisagree>
-                  Disagreed: {proposal.noVotes} ( {(proposal.noVotes / (proposal.yesVotes + proposal.noVotes)) * 100}
-                  %)
-                </TypographyDisagree>
-                <Box mt={1} mb={2}>
-                  <LinearChart type="disagree" main={proposal.noVotes} all={proposal.yesVotes + proposal.noVotes} />
-                </Box>
-              </Box>
-            )}
-            {proposal.yesVotes + proposal.noVotes === 0 && (
-              <Box display="flex" alignItems="center" width="100%">
-                <PlaylistRemoveIcon />
-                <Typography ml={1}>No votes</Typography>
-              </Box>
-            )}
+            <VotesLinearCharts yesVotes={proposal.yesVotes} noVotes={proposal.noVotes} />
           </Box>
         )}
 
@@ -463,34 +428,7 @@ const VoteAccordion: FC<any> = ({ proposal }) => {
             )}
 
             <Box mt={4}>
-              <Typography variant="subtitle2-bold" paragraph>
-                Votes:{' '}
-              </Typography>
-              {proposal.yesVotes + proposal.noVotes > 0 && (
-                <Box width="100%" pb={2}>
-                  <TypographyAgree>
-                    Agreed: {proposal.yesVotes} ( {(proposal.yesVotes / (proposal.yesVotes + proposal.noVotes)) * 100}%
-                    )
-                  </TypographyAgree>
-                  <Box mt={1} mb={2}>
-                    <LinearChart type="agree" main={proposal.yesVotes} all={proposal.yesVotes + proposal.noVotes} />
-                  </Box>
-
-                  <TypographyDisagree>
-                    Disagreed: {proposal.noVotes} ( {(proposal.noVotes / (proposal.yesVotes + proposal.noVotes)) * 100}
-                    %)
-                  </TypographyDisagree>
-                  <Box mt={1} mb={2}>
-                    <LinearChart type="disagree" main={proposal.noVotes} all={proposal.yesVotes + proposal.noVotes} />
-                  </Box>
-                </Box>
-              )}
-              {proposal.yesVotes + proposal.noVotes === 0 && (
-                <Box display="flex" alignItems="center" width="100%">
-                  <PlaylistRemoveIcon />
-                  <Typography ml={1}>No votes</Typography>
-                </Box>
-              )}
+              <VotesLinearCharts yesVotes={proposal.yesVotes} noVotes={proposal.noVotes} />
             </Box>
           </>
         )}
