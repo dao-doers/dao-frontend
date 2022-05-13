@@ -34,16 +34,16 @@ const StyledAccordionSummary = styled(AccordionSummary)`
 
 const TypographyGreenBold = styled(Typography)`
   color: ${({ theme }) => theme.palette.colors.col2};
-  font-weight: 600;
+  font-weight: 500;
 `;
 
 const TypographyRedBold = styled(Typography)`
   color: ${({ theme }) => theme.palette.colors.col4};
-  font-weight: 600;
+  font-weight: 500;
 `;
 
 const GradientTypography = styled(Typography)`
-  font-weight: 600;
+  font-weight: 500;
   margin-right: 10px;
   background: ${({ theme }) => theme.palette.gradients.grad2};
   -webkit-background-clip: text;

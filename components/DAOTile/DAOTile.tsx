@@ -26,11 +26,13 @@ const tileVariant = ({ theme, variant }: TileVariantProps & { theme: Theme }) =>
       `;
     case 'greyShadow':
       return css`
-        box-shadow: 0px 0px 24px 0px ${theme.palette.colors.main8};
+        background: ${theme.palette.colors.main4};
+        padding: 1px;
+        /* box-shadow: 0px 0px 24px 0px ${theme.palette.colors.main8}; */
 
-        @media (max-width: 900px) {
+        /* @media (max-width: 900px) {
           box-shadow: none;
-        }
+        } */
       `;
     case 'successBox':
       return css`
@@ -58,7 +60,8 @@ const innerTileVariant = ({ theme, variant }: TileVariantProps & { theme: Theme 
       `;
     case 'greyShadow':
       return css`
-        background-color: 'transparent';
+        /* background-color: 'transparent'; */
+        background-color: ${theme.palette.colors.main1};
       `;
     case 'successBox':
       return css`

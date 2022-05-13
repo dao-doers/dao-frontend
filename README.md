@@ -1,4 +1,4 @@
-# Nervos Foundation DAO
+# Digi Pnyx Foundation DAO
 
 ## <img width="20px" height="20px" src="https://i.imgur.com/JSD4BhW.png" alt="Content"> Table of Contents
 
@@ -9,7 +9,7 @@
 
 ## <img width="20px" height="20px" src="https://i.imgur.com/hx2bbEi.png" alt="About"> About <a name = "about"></a>
 
-Nervos Foundation DAO project.
+Digi Pnyx Foundation DAO project.
 
 ## <img width="20px" height="20px" src="https://i.imgur.com/Mw1Qnmu.png" alt="Start"> How to start that app <a name = "start"></a>
 

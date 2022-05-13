@@ -8,11 +8,10 @@ import styled from '@emotion/styled';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
 
-import BlockchainStatusContent from 'components/BlockchainStatusContent/BlockchainStatusContent';
-import DesktopMenu from 'components/Menu/DesktopMenu/DesktopMenu';
-import Footer from 'components/Footer/Footer';
+import SideNav from 'components/Layout/SideNav/SideNav';
+import Footer from 'components/Layout/Footer/Footer';
 import LoadingPage from 'components/LoadingPage/LoadingPage';
-import MobileMenu from 'components/Menu/MobileMenu/MobileMenu';
+import Header from 'components/Layout/Header/Header';
 
 import THEME_MODES from 'enums/themeModes';
 
@@ -74,7 +73,6 @@ const Layout: FC<LayoutProps> = ({ children }) => {
     dispatch(setTheme(theme === THEME_MODES.DARK ? THEME_MODES.DARK : THEME_MODES.LIGHT));
   }, [dispatch]);
 
-  // TODO: is that necessary?
   useEffect(() => {
     const checkProvider = async () => {
       if (window.ethereum) {
@@ -86,16 +84,14 @@ const Layout: FC<LayoutProps> = ({ children }) => {
   }, []);
 
   return (
-    <StyledContainer>
-      <MobileMenu />
+    <>
+      <Header />
 
-      <StyledBox>
-        <Box sx={{ display: { xs: 'none', lg: 'block' } }}>
-          <DesktopMenu />
-        </Box>
-
-        <Box width="100%">
-          {!isMobile && <BlockchainStatusContent />}
+      <StyledContainer>
+        <StyledBox>
+          <Box sx={{ display: { xs: 'none', lg: 'block' } }}>
+            <SideNav />
+          </Box>
 
           {proposalsFetchStatus === FETCH_STATUSES.LOADING && proposalsVotesStatus === FETCH_STATUSES.LOADING && (
             <LoadingPage />
@@ -104,11 +100,11 @@ const Layout: FC<LayoutProps> = ({ children }) => {
           {proposalsFetchStatus !== FETCH_STATUSES.LOADING &&
             proposalsVotesStatus !== FETCH_STATUSES.LOADING &&
             children}
-        </Box>
-      </StyledBox>
+        </StyledBox>
 
-      <Footer />
-    </StyledContainer>
+        <Footer />
+      </StyledContainer>
+    </>
   );
 };
 

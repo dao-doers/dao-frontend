@@ -14,7 +14,7 @@ import { APP_ROUTES } from 'utils/routes';
 
 const TypographyTitle = styled(Typography)`
   color: ${({ theme }) => theme.palette.colors.main7};
-  font-weight: 600;
+  font-weight: 500;
   display: -webkit-box;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 1;
@@ -43,10 +43,10 @@ const VoteTile: FC<any> = ({ vote }) => {
   };
 
   return (
-    <Box mb={3}>
+    <Box mb={3} width="98%">
       <DAOTile variant="greyShadow">
-        <Box width="100%" height="100%" px={3} pb={3} pt={1.5}>
-          <TypographySmall align="right" mb={1}>
+        <Box p={3} sx={{ width: '-webkit-fill-available' }}>
+          <TypographySmall align="right" paragraph>
             {formatSeconds(vote.createdAt)}
           </TypographySmall>
 

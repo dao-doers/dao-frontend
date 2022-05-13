@@ -16,7 +16,7 @@ import useCheckProvider from 'hooks/useCheckProvider';
 import { setUserAddress, setIsLoggedIn, getUsersList } from 'redux/slices/user';
 
 const TypographyBold = styled(Typography)`
-  font-weight: 600;
+  font-weight: 500;
   white-space: nowrap;
   ${({ theme }) => theme.breakpoints.down('lg')} {
     display: none;

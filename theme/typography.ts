@@ -98,18 +98,18 @@ const typography: TypographyOptions = {
   body1: body(14, 12, 'Poppins', 300),
   body2: body(12, 11, 'Poppins', 300),
 
-  'h1-bold': header(48, 38, 'Poppins', 600),
-  'h2-bold': header(40, 34, 'Poppins', 600),
-  'h3-bold': header(32, 28, 'Poppins', 600),
-  'h4-bold': header(28, 20, 'Poppins', 600),
-  'h5-bold': header(25, 18, 'Poppins', 600),
-  'h6-bold': header(20, 16, 'Poppins', 600),
+  'h1-bold': header(48, 38, 'Poppins', 500),
+  'h2-bold': header(40, 34, 'Poppins', 500),
+  'h3-bold': header(32, 28, 'Poppins', 500),
+  'h4-bold': header(28, 20, 'Poppins', 500),
+  'h5-bold': header(25, 18, 'Poppins', 500),
+  'h6-bold': header(20, 16, 'Poppins', 500),
 
-  'subtitle1-bold': body(18, 16, 'Poppins', 600),
-  'subtitle2-bold': body(16, 14, 'Poppins', 600),
+  'subtitle1-bold': body(18, 16, 'Poppins', 500),
+  'subtitle2-bold': body(16, 14, 'Poppins', 500),
 
-  'body1-bold': body(14, 12, 'Poppins', 600),
-  'body2-bold': body(12, 11, 'Poppins', 600),
+  'body1-bold': body(14, 12, 'Poppins', 500),
+  'body2-bold': body(12, 11, 'Poppins', 500),
 };
 
 export default typography;

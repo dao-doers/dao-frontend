@@ -40,7 +40,7 @@ const StyledPlaylistRemoveIcon = styled(PlaylistRemoveIcon)`
 
 const TypographyBlue = styled(Typography)`
   color: ${({ theme }) => theme.palette.colors.col1};
-  font-weight: 600;
+  font-weight: 500;
 `;
 
 const LastProposals: FC = () => {
@@ -99,13 +99,11 @@ const LastProposals: FC = () => {
               {proposalsArray.slice(0, 3).map((proposal: any) => {
                 return (
                   <SwiperSlide>
-                    <Box width="90%" mx="auto">
-                      <ProposalTile
-                        key={`proposal-${proposal.proposalId}`}
-                        id={`proposal-${proposal.proposalId}`}
-                        proposal={proposal}
-                      />
-                    </Box>
+                    <ProposalTile
+                      key={`proposal-${proposal.proposalId}`}
+                      id={`proposal-${proposal.proposalId}`}
+                      proposal={proposal}
+                    />
                   </SwiperSlide>
                 );
               })}

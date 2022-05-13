@@ -32,7 +32,7 @@ const sizeStyles = ({ size }: DAOButtonProps) => {
     case 'small':
       return css`
         padding: 8px;
-        font-weight: 600;
+        font-weight: 500;
         font-size: 13px;
         line-height: 19px;
       `;
@@ -91,7 +91,7 @@ const StyledDAOButton = styled(Button)<DAOButtonProps>`
   width: 100%;
   height: 100%;
   min-width: 0;
-  font-weight: 600;
+  font-weight: 500;
   text-transform: none;
   padding: 2px;
   border-radius: 20px;

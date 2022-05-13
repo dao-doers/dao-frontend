@@ -43,7 +43,7 @@ const StyledAccordionDetails = styled(AccordionDetails)`
 `;
 
 const TypographyCursor = styled(Typography)`
-  font-weight: 600;
+  font-weight: 500;
   cursor: pointer;
 `;
 
@@ -60,7 +60,7 @@ const StyledExpandMoreIcon = styled(ExpandMoreIcon)`
 `;
 
 const GradientTypography = styled(Typography)`
-  font-weight: 600;
+  font-weight: 500;
   margin-right: 10px;
   background: ${({ theme }) => theme.palette.gradients.grad2};
   -webkit-background-clip: text;

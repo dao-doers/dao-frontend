@@ -74,7 +74,7 @@ const About: FC = () => {
           </Typography>
 
           {isMobile && (
-            <Box mx="auto" mb={1} mt={5}>
+            <Box mx="auto" mb={1} mt={3} sx={{ width: { xs: '250px', sm: 'auto' } }}>
               <Link internal href={APP_ROUTES.CREATE}>
                 <DAOButton variant="gradientOutline">
                   <Typography noWrap>Create proposal</Typography>

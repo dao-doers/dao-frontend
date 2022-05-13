@@ -45,7 +45,7 @@ const StyledTwitterIcon = styled(TwitterIcon)`
 
 const TypographyTitle = styled(Typography)`
   color: ${({ theme }) => theme.palette.colors.main7};
-  font-weight: 600;
+  font-weight: 500;
   display: -webkit-box;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 1;
@@ -100,9 +100,9 @@ const ProposalTile: FC<any> = ({ proposal }) => {
   }
 
   return (
-    <Box sx={{ mb: { xs: 0, md: 3 } }}>
+    <Box mb={3} width="98%">
       <DAOTile variant="greyShadow">
-        <Box width="100%" height="100%" p={3}>
+        <Box p={3}>
           <TypographySmall align="right" paragraph>
             {formatSeconds(proposal.createdAt)}
           </TypographySmall>
