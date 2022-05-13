@@ -13,11 +13,11 @@ import TwitterIcon from '@mui/icons-material/Twitter';
 import DAOTile from 'components/DAOTile/DAOTile';
 import Link from 'components/Link/Link';
 
-import DetailsAccordion from 'sections/proposalsPage/DetailsAccordion/DetailsAccordion';
-import VoteAccordion from 'sections/proposalsPage/VoteAccordion/VoteAccordion';
-
 import { formatSeconds } from 'utils/formatDate';
 import { APP_ROUTES } from 'utils/routes';
+
+import DetailsAccordion from './DetailsAccordion/DetailsAccordion';
+import VoteAccordion from './VoteAccordion/VoteAccordion';
 
 const StyledExitToAppIcon = styled(ExitToAppIcon)`
   cursor: pointer;
@@ -45,7 +45,7 @@ const StyledTwitterIcon = styled(TwitterIcon)`
 
 const TypographyTitle = styled(Typography)`
   color: ${({ theme }) => theme.palette.colors.main7};
-  font-weight: 600;
+  font-weight: 500;
   display: -webkit-box;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 1;
@@ -100,9 +100,9 @@ const ProposalTile: FC<any> = ({ proposal }) => {
   }
 
   return (
-    <Box sx={{ mb: { xs: 0, md: 3 } }}>
+    <Box mb={3} width="98%">
       <DAOTile variant="greyShadow">
-        <Box width="100%" height="100%" p={3}>
+        <Box p={3}>
           <TypographySmall align="right" paragraph>
             {formatSeconds(proposal.createdAt)}
           </TypographySmall>

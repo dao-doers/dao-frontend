@@ -14,7 +14,7 @@ const StyledBox = styled(Box)`
   width: 100%;
   height: 100%;
   background-color: ${({ theme }) => theme.palette.colors.main4};
-  border-radius: 10px;
+  border-radius: 20px;
   display: flex;
   cursor: pointer;
 `;
@@ -22,7 +22,7 @@ const StyledBox = styled(Box)`
 const GreyBox = styled(Box)`
   width: 50%;
   height: 100%;
-  border-radius: 10px;
+  border-radius: 20px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -34,14 +34,14 @@ const ColoredBox = styled(Box)`
   width: 50%;
   height: 100%;
   padding: 2px;
-  border-radius: 10px;
+  border-radius: 20px;
   background: ${({ theme }) => theme.palette.colors.main4};
 `;
 
 const InnerColoredBox = styled(Box)`
   width: 100%;
   height: 100%;
-  border-radius: 8px;
+  border-radius: 18px;
   background-color: ${({ theme }) => theme.palette.background.default};
   display: flex;
   justify-content: center;

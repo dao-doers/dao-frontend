@@ -9,6 +9,7 @@ const colors: Colors = {
   main4: '#E9E9E9',
   main5: '#CACACA',
   main6: '#5C5B63',
+  // main7: '#001065',
   main7: '#383838',
   main8: 'rgba(66, 68, 90, 0.3)',
   main9: '#000000',

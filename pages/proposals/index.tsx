@@ -9,9 +9,8 @@ import PlaylistRemoveIcon from '@mui/icons-material/PlaylistRemove';
 import Typography from '@mui/material/Typography';
 
 import Layout from 'components/Layout/Layout';
-
-import ProposalTile from 'sections/proposalsPage/ProposalTile/ProposalTile';
-import VoteTile from 'sections/proposalsPage/VoteTile/VoteTile';
+import VoteTile from 'components/VoteTile/VoteTile';
+import ProposalTile from 'components/ProposalTile/ProposalTile';
 
 import { selectSortedProposalsArray } from 'redux/slices/proposals';
 import { selectVotesArray } from 'redux/slices/votes';
@@ -23,7 +22,7 @@ const StyledPlaylistRemoveIcon = styled(PlaylistRemoveIcon)`
 
 const TypographyBlue = styled(Typography)`
   color: ${({ theme }) => theme.palette.colors.col1};
-  font-weight: 600;
+  font-weight: 500;
 `;
 
 const HomePage: FC<NextPage> = () => {
@@ -32,8 +31,13 @@ const HomePage: FC<NextPage> = () => {
 
   return (
     <Layout>
-      <Box display="flex" justifyContent="space-between" width="100%" sx={{ mt: { xs: 2, md: 10 } }}>
-        <Box sx={{ width: { xs: '100%', md: '63%' } }}>
+      <Box
+        display="flex"
+        justifyContent="space-between"
+        width="100%"
+        sx={{ mt: { xs: 2, md: 10 }, ml: { xs: 0, md: 5 } }}
+      >
+        <Box sx={{ width: { xs: '100%', md: '66%' } }}>
           {sortedProposalsArray.length === 0 && (
             <Box display="flex" flexDirection="column" alignItems="center">
               <StyledPlaylistRemoveIcon />
@@ -56,7 +60,7 @@ const HomePage: FC<NextPage> = () => {
           )}
         </Box>
 
-        <Box width="35%" sx={{ display: { xs: 'none', md: 'block' } }}>
+        <Box width="32%" sx={{ display: { xs: 'none', md: 'block' } }}>
           {votesArray.length === 0 && (
             <Box display="flex" flexDirection="column" alignItems="center">
               <StyledPlaylistRemoveIcon />

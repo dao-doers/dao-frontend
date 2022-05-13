@@ -13,18 +13,18 @@ import useIsMobile from 'hooks/useIsMobile';
 
 const TypographyGreen = styled(Typography)`
   color: ${({ theme }) => theme.palette.colors.col2};
-  font-weight: 600;
+  font-weight: 500;
 `;
 
 const TypographyRed = styled(Typography)`
   color: ${({ theme }) => theme.palette.colors.col4};
-  font-weight: 600;
+  font-weight: 500;
   white-space: nowrap;
 `;
 
 const TypographyYellow = styled(Typography)`
   color: ${({ theme }) => theme.palette.colors.col3};
-  font-weight: 600;
+  font-weight: 500;
   white-space: nowrap;
 `;
 

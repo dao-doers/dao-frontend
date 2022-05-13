@@ -26,20 +26,22 @@ const CreatePage: FC<NextPage> = () => {
         sx={{
           display: 'flex',
           flexDirection: { xs: 'column', md: 'row' },
-          justifyContent: { md: 'space-between', xl: 'normal' },
+          justifyContent: { md: 'space-between', xl: 'center' },
         }}
+        width="100%"
       >
         <Typography
           variant="h3-bold"
           mt={1}
+          mb={3}
           sx={{ display: { xs: 'block', md: 'none' }, textAlign: { xs: 'center', md: 'left' } }}
         >
           Create new proposal
         </Typography>
-        <Box sx={{ width: { xs: '100%', md: '40%' }, pl: { xs: 0, md: 4 } }}>
+        <Box sx={{ width: { xs: '100%', md: '45%', lg: '40%' }, pl: { xs: 0, lg: 4 } }}>
           <FormTypeButtons />
         </Box>
-        <Box sx={{ width: { xs: '100%', md: '50%' } }}>
+        <Box sx={{ width: { xs: '100%', md: '50%', lg: '55%' } }}>
           {proposalType === CREATE_PROPOSAL_TYPE.NORMAL && <JoinDaoForm />}
           {proposalType === CREATE_PROPOSAL_TYPE.WITH_FUNDING && <FundProjectForm />}
           {proposalType === CREATE_PROPOSAL_TYPE.KICK && <GuildKickForm />}

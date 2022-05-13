@@ -8,14 +8,10 @@ import DAOTile from 'components/DAOTile/DAOTile';
 
 import CREATE_PROPOSAL_TYPE from 'enums/createProposalType';
 
-import useIsMobile from 'hooks/useIsMobile';
-
 import { selectProposalType, setProposalType } from 'redux/slices/main';
 
 const FormTypeButtons: FC<any> = () => {
   const dispatch = useDispatch();
-
-  const isMobile = useIsMobile('md');
 
   const proposalType = useSelector(selectProposalType);
 
@@ -25,7 +21,7 @@ const FormTypeButtons: FC<any> = () => {
 
   return (
     <Box sx={{ mb: { xs: 0, md: 3 }, mt: { xs: 1.5, md: 3 } }}>
-      <DAOTile variant={proposalType === CREATE_PROPOSAL_TYPE.NORMAL ? 'gradientOutline' : 'greyOutline'}>
+      <DAOTile variant={proposalType === CREATE_PROPOSAL_TYPE.NORMAL ? 'gradientOutline' : null}>
         <Box
           width="100%"
           height="100%"
@@ -41,7 +37,7 @@ const FormTypeButtons: FC<any> = () => {
       </DAOTile>
 
       <Box my={2}>
-        <DAOTile variant={proposalType === CREATE_PROPOSAL_TYPE.WITH_FUNDING ? 'gradientOutline' : 'greyOutline'}>
+        <DAOTile variant={proposalType === CREATE_PROPOSAL_TYPE.WITH_FUNDING ? 'gradientOutline' : null}>
           <Box
             width="100%"
             height="100%"
@@ -59,18 +55,20 @@ const FormTypeButtons: FC<any> = () => {
         </DAOTile>
       </Box>
 
-      {!isMobile && (
-        <DAOTile variant="greyShadow">
-          <Box width="100%" height="100%" p={3} sx={{ cursor: 'pointer' }}>
-            <Typography variant="h6" align="center" paragraph>
-              Guild kick
-            </Typography>
-            <Typography align="center">
-              (Available soon!) Request to forcibly remove a malicious member through a vote
-            </Typography>
-          </Box>
-        </DAOTile>
-      )}
+      <DAOTile variant={proposalType === CREATE_PROPOSAL_TYPE.KICK ? 'gradientOutline' : null}>
+        <Box
+          width="100%"
+          height="100%"
+          p={3}
+          sx={{ cursor: 'pointer' }}
+          onClick={() => handleSetProposalType(CREATE_PROPOSAL_TYPE.KICK)}
+        >
+          <Typography variant="h6-bold" align="center" paragraph>
+            Guild kick
+          </Typography>
+          <Typography align="center">Request to forcibly remove a malicious member through a vote</Typography>
+        </Box>
+      </DAOTile>
     </Box>
   );
 };

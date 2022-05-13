@@ -3,32 +3,33 @@ import { FC } from 'react';
 import { Formik, Form } from 'formik';
 import { useSelector, useDispatch } from 'react-redux';
 
-import styled from '@emotion/styled';
-
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 
+import ConnectWalletButton from 'components/ConnectWalletButton/ConnectWalletButton';
 import DAOButton from 'components/DAOButton/DAOButton';
 import DAOInput from 'components/DAOInput/DAOInput';
+import TooltipIcon from 'components/TooltipIcon';
 
-import { selectProposalStatus, setProposalStatus } from 'redux/slices/proposals';
-
+import PROCESSING_STATUSES from 'enums/processingStatuses';
 import FETCH_STATUSES from 'enums/fetchStatuses';
 
 import useHandleGuildKick from 'hooks/useHandleGuildKick';
+import useIsMobile from 'hooks/useIsMobile';
 
 import guildKickSchema from 'validators/guildKickSchema';
 
-import { selectProvider } from 'redux/slices/main';
+import { getMetamaskMessageError } from 'utils/blockchain';
 
-const StyledBox = styled(Box)`
-  width: 100%;
-`;
+import { selectProvider } from 'redux/slices/main';
+import { selectUserAddress, selectIsLoggedIn, selectdckbBalance } from 'redux/slices/user';
+import { selectProposalStatus, setProposalStatus } from 'redux/slices/proposals';
+import { setOpen, setStatus, setMessage } from 'redux/slices/modalTransaction';
 
 const initialValues = {
   title: '',
   description: '',
-  link: '',
+  link: 'test.com',
   memberToKick: '',
 };
 
@@ -37,32 +38,52 @@ const GuildKickForm: FC = () => {
 
   const provider = useSelector(selectProvider);
   const sendProposalStatus = useSelector(selectProposalStatus);
+  const isLoggedIn = useSelector(selectIsLoggedIn);
+
+  const isMobile = useIsMobile('md');
 
   const onSubmit = async (values: any) => {
-    dispatch(setProposalStatus(FETCH_STATUSES.LOADING));
+    try {
+      dispatch(setStatus(PROCESSING_STATUSES.PROCESSING));
+      dispatch(setOpen(true));
 
-    /* send link without http or https */
-    // const modifiedLink = link.value.replace(/(^\w+:|^)\/\//, '');
+      const modifiedLink = values.link.replace(/(^\w+:|^)\/\//, '');
 
-    // validations
-    // if (!notNull(title.value, description.value, link.value)) return;
-    // if (!memberToKick.validated) return;
+      const receipt = await useHandleGuildKick(provider, values.memberToKick, {
+        title: values.title,
+        description: values.description,
+        link: modifiedLink,
+      } as any);
 
-    await useHandleGuildKick(provider, values.memberToKick, {
-      title: values.title,
-      description: values.description,
-      link: values.link,
-    } as any);
-
-    setTimeout(() => dispatch(setProposalStatus(FETCH_STATUSES.SUCCESS)), 1000);
+      if (receipt.blockNumber) {
+        dispatch(setStatus(PROCESSING_STATUSES.SUCCESS));
+        dispatch(
+          setMessage(
+            `Your request has been processed by blockchain network and will be displayed with the block number ${
+              receipt.blockNumber + 1
+            }`,
+          ),
+        );
+      }
+      if (receipt.code) {
+        dispatch(setStatus(PROCESSING_STATUSES.ERROR));
+        dispatch(setMessage(getMetamaskMessageError(receipt)));
+      }
+    } catch (error) {
+      console.log(error);
+      dispatch(setStatus(PROCESSING_STATUSES.ERROR));
+      dispatch(setMessage(getMetamaskMessageError(error)));
+    }
   };
 
   return (
-    <StyledBox>
-      <Box maxWidth="500px" mx="auto">
-        <Typography variant="h4-bold" paragraph sx={{ display: { xs: 'none', md: 'block' } }}>
-          Create new proposal
-        </Typography>
+    <Box width="100%">
+      <Box maxWidth="500px" mx="auto" pt={3}>
+        {isMobile && (
+          <Typography variant="body2" mb={3}>
+            Press question mark to display tooltip.
+          </Typography>
+        )}
         <Formik validationSchema={guildKickSchema} initialValues={initialValues} validateOnChange onSubmit={onSubmit}>
           {formik => (
             <Form>
@@ -133,21 +154,20 @@ const GuildKickForm: FC = () => {
                 </Box>
 
                 <Box>
-                  <DAOButton
-                    variant="gradientOutline"
-                    type="submit"
-                    isLoading={sendProposalStatus === FETCH_STATUSES.LOADING}
-                    disabled={sendProposalStatus === FETCH_STATUSES.LOADING}
-                  >
-                    Submit proposal
-                  </DAOButton>
+                  {!isLoggedIn && <ConnectWalletButton />}
+
+                  {isLoggedIn && (
+                    <DAOButton variant="gradientOutline" type="submit">
+                      Send request
+                    </DAOButton>
+                  )}
                 </Box>
               </Box>
             </Form>
           )}
         </Formik>
       </Box>
-    </StyledBox>
+    </Box>
   );
 };
 

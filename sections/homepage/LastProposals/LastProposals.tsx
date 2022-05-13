@@ -9,7 +9,7 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import PlaylistRemoveIcon from '@mui/icons-material/PlaylistRemove';
 
-import ProposalTile from 'sections/proposalsPage/ProposalTile/ProposalTile';
+import ProposalTile from 'components/ProposalTile/ProposalTile';
 
 import useIsMobile from 'hooks/useIsMobile';
 
@@ -40,7 +40,7 @@ const StyledPlaylistRemoveIcon = styled(PlaylistRemoveIcon)`
 
 const TypographyBlue = styled(Typography)`
   color: ${({ theme }) => theme.palette.colors.col1};
-  font-weight: 600;
+  font-weight: 500;
 `;
 
 const LastProposals: FC = () => {
@@ -99,13 +99,11 @@ const LastProposals: FC = () => {
               {proposalsArray.slice(0, 3).map((proposal: any) => {
                 return (
                   <SwiperSlide>
-                    <Box width="90%" mx="auto">
-                      <ProposalTile
-                        key={`proposal-${proposal.proposalId}`}
-                        id={`proposal-${proposal.proposalId}`}
-                        proposal={proposal}
-                      />
-                    </Box>
+                    <ProposalTile
+                      key={`proposal-${proposal.proposalId}`}
+                      id={`proposal-${proposal.proposalId}`}
+                      proposal={proposal}
+                    />
                   </SwiperSlide>
                 );
               })}

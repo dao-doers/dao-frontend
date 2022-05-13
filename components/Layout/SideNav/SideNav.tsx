@@ -29,9 +29,25 @@ import {
 import { setOpen } from 'redux/slices/modaldCkbMint';
 import { setOpen as setOpendCkbTransfer } from 'redux/slices/modaldCkbTransfer';
 
-interface MenuContentProps {
+interface SideNavProps {
   setDrawerOpen?: (arg0: false) => void;
 }
+
+const StyledBox = styled(Box)`
+  display: flex;
+  flex-direction: column;
+  min-height: 80vh;
+  width: 250px;
+  align-items: flex-start;
+  position: sticky;
+  top: 74;
+  background-color: ${({ theme }) => theme.palette.colors.main1};
+  ${({ theme }) => theme.breakpoints.down('lg')} {
+    align-items: center;
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+`;
 
 const TypographyBlack = styled(Typography)`
   color: ${({ theme }) => theme.palette.colors.main7};
@@ -41,7 +57,7 @@ const StyledCloseIcon = styled(Close)`
   color: ${({ theme }) => theme.palette.text.primary};
 `;
 
-const MenuContent: FC<MenuContentProps> = ({ setDrawerOpen }) => {
+const SideNav: FC<SideNavProps> = ({ setDrawerOpen }) => {
   const dispatch = useDispatch();
   const router = useRouter();
   const isMobile = useIsMobile('lg');
@@ -97,12 +113,7 @@ const MenuContent: FC<MenuContentProps> = ({ setDrawerOpen }) => {
   };
 
   return (
-    <Box
-      display="flex"
-      flexDirection="column"
-      sx={{ alignItems: { xs: 'center', lg: 'flex-start' }, px: { md: 3, lg: 0 } }}
-      minHeight="80vh"
-    >
+    <StyledBox>
       {isMobile && (
         <Box display="flex" justifyContent="flex-end" width="100%" mt={2} mr={2}>
           <IconButton aria-label="close drawer" onClick={handleClose}>
@@ -173,8 +184,8 @@ const MenuContent: FC<MenuContentProps> = ({ setDrawerOpen }) => {
       <Box mx="auto" my={1} sx={{ width: { xs: '60%', md: '100%' } }}>
         <ThemeModeSwitch />
       </Box>
-    </Box>
+    </StyledBox>
   );
 };
 
-export default MenuContent;
+export default SideNav;
