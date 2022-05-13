@@ -36,7 +36,7 @@ const StatusWrapper = styled(Box)`
 
 const TypographyRed = styled(Typography)`
   color: ${({ theme }) => theme.palette.colors.col4};
-  font-weight: 600;
+  font-weight: 500;
 `;
 
 const ImageWrapper = styled(Box)`
@@ -77,7 +77,7 @@ const BlockchainStatusContent: FC = () => {
   };
 
   return (
-    <Box display="flex" alignItems="center" justifyContent="flex-end" sx={{ mt: { xs: 0, lg: 3 } }}>
+    <Box display="flex" alignItems="center" justifyContent="flex-end">
       {(!isLoggedIn || !isMobile) && (
         <StatusWrapper>
           <IndexerStatus />

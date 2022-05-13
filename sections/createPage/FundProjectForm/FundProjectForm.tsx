@@ -39,7 +39,7 @@ const initialValues = {
 
 const TypographyRed = styled(Typography)`
   color: ${({ theme }) => theme.palette.colors.col4};
-  font-weight: 600;
+  font-weight: 500;
 `;
 
 const FundProjectForm: FC = () => {

@@ -16,7 +16,7 @@ const heroStyles = () => ({
 const useStyles = makeStyles(heroStyles);
 
 const Title = styled(Typography)`
-  font-weight: 600;
+  font-weight: 500;
   margin-top: 75px;
   ${({ theme }) => theme.breakpoints.down('sm')} {
     margin-top: 40px;
@@ -30,12 +30,11 @@ const Intro: FC = () => {
   return (
     <Box mb={6}>
       <Title variant="h2" mb={2}>
-        Welcome to Nervos DAO
+        Welcome to Digi Pnyx DAO
       </Title>
       <Box>
         <Typography variant="subtitle1" mb={4}>
-          Decentralized Autonomous Organization introduced to the World by Nervos Foundation. Our mission is to spread
-          true democracy.
+          Decentralized Autonomous Organization introduced to the World by Digi Pnyx Foundation to spread democracy
         </Typography>
         <Box sx={{ height: { xs: '100px', sm: 'auto' } }}>
           <Typography variant="h2-bold" align="center">

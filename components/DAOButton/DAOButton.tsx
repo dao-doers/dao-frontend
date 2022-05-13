@@ -32,7 +32,7 @@ const sizeStyles = ({ size }: DAOButtonProps) => {
     case 'small':
       return css`
         padding: 8px;
-        font-weight: 600;
+        font-weight: 500;
         font-size: 13px;
         line-height: 19px;
       `;
@@ -91,10 +91,10 @@ const StyledDAOButton = styled(Button)<DAOButtonProps>`
   width: 100%;
   height: 100%;
   min-width: 0;
-  font-weight: 600;
+  font-weight: 500;
   text-transform: none;
   padding: 2px;
-  border-radius: 9px;
+  border-radius: 20px;
   transition: background 250ms ease-in-out;
 `;
 
@@ -107,7 +107,7 @@ const InnerButton = styled.div<DAOButtonProps>`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  border-radius: 7px;
+  border-radius: 18px;
   transition: background 250ms ease-in-out;
 `;
 

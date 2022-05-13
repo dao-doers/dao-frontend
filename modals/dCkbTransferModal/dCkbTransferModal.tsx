@@ -79,6 +79,7 @@ const DCkbTransferModal: FC = () => {
           Transfer dCKB between accounts on Layer 2
         </Typography>
 
+        {/* TODO: check it automatically */}
         <TypographyRed>Important! Check if both accounts exist on:</TypographyRed>
         <Link href={EXTERNAL_ROUTES.CKB_TOOLS} target="_blank">
           https://dev.ckb.tools/create-layer2-account

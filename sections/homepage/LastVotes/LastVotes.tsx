@@ -9,7 +9,7 @@ import Box from '@mui/material/Box';
 import PlaylistRemoveIcon from '@mui/icons-material/PlaylistRemove';
 import Typography from '@mui/material/Typography';
 
-import VoteTile from 'sections/proposalsPage/VoteTile/VoteTile';
+import VoteTile from 'components/VoteTile/VoteTile';
 
 import useIsMobile from 'hooks/useIsMobile';
 
@@ -40,7 +40,7 @@ const StyledPlaylistRemoveIcon = styled(PlaylistRemoveIcon)`
 
 const TypographyBlue = styled(Typography)`
   color: ${({ theme }) => theme.palette.colors.col1};
-  font-weight: 600;
+  font-weight: 500;
 `;
 
 const LastVotes: FC = () => {
@@ -80,9 +80,7 @@ const LastVotes: FC = () => {
               {votesArray.slice(0, 3).map((vote: any) => {
                 return (
                   <SwiperSlide key={`key-${vote.id}`}>
-                    <Box width="90%" mx="auto">
-                      <VoteTile key={`vote-${vote.id}`} vote={vote} />
-                    </Box>
+                    <VoteTile key={`vote-${vote.id}`} vote={vote} />
                   </SwiperSlide>
                 );
               })}

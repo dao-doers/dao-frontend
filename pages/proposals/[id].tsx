@@ -8,9 +8,8 @@ import { ApolloProvider } from '@apollo/react-hooks';
 import Box from '@mui/material/Box';
 
 import Layout from 'components/Layout/Layout';
-
-import ProposalTile from 'sections/proposalsPage/ProposalTile/ProposalTile';
-import VoteTile from 'sections/proposalsPage/VoteTile/VoteTile';
+import VoteTile from 'components/VoteTile/VoteTile';
+import ProposalTile from 'components/ProposalTile/ProposalTile';
 
 import { selectProposalsArray } from 'redux/slices/proposals';
 import { selectVotesArray } from 'redux/slices/votes';

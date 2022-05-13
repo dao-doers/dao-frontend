@@ -13,7 +13,7 @@ import LastVotes from 'sections/homepage/LastVotes/LastVotes';
 const HomePage: FC<NextPage> = () => {
   return (
     <Layout>
-      <Box sx={{ pl: { xs: 0, md: 6 } }}>
+      <Box sx={{ pl: { xs: 0, md: 6 } }} width="100%">
         <Intro />
         <About />
         <LastProposals />

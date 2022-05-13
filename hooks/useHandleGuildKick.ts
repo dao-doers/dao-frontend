@@ -5,11 +5,18 @@ import abiLibrary from 'lib/abi';
 
 const daoAddress = process.env.DAO_ADDRESS || '';
 
-const useHandleGuildKick = async (provider: any, memberToKick: number, details: string) => {
+const useHandleGuildKick = async (
+  provider: any,
+  memberToKick: number,
+  details: { title: string; description: string; link: string },
+) => {
   const signer = provider.getSigner();
   const dao = await new ethers.Contract(daoAddress, abiLibrary.moloch2, signer);
 
-  const tx = await dao.submitGuildKickProposal(memberToKick, details);
+  const tx = await dao.submitGuildKickProposal(
+    memberToKick,
+    `{"title": "${details.title}", "description": "${details.description}", "link": "${details.link}"}`,
+  );
 
   const receipt = await tx.wait();
   return receipt;
