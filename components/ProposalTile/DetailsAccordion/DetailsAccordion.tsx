@@ -59,6 +59,14 @@ const StyledExpandMoreIcon = styled(ExpandMoreIcon)`
   color: ${({ theme }) => theme.palette.text.primary};
 `;
 
+const GradientTypography = styled(Typography)`
+  font-weight: 600;
+  margin-right: 10px;
+  background: ${({ theme }) => theme.palette.gradients.grad2};
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+`;
+
 const DetailsAccordion: FC<any> = ({ proposal }) => {
   const [copiedSponsoredAddress, setCopiedSponsoredAddress] = useState(false);
   const [copiedApplicantAddress, setCopiedApplicantAddress] = useState(false);
@@ -84,8 +92,18 @@ const DetailsAccordion: FC<any> = ({ proposal }) => {
         aria-controls="deails-accordion"
         id="panel1a-header"
       >
-        <Typography variant="subtitle2-bold">Poll Details</Typography>
+        <Box display="flex" justifyContent="space-between" alignItems="center" width="100%">
+          <Typography variant="subtitle2-bold">Poll Details</Typography>
+          {proposal.guildkick === false && Number(proposal.paymentRequested) === 0 && (
+            <GradientTypography>Member Request</GradientTypography>
+          )}
+          {proposal.guildkick === false && Number(proposal.paymentRequested) > 0 && (
+            <GradientTypography>Funding Request</GradientTypography>
+          )}
+          {proposal.guildkick === true && <GradientTypography>Guild Kick</GradientTypography>}
+        </Box>
       </StyledAccordionSummary>
+
       <StyledAccordionDetails>
         <Box display="flex" justifyContent="flex-start" flexWrap="wrap">
           <Box sx={{ width: { xs: '48%', xl: '30%' } }} mb={2} mx="1%">

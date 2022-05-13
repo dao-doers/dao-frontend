@@ -1,6 +1,4 @@
-/* eslint-disable react-hooks/rules-of-hooks */
-import { FC, useState, useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import { FC } from 'react';
 
 import styled from '@emotion/styled';
 
@@ -11,30 +9,13 @@ import Box from '@mui/material/Box';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import Typography from '@mui/material/Typography';
 
-import ConnectWalletButton from 'components/ConnectWalletButton/ConnectWalletButton';
-import Counter from 'components/Counter/Counter';
-import DAOButton from 'components/DAOButton/DAOButton';
-import DAOTile from 'components/DAOTile/DAOTile';
-import DividerLine from 'components/DividerLine/DividerLine';
-import TooltipIcon from 'components/TooltipIcon';
-
-import useHandleVote from 'hooks/useHandleVote';
-import useCheckIfVoted from 'hooks/useCheckIfVoted';
-import useHandleProcessProposal from 'hooks/useHandleProcessProposal';
-import useHandleWithdraw from 'hooks/useHandleWithdraw';
-import useHandleProcessKick from 'hooks/useHandleProcessKick';
-
-import FETCH_STATUSES from 'enums/fetchStatuses';
 import PROPOSAL_STATUS from 'enums/proposalStatus';
-import PROCESSING_STATUSES from 'enums/processingStatuses';
 
-import { getMetamaskMessageError } from 'utils/blockchain';
-
-import { selectProvider } from 'redux/slices/main';
-import { selectUserAddress, selectIsLoggedIn, selectUserShares } from 'redux/slices/user';
-import { setOpen, setStatus, setMessage } from 'redux/slices/modalTransaction';
-
-import SponsorPhase from './SponsorPhase/SponsorPhase';
+import CollectingFunds from './CollectingFunds/CollectingFunds';
+import Voting from './Voting/Voting';
+import GracePeriod from './GracePeriod/GracePeriod';
+import Proceeding from './Proceeding/Proceeding';
+import Finished from './Finished/Finished';
 import VotesLinearCharts from './VotesLinearCharts/VotesLinearCharts';
 
 const StyledAccordion = styled(Accordion)`
@@ -73,166 +54,7 @@ const StyledExpandMoreIcon = styled(ExpandMoreIcon)`
   color: ${({ theme }) => theme.palette.text.primary};
 `;
 
-// TODO: component is waaaay too big, we should fragment it
 const VoteAccordion: FC<any> = ({ proposal }) => {
-  const dispatch = useDispatch();
-
-  const provider = useSelector(selectProvider);
-  const userAddress = useSelector(selectUserAddress);
-  const isLoggedIn = useSelector(selectIsLoggedIn);
-  const userShares = useSelector(selectUserShares);
-
-  // 0 means idle state, 1 means user can vote, 2 means user already voted, 3 means user just voted
-  const [notVotedYet, setNotVotedYet] = useState(0);
-  const [processProposalStatus, setProcessProposalStatus] = useState(FETCH_STATUSES.IDLE);
-
-  const currentTime = new Date().getTime() / 1000;
-
-  useEffect(() => {
-    if (isLoggedIn && userShares > 0 && proposal.proposalIndex !== null) {
-      useCheckIfVoted(provider, userAddress, proposal.proposalIndex, process.env.DAO_ADDRESS as any).then(
-        async response => {
-          if (response === true) {
-            setNotVotedYet(1);
-          } else {
-            setNotVotedYet(2);
-          }
-        },
-      );
-    }
-  }, [userAddress, isLoggedIn, proposal, process.env.DAO_ADDRESS]);
-
-  const handleVote = async (vote: number) => {
-    // TODO: improvement - useCheckIfVoted should run just right after page render, not just after clicking
-
-    dispatch(setStatus(PROCESSING_STATUSES.PROCESSING));
-    dispatch(setOpen(true));
-
-    await useCheckIfVoted(provider, userAddress, proposal.proposalIndex, process.env.DAO_ADDRESS as any).then(
-      async response => {
-        if (response === true) {
-          setNotVotedYet(1);
-          const { proposalIndex } = proposal;
-
-          try {
-            const receipt = await useHandleVote(provider, proposalIndex, vote);
-
-            if (receipt.blockNumber) {
-              setNotVotedYet(3);
-              dispatch(setStatus(PROCESSING_STATUSES.SUCCESS));
-              dispatch(
-                setMessage(
-                  `Your request has been processed by blockchain network and will be displayed with the block number ${
-                    receipt.blockNumber + 1
-                  }`,
-                ),
-              );
-            }
-          } catch (error: any) {
-            if (error.code) {
-              dispatch(setStatus(PROCESSING_STATUSES.ERROR));
-              dispatch(setMessage(getMetamaskMessageError(error)));
-            }
-            setProcessProposalStatus(FETCH_STATUSES.ERROR);
-            dispatch(setStatus(PROCESSING_STATUSES.ERROR));
-          }
-        } else {
-          setNotVotedYet(2);
-          dispatch(setMessage('You have already voted!'));
-          dispatch(setStatus(PROCESSING_STATUSES.ERROR));
-        }
-      },
-    );
-  };
-
-  const handleProcessProposal = async () => {
-    const { proposalIndex } = proposal;
-    dispatch(setStatus(PROCESSING_STATUSES.PROCESSING));
-    dispatch(setOpen(true));
-
-    try {
-      const receipt = await useHandleProcessProposal(provider, proposalIndex);
-
-      if (receipt.blockNumber) {
-        dispatch(setStatus(PROCESSING_STATUSES.SUCCESS));
-        dispatch(
-          setMessage(
-            `Your request has been processed by blockchain network and will be displayed with the block number ${
-              receipt.blockNumber + 1
-            }`,
-          ),
-        );
-      }
-    } catch (error: any) {
-      console.log(error);
-      if (error.code) {
-        dispatch(setStatus(PROCESSING_STATUSES.ERROR));
-        dispatch(setMessage(getMetamaskMessageError(error)));
-      }
-      setProcessProposalStatus(FETCH_STATUSES.ERROR);
-      dispatch(setStatus(PROCESSING_STATUSES.ERROR));
-    }
-  };
-
-  const handleProcessKick = async () => {
-    const { proposalIndex } = proposal;
-    dispatch(setStatus(PROCESSING_STATUSES.PROCESSING));
-    dispatch(setOpen(true));
-
-    try {
-      const receipt = await useHandleProcessKick(provider, proposalIndex);
-
-      if (receipt.blockNumber) {
-        dispatch(setStatus(PROCESSING_STATUSES.SUCCESS));
-        dispatch(
-          setMessage(
-            `Your request has been processed by blockchain network and will be displayed with the block number ${
-              receipt.blockNumber + 1
-            }`,
-          ),
-        );
-      }
-    } catch (error: any) {
-      console.log(error);
-      if (error.code) {
-        dispatch(setStatus(PROCESSING_STATUSES.ERROR));
-        dispatch(setMessage(getMetamaskMessageError(error)));
-      }
-      setProcessProposalStatus(FETCH_STATUSES.ERROR);
-      dispatch(setStatus(PROCESSING_STATUSES.ERROR));
-    }
-  };
-
-  const handleWithdraw = async () => {
-    dispatch(setStatus(PROCESSING_STATUSES.PROCESSING));
-    dispatch(setOpen(true));
-
-    try {
-      // TODO: must add flag or something after withraw has been done
-      const receipt = await useHandleWithdraw(provider, proposal.paymentRequested);
-
-      if (receipt.blockNumber) {
-        dispatch(setStatus(PROCESSING_STATUSES.SUCCESS));
-        dispatch(
-          setMessage(
-            `Your request has been processed by blockchain network and will be displayed with the block number ${
-              receipt.blockNumber + 1
-            }`,
-          ),
-        );
-      }
-    } catch (error: any) {
-      console.log(error);
-
-      if (error.code) {
-        dispatch(setStatus(PROCESSING_STATUSES.ERROR));
-        dispatch(setMessage(getMetamaskMessageError(error)));
-      }
-      setProcessProposalStatus(FETCH_STATUSES.ERROR);
-      dispatch(setStatus(PROCESSING_STATUSES.ERROR));
-    }
-  };
-
   return (
     <StyledAccordion>
       <StyledAccordionSummary expandIcon={<StyledExpandMoreIcon />} aria-controls="vote-accordion" id="panel1a-header">
@@ -259,175 +81,47 @@ const VoteAccordion: FC<any> = ({ proposal }) => {
 
       <AccordionDetails>
         {proposal.proposalStatus === PROPOSAL_STATUS.COLLECTING_FUNDS && (
-          <SponsorPhase proposalId={proposal.proposalId} />
+          <CollectingFunds proposalId={proposal.proposalId} />
         )}
 
-        {(proposal.proposalStatus === PROPOSAL_STATUS.VOTING ||
-          proposal.proposalStatus === PROPOSAL_STATUS.GRACE_PERIOD ||
-          proposal.proposalStatus === PROPOSAL_STATUS.PROCEEDING) && (
-          <Box>
-            <Box>
-              {currentTime <= proposal.votingPeriodEnds && (
-                <>
-                  <Typography mb={2}>Your Vote:</Typography>
-
-                  {!isLoggedIn && (
-                    <Box maxWidth="200px" mx="auto" mb={3}>
-                      <ConnectWalletButton />
-                    </Box>
-                  )}
-
-                  {/* TODO: display button only to guild members */}
-                  {isLoggedIn && notVotedYet < 2 && (
-                    <Box display="flex" justifyContent="space-between" mb={3}>
-                      <Box width="48%">
-                        <DAOButton variant="agreeVariant" onClick={() => handleVote(1)}>
-                          Yes
-                        </DAOButton>
-                      </Box>
-                      <Box width="48%">
-                        <DAOButton variant="disagreeVariant" onClick={() => handleVote(2)}>
-                          No
-                        </DAOButton>
-                      </Box>
-                    </Box>
-                  )}
-
-                  {notVotedYet === 2 && (
-                    <DAOTile variant="errorBox">
-                      <Typography align="center" p={1}>
-                        You have already voted!
-                      </Typography>
-                    </DAOTile>
-                  )}
-
-                  {notVotedYet === 3 && (
-                    <DAOTile variant="gradientOutline">
-                      <Typography align="center" p={1}>
-                        You have successfully voted!
-                      </Typography>
-                    </DAOTile>
-                  )}
-                </>
-              )}
-
-              {currentTime > proposal.votingPeriodEnds && currentTime < proposal.gracePeriodEnds && (
-                <DAOTile variant="gradientOutline">
-                  <Typography align="center" p={1}>
-                    Proposal is in Grace Period.
-                    <TooltipIcon>
-                      <Typography variant="body2">
-                        Voting is over, and the Proposal is set to pass or fail depending on the votes cast during
-                        Voting. Members who voted No, and have no other pending Yes votes, can ragequit during this
-                        period.
-                      </Typography>
-                    </TooltipIcon>
-                  </Typography>
-                </DAOTile>
-              )}
-
-              {currentTime > proposal.votingPeriodEnds && currentTime > proposal.gracePeriodEnds && (
-                <>
-                  {processProposalStatus === FETCH_STATUSES.IDLE && (
-                    <DAOTile>
-                      <Typography align="center" p={1}>
-                        To finish the whole process, proposal needs to be processed.
-                      </Typography>
-                    </DAOTile>
-                  )}
-
-                  {processProposalStatus === FETCH_STATUSES.ERROR && (
-                    <Box mt={1}>
-                      <DAOTile variant="errorBox">
-                        <Typography align="center" p={1}>
-                          Proposal is not ready to be processed by blockchain network or it is been proceeding right
-                          now.
-                        </Typography>
-                      </DAOTile>
-                    </Box>
-                  )}
-
-                  {processProposalStatus === FETCH_STATUSES.SUCCESS && (
-                    <DAOTile variant="gradientOutline">
-                      <Typography align="center" p={1}>
-                        Proposal is been proceeding.
-                      </Typography>
-                    </DAOTile>
-                  )}
-
-                  {!isLoggedIn && (
-                    <Box maxWidth="200px" mx="auto" mt={2}>
-                      <ConnectWalletButton />
-                    </Box>
-                  )}
-
-                  {/* TODO: display button only to applicant */}
-                  {isLoggedIn && processProposalStatus !== FETCH_STATUSES.SUCCESS && (
-                    <Box maxWidth="200px" mx="auto" mt={2}>
-                      <DAOButton variant="gradientOutline" onClick={handleProcessProposal}>
-                        Process Proposal
-                      </DAOButton>
-                    </Box>
-                  )}
-
-                  {/* TODO: display only if kick */}
-                  {isLoggedIn && processProposalStatus !== FETCH_STATUSES.SUCCESS && (
-                    <Box maxWidth="200px" mx="auto" mt={2}>
-                      <DAOButton variant="gradientOutline" onClick={handleProcessKick}>
-                        Process Guild Kick
-                      </DAOButton>
-                    </Box>
-                  )}
-                </>
-              )}
-            </Box>
-
-            <DividerLine />
-
-            {currentTime <= proposal.votingPeriodEnds && (
-              <Box display="flex" justifyContent="space-between" width="100%" pb={2}>
-                <Typography width="100%">Voting Ends In:</Typography>
-                <Counter time={Number(proposal.votingPeriodEnds)} />
-              </Box>
-            )}
-            {currentTime > proposal.votingPeriodEnds && currentTime < proposal.gracePeriodEnds && (
-              <Box display="flex" justifyContent="space-between" width="100%" pb={2}>
-                <Typography width="100%">Grace Period Ends In:</Typography>
-                <Counter time={Number(proposal.gracePeriodEnds)} />
-              </Box>
-            )}
-
+        {proposal.proposalStatus === PROPOSAL_STATUS.VOTING && (
+          <>
+            <Voting proposalIndex={proposal.proposalIndex} votingPeriodEnds={proposal.votingPeriodEnds} />
             <VotesLinearCharts yesVotes={proposal.yesVotes} noVotes={proposal.noVotes} />
-          </Box>
+          </>
+        )}
+
+        {proposal.proposalStatus === PROPOSAL_STATUS.GRACE_PERIOD && (
+          <>
+            <GracePeriod votingPeriodEnds={proposal.votingPeriodEnds} gracePeriodEnds={proposal.gracePeriodEnds} />
+            <VotesLinearCharts yesVotes={proposal.yesVotes} noVotes={proposal.noVotes} />
+          </>
+        )}
+
+        {/* TODO: does anyone can process proposal?  */}
+        {proposal.proposalStatus === PROPOSAL_STATUS.PROCEEDING && (
+          <>
+            <Proceeding
+              votingPeriodEnds={proposal.votingPeriodEnds}
+              gracePeriodEnds={proposal.gracePeriodEnds}
+              guildkick={proposal.guildkick}
+              proposalIndex={proposal.proposalIndex}
+            />
+            <Box mt={2}>
+              <VotesLinearCharts yesVotes={proposal.yesVotes} noVotes={proposal.noVotes} />
+            </Box>
+          </>
         )}
 
         {proposal.proposalStatus === PROPOSAL_STATUS.FINISHED && (
           <>
-            {proposal.didPass === true && (
-              <>
-                <DAOTile variant="successBox">
-                  <Typography align="center" p={1}>
-                    Proposal has been approved.
-                  </Typography>
-                </DAOTile>
-                {userAddress === proposal.applicant && (
-                  <Box maxWidth="200px" mx="auto" mt={2}>
-                    <DAOButton variant="gradientOutline" onClick={handleWithdraw}>
-                      Withdraw funds
-                    </DAOButton>
-                  </Box>
-                )}
-              </>
-            )}
-            {proposal.didPass === false && (
-              <DAOTile variant="errorBox">
-                <Typography align="center" p={1}>
-                  Proposal has been rejected.
-                </Typography>
-              </DAOTile>
-            )}
+            <Finished
+              paymentRequested={proposal.paymentRequested}
+              didPass={proposal.didPass}
+              applicant={proposal.applicant}
+            />
 
-            <Box mt={4}>
+            <Box mt={2}>
               <VotesLinearCharts yesVotes={proposal.yesVotes} noVotes={proposal.noVotes} />
             </Box>
           </>

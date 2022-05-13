@@ -19,11 +19,11 @@ import { selectProvider } from 'redux/slices/main';
 import { selectIsLoggedIn, selectUserShares } from 'redux/slices/user';
 import { setOpen, setStatus, setMessage } from 'redux/slices/modalTransaction';
 
-interface SponsorPhaseProps {
+interface CollectingFundsProps {
   proposalId: string;
 }
 
-const SponsorPhase: FC<SponsorPhaseProps> = ({ proposalId }) => {
+const CollectingFunds: FC<CollectingFundsProps> = ({ proposalId }) => {
   const dispatch = useDispatch();
 
   const provider = useSelector(selectProvider);
@@ -90,4 +90,4 @@ const SponsorPhase: FC<SponsorPhaseProps> = ({ proposalId }) => {
   );
 };
 
-export default SponsorPhase;
+export default CollectingFunds;

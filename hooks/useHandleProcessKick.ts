@@ -4,7 +4,7 @@ import abiLibrary from 'lib/abi';
 
 const daoAddress = process.env.DAO_ADDRESS || '';
 
-const useHandleProcessKick = async (provider: any, proposalIndex: number) => {
+const useHandleProcessKick = async (provider: any, proposalIndex: string) => {
   const signer = provider.getSigner();
   const dao = await new ethers.Contract(daoAddress, abiLibrary.moloch2, signer);
 

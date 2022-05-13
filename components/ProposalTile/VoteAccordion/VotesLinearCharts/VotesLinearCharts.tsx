@@ -30,17 +30,17 @@ const VotesLinearCharts: FC<VotesLinearChartsProps> = ({ yesVotes, noVotes }) =>
       </Typography>
       {yesVotes + noVotes > 0 && (
         <Box width="100%" pb={2}>
-          <TypographyAgree>
+          <Typography>
             Agreed: {yesVotes} ( {(yesVotes / (yesVotes + noVotes)) * 100}% )
-          </TypographyAgree>
+          </Typography>
           <Box mt={1} mb={2}>
             <LinearChart type="agree" main={yesVotes} all={yesVotes + noVotes} />
           </Box>
 
-          <TypographyDisagree>
+          <Typography>
             Disagreed: {noVotes} ( {(noVotes / (yesVotes + noVotes)) * 100}
             %)
-          </TypographyDisagree>
+          </Typography>
           <Box mt={1} mb={2}>
             <LinearChart type="disagree" main={noVotes} all={yesVotes + noVotes} />
           </Box>
