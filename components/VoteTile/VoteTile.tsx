@@ -43,7 +43,7 @@ const VoteTile: FC<any> = ({ vote }) => {
   };
 
   return (
-    <Box mb={3} width="98%">
+    <Box mb={3} width="100%">
       <DAOTile variant="greyShadow">
         <Box p={3} sx={{ width: '-webkit-fill-available' }}>
           <TypographySmall align="right" paragraph>

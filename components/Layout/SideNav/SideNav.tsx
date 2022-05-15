@@ -41,7 +41,7 @@ const StyledBox = styled(Box)`
   align-items: flex-start;
   position: sticky;
   top: 74;
-  background-color: ${({ theme }) => theme.palette.colors.main1};
+  background-color: ${({ theme }) => theme.palette.colors.main2};
   ${({ theme }) => theme.breakpoints.down('lg')} {
     align-items: center;
     padding-left: 24px;

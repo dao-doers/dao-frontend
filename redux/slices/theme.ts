@@ -13,7 +13,7 @@ interface StateProps {
 const themeSlice = createSlice({
   name: 'theme',
   initialState: {
-    mode: THEME_MODES.LIGHT,
+    mode: THEME_MODES.DARK,
   },
   reducers: {
     toggleTheme: state => {

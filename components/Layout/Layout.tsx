@@ -89,7 +89,7 @@ const Layout: FC<LayoutProps> = ({ children }) => {
 
       <StyledContainer>
         <StyledBox>
-          <Box sx={{ display: { xs: 'none', lg: 'block' } }}>
+          <Box sx={{ display: { xs: 'none', lg: 'block' } }} mt={8}>
             <SideNav />
           </Box>
 

@@ -67,7 +67,7 @@ const LastVotes: FC = () => {
             <Box display="flex" justifyContent="space-between" width="100%">
               {votesArray.slice(0, 3).map((vote: any) => {
                 return (
-                  <Box width="32%" key={`key-${vote.id}`}>
+                  <Box width="33.3333%" key={`key-${vote.id}`}>
                     <VoteTile key={`vote-${vote.id}`} vote={vote} />
                   </Box>
                 );

@@ -22,6 +22,8 @@ const params = {
   grabCursor: true,
 };
 
+const StyledBox = styled(Box)``;
+
 const StyledSwiper = styled(Swiper)`
   .swiper-pagination {
     bottom: 0;
@@ -64,11 +66,11 @@ const LastProposals: FC = () => {
       {proposalsArray.length > 0 && (
         <>
           {!isMobile && (
-            <>
+            <StyledBox>
               <Box display="flex" justifyContent="space-between" width="100%">
                 {proposalsArray.slice(0, 2).map((proposal: any) => {
                   return (
-                    <Box width="49%" key={`key-${proposal.proposalId}`}>
+                    <Box width="50%" key={`key-${proposal.proposalId}`}>
                       <ProposalTile
                         key={`proposal-${proposal.proposalId}`}
                         id={`proposal-${proposal.proposalId}`}
@@ -81,7 +83,7 @@ const LastProposals: FC = () => {
               <Box display="flex" justifyContent="space-between" width="100%">
                 {proposalsArray.slice(2, 4).map((proposal: any) => {
                   return (
-                    <Box width="49%" key={`key-${proposal.proposalId}`}>
+                    <Box width="50%" key={`key-${proposal.proposalId}`}>
                       <ProposalTile
                         key={`proposal-${proposal.proposalId}`}
                         id={`proposal-${proposal.proposalId}`}
@@ -91,7 +93,7 @@ const LastProposals: FC = () => {
                   );
                 })}
               </Box>
-            </>
+            </StyledBox>
           )}
 
           {isMobile && (

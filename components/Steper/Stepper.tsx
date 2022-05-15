@@ -1,4 +1,5 @@
 /* eslint-disable react/no-array-index-key */
+// TODO: refactor that
 import React, { useState, useEffect } from 'react';
 import MUIStepper from '@mui/material/Stepper';
 import Step from '@mui/material/Step';
@@ -86,13 +87,13 @@ const CustomStepConnector = withStyles({
 // Styles for StepLabel.
 const CustomStepLabel = withStyles({
   completed: {
-    color: '#212030 !important',
+    color: '#ED2391 !important',
   },
   active: {
-    color: '#212030 !important',
+    color: '#ED2391 !important',
   },
   label: {
-    color: '#212030',
+    color: '#ED2391',
   },
   root: {
     width: 'auto !important',
