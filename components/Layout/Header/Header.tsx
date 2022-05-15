@@ -1,4 +1,3 @@
-import Image from 'next/image';
 import React, { FC, useState } from 'react';
 import { useSelector } from 'react-redux';
 
@@ -24,6 +23,7 @@ const HeaderWrapper = styled(Box)`
   position: sticky;
   top: 0;
   border-bottom: 1px solid ${({ theme }) => theme.palette.colors.main4};
+  background-color: ${({ theme }) => theme.palette.colors.main1};
   z-index: 100;
 `;
 
@@ -31,7 +31,6 @@ const StyledBox = styled(Box)`
   width: 100%;
   display: flex;
   align-items: center;
-  background-color: ${({ theme }) => theme.palette.colors.main1};
   height: 80px;
 `;
 
@@ -82,7 +81,9 @@ const Header: FC = () => {
         <StyledBox>
           <Box display="flex" justifyContent="space-between" alignItems="center" width="100%">
             <Box width="200px">
-              <GradientTypography variant="h3-bold">Digi Pnyx</GradientTypography>
+              <Link href="/" internal>
+                <GradientTypography variant="h3-bold">Digi Pnyx</GradientTypography>
+              </Link>
             </Box>
 
             <Box display="flex" alignItems="center">

@@ -54,6 +54,8 @@ const StyledMenu = styled(Menu)`
 
   .MuiPaper-root {
     border-radius: 10px;
+    background-color: ${({ theme }) => theme.palette.colors.main1};
+    border: 1px solid ${({ theme }) => theme.palette.colors.main4};
   }
 `;
 

@@ -53,6 +53,7 @@ const HomePage: FC<NextPage> = () => {
                     key={`proposal-${proposal.proposalId}`}
                     id={`proposal-${proposal.proposalId}`}
                     proposal={proposal}
+                    mbProps={3}
                   />
                 );
               })}

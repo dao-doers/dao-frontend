@@ -19,17 +19,10 @@ import { APP_ROUTES } from 'utils/routes';
 import DetailsAccordion from './DetailsAccordion/DetailsAccordion';
 import VoteAccordion from './VoteAccordion/VoteAccordion';
 
-const StyledExitToAppIcon = styled(ExitToAppIcon)`
-  cursor: pointer;
-  margin-right: 10px;
-  ${({ theme }) => theme.breakpoints.down('sm')} {
-    font-size: 20px;
-  }
-`;
-
 const StyledLanguageIcon = styled(LanguageIcon)`
   cursor: pointer;
   margin-right: 10px;
+  font-size: 20px;
   ${({ theme }) => theme.breakpoints.down('sm')} {
     font-size: 20px;
   }
@@ -38,6 +31,7 @@ const StyledLanguageIcon = styled(LanguageIcon)`
 const StyledTwitterIcon = styled(TwitterIcon)`
   color: #2ea5e8;
   cursor: pointer;
+  font-size: 20px;
   ${({ theme }) => theme.breakpoints.down('sm')} {
     font-size: 20px;
   }
@@ -63,7 +57,7 @@ const TypographyDescription = styled(Typography)`
   overflow: hidden;
 `;
 
-const ProposalTile: FC<any> = ({ proposal }) => {
+const ProposalTile: FC<any> = ({ proposal, mbProps }) => {
   const router = useRouter();
 
   const [nullObject, setNullObject] = useState(true);
@@ -100,24 +94,15 @@ const ProposalTile: FC<any> = ({ proposal }) => {
   }
 
   return (
-    <Box mb={3} width="98%">
+    <Box mb={mbProps}>
       <DAOTile variant="greyShadow">
-        <Box p={3}>
-          <TypographySmall align="right" paragraph>
-            {formatSeconds(proposal.createdAt)}
-          </TypographySmall>
-
-          <Box display="flex" justifyContent="space-between" alignItems="center" pb={4}>
-            <Link internal href={`${APP_ROUTES.PROPOSALS}/${proposal.id}`}>
-              <TypographyTitle variant="h3">{formattedTitle}</TypographyTitle>
-            </Link>
+        <Box p={3} width="100%">
+          <Box display="flex" justifyContent="space-between" alignItems="center">
+            <TypographySmall align="right" paragraph>
+              {formatSeconds(proposal.createdAt)}
+            </TypographySmall>
 
             <Box display="flex">
-              <Tooltip title="Go to proposal page" placement="top">
-                <Link internal href={`${APP_ROUTES.PROPOSALS}/${proposal.id}`}>
-                  <StyledExitToAppIcon />
-                </Link>
-              </Tooltip>
               <Tooltip title="Go to project website" placement="top">
                 <Link href={`https://${formattedWebsite}`} target="_blank">
                   <StyledLanguageIcon />
@@ -132,6 +117,12 @@ const ProposalTile: FC<any> = ({ proposal }) => {
                 </Link>
               </Tooltip>
             </Box>
+          </Box>
+
+          <Box pb={4}>
+            <Link internal href={`${APP_ROUTES.PROPOSALS}/${proposal.id}`}>
+              <TypographyTitle variant="h3">{formattedTitle}</TypographyTitle>
+            </Link>
           </Box>
 
           {router.pathname.includes('proposals') ? (
