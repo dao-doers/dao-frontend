@@ -5,6 +5,7 @@ import CREATE_PROPOSAL_TYPE from 'enums/createProposalType';
 
 interface MainProps {
   provider: any;
+  chainId: string;
   proposalType: CREATE_PROPOSAL_TYPE;
 }
 
@@ -16,21 +17,26 @@ const mainSlice = createSlice({
   name: 'main',
   initialState: {
     provider: new ethers.providers.JsonRpcProvider(process.env.PROVIDER_URL || ''),
+    chainId: '',
     proposalType: CREATE_PROPOSAL_TYPE.NORMAL,
   },
   reducers: {
-    setProposalType: (state, action) => {
-      state.proposalType = action.payload;
-    },
     setProvider: (state, action) => {
       state.provider = action.payload;
+    },
+    setChainId: (state, action) => {
+      state.chainId = action.payload;
+    },
+    setProposalType: (state, action) => {
+      state.proposalType = action.payload;
     },
   },
 });
 
 export const selectProvider = (state: StateProps) => state.main.provider;
+export const selectChainId = (state: StateProps) => state.main.chainId;
 export const selectProposalType = (state: StateProps) => state.main.proposalType;
 
-export const { setProvider, setProposalType } = mainSlice.actions;
+export const { setProvider, setChainId, setProposalType } = mainSlice.actions;
 
 export default mainSlice.reducer;

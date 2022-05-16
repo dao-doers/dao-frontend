@@ -1,14 +1,19 @@
 /* eslint-disable consistent-return */
 import store from 'redux/store';
+import { ethers } from 'ethers';
 
 import { clearUser } from 'redux/slices/user';
+import { setChainId } from 'redux/slices/main';
 
 // TODO: remove (window as any)
 
 export const loadWeb3 = async () => {
   if (window.ethereum) {
+    store.dispatch(setChainId((window as any).ethereum.networkVersion));
+
     (window as any).ethereum.on('chainChanged', () => {
       console.log('chainChanged');
+      store.dispatch(setChainId((window as any).ethereum.networkVersion));
     });
     (window as any).ethereum.on('accountsChanged', () => {
       console.log('accountChanged');
@@ -100,5 +105,18 @@ export const getMetamaskMessageError = (error: any) => {
       default:
         return 'Something went wrong';
     }
+  }
+};
+
+export const loadContract = (provider: any, contract: any, chainId: string) => {
+  try {
+    const deployedNetwork = contract.networks[chainId];
+
+    if (deployedNetwork === undefined) {
+      return null; // wrong network
+    }
+    return new ethers.Contract(deployedNetwork.address, contract.abi, provider);
+  } catch (error) {
+    console.log(error, 'error function load');
   }
 };

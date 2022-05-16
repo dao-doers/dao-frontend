@@ -1,16 +1,15 @@
 import { ethers } from 'ethers';
 
-import abiLibrary from 'lib/abi';
-
 import { ckbToShannons } from 'utils/formatShannons';
 
-const tributeToken = process.env.TRIBUTE_TOKEN_ADDRESS || '';
+import { DCKBToken } from 'utils/contracts';
 
-const useHandleTransferERC20 = async (provider: any, receiverAddress: string, amount: number) => {
+const useHandleTransferERC20 = async (provider: any, receiverAddress: string, amount: number, chainId: string) => {
   const signer = provider.getSigner();
-  const token = await new ethers.Contract(tributeToken, abiLibrary.erc20, signer);
+  const token = await DCKBToken(signer, chainId);
 
-  const tx = await token.transfer(receiverAddress, ckbToShannons(amount), {
+  // TODO: dont we need approval here? and check that shannons
+  const tx = await (token as ethers.Contract).transfer(receiverAddress, ckbToShannons(amount), {
     gasLimit: 100000,
   });
 

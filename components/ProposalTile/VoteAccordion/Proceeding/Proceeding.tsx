@@ -17,7 +17,7 @@ import PROCESSING_STATUSES from 'enums/processingStatuses';
 
 import { getMetamaskMessageError } from 'utils/blockchain';
 
-import { selectProvider } from 'redux/slices/main';
+import { selectProvider, selectChainId } from 'redux/slices/main';
 import { selectIsLoggedIn } from 'redux/slices/user';
 import { setOpen, setStatus, setMessage } from 'redux/slices/modalTransaction';
 
@@ -32,6 +32,7 @@ const Proceeding: FC<ProceedingProps> = ({ votingPeriodEnds, gracePeriodEnds, gu
   const dispatch = useDispatch();
 
   const provider = useSelector(selectProvider);
+  const chainId = useSelector(selectChainId);
   const isLoggedIn = useSelector(selectIsLoggedIn);
 
   const [processProposalStatus, setProcessProposalStatus] = useState(FETCH_STATUSES.IDLE);
@@ -43,7 +44,7 @@ const Proceeding: FC<ProceedingProps> = ({ votingPeriodEnds, gracePeriodEnds, gu
     dispatch(setOpen(true));
 
     try {
-      const receipt = await useHandleProcessProposal(provider, proposalIndex);
+      const receipt = await useHandleProcessProposal(provider, proposalIndex, chainId);
 
       if (receipt.blockNumber) {
         dispatch(setStatus(PROCESSING_STATUSES.SUCCESS));
@@ -70,7 +71,7 @@ const Proceeding: FC<ProceedingProps> = ({ votingPeriodEnds, gracePeriodEnds, gu
     dispatch(setOpen(true));
 
     try {
-      const receipt = await useHandleProcessKick(provider, proposalIndex);
+      const receipt = await useHandleProcessKick(provider, proposalIndex, chainId);
 
       if (receipt.blockNumber) {
         dispatch(setStatus(PROCESSING_STATUSES.SUCCESS));
