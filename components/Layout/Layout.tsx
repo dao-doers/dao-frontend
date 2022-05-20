@@ -70,7 +70,7 @@ const Layout: FC<LayoutProps> = ({ children }) => {
   useEffect(() => {
     const theme = sessionStorage.getItem('dao-theme');
 
-    dispatch(setTheme(theme === THEME_MODES.DARK ? THEME_MODES.DARK : THEME_MODES.LIGHT));
+    dispatch(setTheme(theme === THEME_MODES.LIGHT ? THEME_MODES.LIGHT : THEME_MODES.DARK));
   }, [dispatch]);
 
   useEffect(() => {

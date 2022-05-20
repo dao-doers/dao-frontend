@@ -13,6 +13,7 @@ import Link from 'components/Link/Link';
 import SideNav from 'components/Layout/SideNav/SideNav';
 import BlockchainStatusContent from 'components/BlockchainStatusContent/BlockchainStatusContent';
 import DAOPlainButton from 'components/DAOPlainButton/DAOPlainButton';
+import WalletAbstraction from 'components/WalletAbstraction/WalletAbstraction';
 
 import THEME_MODES from 'enums/themeModes';
 
@@ -87,6 +88,7 @@ const Header: FC = () => {
             </Box>
 
             <Box display="flex" alignItems="center">
+              <WalletAbstraction />
               <BlockchainStatusContent />
 
               <Box sx={{ display: { xs: 'block', lg: 'none' } }}>
