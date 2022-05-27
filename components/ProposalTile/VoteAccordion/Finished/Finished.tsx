@@ -14,7 +14,7 @@ import PROCESSING_STATUSES from 'enums/processingStatuses';
 
 import { getMetamaskMessageError } from 'utils/blockchain';
 
-import { selectProvider } from 'redux/slices/main';
+import { selectProvider, selectChainId } from 'redux/slices/main';
 import { selectUserAddress } from 'redux/slices/user';
 import { setOpen, setStatus, setMessage } from 'redux/slices/modalTransaction';
 
@@ -28,6 +28,7 @@ const Finished: FC<FinishedProps> = ({ paymentRequested, didPass, applicant }) =
   const dispatch = useDispatch();
 
   const provider = useSelector(selectProvider);
+  const chainId = useSelector(selectChainId);
   const userAddress = useSelector(selectUserAddress);
 
   const handleWithdraw = async () => {
@@ -36,7 +37,7 @@ const Finished: FC<FinishedProps> = ({ paymentRequested, didPass, applicant }) =
 
     try {
       // TODO: must add flag or something after withraw has been done
-      const receipt = await useHandleWithdraw(provider, paymentRequested);
+      const receipt = await useHandleWithdraw(provider, paymentRequested, chainId);
 
       if (receipt.blockNumber) {
         dispatch(setStatus(PROCESSING_STATUSES.SUCCESS));

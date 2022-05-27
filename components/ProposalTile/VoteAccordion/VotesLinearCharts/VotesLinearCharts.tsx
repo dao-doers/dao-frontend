@@ -14,14 +14,6 @@ interface VotesLinearChartsProps {
   noVotes: number;
 }
 
-const TypographyAgree = styled(Typography)`
-  color: ${({ theme }) => theme.palette.colors.col2};
-`;
-
-const TypographyDisagree = styled(Typography)`
-  color: ${({ theme }) => theme.palette.colors.col4};
-`;
-
 const VotesLinearCharts: FC<VotesLinearChartsProps> = ({ yesVotes, noVotes }) => {
   return (
     <Box>

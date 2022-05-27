@@ -15,8 +15,8 @@ import PROCESSING_STATUSES from 'enums/processingStatuses';
 
 import { getMetamaskMessageError } from 'utils/blockchain';
 
-import { selectProvider } from 'redux/slices/main';
-import { selectIsLoggedIn, selectUserShares } from 'redux/slices/user';
+import { selectProvider, selectChainId } from 'redux/slices/main';
+import { selectUserAddress, selectIsLoggedIn, selectUserShares } from 'redux/slices/user';
 import { setOpen, setStatus, setMessage } from 'redux/slices/modalTransaction';
 
 interface CollectingFundsProps {
@@ -27,6 +27,8 @@ const CollectingFunds: FC<CollectingFundsProps> = ({ proposalId }) => {
   const dispatch = useDispatch();
 
   const provider = useSelector(selectProvider);
+  const chainId = useSelector(selectChainId);
+  const userAddress = useSelector(selectUserAddress);
   const isLoggedIn = useSelector(selectIsLoggedIn);
   const userShares = useSelector(selectUserShares);
 
@@ -37,7 +39,7 @@ const CollectingFunds: FC<CollectingFundsProps> = ({ proposalId }) => {
       dispatch(setStatus(PROCESSING_STATUSES.PROCESSING));
       dispatch(setOpen(true));
 
-      const receipt = await useHandleSponsorProposal(provider, proposalId);
+      const receipt = await useHandleSponsorProposal(provider, proposalId, userAddress, chainId);
       if (receipt.blockNumber) {
         dispatch(setStatus(PROCESSING_STATUSES.SUCCESS));
         dispatch(
@@ -50,6 +52,7 @@ const CollectingFunds: FC<CollectingFundsProps> = ({ proposalId }) => {
         setSponsorProposalStatus(PROCESSING_STATUSES.SUCCESS);
       }
     } catch (error: any) {
+      console.log(error);
       dispatch(setStatus(PROCESSING_STATUSES.ERROR));
       if (error.code) {
         dispatch(setMessage(getMetamaskMessageError(error)));

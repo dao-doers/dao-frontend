@@ -24,9 +24,9 @@ import { getMetamaskMessageError } from 'utils/blockchain';
 
 import config from 'config/config';
 
+import { selectProvider, selectChainId } from 'redux/slices/main';
 import { setOpen, setStatus, setMessage } from 'redux/slices/modalTransaction';
 import { selectUserAddress, selectIsLoggedIn, selectUserShares, selectdckbBalance } from 'redux/slices/user';
-import { selectProvider } from 'redux/slices/main';
 
 const initialValues = {
   title: '',
@@ -46,6 +46,7 @@ const FundProjectForm: FC = () => {
   const dispatch = useDispatch();
 
   const provider = useSelector(selectProvider);
+  const chainId = useSelector(selectChainId);
   const userAddress = useSelector(selectUserAddress);
   const isLoggedIn = useSelector(selectIsLoggedIn);
   const userShares = useSelector(selectUserShares);
@@ -79,6 +80,7 @@ const FundProjectForm: FC = () => {
           tributeOffered,
           paymentRequested,
           { title: values.title, description: values.description, link: modifiedLink },
+          chainId,
         );
 
         if (receipt.blockNumber) {

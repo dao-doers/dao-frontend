@@ -13,12 +13,11 @@ import Counter from 'components/Counter/Counter';
 import useHandleVote from 'hooks/useHandleVote';
 import useCheckIfVoted from 'hooks/useCheckIfVoted';
 
-import FETCH_STATUSES from 'enums/fetchStatuses';
 import PROCESSING_STATUSES from 'enums/processingStatuses';
 
 import { getMetamaskMessageError } from 'utils/blockchain';
 
-import { selectProvider } from 'redux/slices/main';
+import { selectProvider, selectChainId } from 'redux/slices/main';
 import { selectUserAddress, selectIsLoggedIn, selectUserShares } from 'redux/slices/user';
 import { setOpen, setStatus, setMessage } from 'redux/slices/modalTransaction';
 
@@ -31,6 +30,7 @@ const Voting: FC<VotingProps> = ({ proposalIndex, votingPeriodEnds }) => {
   const dispatch = useDispatch();
 
   const provider = useSelector(selectProvider);
+  const chainId = useSelector(selectChainId);
   const userAddress = useSelector(selectUserAddress);
   const isLoggedIn = useSelector(selectIsLoggedIn);
   const userShares = useSelector(selectUserShares);
@@ -40,7 +40,7 @@ const Voting: FC<VotingProps> = ({ proposalIndex, votingPeriodEnds }) => {
 
   useEffect(() => {
     if (isLoggedIn && userShares > 0 && proposalIndex !== null) {
-      useCheckIfVoted(provider, userAddress, proposalIndex, process.env.DAO_ADDRESS as any).then(async response => {
+      useCheckIfVoted(provider, userAddress, proposalIndex, chainId).then(async response => {
         if (response === true) {
           setNotVotedYet(1);
         } else {
@@ -48,18 +48,19 @@ const Voting: FC<VotingProps> = ({ proposalIndex, votingPeriodEnds }) => {
         }
       });
     }
+    // TODO: remove that DAO_ADDRESS env
   }, [userAddress, isLoggedIn, proposalIndex, process.env.DAO_ADDRESS]);
 
   const handleVote = async (vote: number) => {
     dispatch(setStatus(PROCESSING_STATUSES.PROCESSING));
     dispatch(setOpen(true));
 
-    await useCheckIfVoted(provider, userAddress, proposalIndex, process.env.DAO_ADDRESS as any).then(async response => {
+    await useCheckIfVoted(provider, userAddress, proposalIndex, chainId).then(async response => {
       if (response === true) {
         setNotVotedYet(1);
 
         try {
-          const receipt = await useHandleVote(provider, proposalIndex, vote);
+          const receipt = await useHandleVote(provider, proposalIndex, vote, chainId);
 
           if (receipt.blockNumber) {
             setNotVotedYet(3);

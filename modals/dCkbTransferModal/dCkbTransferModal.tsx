@@ -22,7 +22,7 @@ import PROCESSING_STATUSES from 'enums/processingStatuses';
 
 import transferModalSchema from 'validators/transferModalSchema';
 
-import { selectProvider } from 'redux/slices/main';
+import { selectProvider, selectChainId } from 'redux/slices/main';
 import { selectOpen, setClose } from 'redux/slices/modaldCkbTransfer';
 import { selectUserAddress, selectIsLoggedIn, selectdckbBalance } from 'redux/slices/user';
 import { setOpen, setMessage, setStatus } from 'redux/slices/modalTransaction';
@@ -48,6 +48,7 @@ const DCkbTransferModal: FC = () => {
   const dispatch = useDispatch();
 
   const provider = useSelector(selectProvider);
+  const chainId = useSelector(selectChainId);
   const userAddress = useSelector(selectUserAddress);
   const isLoggedIn = useSelector(selectIsLoggedIn);
   const isModalOpen = useSelector(selectOpen);
@@ -63,7 +64,7 @@ const DCkbTransferModal: FC = () => {
       dispatch(setStatus(PROCESSING_STATUSES.PROCESSING));
 
       // eslint-disable-next-line react-hooks/rules-of-hooks
-      await useHandleTransferERC20(provider, values.receiverAddress, values.amount);
+      await useHandleTransferERC20(provider, values.receiverAddress, values.amount, chainId);
       dispatch(setStatus(PROCESSING_STATUSES.SUCCESS));
     } catch (error: any) {
       dispatch(setStatus(PROCESSING_STATUSES.ERROR));

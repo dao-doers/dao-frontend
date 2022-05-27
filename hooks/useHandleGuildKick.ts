@@ -1,19 +1,17 @@
-// TODO: we gonna need that in future - not tested
 import { ethers } from 'ethers';
 
-import abiLibrary from 'lib/abi';
-
-const daoAddress = process.env.DAO_ADDRESS || '';
+import { MolochV2 } from 'utils/contracts';
 
 const useHandleGuildKick = async (
   provider: any,
   memberToKick: number,
   details: { title: string; description: string; link: string },
+  chainId: string,
 ) => {
   const signer = provider.getSigner();
-  const dao = await new ethers.Contract(daoAddress, abiLibrary.moloch2, signer);
+  const dao = await MolochV2(signer, chainId);
 
-  const tx = await dao.submitGuildKickProposal(
+  const tx = await (dao as ethers.Contract).submitGuildKickProposal(
     memberToKick,
     `{"title": "${details.title}", "description": "${details.description}", "link": "${details.link}"}`,
   );
