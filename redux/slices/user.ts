@@ -15,6 +15,7 @@ interface UserSlice {
   ckbBalance: number;
   balanceSUDT: any;
   sessionMaintained: boolean;
+  isWalletsModalOpen: boolean;
 }
 
 interface StateProps {
@@ -66,6 +67,7 @@ const initialstate = {
   balanceSUDT: 0,
   userShares: 0,
   sessionMaintained: false,
+  isWalletsModalOpen: false,
 };
 
 const userSlice = createSlice({
@@ -99,6 +101,9 @@ const userSlice = createSlice({
     setSessionMaintained: (state, action) => {
       state.sessionMaintained = action.payload;
     },
+    setWalletsModalOpen: (state, action) => {
+      state.isWalletsModalOpen = action.payload;
+    },
     clearUser: () => initialstate,
   },
   extraReducers: builder => {
@@ -126,6 +131,7 @@ export const selectckbBalance = (state: StateProps) => state.user.ckbBalance;
 export const selectbalanceSUDT = (state: StateProps) => state.user.balanceSUDT;
 export const selectUserShares = (state: StateProps) => state.user.userShares;
 export const selectessionMaintained = (state: StateProps) => state.user.sessionMaintained;
+export const selectWalletsModalOpen = (state: StateProps) => state.user.isWalletsModalOpen;
 
 export const {
   setUserAddress,
@@ -137,6 +143,7 @@ export const {
   setbalanceSUDT,
   setUserShares,
   setSessionMaintained,
+  setWalletsModalOpen,
   clearUser,
 } = userSlice.actions;
 

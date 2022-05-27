@@ -33,9 +33,6 @@ const IndexerStatus: FC = () => {
 
   const { molochBlock, layer2Block, molochError, molochLoading, layer2BlockLoading } = useCheckIndexerStatus();
 
-  console.log(molochBlock, 'molochBlock');
-  console.log(layer2Block, 'layer2Block');
-
   return (
     <StatusChip title="Indexer status:">
       {molochBlock === layer2Block && typeof layer2Block === 'number' && typeof molochBlock === 'number' && (

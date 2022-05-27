@@ -14,8 +14,6 @@ import SideNav from 'components/Layout/SideNav/SideNav';
 import BlockchainStatusContent from 'components/BlockchainStatusContent/BlockchainStatusContent';
 import DAOPlainButton from 'components/DAOPlainButton/DAOPlainButton';
 
-import THEME_MODES from 'enums/themeModes';
-
 import { selectTheme } from 'redux/slices/theme';
 import { Typography } from '@mui/material';
 
@@ -63,8 +61,6 @@ const StyledDrawer = styled(Drawer)`
 `;
 
 const Header: FC = () => {
-  const themeMode = useSelector(selectTheme);
-
   const [isDrawerOpen, setDrawerOpen] = useState(false);
 
   const handleDrawerToggle = () => {
