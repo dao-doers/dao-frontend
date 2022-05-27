@@ -14,19 +14,23 @@ import { GlobalThemeProvider } from 'theme';
 
 import createEmotionCache from '../createEmotionCache';
 
+import WalletProvider from '../web3/WalletProvider';
+
 const MyApp = ({ Component, pageProps }: AppProps) => {
   const cache = createEmotionCache();
 
   return (
     <CacheProvider value={cache}>
       <Provider store={store}>
-        <GlobalThemeProvider>
-          <CssBaseline />
-          <ApolloProvider client={apollo}>
-            <ModalsContainer />
-            <Component {...pageProps} />
-          </ApolloProvider>
-        </GlobalThemeProvider>
+        <WalletProvider>
+          <GlobalThemeProvider>
+            <CssBaseline />
+            <ApolloProvider client={apollo}>
+              <ModalsContainer />
+              <Component {...pageProps} />
+            </ApolloProvider>
+          </GlobalThemeProvider>
+        </WalletProvider>
       </Provider>
     </CacheProvider>
   );
