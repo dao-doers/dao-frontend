@@ -12,7 +12,7 @@ const WalletConnect: Connector<WalletConnectConnector> = (() => {
         71401: 'https://godwoken-testnet-v1.ckbapp.dev',
       },
       qrcode: true,
-      supportedChainIds: ['71401'],
+      supportedChainIds: [71401],
       chainId,
     }),
     canConnect: () => true,

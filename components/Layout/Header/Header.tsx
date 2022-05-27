@@ -14,7 +14,6 @@ import SideNav from 'components/Layout/SideNav/SideNav';
 import BlockchainStatusContent from 'components/BlockchainStatusContent/BlockchainStatusContent';
 import DAOPlainButton from 'components/DAOPlainButton/DAOPlainButton';
 
-import { selectTheme } from 'redux/slices/theme';
 import { Typography } from '@mui/material';
 
 const HeaderWrapper = styled(Box)`

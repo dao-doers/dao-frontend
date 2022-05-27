@@ -4,7 +4,6 @@ import { FC, useState, useEffect } from 'react';
 import styled from '@emotion/styled';
 
 import Box from '@mui/material/Box';
-import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 import LanguageIcon from '@mui/icons-material/Language';
 import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';

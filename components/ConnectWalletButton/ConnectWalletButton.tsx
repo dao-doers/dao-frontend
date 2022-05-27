@@ -1,5 +1,4 @@
 import { FC } from 'react';
-import Image from 'next/image';
 import { useDispatch } from 'react-redux';
 
 import styled from '@emotion/styled';

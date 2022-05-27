@@ -15,7 +15,6 @@ import Header from 'components/Layout/Header/Header';
 
 import THEME_MODES from 'enums/themeModes';
 
-import useIsMobile from 'hooks/useIsMobile';
 import useMaintainSession from 'hooks/useMaintainSession';
 // import useTestFunction from 'hooks/useTestFunction';
 
@@ -53,7 +52,6 @@ declare global {
 const Layout: FC<LayoutProps> = ({ children }) => {
   const dispatch = useDispatch();
 
-  const isMobile = useIsMobile('lg');
   const proposalsFetchStatus = useSelector(selectProposalsFetchStatus);
   const proposalsVotesStatus = useSelector(selectVotesFetchStatus);
 
