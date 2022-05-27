@@ -16,7 +16,6 @@ import Typography from '@mui/material/Typography';
 import DAOTile from 'components/DAOTile/DAOTile';
 
 import formatAddress from 'utils/formatAddress';
-import { shannonsToCkb } from 'utils/formatShannons';
 
 const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;

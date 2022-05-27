@@ -15,7 +15,6 @@ import Header from 'components/Layout/Header/Header';
 
 import THEME_MODES from 'enums/themeModes';
 
-import useIsMobile from 'hooks/useIsMobile';
 import useMaintainSession from 'hooks/useMaintainSession';
 // import useTestFunction from 'hooks/useTestFunction';
 
@@ -53,7 +52,6 @@ declare global {
 const Layout: FC<LayoutProps> = ({ children }) => {
   const dispatch = useDispatch();
 
-  const isMobile = useIsMobile('lg');
   const proposalsFetchStatus = useSelector(selectProposalsFetchStatus);
   const proposalsVotesStatus = useSelector(selectVotesFetchStatus);
 
@@ -70,7 +68,7 @@ const Layout: FC<LayoutProps> = ({ children }) => {
   useEffect(() => {
     const theme = sessionStorage.getItem('dao-theme');
 
-    dispatch(setTheme(theme === THEME_MODES.DARK ? THEME_MODES.DARK : THEME_MODES.LIGHT));
+    dispatch(setTheme(theme === THEME_MODES.LIGHT ? THEME_MODES.LIGHT : THEME_MODES.DARK));
   }, [dispatch]);
 
   useEffect(() => {

@@ -1,10 +1,9 @@
 import { ethers } from 'ethers';
 
-import abiLibrary from 'lib/abi';
+import { DCKBToken, MolochV2 } from 'utils/contracts';
 
-const daoAddress = process.env.DAO_ADDRESS || '';
-const tributeToken = process.env.TRIBUTE_TOKEN_ADDRESS || '';
-const paymentToken = process.env.TRIBUTE_TOKEN_ADDRESS || '';
+import DCKBTokenJSON from 'lib/DCKBToken.json';
+import MolochV2JSON from 'lib/MolochV2.json';
 
 const useHandleCreateProposal = async (
   provider: any,
@@ -15,6 +14,7 @@ const useHandleCreateProposal = async (
   tributeOffered: number,
   paymentRequested: number,
   details: { title: string; description: string; link: string },
+  chainId: string,
 ) => {
   const sharesRequestedBigNumber = ethers.BigNumber.from(sharesRequested);
   const lootRequestedBigNumber = ethers.BigNumber.from(lootRequested);
@@ -22,27 +22,30 @@ const useHandleCreateProposal = async (
   const tributeOfferedBigNumber = ethers.BigNumber.from(tributeOffered);
   const paymentRequestedBigNumber = ethers.BigNumber.from(paymentRequested);
 
+  const tokenAddress = (DCKBTokenJSON.networks as any)[chainId].address;
+  const molochAddress = (MolochV2JSON.networks as any)[chainId].address;
+
   const signer = provider.getSigner();
-  const dao = await new ethers.Contract(daoAddress, abiLibrary.moloch2, signer);
-  const token = await new ethers.Contract(tributeToken, abiLibrary.erc20, signer);
+  const token = await DCKBToken(signer, chainId);
+  const dao = await MolochV2(signer, chainId);
 
-  // TODO: check if there is existing approval in case if proposalCreator approved first MM request and rejected second
-  // console.log('token whitelist', {
-  //   a: await dao.tokenWhitelist(tributeToken),
-  //   daoAddress,
-  //   existingApproval: await token.allowance(proposalCreator, daoAddress),
-  // });
+  // TODO: check allowance and approve only necessary amount of tokens
+  const existingApproval = await (token as ethers.Contract).allowance(proposalCreator, molochAddress);
 
-  await token.approve(daoAddress, tributeOfferedBigNumber);
+  await (token as ethers.Contract).approve(
+    molochAddress,
+    // TODO: check that calc
+    ethers.BigNumber.from(tributeOffered - Number(existingApproval)),
+  );
 
-  const tx = await dao.submitProposal(
+  const tx = await (dao as ethers.Contract).submitProposal(
     applicantAddress,
     sharesRequestedBigNumber,
     lootRequestedBigNumber,
     tributeOfferedBigNumber,
-    tributeToken,
+    tokenAddress,
     paymentRequestedBigNumber,
-    paymentToken,
+    tokenAddress,
     `{"title": "${details.title}", "description": "${details.description}", "link": "${details.link}"}`,
   );
 

@@ -1,14 +1,19 @@
 /* eslint-disable consistent-return */
 import store from 'redux/store';
+import { ethers } from 'ethers';
 
 import { clearUser } from 'redux/slices/user';
+import { setChainId } from 'redux/slices/main';
 
 // TODO: remove (window as any)
 
 export const loadWeb3 = async () => {
   if (window.ethereum) {
+    store.dispatch(setChainId((window as any).ethereum.networkVersion));
+
     (window as any).ethereum.on('chainChanged', () => {
       console.log('chainChanged');
+      store.dispatch(setChainId((window as any).ethereum.networkVersion));
     });
     (window as any).ethereum.on('accountsChanged', () => {
       console.log('accountChanged');
@@ -17,18 +22,18 @@ export const loadWeb3 = async () => {
     });
 
     // TODO: get that data from env
-    if ((window as any).ethereum.networkVersion !== '0x315db00000006') {
+    if ((window as any).ethereum.networkVersion !== '0x116e9') {
       const data = [
         {
-          chainId: '0x315db00000006',
-          chainName: 'Godwoken V1 Testnet',
+          chainId: '0x116e9',
+          chainName: 'Godwoken v1.1 Testnet',
           nativeCurrency: {
-            name: 'CKB',
-            symbol: 'CKB',
+            name: 'dCKB',
+            symbol: 'dCKB',
             decimals: 18,
           },
-          rpcUrls: ['https://godwoken-testnet-web3-v1-rpc.ckbapp.dev'],
-          blockExplorerUrls: ['https://v1.aggron.gwscan.com'],
+          rpcUrls: ['https://godwoken-testnet-v1.ckbapp.dev'],
+          blockExplorerUrls: ['https://v1.betanet.gwscan.com'],
         },
       ];
       /* eslint-disable */
@@ -100,5 +105,18 @@ export const getMetamaskMessageError = (error: any) => {
       default:
         return 'Something went wrong';
     }
+  }
+};
+
+export const loadContract = (provider: any, contract: any, chainId: string) => {
+  try {
+    const deployedNetwork = contract.networks[chainId];
+
+    if (deployedNetwork === undefined) {
+      return null; // wrong network
+    }
+    return new ethers.Contract(deployedNetwork.address, contract.abi, provider);
+  } catch (error) {
+    console.log(error, 'error function load');
   }
 };

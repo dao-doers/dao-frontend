@@ -22,7 +22,7 @@ import { getMetamaskMessageError } from 'utils/blockchain';
 
 import config from 'config/config';
 
-import { selectProvider } from 'redux/slices/main';
+import { selectProvider, selectChainId } from 'redux/slices/main';
 import { selectUserAddress, selectIsLoggedIn, selectdckbBalance } from 'redux/slices/user';
 import { setOpen, setStatus, setMessage } from 'redux/slices/modalTransaction';
 
@@ -37,6 +37,7 @@ const JoinDaoForm: FC = () => {
   const dispatch = useDispatch();
 
   const provider = useSelector(selectProvider);
+  const chainId = useSelector(selectChainId);
   const userAddress = useSelector(selectUserAddress);
   const isLoggedIn = useSelector(selectIsLoggedIn);
   const dckbBalance = useSelector(selectdckbBalance);
@@ -73,6 +74,7 @@ const JoinDaoForm: FC = () => {
             description: values.description,
             link: modifiedLink,
           },
+          chainId,
         );
 
         if (receipt.blockNumber) {

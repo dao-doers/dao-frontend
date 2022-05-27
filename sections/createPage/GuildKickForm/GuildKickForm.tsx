@@ -21,7 +21,7 @@ import guildKickSchema from 'validators/guildKickSchema';
 
 import { getMetamaskMessageError } from 'utils/blockchain';
 
-import { selectProvider } from 'redux/slices/main';
+import { selectProvider, selectChainId } from 'redux/slices/main';
 import { selectUserAddress, selectIsLoggedIn, selectdckbBalance } from 'redux/slices/user';
 import { selectProposalStatus, setProposalStatus } from 'redux/slices/proposals';
 import { setOpen, setStatus, setMessage } from 'redux/slices/modalTransaction';
@@ -37,6 +37,7 @@ const GuildKickForm: FC = () => {
   const dispatch = useDispatch();
 
   const provider = useSelector(selectProvider);
+  const chainId = useSelector(selectChainId);
   const sendProposalStatus = useSelector(selectProposalStatus);
   const isLoggedIn = useSelector(selectIsLoggedIn);
 
@@ -49,11 +50,16 @@ const GuildKickForm: FC = () => {
 
       const modifiedLink = values.link.replace(/(^\w+:|^)\/\//, '');
 
-      const receipt = await useHandleGuildKick(provider, values.memberToKick, {
-        title: values.title,
-        description: values.description,
-        link: modifiedLink,
-      } as any);
+      const receipt = await useHandleGuildKick(
+        provider,
+        values.memberToKick,
+        {
+          title: values.title,
+          description: values.description,
+          link: modifiedLink,
+        },
+        chainId,
+      );
 
       if (receipt.blockNumber) {
         dispatch(setStatus(PROCESSING_STATUSES.SUCCESS));
