@@ -77,7 +77,7 @@ const FundProjectForm: FC = () => {
           applicantAddress,
           sharesRequested,
           lootRequested,
-          tributeOffered,
+          tributeOffered as any,
           paymentRequested,
           { title: values.title, description: values.description, link: modifiedLink },
           chainId,
