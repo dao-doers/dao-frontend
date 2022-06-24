@@ -3,7 +3,7 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { gql } from '@apollo/client';
 
 import { shannonsToCkb } from 'utils/formatShannons';
-import BigNumber from 'bignumber.js';
+import { BigNumber } from 'ethers';
 
 interface UserSlice {
   address: string;
@@ -11,7 +11,8 @@ interface UserSlice {
   cktLayer2Address: string;
   isLoggedIn: boolean;
   userShares: number;
-  dckbBalance: number;
+  dckbBalance?: BigNumber;
+  dckbBalanceInDao?: BigNumber;
   ckbBalance: number;
   balanceSUDT: any;
   sessionMaintained: boolean;
@@ -57,12 +58,13 @@ export const getUsersList = createAsyncThunk('user/getUsersList', async (userTok
   });
 });
 
-const initialstate = {
+const initialstate: UserSlice = {
   address: '',
   cktLayer1Address: '',
   cktLayer2Address: '',
   isLoggedIn: false,
-  dckbBalance: 0,
+  dckbBalance: undefined,
+  dckbBalanceInDao: undefined,
   ckbBalance: 0,
   balanceSUDT: 0,
   userShares: 0,
@@ -86,10 +88,13 @@ const userSlice = createSlice({
     setIsLoggedIn: (state, action) => {
       state.isLoggedIn = action.payload;
     },
-    setdckbBalance: (state, action) => {
-      state.dckbBalance = new BigNumber(action.payload).dividedBy(10 ** 8).toNumber();
+    setDckbBalance: (state, action: { payload: BigNumber }) => {
+      state.dckbBalance = action.payload;
     },
-    setckbBalance: (state, action) => {
+    setDckbBalanceInDao: (state, action: { payload: BigNumber }) => {
+      state.dckbBalanceInDao = action.payload;
+    },
+    setckbBalance: (state, action: { payload: number }) => {
       state.ckbBalance = shannonsToCkb(action.payload);
     },
     setbalanceSUDT: (state, action) => {
@@ -126,7 +131,8 @@ export const selectUserAddress = (state: StateProps) => state.user.address;
 export const selectCktLayer1Address = (state: StateProps) => state.user.cktLayer1Address;
 export const selectCktLayer2Address = (state: StateProps) => state.user.cktLayer2Address;
 export const selectIsLoggedIn = (state: StateProps) => state.user.isLoggedIn;
-export const selectdckbBalance = (state: StateProps) => state.user.dckbBalance;
+export const selectDckbBalance = (state: StateProps) => state.user.dckbBalance;
+export const selectDckbBalanceInDao = (state: StateProps) => state.user.dckbBalanceInDao;
 export const selectckbBalance = (state: StateProps) => state.user.ckbBalance;
 export const selectbalanceSUDT = (state: StateProps) => state.user.balanceSUDT;
 export const selectUserShares = (state: StateProps) => state.user.userShares;
@@ -138,7 +144,8 @@ export const {
   setCktLayer1Address,
   setCktLayer2Address,
   setIsLoggedIn,
-  setdckbBalance,
+  setDckbBalance,
+  setDckbBalanceInDao,
   setckbBalance,
   setbalanceSUDT,
   setUserShares,

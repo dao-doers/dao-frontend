@@ -9,8 +9,8 @@ const newFundingSchema = yup.object({
   // applicant: yup.string().required('Address is required'),
   tributeOffered: yup
     .number()
-    .test('maxDigitsAfterDecimal', 'Decimals not allowed', number => /^\d+(\.\d{0,0})?$/.test(String(number)))
-    .moreThan(0, 'Must be more than 0')
+    .integer()
+    .min(0)
     .typeError('Must be a number')
     .required('You must specify an amount as a tribute for considering your proposal.'),
   paymentRequested: yup

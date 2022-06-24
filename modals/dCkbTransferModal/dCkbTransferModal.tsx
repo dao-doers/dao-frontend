@@ -24,7 +24,7 @@ import transferModalSchema from 'validators/transferModalSchema';
 
 import { selectProvider, selectChainId } from 'redux/slices/main';
 import { selectOpen, setClose } from 'redux/slices/modaldCkbTransfer';
-import { selectUserAddress, selectIsLoggedIn, selectdckbBalance } from 'redux/slices/user';
+import { selectUserAddress, selectIsLoggedIn, selectDckbBalance } from 'redux/slices/user';
 import { setOpen, setMessage, setStatus } from 'redux/slices/modalTransaction';
 
 const StyledBox = styled(Box)`
@@ -52,7 +52,7 @@ const DCkbTransferModal: FC = () => {
   const userAddress = useSelector(selectUserAddress);
   const isLoggedIn = useSelector(selectIsLoggedIn);
   const isModalOpen = useSelector(selectOpen);
-  const dckbBalance = useSelector(selectdckbBalance);
+  const dckbBalance = useSelector(selectDckbBalance);
 
   const handleModalOpen = () => {
     dispatch(setClose());

@@ -9,10 +9,8 @@ import Typography from '@mui/material/Typography';
 import ConnectWalletButton from 'components/ConnectWalletButton/ConnectWalletButton';
 import DAOButton from 'components/DAOButton/DAOButton';
 import DAOInput from 'components/DAOInput/DAOInput';
-import TooltipIcon from 'components/TooltipIcon';
 
 import PROCESSING_STATUSES from 'enums/processingStatuses';
-import FETCH_STATUSES from 'enums/fetchStatuses';
 
 import useHandleGuildKick from 'hooks/useHandleGuildKick';
 import useIsMobile from 'hooks/useIsMobile';
@@ -22,8 +20,8 @@ import guildKickSchema from 'validators/guildKickSchema';
 import { getMetamaskMessageError } from 'utils/blockchain';
 
 import { selectProvider, selectChainId } from 'redux/slices/main';
-import { selectUserAddress, selectIsLoggedIn, selectdckbBalance } from 'redux/slices/user';
-import { selectProposalStatus, setProposalStatus } from 'redux/slices/proposals';
+import { selectIsLoggedIn } from 'redux/slices/user';
+import { selectProposalStatus } from 'redux/slices/proposals';
 import { setOpen, setStatus, setMessage } from 'redux/slices/modalTransaction';
 
 const initialValues = {

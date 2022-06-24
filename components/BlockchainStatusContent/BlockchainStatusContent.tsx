@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { FC, useState } from 'react';
 import { useSelector } from 'react-redux';
 import Identicon from 'identicon.js';
 import Image from 'next/image';
@@ -21,7 +21,14 @@ import formatAddress from 'utils/formatAddress';
 import useCheckBalance from 'hooks/useCheckBalance';
 import useIsMobile from 'hooks/useIsMobile';
 
-import { selectUserAddress, selectIsLoggedIn, selectUserShares, selectdckbBalance } from 'redux/slices/user';
+import {
+  selectUserAddress,
+  selectIsLoggedIn,
+  selectUserShares,
+  selectDckbBalance,
+  selectDckbBalanceInDao,
+} from 'redux/slices/user';
+import { shannonsToDisplayValue } from 'utils/units';
 
 import IndexerStatus from './IndexerStatus/IndexerStatus';
 
@@ -65,11 +72,13 @@ const BlockchainStatusContent: FC = () => {
   const userAddress = useSelector(selectUserAddress);
   const isLoggedIn = useSelector(selectIsLoggedIn);
   const userShares = useSelector(selectUserShares);
-  const dckbBalance = useSelector(selectdckbBalance);
+  const dckbBalance = useSelector(selectDckbBalance);
+  const dckbBalanceInDao = useSelector(selectDckbBalanceInDao);
 
   const { isChecked } = useCheckBalance();
 
-  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+
   const open = Boolean(anchorEl);
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
@@ -118,9 +127,9 @@ const BlockchainStatusContent: FC = () => {
             }}
           >
             <MenuItem onClick={handleClose}>
-              <StatusChip title="dCKB balance:">
+              <StatusChip title="Godwoken dCKB:">
                 {isChecked ? (
-                  <Typography variant="body1-bold">{dckbBalance.toFixed(2)}</Typography>
+                  <Typography variant="body1-bold">{dckbBalance ? shannonsToDisplayValue(dckbBalance) : ''}</Typography>
                 ) : (
                   <Box display="flex" alignItems="center">
                     <Box display="flex" alignItems="center" mr={1}>
@@ -133,15 +142,32 @@ const BlockchainStatusContent: FC = () => {
             </MenuItem>
             {userShares > 0 && (
               <MenuItem onClick={handleClose}>
-                <StatusChip title="Member shares:">
+                <StatusChip title="DAO member shares:">
                   <Typography variant="body1-bold">{userShares}</Typography>
                 </StatusChip>
               </MenuItem>
             )}
 
+            <MenuItem onClick={handleClose}>
+              <StatusChip title="DAO member dCKB:">
+                {isChecked ? (
+                  <Typography variant="body1-bold">
+                    {dckbBalanceInDao ? shannonsToDisplayValue(dckbBalanceInDao) : ''}
+                  </Typography>
+                ) : (
+                  <Box display="flex" alignItems="center">
+                    <Box display="flex" alignItems="center" mr={1}>
+                      <DAOCircleLoader size={20} />
+                    </Box>
+                    <Typography variant="body2">Checking</Typography>
+                  </Box>
+                )}
+              </StatusChip>
+            </MenuItem>
+
             {userShares === 0 && (
               <MenuItem onClick={handleClose}>
-                <StatusChip title="Member status:">
+                <StatusChip title="DAO member status:">
                   <TypographyRed>Not a member</TypographyRed>
                 </StatusChip>
               </MenuItem>

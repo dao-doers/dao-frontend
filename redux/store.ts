@@ -30,6 +30,7 @@ const store = configureStore({
       thunk: {
         extraArgument: { apollo },
       },
+      serializableCheck: false,
     }),
 });
 

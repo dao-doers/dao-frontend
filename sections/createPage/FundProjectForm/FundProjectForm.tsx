@@ -26,7 +26,7 @@ import config from 'config/config';
 
 import { selectProvider, selectChainId } from 'redux/slices/main';
 import { setOpen, setStatus, setMessage } from 'redux/slices/modalTransaction';
-import { selectUserAddress, selectIsLoggedIn, selectUserShares, selectdckbBalance } from 'redux/slices/user';
+import { selectUserAddress, selectIsLoggedIn, selectUserShares, selectDckbBalance } from 'redux/slices/user';
 
 const initialValues = {
   title: '',
@@ -50,7 +50,7 @@ const FundProjectForm: FC = () => {
   const userAddress = useSelector(selectUserAddress);
   const isLoggedIn = useSelector(selectIsLoggedIn);
   const userShares = useSelector(selectUserShares);
-  const dckbBalance = useSelector(selectdckbBalance);
+  const dckbBalance = useSelector(selectDckbBalance);
 
   const isMobile = useIsMobile('md');
 

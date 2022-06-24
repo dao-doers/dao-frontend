@@ -24,9 +24,6 @@ const useCheckIndexerStatus = () => {
   const [layer2Block, setLayer2Block] = useState();
   const [layer2BlockLoading, setLayer2BlockLoading] = useState(false);
 
-  console.log(molochBlock, 'molochBlock');
-  console.log(layer2Block, 'layer2Block');
-
   const getBlockNumber = () => provider.getBlockNumber();
 
   const { loading: molochLoading, error: molochError, data: molochBlockData } = useQuery(GET_BLOCK, {
