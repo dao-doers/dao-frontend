@@ -14,6 +14,9 @@ import Link from 'components/Link/Link';
 import { APP_ROUTES } from 'utils/routes';
 
 import useIsMobile from 'hooks/useIsMobile';
+import { useSelector } from 'react-redux';
+import { selectDaoTotalShares, selectGuildDckbBalance } from 'redux/slices/user';
+import { shannonsToDisplayValue } from 'utils/units';
 
 const ColumnsWrapper = styled(Box)`
   display: flex;
@@ -60,43 +63,69 @@ const Title = styled(Typography)`
 
 const About: FC = () => {
   const isMobile = useIsMobile('lg');
+  const guildDckbBalance = useSelector(selectGuildDckbBalance);
+  const daoTotalShares = useSelector(selectDaoTotalShares);
 
   return (
-    <Box mb={8}>
-      <Title variant="h3-bold" paragraph>
-        How does it work
-      </Title>
-      <ColumnsWrapper>
-        <ColumnWrapper>
-          <StyledAddReactionIcon />
-          <Typography variant="subtitle2">
-            Every person can create proposal request to join our guild which will allow you to take part in votings.
-          </Typography>
+    <>
+      <Box mb={8}>
+        <Title variant="h3-bold" paragraph>
+          How does it work
+        </Title>
+        <ColumnsWrapper>
+          <ColumnWrapper>
+            <StyledAddReactionIcon />
+            <Typography variant="subtitle2">
+              Every person can create proposal request to join our guild which will allow you to take part in votings.
+            </Typography>
 
-          {isMobile && (
-            <Box mx="auto" mb={1} mt={3} sx={{ width: { xs: '250px', sm: 'auto' } }}>
-              <Link internal href={APP_ROUTES.CREATE}>
-                <DAOButton variant="gradientOutline">
-                  <Typography noWrap>Create proposal</Typography>
-                </DAOButton>
-              </Link>
-            </Box>
-          )}
-        </ColumnWrapper>
-        <ColumnWrapper>
-          <StyledAddCircleOutlineIcon />
-          <Typography variant="subtitle2">
-            Every guild member can create his own proposal on which the community will vote.
-          </Typography>
-        </ColumnWrapper>
-        <ColumnWrapper>
-          <StyledAddTaskIcon />
-          <Typography variant="subtitle2">
-            Once the proposal is approved, it goes to the grace period and then execution phase.
-          </Typography>
-        </ColumnWrapper>
-      </ColumnsWrapper>
-    </Box>
+            {isMobile && (
+              <Box mx="auto" mb={1} mt={3} sx={{ width: { xs: '250px', sm: 'auto' } }}>
+                <Link internal href={APP_ROUTES.CREATE}>
+                  <DAOButton variant="gradientOutline">
+                    <Typography noWrap>Create proposal</Typography>
+                  </DAOButton>
+                </Link>
+              </Box>
+            )}
+          </ColumnWrapper>
+          <ColumnWrapper>
+            <StyledAddCircleOutlineIcon />
+            <Typography variant="subtitle2">
+              Every guild member can create his own proposal on which the community will vote.
+            </Typography>
+          </ColumnWrapper>
+          <ColumnWrapper>
+            <StyledAddTaskIcon />
+            <Typography variant="subtitle2">
+              Once the proposal is approved, it goes to the grace period and then execution phase.
+            </Typography>
+          </ColumnWrapper>
+        </ColumnsWrapper>
+      </Box>
+      <Box mb={8}>
+        <Title variant="h3-bold" paragraph>
+          Dashboard
+        </Title>
+        <ColumnsWrapper>
+          <ColumnWrapper>
+            <Typography variant="subtitle2">
+              DAO guild balance: {guildDckbBalance ? shannonsToDisplayValue(guildDckbBalance) : '-'} dCKB
+            </Typography>
+          </ColumnWrapper>
+          <ColumnWrapper>
+            <Typography variant="subtitle2">DAO total shares: {daoTotalShares?.toString()}</Typography>
+          </ColumnWrapper>
+          <ColumnWrapper>
+            <Typography variant="subtitle2">
+              Share to dCKB ratio:{' '}
+              {guildDckbBalance && daoTotalShares ? shannonsToDisplayValue(guildDckbBalance.div(daoTotalShares)) : '-'}{' '}
+              dCKB
+            </Typography>
+          </ColumnWrapper>
+        </ColumnsWrapper>
+      </Box>
+    </>
   );
 };
 

@@ -17,6 +17,8 @@ interface UserSlice {
   dckbBalance?: BigNumber;
   dckbBalanceInDao?: BigNumber;
   layer1Balance?: TLayer1Balance;
+  guildDckbBalance?: BigNumber;
+  daoTotalShares?: BigNumber;
 }
 
 interface StateProps {
@@ -58,7 +60,7 @@ export const getUsersList = createAsyncThunk('user/getUsersList', async (userTok
   });
 });
 
-const initialstate: UserSlice = {
+const initialState: UserSlice = {
   address: '',
   cktLayer1Address: '',
   cktLayer2Address: '',
@@ -70,11 +72,13 @@ const initialstate: UserSlice = {
   userShares: 0,
   sessionMaintained: false,
   isWalletsModalOpen: false,
+  guildDckbBalance: undefined,
+  daoTotalShares: undefined,
 };
 
 const userSlice = createSlice({
   name: 'user',
-  initialState: initialstate,
+  initialState,
   reducers: {
     setUserAddress: (state, action) => {
       state.address = action.payload;
@@ -109,7 +113,13 @@ const userSlice = createSlice({
     setWalletsModalOpen: (state, action) => {
       state.isWalletsModalOpen = action.payload;
     },
-    clearUser: () => initialstate,
+    setGuildDckbBalance: (state, action: { payload: BigNumber }) => {
+      state.guildDckbBalance = action.payload;
+    },
+    setDaoTotalShares: (state, action: { payload: BigNumber }) => {
+      state.daoTotalShares = action.payload;
+    },
+    clearUser: () => initialState,
   },
   extraReducers: builder => {
     // Get list of users
@@ -138,6 +148,8 @@ export const selectLayer1Balance = (state: StateProps) => state.user.layer1Balan
 export const selectUserShares = (state: StateProps) => state.user.userShares;
 export const selectessionMaintained = (state: StateProps) => state.user.sessionMaintained;
 export const selectWalletsModalOpen = (state: StateProps) => state.user.isWalletsModalOpen;
+export const selectGuildDckbBalance = (state: StateProps) => state.user.guildDckbBalance;
+export const selectDaoTotalShares = (state: StateProps) => state.user.daoTotalShares;
 
 export const {
   setUserAddress,
@@ -152,6 +164,8 @@ export const {
   setSessionMaintained,
   setWalletsModalOpen,
   clearUser,
+  setGuildDckbBalance,
+  setDaoTotalShares,
 } = userSlice.actions;
 
 export default userSlice.reducer;

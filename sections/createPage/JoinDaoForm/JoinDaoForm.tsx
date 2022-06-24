@@ -20,17 +20,17 @@ import newProposalSchema from 'validators/newProposalSchema';
 
 import { getMetamaskMessageError } from 'utils/blockchain';
 
-import config from 'config/config';
-
 import { selectProvider, selectChainId } from 'redux/slices/main';
 import { selectUserAddress, selectIsLoggedIn, selectDckbBalance } from 'redux/slices/user';
 import { setOpen, setStatus, setMessage } from 'redux/slices/modalTransaction';
+import { ckbToShannons } from 'utils/units';
 
 const initialValues = {
   title: '',
   description: '',
   link: '',
   tributeOffered: 0,
+  sharesRequested: 0,
 };
 
 const JoinDaoForm: FC = () => {
@@ -44,7 +44,7 @@ const JoinDaoForm: FC = () => {
 
   const isMobile = useIsMobile('md');
 
-  const onSubmit = async (values: any) => {
+  const onSubmit = async (values: typeof initialValues) => {
     try {
       dispatch(setStatus(PROCESSING_STATUSES.PROCESSING));
       dispatch(setOpen(true));
@@ -52,9 +52,8 @@ const JoinDaoForm: FC = () => {
       const modifiedLink = values.link.replace(/(^\w+:|^)\/\//, '');
       const proposalCreator = userAddress;
       const applicantAddress = userAddress;
-      const sharesRequested = values.tributeOffered * config.general.tribute_sharesRatio;
       const lootRequested = 0;
-      const { tributeOffered } = values;
+      const { tributeOffered, sharesRequested } = values;
       const paymentRequested = 0;
 
       if (dckbBalance?.lt(values.tributeOffered)) {
@@ -67,7 +66,7 @@ const JoinDaoForm: FC = () => {
           applicantAddress,
           sharesRequested,
           lootRequested,
-          tributeOffered,
+          ckbToShannons(tributeOffered),
           paymentRequested,
           {
             title: values.title,
@@ -179,6 +178,24 @@ const JoinDaoForm: FC = () => {
                   />
                 </Box>
 
+                <Box width="100%" mb={2}>
+                  <DAOInput
+                    label="Shares Requested"
+                    tootltip="The amount of requested shares for your tribute. The current convention is 1 dCKB : 1 voting share conversion rate."
+                    inputProps={{
+                      id: 'sharesRequested',
+                      placeholder: 'e.g. 10',
+                      value: formik.values.sharesRequested,
+                      onChange: formik.handleChange,
+                      type: 'number',
+                    }}
+                    formControlProps={{
+                      fullWidth: true,
+                    }}
+                    error={formik.errors.sharesRequested}
+                  />
+                </Box>
+
                 <Typography variant="subtitle1-bold" paragraph>
                   Summary:
                 </Typography>
@@ -204,9 +221,7 @@ const JoinDaoForm: FC = () => {
                   <Typography variant="body1-bold" mx={1}>
                     {/* TODO: create function to format numbers and prevent nan */}
                     {/* TODO: add process.env.TRIBUTE_SHARES_RATIO here */}
-                    {new Intl.NumberFormat('en-US').format(
-                      formik.values.tributeOffered * config.general.tribute_sharesRatio,
-                    )}
+                    {new Intl.NumberFormat('en-US').format(formik.values.sharesRequested)}
                   </Typography>
                   <TooltipIcon>
                     <Typography variant="body2">
