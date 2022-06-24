@@ -1,10 +1,10 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { ethers } from 'ethers';
+import { ethers, providers } from 'ethers';
 
 import CREATE_PROPOSAL_TYPE from 'enums/createProposalType';
 
 interface MainProps {
-  provider: any;
+  provider: providers.JsonRpcProvider;
   chainId: string;
   proposalType: CREATE_PROPOSAL_TYPE;
 }

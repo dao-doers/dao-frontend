@@ -1,9 +1,8 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-
 import { gql } from '@apollo/client';
-
-import { shannonsToCkb } from 'utils/formatShannons';
 import { BigNumber } from 'ethers';
+
+type TLayer1Balance = { ckbBalance: BigNumber; dckbBalance: BigNumber };
 
 interface UserSlice {
   address: string;
@@ -11,12 +10,13 @@ interface UserSlice {
   cktLayer2Address: string;
   isLoggedIn: boolean;
   userShares: number;
-  dckbBalance?: BigNumber;
-  dckbBalanceInDao?: BigNumber;
-  ckbBalance: number;
-  balanceSUDT: any;
   sessionMaintained: boolean;
   isWalletsModalOpen: boolean;
+
+  godwokenCkbBalance?: BigNumber;
+  dckbBalance?: BigNumber;
+  dckbBalanceInDao?: BigNumber;
+  layer1Balance?: TLayer1Balance;
 }
 
 interface StateProps {
@@ -65,8 +65,8 @@ const initialstate: UserSlice = {
   isLoggedIn: false,
   dckbBalance: undefined,
   dckbBalanceInDao: undefined,
-  ckbBalance: 0,
-  balanceSUDT: 0,
+  godwokenCkbBalance: undefined,
+  layer1Balance: undefined,
   userShares: 0,
   sessionMaintained: false,
   isWalletsModalOpen: false,
@@ -94,11 +94,11 @@ const userSlice = createSlice({
     setDckbBalanceInDao: (state, action: { payload: BigNumber }) => {
       state.dckbBalanceInDao = action.payload;
     },
-    setckbBalance: (state, action: { payload: number }) => {
-      state.ckbBalance = shannonsToCkb(action.payload);
+    setCkbBalance: (state, action: { payload: BigNumber }) => {
+      state.godwokenCkbBalance = action.payload;
     },
-    setbalanceSUDT: (state, action) => {
-      state.balanceSUDT = action.payload;
+    setLayer1Balance: (state, action: { payload: TLayer1Balance }) => {
+      state.layer1Balance = action.payload;
     },
     setUserShares: (state, action) => {
       state.userShares = Number(action.payload);
@@ -133,8 +133,8 @@ export const selectCktLayer2Address = (state: StateProps) => state.user.cktLayer
 export const selectIsLoggedIn = (state: StateProps) => state.user.isLoggedIn;
 export const selectDckbBalance = (state: StateProps) => state.user.dckbBalance;
 export const selectDckbBalanceInDao = (state: StateProps) => state.user.dckbBalanceInDao;
-export const selectckbBalance = (state: StateProps) => state.user.ckbBalance;
-export const selectbalanceSUDT = (state: StateProps) => state.user.balanceSUDT;
+export const selectGodwokenCkbBalance = (state: StateProps) => state.user.godwokenCkbBalance;
+export const selectLayer1Balance = (state: StateProps) => state.user.layer1Balance;
 export const selectUserShares = (state: StateProps) => state.user.userShares;
 export const selectessionMaintained = (state: StateProps) => state.user.sessionMaintained;
 export const selectWalletsModalOpen = (state: StateProps) => state.user.isWalletsModalOpen;
@@ -146,8 +146,8 @@ export const {
   setIsLoggedIn,
   setDckbBalance,
   setDckbBalanceInDao,
-  setckbBalance,
-  setbalanceSUDT,
+  setCkbBalance,
+  setLayer1Balance,
   setUserShares,
   setSessionMaintained,
   setWalletsModalOpen,

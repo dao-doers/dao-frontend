@@ -1,6 +1,5 @@
 import { FC, ReactNode, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import Web3 from 'web3';
 import { ethers } from 'ethers';
 
 import styled from '@emotion/styled';
@@ -42,12 +41,6 @@ const StyledContainer = styled(Container)`
 const StyledBox = styled(Box)`
   display: flex;
 `;
-
-declare global {
-  interface Window {
-    web3: Web3;
-  }
-}
 
 const Layout: FC<LayoutProps> = ({ children }) => {
   const dispatch = useDispatch();

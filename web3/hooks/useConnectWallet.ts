@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
 import { UnsupportedChainIdError, useWeb3React } from '@web3-react/core';
-import { Web3Provider } from '@ethersproject/providers';
+import { providers } from 'ethers';
 import { AbstractConnector } from '@web3-react/abstract-connector';
 
 import WALLET_TYPES from 'enums/walletTypes';
@@ -26,7 +26,7 @@ const activateWithNetworkSwitch = async (
 };
 
 const useConnectWallet = () => {
-  const { activate } = useWeb3React<Web3Provider>();
+  const { activate } = useWeb3React<providers.Web3Provider>();
 
   return useCallback(
     async (walletType: WALLET_TYPES) => {

@@ -54,7 +54,7 @@ const FundProjectForm: FC = () => {
 
   const isMobile = useIsMobile('md');
 
-  const onSubmit = async (values: any) => {
+  const onSubmit = async (values: typeof initialValues) => {
     try {
       dispatch(setStatus(PROCESSING_STATUSES.PROCESSING));
       dispatch(setOpen(true));
@@ -67,7 +67,7 @@ const FundProjectForm: FC = () => {
       const { tributeOffered } = values;
       const { paymentRequested } = values;
 
-      if (dckbBalance < values.tributeOffered) {
+      if (dckbBalance?.lt(values.tributeOffered)) {
         dispatch(setStatus(PROCESSING_STATUSES.ERROR));
         dispatch(setMessage('You have not enough dCKB'));
       } else {

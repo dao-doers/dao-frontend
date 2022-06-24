@@ -14,13 +14,14 @@ import useCheckProvider from 'hooks/useCheckProvider';
 
 import PROCESSING_STATUSES from 'enums/processingStatuses';
 
-import { shannonsToCkb, ckbToShannons } from 'utils/formatShannons';
+import { ckbToShannons } from 'utils/formatShannons';
 import formatAddress from 'utils/formatAddress';
 
 import mintModalSchema from 'validators/mintModalSchema';
 
-import { selectUserAddress, selectbalanceSUDT, setbalanceSUDT, selectCktLayer2Address } from 'redux/slices/user';
+import { selectUserAddress, selectLayer1Balance, setLayer1Balance, selectCktLayer2Address } from 'redux/slices/user';
 import { setMessage, setStatus } from 'redux/slices/modalTransaction';
+import { shannonsToDisplayValue } from 'utils/units';
 
 interface IBridgeComponent {
   onSubmitCompleteStep: (values: any) => void;
@@ -33,7 +34,7 @@ const BridgeComponent: FC<IBridgeComponent> = ({ onSubmitCompleteStep }) => {
   const dispatch = useDispatch();
 
   const userAddress = useSelector(selectUserAddress);
-  const balanceSUDT = useSelector(selectbalanceSUDT);
+  const balanceSUDT = useSelector(selectLayer1Balance);
   const cktLayer2Address = useSelector(selectCktLayer2Address);
 
   const hasProvider = useCheckProvider();
@@ -45,7 +46,7 @@ const BridgeComponent: FC<IBridgeComponent> = ({ onSubmitCompleteStep }) => {
       if (hasProvider && userAddress) {
         const balances = await balanceFromWallet();
 
-        dispatch(setbalanceSUDT(balances));
+        dispatch(setLayer1Balance(balances));
         return balances;
       }
     } catch (error: any) {
@@ -101,7 +102,9 @@ const BridgeComponent: FC<IBridgeComponent> = ({ onSubmitCompleteStep }) => {
               {!loaderBalance ? (
                 <Box display="flex" flexDirection="column" justifyContent="flex-end">
                   <Typography variant="body1-bold">
-                    {balanceSUDT?.dckbBalance ? `${shannonsToCkb(balanceSUDT?.dckbBalance)} dCKB` : 'no balance'}
+                    {balanceSUDT?.dckbBalance
+                      ? `${shannonsToDisplayValue(balanceSUDT.dckbBalance)} dCKB`
+                      : 'no balance'}
                   </Typography>
                 </Box>
               ) : (

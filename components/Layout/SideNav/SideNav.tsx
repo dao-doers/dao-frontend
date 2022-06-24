@@ -27,7 +27,6 @@ import {
   clearSorted,
 } from 'redux/slices/proposals';
 import { setOpen } from 'redux/slices/modaldCkbMint';
-import { setOpen as setOpendCkbTransfer } from 'redux/slices/modaldCkbTransfer';
 
 interface SideNavProps {
   setDrawerOpen?: (arg0: false) => void;
@@ -64,10 +63,6 @@ const SideNav: FC<SideNavProps> = ({ setDrawerOpen }) => {
 
   const handledCKBModal = () => {
     dispatch(setOpen(true));
-  };
-
-  const handleUSDTTransferModal = () => {
-    dispatch(setOpendCkbTransfer(true));
   };
 
   const handleClose = () => {
@@ -172,12 +167,6 @@ const SideNav: FC<SideNavProps> = ({ setDrawerOpen }) => {
       <Box mx="auto" my={1} sx={{ width: { xs: '60%', md: '100%' } }}>
         <DAOButton variant="gradientOutline" onClick={handledCKBModal}>
           <Typography>Get dCKB</Typography>
-        </DAOButton>
-      </Box>
-
-      <Box mx="auto" my={1} sx={{ width: { xs: '60%', md: '100%' } }}>
-        <DAOButton variant="gradientOutline" onClick={handleUSDTTransferModal}>
-          <Typography>Transfer dCKB</Typography>
         </DAOButton>
       </Box>
 

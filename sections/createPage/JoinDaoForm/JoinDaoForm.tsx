@@ -57,7 +57,7 @@ const JoinDaoForm: FC = () => {
       const { tributeOffered } = values;
       const paymentRequested = 0;
 
-      if (dckbBalance < values.tributeOffered) {
+      if (dckbBalance?.lt(values.tributeOffered)) {
         dispatch(setStatus(PROCESSING_STATUSES.ERROR));
         dispatch(setMessage('You have not enough dCKB'));
       } else {

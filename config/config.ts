@@ -13,7 +13,6 @@ const config = {
     },
     godwoken: {
       rpcUrl: 'https://godwoken-testnet-web3-v1-rpc.ckbapp.dev',
-      wsUrl: 'ws://godwoken-testnet-web3-v1-rpc.ckbapp.dev/ws',
       networkId: '0x116e1',
     },
     indexer: {
@@ -31,19 +30,6 @@ const config = {
     SUDT_PROXY_CONTRACT_ADDRESS: '0x884541623C1B26A926a5320615F117113765fF81',
     forceBridgeUrl: 'https://testnet.forcebridge.com/api/force-bridge/api/v1',
   },
-  ethereum: {
-    networkId: '0x4',
-    fallback: {
-      rpcUrl: '',
-      infura: {
-        apiKey: '808015861a3048648a41e56b23038945',
-      },
-    },
-  },
-  // WEB3_PROVIDER_URL: 'https://godwoken-testnet-web3-rpc.ckbapp.dev',
-  // ROLLUP_TYPE_HASH: '0x4cc2e6526204ae6a2e8fcf12f7ad472f41a1606d5b9624beebd215d780809f6a',
-  // ETH_ACCOUNT_LOCK_CODE_HASH: '0xdeec13a7b8e100579541384ccaf4b5223733e4a5483c3aec95ddc4c1d5ea5b22',
-  // WEB3_URL: 'https://godwoken-testnet-web3-rpc.ckbapp.dev',
 };
 
 export default config;

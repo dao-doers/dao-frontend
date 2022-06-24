@@ -8,7 +8,6 @@ import votesReducer from 'redux/slices/votes';
 
 import modalTransactionReducer from 'redux/slices/modalTransaction';
 import modaldCkbMintReducer from 'redux/slices/modaldCkbMint';
-import modaldCkbTransferReducer from 'redux/slices/modaldCkbTransfer';
 
 import apollo from 'config/apollo';
 
@@ -19,10 +18,8 @@ const store = configureStore({
     theme: themeReducer,
     proposals: proposalsReducer,
     votes: votesReducer,
-
     modalTransaction: modalTransactionReducer,
     modaldCkbMint: modaldCkbMintReducer,
-    modaldCkbTransfer: modaldCkbTransferReducer,
   },
   devTools: process.env.MODE !== 'production',
   middleware: getDefaultMiddleware =>

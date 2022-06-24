@@ -28,11 +28,13 @@ import {
   selectIsLoggedIn,
   selectCktLayer1Address,
   selectCktLayer2Address,
-  selectckbBalance,
+  selectGodwokenCkbBalance,
   setCktLayer1Address,
   setCktLayer2Address,
-  setckbBalance,
+  setCkbBalance,
 } from 'redux/slices/user';
+import { selectProvider } from 'redux/slices/main';
+import { BigNumber } from 'ethers';
 
 interface CreateAccountStepProps {
   completeStep: () => void;
@@ -84,8 +86,9 @@ const CreateAccountStep: FC<CreateAccountStepProps> = ({ completeStep }) => {
   const userAddress = useSelector(selectUserAddress);
   const cktLayer1Address = useSelector(selectCktLayer1Address);
   const cktLayer2Address = useSelector(selectCktLayer2Address);
-  const ckbBalance = useSelector(selectckbBalance);
+  const ckbBalance = useSelector(selectGodwokenCkbBalance);
   const isLoggedIn = useSelector(selectIsLoggedIn);
+  const provider = useSelector(selectProvider);
 
   const hasProvider = useCheckProvider();
   const { createLayer2Account, connectedWalletAddress, getLayer2Address } = useDCKBTokenHook();
@@ -93,24 +96,7 @@ const CreateAccountStep: FC<CreateAccountStepProps> = ({ completeStep }) => {
   const [copiedCKBAddress, setCopiedCKBAddress] = useState(false);
 
   const runCheckLayer2CKBAccountBalance = useCallback(async () => {
-    const response = await fetch(process.env.PROVIDER_URL || '', {
-      method: 'POST',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        jsonrpc: '2.0',
-        id: 1,
-        method: 'eth_getBalance',
-        params: [userAddress, 'latest'],
-      }),
-      mode: 'cors',
-    });
-
-    const json = await response.json();
-    // eslint-disable-next-line radix
-    dispatch(setckbBalance(parseInt(json.result)));
+    dispatch(setCkbBalance(await provider.getBalance(userAddress)));
   }, [userAddress]);
 
   const runGetLayer1Address = async () => {
@@ -154,7 +140,7 @@ const CreateAccountStep: FC<CreateAccountStepProps> = ({ completeStep }) => {
   }, [hasProvider, userAddress]);
 
   useEffect((): void => {
-    if (ckbBalance > 0) {
+    if (ckbBalance?.gt(BigNumber.from(0))) {
       runGetLayer2Address();
     }
   }, [ckbBalance]);
@@ -169,29 +155,32 @@ const CreateAccountStep: FC<CreateAccountStepProps> = ({ completeStep }) => {
   return (
     <Box mt={5} mb={4}>
       <StyledBox>
-        {ckbBalance === 0 && (
-          <>
-            <Box>
-              <Typography component="h6" variant="h6">
-                Create account on Nervos Layer 2
-              </Typography>
-              <Typography>You must have at least 462 CKB on your Layer 1 account to create Layer 2 account.</Typography>
-            </Box>
-            <ButtonWrapper>
-              {isLoggedIn ? (
-                <DAOButton variant="gradientOutline" onClick={() => handleCreateLayer2Account()}>
-                  Create account
-                </DAOButton>
-              ) : (
-                <ConnectWalletButton />
-              )}
-            </ButtonWrapper>
-          </>
-        )}
+        {!ckbBalance ||
+          (ckbBalance.eq(BigNumber.from(0)) && (
+            <>
+              <Box>
+                <Typography component="h6" variant="h6">
+                  Create account on Nervos Layer 2
+                </Typography>
+                <Typography>
+                  You must have at least 462 CKB on your Layer 1 account to create Layer 2 account.
+                </Typography>
+              </Box>
+              <ButtonWrapper>
+                {isLoggedIn ? (
+                  <DAOButton variant="gradientOutline" onClick={() => handleCreateLayer2Account()}>
+                    Create account
+                  </DAOButton>
+                ) : (
+                  <ConnectWalletButton />
+                )}
+              </ButtonWrapper>
+            </>
+          ))}
       </StyledBox>
 
       <StyledBox>
-        {ckbBalance === 0 && process.env.MODE === APP_MODES.DEV && (
+        {ckbBalance?.eq(BigNumber.from(0)) && process.env.MODE === APP_MODES.DEV && (
           <>
             <Box>
               <Typography component="h6" variant="h6">
@@ -213,7 +202,7 @@ const CreateAccountStep: FC<CreateAccountStepProps> = ({ completeStep }) => {
           </>
         )}
 
-        {ckbBalance > 0 && (
+        {ckbBalance?.gt(BigNumber.from(0)) && (
           <Box>
             <Typography component="h6" variant="h6">
               You already have a Nervos Layer 2 account.
