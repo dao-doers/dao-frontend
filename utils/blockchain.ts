@@ -22,18 +22,18 @@ export const loadWeb3 = async () => {
     });
 
     // TODO: get that data from env
-    if ((window as any).ethereum.networkVersion !== '0x116e9') {
+    if ((window as any).ethereum.networkVersion !== '0x116ea') {
       const data = [
         {
-          chainId: '0x116e9',
-          chainName: 'Godwoken v1.1 Testnet',
+          chainId: '0x116ea',
+          chainName: 'Godwoken v1 Mainnet',
           nativeCurrency: {
-            name: 'dCKB',
-            symbol: 'dCKB',
+            name: 'pCKB',
+            symbol: 'pCKB',
             decimals: 18,
           },
-          rpcUrls: ['https://godwoken-testnet-v1.ckbapp.dev'],
-          blockExplorerUrls: ['https://v1.betanet.gwscan.com'],
+          rpcUrls: ['https://v1.mainnet.godwoken.io/rpc'],
+          blockExplorerUrls: ['https://v1.gwscan.com'],
         },
       ];
       /* eslint-disable */

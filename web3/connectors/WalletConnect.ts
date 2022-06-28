@@ -9,10 +9,10 @@ const WalletConnect: Connector<WalletConnectConnector> = (() => {
   return {
     connector: new WalletConnectConnector({
       rpc: {
-        71401: 'https://godwoken-testnet-v1.ckbapp.dev',
+        71402: 'https://v1.mainnet.godwoken.io/rpc',
       },
       qrcode: true,
-      supportedChainIds: [71401],
+      supportedChainIds: [71402],
       chainId,
     }),
     canConnect: () => true,
