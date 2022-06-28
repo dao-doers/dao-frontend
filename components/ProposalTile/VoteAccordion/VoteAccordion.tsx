@@ -115,11 +115,7 @@ const VoteAccordion: FC<any> = ({ proposal }) => {
 
         {proposal.proposalStatus === PROPOSAL_STATUS.FINISHED && (
           <>
-            <Finished
-              paymentRequested={proposal.paymentRequested}
-              didPass={proposal.didPass}
-              applicant={proposal.applicant}
-            />
+            <Finished didPass={proposal.didPass} />
 
             <Box mt={2}>
               <VotesLinearCharts yesVotes={proposal.yesVotes} noVotes={proposal.noVotes} />
