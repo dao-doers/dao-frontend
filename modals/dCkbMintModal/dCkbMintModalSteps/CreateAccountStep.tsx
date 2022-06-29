@@ -207,13 +207,6 @@ const CreateAccountStep: FC<CreateAccountStepProps> = ({ completeStep }) => {
             <Typography component="h6" variant="h6">
               You already have a Nervos Layer 2 account.
             </Typography>
-            <CopyToClipboard text={cktLayer2Address} onCopy={handleCopy}>
-              <Box display="flex" alignItems="center" sx={{ cursor: 'pointer' }}>
-                <Typography mr={1}>Here is your address:</Typography>
-                <TypographyBlue>{formatAddress(cktLayer2Address)}</TypographyBlue>
-                <StyledCopyIcon />
-              </Box>
-            </CopyToClipboard>
           </Box>
         )}
       </StyledBox>

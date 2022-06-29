@@ -18,7 +18,7 @@ import { getMetamaskMessageError } from 'utils/blockchain';
 import { selectProvider, selectChainId } from 'redux/slices/main';
 import { selectUserAddress, selectIsLoggedIn, selectUserShares } from 'redux/slices/user';
 import { setOpen, setStatus, setMessage } from 'redux/slices/modalTransaction';
-import { selectProposalDeposit } from 'redux/slices/dao';
+import { selectProcessingReward, selectProposalDeposit } from 'redux/slices/dao';
 import { shannonsToDisplayValue } from 'utils/units';
 
 interface CollectingFundsProps {
@@ -33,6 +33,7 @@ const CollectingFunds: FC<CollectingFundsProps> = ({ proposalId }) => {
   const userAddress = useSelector(selectUserAddress);
   const isLoggedIn = useSelector(selectIsLoggedIn);
   const userShares = useSelector(selectUserShares);
+  const processingReward = useSelector(selectProcessingReward);
   const proposalDeposit = useSelector(selectProposalDeposit);
 
   const [sponsorProposalStatus, setSponsorProposalStatus] = useState(PROCESSING_STATUSES.IDLE);
@@ -76,6 +77,9 @@ const CollectingFunds: FC<CollectingFundsProps> = ({ proposalId }) => {
             This proposal has not been sponsored yet. It can be sponsored only by DAO member.
             <br />
             Amount required to sponsor: {proposalDeposit ? shannonsToDisplayValue(proposalDeposit) : ' - '} dCKB.
+            <br />
+            It will be returned to sponsor except processing reward (
+            {processingReward ? shannonsToDisplayValue(processingReward) : ' - '} dCKB).
           </Typography>
         </DAOTile>
       )}

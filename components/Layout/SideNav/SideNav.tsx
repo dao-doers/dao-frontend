@@ -164,11 +164,11 @@ const SideNav: FC<SideNavProps> = ({ setDrawerOpen }) => {
         </DAOButton>
       </Box>
 
-      <Box mx="auto" my={1} sx={{ width: { xs: '60%', md: '100%' } }}>
+      {/* <Box mx="auto" my={1} sx={{ width: { xs: '60%', md: '100%' } }}>
         <DAOButton variant="gradientOutline" onClick={handledCKBModal}>
           <Typography>Get dCKB</Typography>
         </DAOButton>
-      </Box>
+      </Box> */}
 
       <Box mx="auto" my={1} sx={{ width: { xs: '60%', md: '100%' } }}>
         <ThemeModeSwitch />
