@@ -5,6 +5,7 @@ import userReducer from 'redux/slices/user';
 import themeReducer from 'redux/slices/theme';
 import proposalsReducer from 'redux/slices/proposals';
 import votesReducer from 'redux/slices/votes';
+import daoReducer from 'redux/slices/dao';
 
 import modalTransactionReducer from 'redux/slices/modalTransaction';
 import modaldCkbMintReducer from 'redux/slices/modaldCkbMint';
@@ -20,6 +21,7 @@ const store = configureStore({
     votes: votesReducer,
     modalTransaction: modalTransactionReducer,
     modaldCkbMint: modaldCkbMintReducer,
+    dao: daoReducer,
   },
   devTools: process.env.MODE !== 'production',
   middleware: getDefaultMiddleware =>

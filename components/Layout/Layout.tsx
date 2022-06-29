@@ -26,6 +26,7 @@ import { selectFetchStatus as selectProposalsFetchStatus, getProposalsList } fro
 import { selectFetchStatus as selectVotesFetchStatus, getVotesList } from 'redux/slices/votes';
 import { getUsersList } from 'redux/slices/user';
 import { setProvider } from 'redux/slices/main';
+import { getTotalShares } from 'redux/slices/dao';
 
 export type LayoutProps = {
   children: ReactNode;
@@ -49,6 +50,7 @@ const Layout: FC<LayoutProps> = ({ children }) => {
   const proposalsVotesStatus = useSelector(selectVotesFetchStatus);
 
   useEffect(() => {
+    dispatch(getTotalShares());
     dispatch(getProposalsList());
     dispatch(getVotesList());
     dispatch(getUsersList());
@@ -77,7 +79,6 @@ const Layout: FC<LayoutProps> = ({ children }) => {
   return (
     <>
       <Header />
-
       <StyledContainer>
         <StyledBox>
           <Box sx={{ display: { xs: 'none', lg: 'block' } }} mt={8}>

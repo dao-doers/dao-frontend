@@ -9,7 +9,6 @@ import {
   setDckbBalance,
   setDckbBalanceInDao,
   setGuildDckbBalance,
-  setDaoTotalShares,
 } from 'redux/slices/user';
 
 import { DCKBToken, MolochV2 } from 'utils/contracts';
@@ -38,7 +37,6 @@ const useCheckBalance = () => {
         const guildDckbBalance = await dao.userTokenBalances(guildAddress, token.address);
 
         dispatch(setGuildDckbBalance(guildDckbBalance));
-        dispatch(setDaoTotalShares(await dao.totalShares()));
       }
 
       if (isLoggedIn && token) {

@@ -15,8 +15,9 @@ import { APP_ROUTES } from 'utils/routes';
 
 import useIsMobile from 'hooks/useIsMobile';
 import { useSelector } from 'react-redux';
-import { selectDaoTotalShares, selectGuildDckbBalance } from 'redux/slices/user';
+import { selectGuildDckbBalance } from 'redux/slices/user';
 import { shannonsToDisplayValue } from 'utils/units';
+import { selectTotalShares } from 'redux/slices/dao';
 
 const ColumnsWrapper = styled(Box)`
   display: flex;
@@ -64,7 +65,7 @@ const Title = styled(Typography)`
 const About: FC = () => {
   const isMobile = useIsMobile('lg');
   const guildDckbBalance = useSelector(selectGuildDckbBalance);
-  const daoTotalShares = useSelector(selectDaoTotalShares);
+  const daoTotalShares = useSelector(selectTotalShares);
 
   return (
     <>
