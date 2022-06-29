@@ -17,7 +17,6 @@ interface UserSlice {
   dckbBalance?: BigNumber;
   dckbBalanceInDao?: BigNumber;
   layer1Balance?: TLayer1Balance;
-  guildDckbBalance?: BigNumber;
 }
 
 interface StateProps {
@@ -71,7 +70,6 @@ const initialState: UserSlice = {
   userShares: 0,
   sessionMaintained: false,
   isWalletsModalOpen: false,
-  guildDckbBalance: undefined,
 };
 
 const userSlice = createSlice({
@@ -111,9 +109,6 @@ const userSlice = createSlice({
     setWalletsModalOpen: (state, action) => {
       state.isWalletsModalOpen = action.payload;
     },
-    setGuildDckbBalance: (state, action: { payload: BigNumber }) => {
-      state.guildDckbBalance = action.payload;
-    },
     clearUser: () => initialState,
   },
   extraReducers: builder => {
@@ -143,7 +138,6 @@ export const selectLayer1Balance = (state: StateProps) => state.user.layer1Balan
 export const selectUserShares = (state: StateProps) => state.user.userShares;
 export const selectessionMaintained = (state: StateProps) => state.user.sessionMaintained;
 export const selectWalletsModalOpen = (state: StateProps) => state.user.isWalletsModalOpen;
-export const selectGuildDckbBalance = (state: StateProps) => state.user.guildDckbBalance;
 
 export const {
   setUserAddress,
@@ -158,7 +152,6 @@ export const {
   setSessionMaintained,
   setWalletsModalOpen,
   clearUser,
-  setGuildDckbBalance,
 } = userSlice.actions;
 
 export default userSlice.reducer;

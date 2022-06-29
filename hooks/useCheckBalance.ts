@@ -3,13 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { ethers } from 'ethers';
 
 import { selectProvider, selectChainId } from 'redux/slices/main';
-import {
-  selectUserAddress,
-  selectIsLoggedIn,
-  setDckbBalance,
-  setDckbBalanceInDao,
-  setGuildDckbBalance,
-} from 'redux/slices/user';
+import { selectUserAddress, selectIsLoggedIn, setDckbBalance, setDckbBalanceInDao } from 'redux/slices/user';
 
 import { DCKBToken, MolochV2 } from 'utils/contracts';
 
@@ -32,11 +26,6 @@ const useCheckBalance = () => {
         const userDckbBalanceInDao = await dao.userTokenBalances(userAddress, token.address);
 
         dispatch(setDckbBalanceInDao(userDckbBalanceInDao));
-
-        const guildAddress = await dao.GUILD();
-        const guildDckbBalance = await dao.userTokenBalances(guildAddress, token.address);
-
-        dispatch(setGuildDckbBalance(guildDckbBalance));
       }
 
       if (isLoggedIn && token) {

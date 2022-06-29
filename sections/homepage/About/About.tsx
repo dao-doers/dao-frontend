@@ -17,7 +17,7 @@ import useIsMobile from 'hooks/useIsMobile';
 import { useSelector } from 'react-redux';
 import { selectGuildDckbBalance } from 'redux/slices/user';
 import { shannonsToDisplayValue } from 'utils/units';
-import { selectTotalShares } from 'redux/slices/dao';
+import { selectGuildTributeTokenBalance, selectTotalShares } from 'redux/slices/dao';
 
 const ColumnsWrapper = styled(Box)`
   display: flex;
@@ -64,7 +64,7 @@ const Title = styled(Typography)`
 
 const About: FC = () => {
   const isMobile = useIsMobile('lg');
-  const guildDckbBalance = useSelector(selectGuildDckbBalance);
+  const guildTributeTokenBalance = useSelector(selectGuildTributeTokenBalance);
   const daoTotalShares = useSelector(selectTotalShares);
 
   return (
@@ -111,7 +111,8 @@ const About: FC = () => {
         <ColumnsWrapper>
           <ColumnWrapper>
             <Typography variant="subtitle2">
-              DAO guild balance: {guildDckbBalance ? shannonsToDisplayValue(guildDckbBalance) : '-'} dCKB
+              DAO guild balance: {guildTributeTokenBalance ? shannonsToDisplayValue(guildTributeTokenBalance) : '-'}{' '}
+              dCKB
             </Typography>
           </ColumnWrapper>
           <ColumnWrapper>
@@ -120,7 +121,9 @@ const About: FC = () => {
           <ColumnWrapper>
             <Typography variant="subtitle2">
               Share to dCKB ratio:{' '}
-              {guildDckbBalance && daoTotalShares ? shannonsToDisplayValue(guildDckbBalance.div(daoTotalShares)) : '-'}{' '}
+              {guildTributeTokenBalance && daoTotalShares
+                ? shannonsToDisplayValue(guildTributeTokenBalance.div(daoTotalShares))
+                : '-'}{' '}
               dCKB
             </Typography>
           </ColumnWrapper>
