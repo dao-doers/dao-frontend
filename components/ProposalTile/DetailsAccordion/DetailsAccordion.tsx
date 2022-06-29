@@ -16,6 +16,7 @@ import Typography from '@mui/material/Typography';
 import DAOTile from 'components/DAOTile/DAOTile';
 
 import formatAddress from 'utils/formatAddress';
+import { shannonsToDisplayValue } from 'utils/units';
 
 const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
@@ -180,7 +181,7 @@ const DetailsAccordion: FC<any> = ({ proposal }) => {
                     Tribute to DAO
                   </Typography>
                   <Typography variant="body1-bold">
-                    {proposal.tributeOffered} {proposal.tributeTokenSymbol}
+                    {shannonsToDisplayValue(proposal.tributeOffered)} {proposal.tributeTokenSymbol}
                   </Typography>
                 </Box>
               </DAOTile>
