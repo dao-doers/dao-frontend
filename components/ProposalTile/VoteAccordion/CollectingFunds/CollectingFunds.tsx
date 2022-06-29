@@ -18,6 +18,8 @@ import { getMetamaskMessageError } from 'utils/blockchain';
 import { selectProvider, selectChainId } from 'redux/slices/main';
 import { selectUserAddress, selectIsLoggedIn, selectUserShares } from 'redux/slices/user';
 import { setOpen, setStatus, setMessage } from 'redux/slices/modalTransaction';
+import { selectProposalDeposit } from 'redux/slices/dao';
+import { shannonsToDisplayValue } from 'utils/units';
 
 interface CollectingFundsProps {
   proposalId: string;
@@ -31,15 +33,20 @@ const CollectingFunds: FC<CollectingFundsProps> = ({ proposalId }) => {
   const userAddress = useSelector(selectUserAddress);
   const isLoggedIn = useSelector(selectIsLoggedIn);
   const userShares = useSelector(selectUserShares);
+  const proposalDeposit = useSelector(selectProposalDeposit);
 
   const [sponsorProposalStatus, setSponsorProposalStatus] = useState(PROCESSING_STATUSES.IDLE);
 
   const handleSponsorProposal = async () => {
     try {
+      if (!proposalDeposit) {
+        throw new Error('proposalDeposit from indexer undefined');
+      }
+
       dispatch(setStatus(PROCESSING_STATUSES.PROCESSING));
       dispatch(setOpen(true));
 
-      const receipt = await useHandleSponsorProposal(provider, proposalId, userAddress, chainId);
+      const receipt = await useHandleSponsorProposal(provider, proposalId, userAddress, chainId, proposalDeposit);
       if (receipt.blockNumber) {
         dispatch(setStatus(PROCESSING_STATUSES.SUCCESS));
         dispatch(
@@ -67,6 +74,8 @@ const CollectingFunds: FC<CollectingFundsProps> = ({ proposalId }) => {
         <DAOTile>
           <Typography align="center" p={1}>
             This proposal has not been sponsored yet. It can be sponsored only by DAO member.
+            <br />
+            Amount required to sponsor: {proposalDeposit ? shannonsToDisplayValue(proposalDeposit) : ' - '} dCKB.
           </Typography>
         </DAOTile>
       )}

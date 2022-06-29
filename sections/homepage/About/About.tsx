@@ -15,7 +15,6 @@ import { APP_ROUTES } from 'utils/routes';
 
 import useIsMobile from 'hooks/useIsMobile';
 import { useSelector } from 'react-redux';
-import { selectGuildDckbBalance } from 'redux/slices/user';
 import { shannonsToDisplayValue } from 'utils/units';
 import { selectGuildTributeTokenBalance, selectTotalShares } from 'redux/slices/dao';
 

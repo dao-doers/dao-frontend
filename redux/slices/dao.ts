@@ -10,6 +10,7 @@ type FetchingStatusProps = FETCH_STATUSES;
 interface DaoProps {
   fetchStatus: FetchingStatusProps;
   guildTributeTokenBalance?: BigNumber;
+  proposalDeposit?: BigNumber;
   totalShares?: BigNumber;
 }
 
@@ -22,6 +23,7 @@ export const getTotalShares = createAsyncThunk('dao/getTotalShares', async (user
     query: gql`
       query totalShares {
         moloches {
+          proposalDeposit
           totalShares
           tokenBalances {
             token {
@@ -52,6 +54,7 @@ const daoSlice = createSlice({
       state.guildTributeTokenBalance = BigNumber.from(
         action.payload.data.moloches?.[0]?.tokenBalances.find((tb: any) => tb.guildBank).tokenBalance,
       );
+      state.proposalDeposit = BigNumber.from(action.payload.data.moloches?.[0]?.proposalDeposit);
       state.totalShares = BigNumber.from(action.payload.data.moloches?.[0]?.totalShares);
       state.fetchStatus = FETCH_STATUSES.SUCCESS;
     });
@@ -64,8 +67,9 @@ const daoSlice = createSlice({
   },
 });
 
-export const selectTotalShares = (state: StateProps) => state.dao.totalShares;
 export const selectGuildTributeTokenBalance = (state: StateProps) => state.dao.guildTributeTokenBalance;
+export const selectProposalDeposit = (state: StateProps) => state.dao.proposalDeposit;
+export const selectTotalShares = (state: StateProps) => state.dao.totalShares;
 
 export const { setTotalShares } = daoSlice.actions;
 
