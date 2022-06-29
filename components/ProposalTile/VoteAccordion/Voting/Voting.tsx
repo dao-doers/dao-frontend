@@ -1,6 +1,7 @@
 /* eslint-disable react-hooks/rules-of-hooks */
-import { FC, useState, useEffect } from 'react';
+import { FC, useState, useEffect, useMemo } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import moment from 'moment-mini';
 
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
@@ -10,7 +11,7 @@ import DAOButton from 'components/DAOButton/DAOButton';
 import DAOTile from 'components/DAOTile/DAOTile';
 import Counter from 'components/Counter/Counter';
 
-import useHandleVote from 'hooks/useHandleVote';
+import useHandleVote, { HANDLE_VOTE_ERRORS } from 'hooks/useHandleVote';
 import useCheckIfVoted from 'hooks/useCheckIfVoted';
 
 import PROCESSING_STATUSES from 'enums/processingStatuses';
@@ -23,10 +24,11 @@ import { setOpen, setStatus, setMessage } from 'redux/slices/modalTransaction';
 
 interface VotingProps {
   proposalIndex: string;
+  votingPeriodStarts: string;
   votingPeriodEnds: string;
 }
 
-const Voting: FC<VotingProps> = ({ proposalIndex, votingPeriodEnds }) => {
+const Voting: FC<VotingProps> = ({ proposalIndex, votingPeriodStarts, votingPeriodEnds }) => {
   const dispatch = useDispatch();
 
   const provider = useSelector(selectProvider);
@@ -37,6 +39,10 @@ const Voting: FC<VotingProps> = ({ proposalIndex, votingPeriodEnds }) => {
 
   // 0 means idle state, 1 means user can vote, 2 means user already voted, 3 means user just voted
   const [notVotedYet, setNotVotedYet] = useState(0);
+
+  const votingPeriodStarted = useMemo(() => moment.unix(parseInt(votingPeriodStarts, 10)).isBefore(), [
+    votingPeriodStarts,
+  ]);
 
   useEffect(() => {
     if (isLoggedIn && userShares > 0 && proposalIndex !== null) {
@@ -74,7 +80,10 @@ const Voting: FC<VotingProps> = ({ proposalIndex, votingPeriodEnds }) => {
             );
           }
         } catch (error: any) {
-          if (error.code) {
+          if (HANDLE_VOTE_ERRORS.includes(error?.message)) {
+            dispatch(setStatus(PROCESSING_STATUSES.ERROR));
+            dispatch(setMessage(error.message));
+          } else if (error.code) {
             dispatch(setStatus(PROCESSING_STATUSES.ERROR));
             dispatch(setMessage(getMetamaskMessageError(error)));
           }
@@ -86,6 +95,16 @@ const Voting: FC<VotingProps> = ({ proposalIndex, votingPeriodEnds }) => {
       }
     });
   };
+
+  if (!votingPeriodStarted) {
+    return (
+      <Box>
+        <b>Voting period has not started yet.</b> It will begin at:{' '}
+        {moment.unix(parseInt(votingPeriodStarts, 10)).format()}.<br />
+        <br />
+      </Box>
+    );
+  }
 
   return (
     <Box>

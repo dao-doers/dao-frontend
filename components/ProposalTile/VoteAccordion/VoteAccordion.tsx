@@ -86,7 +86,11 @@ const VoteAccordion: FC<any> = ({ proposal }) => {
 
         {proposal.proposalStatus === PROPOSAL_STATUS.VOTING && (
           <>
-            <Voting proposalIndex={proposal.proposalIndex} votingPeriodEnds={proposal.votingPeriodEnds} />
+            <Voting
+              proposalIndex={proposal.proposalIndex}
+              votingPeriodStarts={proposal.votingPeriodStarts}
+              votingPeriodEnds={proposal.votingPeriodEnds}
+            />
             <VotesLinearCharts yesVotes={proposal.yesVotes} noVotes={proposal.noVotes} />
           </>
         )}
