@@ -86,6 +86,9 @@ const Voting: FC<VotingProps> = ({ proposalIndex, votingPeriodStarts, votingPeri
           } else if (error.code) {
             dispatch(setStatus(PROCESSING_STATUSES.ERROR));
             dispatch(setMessage(getMetamaskMessageError(error)));
+          } else {
+            dispatch(setStatus(PROCESSING_STATUSES.ERROR));
+            dispatch(setMessage('Unknown error.'));
           }
         }
       } else {
