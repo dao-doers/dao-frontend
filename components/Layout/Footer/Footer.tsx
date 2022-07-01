@@ -15,13 +15,13 @@ const Footer: FC = () => {
   return (
     <Box display="flex" justifyContent="center" width="100%" mt={10} mb={4}>
       <Box mx={2}>
-        <Link href="/" target="_blank" rel="noreferrer noopener">
-          <TypographyGrey>TERMS OF USE</TypographyGrey>
+        <Link href="https://mainnet.bridge.godwoken.io" target="_blank" rel="noreferrer noopener">
+          <TypographyGrey>GODWOKEN MAINNET BRIDGE</TypographyGrey>
         </Link>
       </Box>
       <Box mx={2}>
-        <Link href="/" target="_blank" rel="noreferrer noopener">
-          <TypographyGrey>PRIVACY POLICY</TypographyGrey>
+        <Link href="https://app.nexisdao.com/dckb" target="_blank" rel="noreferrer noopener">
+          <TypographyGrey>NEXISDAO DCKB APP</TypographyGrey>
         </Link>
       </Box>
     </Box>

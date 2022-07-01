@@ -34,7 +34,7 @@ const Intro: FC = () => {
       </Title>
       <Box>
         <Typography variant="subtitle1" mb={4}>
-          Decentralized Autonomous Organization introduced to the World by Digi Pnyx Foundation to spread democracy
+          Decentralized Autonomous Organization on Godwoken Mainnet (Nervos blockchain Layer 2).
         </Typography>
         <Box sx={{ height: { xs: '100px', sm: 'auto' } }}>
           <Typography variant="h2-bold" align="center">
