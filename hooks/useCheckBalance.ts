@@ -22,7 +22,7 @@ const useCheckBalance = () => {
       const token = await DCKBToken(provider, chainId);
       const dao = await MolochV2(provider, chainId);
 
-      if (dao && token) {
+      if (dao && token && userAddress !== '') {
         const userDckbBalanceInDao = await dao.userTokenBalances(userAddress, token.address);
 
         dispatch(setDckbBalanceInDao(userDckbBalanceInDao));

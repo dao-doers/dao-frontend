@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/rules-of-hooks */
 import { FC, useState, useEffect, useMemo } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import moment from 'moment-mini';
@@ -11,8 +10,7 @@ import DAOButton from 'components/DAOButton/DAOButton';
 import DAOTile from 'components/DAOTile/DAOTile';
 import Counter from 'components/Counter/Counter';
 
-import useHandleVote, { HANDLE_VOTE_ERRORS } from 'hooks/useHandleVote';
-import useCheckIfVoted from 'hooks/useCheckIfVoted';
+import submitProposalVote, { HANDLE_VOTE_ERRORS } from 'hooks/vote';
 
 import PROCESSING_STATUSES from 'enums/processingStatuses';
 
@@ -21,6 +19,7 @@ import { getMetamaskMessageError } from 'utils/blockchain';
 import { selectProvider, selectChainId } from 'redux/slices/main';
 import { selectUserAddress, selectIsLoggedIn, selectUserShares } from 'redux/slices/user';
 import { setOpen, setStatus, setMessage } from 'redux/slices/modalTransaction';
+import { MolochV2 } from 'utils/contracts';
 
 interface VotingProps {
   proposalIndex: string;
@@ -37,66 +36,62 @@ const Voting: FC<VotingProps> = ({ proposalIndex, votingPeriodStarts, votingPeri
   const isLoggedIn = useSelector(selectIsLoggedIn);
   const userShares = useSelector(selectUserShares);
 
-  // 0 means idle state, 1 means user can vote, 2 means user already voted, 3 means user just voted
-  const [notVotedYet, setNotVotedYet] = useState(0);
-
+  const [currentUserDidNotVote, setCurrentUserDidNotVote] = useState(false);
+  const [voteSuccessMessageVisibility, setVoteSuccessMessageVisibility] = useState(false);
   const votingPeriodStarted = useMemo(() => moment.unix(parseInt(votingPeriodStarts, 10)).isBefore(), [
     votingPeriodStarts,
   ]);
 
   useEffect(() => {
-    if (isLoggedIn && userShares > 0 && proposalIndex !== null) {
-      useCheckIfVoted(provider, userAddress, proposalIndex, chainId).then(async response => {
-        if (response === true) {
-          setNotVotedYet(1);
-        } else {
-          setNotVotedYet(2);
-        }
-      });
+    async function getMemberProposalVote() {
+      if (!userAddress || typeof proposalIndex !== 'string' || proposalIndex === '') {
+        return;
+      }
+
+      const dao = await MolochV2(provider, chainId);
+
+      if (!dao) {
+        throw new Error('useCheckIfVoted::dao is falsy');
+      }
+
+      const response: number = await dao.getMemberProposalVote(userAddress, proposalIndex);
+
+      setCurrentUserDidNotVote(response === 0);
     }
-    // TODO: remove that DAO_ADDRESS env
-  }, [userAddress, isLoggedIn, proposalIndex, process.env.DAO_ADDRESS]);
+
+    getMemberProposalVote();
+  }, [userAddress, proposalIndex, provider, chainId]);
 
   const handleVote = async (vote: number) => {
     dispatch(setStatus(PROCESSING_STATUSES.PROCESSING));
     dispatch(setOpen(true));
 
-    await useCheckIfVoted(provider, userAddress, proposalIndex, chainId).then(async response => {
-      if (response === true) {
-        setNotVotedYet(1);
+    try {
+      const receipt = await submitProposalVote(provider, proposalIndex, vote, chainId);
 
-        try {
-          const receipt = await useHandleVote(provider, proposalIndex, vote, chainId);
-
-          if (receipt.blockNumber) {
-            setNotVotedYet(3);
-            dispatch(setStatus(PROCESSING_STATUSES.SUCCESS));
-            dispatch(
-              setMessage(
-                `Your request has been processed by blockchain network and will be displayed with the block number ${
-                  receipt.blockNumber + 1
-                }`,
-              ),
-            );
-          }
-        } catch (error: any) {
-          if (HANDLE_VOTE_ERRORS.includes(error?.message)) {
-            dispatch(setStatus(PROCESSING_STATUSES.ERROR));
-            dispatch(setMessage(error.message));
-          } else if (error.code) {
-            dispatch(setStatus(PROCESSING_STATUSES.ERROR));
-            dispatch(setMessage(getMetamaskMessageError(error)));
-          } else {
-            dispatch(setStatus(PROCESSING_STATUSES.ERROR));
-            dispatch(setMessage('Unknown error.'));
-          }
-        }
-      } else {
-        setNotVotedYet(2);
-        dispatch(setMessage('You have already voted!'));
-        dispatch(setStatus(PROCESSING_STATUSES.ERROR));
+      if (receipt.blockNumber) {
+        setVoteSuccessMessageVisibility(true);
+        dispatch(setStatus(PROCESSING_STATUSES.SUCCESS));
+        dispatch(
+          setMessage(
+            `Your request has been processed by blockchain network and will be displayed when the next block is mined. Transaction hash: ${receipt.transactionHash}`,
+          ),
+        );
       }
-    });
+    } catch (error: any) {
+      if (HANDLE_VOTE_ERRORS.includes(error?.message)) {
+        dispatch(setStatus(PROCESSING_STATUSES.ERROR));
+        dispatch(setMessage(error.message));
+      } else if (error.code) {
+        dispatch(setStatus(PROCESSING_STATUSES.ERROR));
+        dispatch(setMessage(getMetamaskMessageError(error)));
+      } else {
+        dispatch(setStatus(PROCESSING_STATUSES.ERROR));
+        dispatch(setMessage('Unknown error.'));
+      }
+
+      setVoteSuccessMessageVisibility(false);
+    }
   };
 
   if (!votingPeriodStarted) {
@@ -117,7 +112,7 @@ const Voting: FC<VotingProps> = ({ proposalIndex, votingPeriodStarts, votingPeri
         </Box>
       )}
 
-      {isLoggedIn && notVotedYet < 2 && userShares > 0 && (
+      {isLoggedIn && currentUserDidNotVote && userShares > 0 && (
         <Box display="flex" justifyContent="space-between">
           <Box width="48%">
             <DAOButton variant="agreeVariant" onClick={() => handleVote(1)}>
@@ -132,7 +127,7 @@ const Voting: FC<VotingProps> = ({ proposalIndex, votingPeriodStarts, votingPeri
         </Box>
       )}
 
-      {notVotedYet === 2 && (
+      {isLoggedIn && !currentUserDidNotVote && (
         <DAOTile variant="errorBox">
           <Typography align="center" p={1}>
             You have already voted!
@@ -140,7 +135,7 @@ const Voting: FC<VotingProps> = ({ proposalIndex, votingPeriodStarts, votingPeri
         </DAOTile>
       )}
 
-      {notVotedYet === 3 && (
+      {voteSuccessMessageVisibility && (
         <DAOTile variant="gradientOutline">
           <Typography align="center" p={1}>
             You have successfully voted!

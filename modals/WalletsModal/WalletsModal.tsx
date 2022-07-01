@@ -15,9 +15,6 @@ import { getMetamaskAddress } from 'utils/blockchain';
 
 import useCheckProvider from 'hooks/useCheckProvider';
 
-import useConnectWallet from 'web3/hooks/useConnectWallet';
-import WALLET_TYPES from 'enums/walletTypes';
-
 import {
   selectWalletsModalOpen,
   setWalletsModalOpen,
@@ -51,7 +48,6 @@ const WalletsModal: FC = () => {
   const isModalOpen = useSelector(selectWalletsModalOpen);
 
   const hasProvider = useCheckProvider();
-  const handleConnectWallet = useConnectWallet();
 
   const dAppLink = process.env.APP_URL;
 
@@ -68,10 +64,6 @@ const WalletsModal: FC = () => {
 
     dispatch(getUsersList());
     dispatch(setWalletsModalOpen(false));
-  };
-
-  const handleWalletConnect = () => {
-    handleConnectWallet(WALLET_TYPES.WALLETCONNECT);
   };
 
   return (
@@ -97,17 +89,6 @@ const WalletsModal: FC = () => {
             </DAOButton>
           )}
         </DAOTile>
-
-        <Box my={2} width="100%">
-          <DAOTile variant="greyShadow">
-            <DAOButton variant="gradientOutline" onClick={handleWalletConnect}>
-              <Box display="flex" alignItems="center" minWidth={20}>
-                <Image src="/logos/walletConnect.png" alt="header-logo" height="14" width="21" />
-                <TypographyBold>WalletConnect</TypographyBold>
-              </Box>
-            </DAOButton>
-          </DAOTile>
-        </Box>
       </StyledBox>
     </Modal>
   );
