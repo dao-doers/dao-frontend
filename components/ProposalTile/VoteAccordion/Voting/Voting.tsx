@@ -42,23 +42,23 @@ const Voting: FC<VotingProps> = ({ proposalIndex, votingPeriodStarts, votingPeri
     votingPeriodStarts,
   ]);
 
-  useEffect(() => {
-    async function getMemberProposalVote() {
-      if (!userAddress || typeof proposalIndex !== 'string' || proposalIndex === '') {
-        return;
-      }
-
-      const dao = await MolochV2(provider, chainId);
-
-      if (!dao) {
-        throw new Error('useCheckIfVoted::dao is falsy');
-      }
-
-      const response: number = await dao.getMemberProposalVote(userAddress, proposalIndex);
-
-      setCurrentUserDidNotVote(response === 0);
+  async function getMemberProposalVote() {
+    if (!userAddress || typeof proposalIndex !== 'string' || proposalIndex === '') {
+      return;
     }
 
+    const dao = await MolochV2(provider, chainId);
+
+    if (!dao) {
+      throw new Error('useCheckIfVoted::dao is falsy');
+    }
+
+    const response: number = await dao.getMemberProposalVote(userAddress, proposalIndex);
+
+    setCurrentUserDidNotVote(response === 0);
+  }
+
+  useEffect(() => {
     getMemberProposalVote();
   }, [userAddress, proposalIndex, provider, chainId]);
 
@@ -77,6 +77,7 @@ const Voting: FC<VotingProps> = ({ proposalIndex, votingPeriodStarts, votingPeri
             `Your request has been processed by blockchain network and will be displayed when the next block is mined. Transaction hash: ${receipt.transactionHash}`,
           ),
         );
+        getMemberProposalVote();
       }
     } catch (error: any) {
       if (HANDLE_VOTE_ERRORS.includes(error?.message)) {
