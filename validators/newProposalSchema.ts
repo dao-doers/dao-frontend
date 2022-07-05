@@ -11,11 +11,7 @@ const newProposalSchema = yup.object({
     .integer()
     .moreThan(0, 'Must be more than 0')
     .required('You must specify an amount as a tribute for considering your proposal.'),
-  sharesRequested: yup
-    .number()
-    .integer()
-    .moreThan(0, 'Must be more than 0')
-    .required('You must specify an amount as a tribute for considering your proposal.'),
+  sharesRequested: yup.number().integer().min(0).required('You have to specify how many shares you are requesting.'),
 });
 
 export default newProposalSchema;

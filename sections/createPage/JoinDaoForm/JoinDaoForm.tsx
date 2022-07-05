@@ -181,7 +181,7 @@ const JoinDaoForm: FC = () => {
                 <Box width="100%" mb={2}>
                   <DAOInput
                     label="Shares Requested"
-                    tootltip="The amount of requested shares for your tribute. The current convention is 1 dCKB : 1 voting share conversion rate."
+                    tootltip="The amount of requested shares for your tribute. The current recommended convention is 1 dCKB : 1 voting share conversion rate."
                     inputProps={{
                       id: 'sharesRequested',
                       placeholder: 'e.g. 10',

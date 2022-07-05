@@ -43,14 +43,18 @@ const Voting: FC<VotingProps> = ({ proposalIndex, votingPeriodStarts, votingPeri
   ]);
 
   async function getMemberProposalVote() {
-    if (!userAddress || typeof proposalIndex !== 'string' || proposalIndex === '') {
+    if (!userAddress || typeof proposalIndex !== 'string' || proposalIndex === '' || !chainId) {
       return;
     }
 
     const dao = await MolochV2(provider, chainId);
 
     if (!dao) {
-      throw new Error('useCheckIfVoted::dao is falsy');
+      console.error('useCheckIfVoted::dao is falsy', {
+        chainId,
+        provider,
+      });
+      return;
     }
 
     const response: number = await dao.getMemberProposalVote(userAddress, proposalIndex);
