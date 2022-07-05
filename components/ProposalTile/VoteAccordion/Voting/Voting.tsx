@@ -27,6 +27,9 @@ interface VotingProps {
   votingPeriodEnds: string;
 }
 
+const VOTE_YES = 1;
+const VOTE_NO = 2;
+
 const Voting: FC<VotingProps> = ({ proposalIndex, votingPeriodStarts, votingPeriodEnds }) => {
   const dispatch = useDispatch();
 
@@ -36,7 +39,7 @@ const Voting: FC<VotingProps> = ({ proposalIndex, votingPeriodStarts, votingPeri
   const isLoggedIn = useSelector(selectIsLoggedIn);
   const userShares = useSelector(selectUserShares);
 
-  const [currentUserDidNotVote, setCurrentUserDidNotVote] = useState(false);
+  const [currentUserVoted, setCurrentUserVoted] = useState<boolean | null>(null);
   const [voteSuccessMessageVisibility, setVoteSuccessMessageVisibility] = useState(false);
   const votingPeriodStarted = useMemo(() => moment.unix(parseInt(votingPeriodStarts, 10)).isBefore(), [
     votingPeriodStarts,
@@ -44,6 +47,7 @@ const Voting: FC<VotingProps> = ({ proposalIndex, votingPeriodStarts, votingPeri
 
   async function getMemberProposalVote() {
     if (!userAddress || typeof proposalIndex !== 'string' || proposalIndex === '' || !chainId) {
+      setCurrentUserVoted(null);
       return;
     }
 
@@ -54,12 +58,17 @@ const Voting: FC<VotingProps> = ({ proposalIndex, votingPeriodStarts, votingPeri
         chainId,
         provider,
       });
+      setCurrentUserVoted(null);
       return;
     }
 
-    const response: number = await dao.getMemberProposalVote(userAddress, proposalIndex);
+    const voteEnum: number = await dao.getMemberProposalVote(userAddress, proposalIndex);
 
-    setCurrentUserDidNotVote(response === 0);
+    if (typeof voteEnum === 'number') {
+      setCurrentUserVoted(voteEnum === VOTE_YES || voteEnum === VOTE_NO);
+    } else {
+      setCurrentUserVoted(null);
+    }
   }
 
   useEffect(() => {
@@ -117,22 +126,22 @@ const Voting: FC<VotingProps> = ({ proposalIndex, votingPeriodStarts, votingPeri
         </Box>
       )}
 
-      {isLoggedIn && currentUserDidNotVote && userShares > 0 && (
+      {isLoggedIn && currentUserVoted === false && userShares > 0 && (
         <Box display="flex" justifyContent="space-between">
           <Box width="48%">
-            <DAOButton variant="agreeVariant" onClick={() => handleVote(1)}>
+            <DAOButton variant="agreeVariant" onClick={() => handleVote(VOTE_YES)}>
               Yes
             </DAOButton>
           </Box>
           <Box width="48%">
-            <DAOButton variant="disagreeVariant" onClick={() => handleVote(2)}>
+            <DAOButton variant="disagreeVariant" onClick={() => handleVote(VOTE_NO)}>
               No
             </DAOButton>
           </Box>
         </Box>
       )}
 
-      {isLoggedIn && !currentUserDidNotVote && (
+      {isLoggedIn && currentUserVoted === true && (
         <DAOTile variant="errorBox">
           <Typography align="center" p={1}>
             You have already voted!

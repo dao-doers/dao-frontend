@@ -173,6 +173,21 @@ const DetailsAccordion: FC<any> = ({ proposal }) => {
             </Box>
           )}
 
+          {proposal.lootRequested && (
+            <Box sx={{ width: { xs: '48%', xl: '30%' } }} mb={2} mx="1%">
+              <DAOTile variant="gradientOutline" width="100%" height="100px">
+                <Box display="flex" flexDirection="column" alignItems="center">
+                  <Typography variant="body2" gutterBottom>
+                    Loot Requested
+                  </Typography>
+                  <Typography variant="body1-bold">
+                    {new Intl.NumberFormat('de-DE').format(proposal.lootRequested)}
+                  </Typography>
+                </Box>
+              </DAOTile>
+            </Box>
+          )}
+
           {proposal.tributeOffered && (
             <Box sx={{ width: { xs: '48%', xl: '30%' } }} mb={2} mx="1%">
               <DAOTile variant="gradientOutline" width="100%" height="100px">
