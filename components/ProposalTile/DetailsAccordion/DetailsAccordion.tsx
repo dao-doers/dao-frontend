@@ -70,6 +70,7 @@ const GradientTypography = styled(Typography)`
 const DetailsAccordion: FC<any> = ({ proposal }) => {
   const [copiedSponsoredAddress, setCopiedSponsoredAddress] = useState(false);
   const [copiedApplicantAddress, setCopiedApplicantAddress] = useState(false);
+  const [copiedProposerAddress, setCopiedProposerAddress] = useState(false);
 
   const handleCopySponsoredAddress = () => {
     setCopiedSponsoredAddress(true);
@@ -82,6 +83,13 @@ const DetailsAccordion: FC<any> = ({ proposal }) => {
     setCopiedApplicantAddress(true);
     setTimeout(() => {
       setCopiedApplicantAddress(false);
+    }, 2000);
+  };
+
+  const handleCopyProposerAddress = () => {
+    setCopiedProposerAddress(true);
+    setTimeout(() => {
+      setCopiedProposerAddress(false);
     }, 2000);
   };
 
@@ -112,7 +120,7 @@ const DetailsAccordion: FC<any> = ({ proposal }) => {
                 <Typography variant="body2" align="center" gutterBottom>
                   Created by
                 </Typography>
-                <CopyToClipboard text={proposal.sponsor} onCopy={handleCopySponsoredAddress}>
+                <CopyToClipboard text={proposal.proposer} onCopy={handleCopyProposerAddress}>
                   <Box display="flex" justifyContent="center">
                     <TypographyCursor align="center">{formatAddress(proposal.proposer, 5, 5)}</TypographyCursor>
                     <StyledCopyIcon />
@@ -218,7 +226,7 @@ const DetailsAccordion: FC<any> = ({ proposal }) => {
             </Box>
           )}
 
-          <Snackbar open={copiedSponsoredAddress || copiedApplicantAddress}>
+          <Snackbar open={copiedSponsoredAddress || copiedApplicantAddress || copiedProposerAddress}>
             <Alert severity="success" sx={{ width: '100%' }}>
               Address copied!
             </Alert>

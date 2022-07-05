@@ -100,22 +100,6 @@ const ProposalTile: FC<any> = ({ proposal, mbProps }) => {
             <TypographySmall align="right" paragraph>
               {formatSeconds(proposal.createdAt)}
             </TypographySmall>
-
-            <Box display="flex">
-              <Tooltip title="Go to project website" placement="top">
-                <Link href={`https://${formattedWebsite}`} target="_blank">
-                  <StyledLanguageIcon />
-                </Link>
-              </Tooltip>
-              <Tooltip title="Share this proposal on Twitter" placement="top">
-                <Link
-                  href={`https://twitter.com/share?url=${process.env.APP_URL}proposal/${proposal.id}&text=${formattedTitle}`}
-                  target="_blank"
-                >
-                  <StyledTwitterIcon />
-                </Link>
-              </Tooltip>
-            </Box>
           </Box>
 
           <Box pb={4}>
