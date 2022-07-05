@@ -126,7 +126,7 @@ const Voting: FC<VotingProps> = ({ proposalIndex, votingPeriodStarts, votingPeri
         </Box>
       )}
 
-      {isLoggedIn && currentUserVoted === false && userShares > 0 && (
+      {isLoggedIn && !voteSuccessMessageVisibility && currentUserVoted === false && userShares > 0 && (
         <Box display="flex" justifyContent="space-between">
           <Box width="48%">
             <DAOButton variant="agreeVariant" onClick={() => handleVote(VOTE_YES)}>
@@ -141,7 +141,7 @@ const Voting: FC<VotingProps> = ({ proposalIndex, votingPeriodStarts, votingPeri
         </Box>
       )}
 
-      {isLoggedIn && currentUserVoted === true && (
+      {isLoggedIn && !voteSuccessMessageVisibility && currentUserVoted === true && (
         <DAOTile variant="errorBox">
           <Typography align="center" p={1}>
             You have already voted!
