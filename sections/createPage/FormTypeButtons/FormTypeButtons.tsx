@@ -30,45 +30,28 @@ const FormTypeButtons: FC<any> = () => {
           onClick={() => handleSetProposalType(CREATE_PROPOSAL_TYPE.NORMAL)}
         >
           <Typography variant="h6-bold" align="center" paragraph>
-            Request for joining DAO
+            Create standard proposal
           </Typography>
-          <Typography align="center">Tributing capital and requesting new shares to join the DAO</Typography>
+          <Typography align="center">Tributing capital, requesting new shares</Typography>
         </Box>
       </DAOTile>
 
       <Box my={2}>
-        <DAOTile variant={proposalType === CREATE_PROPOSAL_TYPE.WITH_FUNDING ? 'gradientOutline' : null}>
+        <DAOTile variant={proposalType === CREATE_PROPOSAL_TYPE.KICK ? 'gradientOutline' : null}>
           <Box
             width="100%"
             height="100%"
             p={3}
             sx={{ cursor: 'pointer' }}
-            onClick={() => handleSetProposalType(CREATE_PROPOSAL_TYPE.WITH_FUNDING)}
+            onClick={() => handleSetProposalType(CREATE_PROPOSAL_TYPE.KICK)}
           >
             <Typography variant="h6-bold" align="center" paragraph>
-              Request for project funding
+              Guild kick
             </Typography>
-            <Typography align="center">
-              Tributing spoils or requesting funds from the DAO to work on internal projects and improvements
-            </Typography>
+            <Typography align="center">Request to forcibly remove a malicious member through a vote</Typography>
           </Box>
         </DAOTile>
       </Box>
-
-      <DAOTile variant={proposalType === CREATE_PROPOSAL_TYPE.KICK ? 'gradientOutline' : null}>
-        <Box
-          width="100%"
-          height="100%"
-          p={3}
-          sx={{ cursor: 'pointer' }}
-          onClick={() => handleSetProposalType(CREATE_PROPOSAL_TYPE.KICK)}
-        >
-          <Typography variant="h6-bold" align="center" paragraph>
-            Guild kick
-          </Typography>
-          <Typography align="center">Request to forcibly remove a malicious member through a vote</Typography>
-        </Box>
-      </DAOTile>
     </Box>
   );
 };

@@ -8,7 +8,6 @@ import Typography from '@mui/material/Typography';
 import Layout from 'components/Layout/Layout';
 
 import FormTypeButtons from 'sections/createPage/FormTypeButtons/FormTypeButtons';
-import FundProjectForm from 'sections/createPage/FundProjectForm/FundProjectForm';
 import GuildKickForm from 'sections/createPage/GuildKickForm/GuildKickForm';
 import JoinDaoForm from 'sections/createPage/JoinDaoForm/JoinDaoForm';
 
@@ -43,7 +42,6 @@ const CreatePage: FC<NextPage> = () => {
         </Box>
         <Box sx={{ width: { xs: '100%', md: '50%', lg: '55%' } }}>
           {proposalType === CREATE_PROPOSAL_TYPE.NORMAL && <JoinDaoForm />}
-          {proposalType === CREATE_PROPOSAL_TYPE.WITH_FUNDING && <FundProjectForm />}
           {proposalType === CREATE_PROPOSAL_TYPE.KICK && <GuildKickForm />}
         </Box>
       </Box>

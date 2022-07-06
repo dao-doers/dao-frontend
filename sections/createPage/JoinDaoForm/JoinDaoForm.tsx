@@ -31,6 +31,7 @@ const initialValues = {
   link: '',
   tributeOffered: 0,
   sharesRequested: 0,
+  lootRequested: 0,
 };
 
 const JoinDaoForm: FC = () => {
@@ -52,8 +53,7 @@ const JoinDaoForm: FC = () => {
       const modifiedLink = values.link.replace(/(^\w+:|^)\/\//, '');
       const proposalCreator = userAddress;
       const applicantAddress = userAddress;
-      const lootRequested = 0;
-      const { tributeOffered, sharesRequested } = values;
+      const { tributeOffered, sharesRequested, lootRequested } = values;
       const paymentRequested = 0;
 
       if (dckbBalance?.lt(values.tributeOffered)) {
@@ -181,7 +181,7 @@ const JoinDaoForm: FC = () => {
                 <Box width="100%" mb={2}>
                   <DAOInput
                     label="Shares Requested"
-                    tootltip="The amount of requested shares for your tribute. The current recommended convention is 1 dCKB : 1 voting share conversion rate."
+                    tootltip="The amount of requested shares for your tribute. The current recommended convention is 1 dCKB : 1 voting share ratio."
                     inputProps={{
                       id: 'sharesRequested',
                       placeholder: 'e.g. 10',
@@ -193,6 +193,24 @@ const JoinDaoForm: FC = () => {
                       fullWidth: true,
                     }}
                     error={formik.errors.sharesRequested}
+                  />
+                </Box>
+
+                <Box width="100%" mb={2}>
+                  <DAOInput
+                    label="Loot Requested"
+                    tootltip="Non-voting shares. The current recommended convention is 1 dCKB : 1 loot ratio."
+                    inputProps={{
+                      id: 'lootRequested',
+                      placeholder: 'e.g. 10',
+                      value: formik.values.lootRequested,
+                      onChange: formik.handleChange,
+                      type: 'number',
+                    }}
+                    formControlProps={{
+                      fullWidth: true,
+                    }}
+                    error={formik.errors.lootRequested}
                   />
                 </Box>
 
@@ -212,22 +230,6 @@ const JoinDaoForm: FC = () => {
                   <TooltipIcon>
                     <Typography variant="body2">
                       The amount of dCKB you are committing to deposit to the DAO bank.
-                    </Typography>
-                  </TooltipIcon>
-                </Box>
-
-                <Box display="flex" width="100%" mb={2}>
-                  <Typography>Shares Requested: </Typography>
-                  <Typography variant="body1-bold" mx={1}>
-                    {/* TODO: create function to format numbers and prevent nan */}
-                    {/* TODO: add process.env.TRIBUTE_SHARES_RATIO here */}
-                    {new Intl.NumberFormat('en-US').format(formik.values.sharesRequested)}
-                  </Typography>
-                  <TooltipIcon>
-                    <Typography variant="body2">
-                      Voting shares in the DAO. Shares are granted to members in order to allow them to vote on
-                      proposals in the DAO. Shares also represent a claim on the tokens held in the DAO. Shares can
-                      neither be exchanged or sold to other members of the DAO.
                     </Typography>
                   </TooltipIcon>
                 </Box>
