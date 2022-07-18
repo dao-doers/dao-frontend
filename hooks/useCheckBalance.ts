@@ -19,6 +19,10 @@ const useCheckBalance = () => {
 
   useEffect(() => {
     const fetchCkbBalance = async () => {
+      if (!chainId) {
+        return;
+      }
+
       const token = await DCKBToken(provider, chainId);
       const dao = await MolochV2(provider, chainId);
 
@@ -38,7 +42,7 @@ const useCheckBalance = () => {
     };
 
     fetchCkbBalance();
-  }, [isLoggedIn, userAddress]);
+  }, [provider, chainId, isLoggedIn, userAddress]);
 
   return { isChecked };
 };

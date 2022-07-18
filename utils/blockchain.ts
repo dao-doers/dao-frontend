@@ -110,9 +110,13 @@ export const getMetamaskMessageError = (error: any) => {
 
 export const loadContract = (provider: any, contract: any, chainId: string) => {
   try {
-    const deployedNetwork = contract.networks[chainId];
+    let deployedNetwork = contract.networks[chainId];
 
-    if (deployedNetwork === undefined) {
+    if (typeof(chainId) === 'string' && !chainId.includes('0x')) {
+      deployedNetwork = deployedNetwork ||contract.networks['0x' + parseInt(chainId, 10).toString(16)];
+    }
+
+    if (typeof deployedNetwork === 'undefined') {
       return null; // wrong network
     }
     return new ethers.Contract(deployedNetwork.address, contract.abi, provider);
