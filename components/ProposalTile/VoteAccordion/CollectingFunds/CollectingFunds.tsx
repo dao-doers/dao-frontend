@@ -95,13 +95,16 @@ const CollectingFunds: FC<CollectingFundsProps> = ({ proposalId }) => {
           <ConnectWalletButton />
         </Box>
       )}
-      {isLoggedIn && sponsorProposalStatus !== PROCESSING_STATUSES.SUCCESS && userShares > 0 && (
-        <Box maxWidth="200px" mx="auto" mt={2}>
-          <DAOButton variant="gradientOutline" onClick={handleSponsorProposal}>
-            Sponsor Proposal
-          </DAOButton>
-        </Box>
-      )}
+      {isLoggedIn &&
+        sponsorProposalStatus !== PROCESSING_STATUSES.SUCCESS &&
+        typeof userShares === 'number' &&
+        userShares > 0 && (
+          <Box maxWidth="200px" mx="auto" mt={2}>
+            <DAOButton variant="gradientOutline" onClick={handleSponsorProposal}>
+              Sponsor Proposal
+            </DAOButton>
+          </Box>
+        )}
     </Box>
   );
 };

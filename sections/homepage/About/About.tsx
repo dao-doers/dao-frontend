@@ -17,6 +17,7 @@ import useIsMobile from 'hooks/useIsMobile';
 import { useSelector } from 'react-redux';
 import { shannonsToDisplayValue } from 'utils/units';
 import { selectGuildTributeTokenBalance, selectTotalShares } from 'redux/slices/dao';
+import { selectAllMembers } from 'redux/slices/user';
 
 const ColumnsWrapper = styled(Box)`
   display: flex;
@@ -65,6 +66,7 @@ const About: FC = () => {
   const isMobile = useIsMobile('lg');
   const guildTributeTokenBalance = useSelector(selectGuildTributeTokenBalance);
   const daoTotalShares = useSelector(selectTotalShares);
+  const members = useSelector(selectAllMembers);
 
   return (
     <>
@@ -109,13 +111,14 @@ const About: FC = () => {
         </Title>
         <ColumnsWrapper>
           <ColumnWrapper>
-            <Typography variant="subtitle2">
-              DAO guild balance: {guildTributeTokenBalance ? shannonsToDisplayValue(guildTributeTokenBalance) : '-'}{' '}
-              dCKB
-            </Typography>
+            <Typography variant="subtitle2">Members: {members?.length}</Typography>
           </ColumnWrapper>
           <ColumnWrapper>
-            <Typography variant="subtitle2">DAO total shares: {daoTotalShares?.toString()}</Typography>
+            <Typography variant="subtitle2">
+              Guild balance: {guildTributeTokenBalance ? shannonsToDisplayValue(guildTributeTokenBalance) : '-'} dCKB
+              <br />
+              Total shares: {daoTotalShares?.toString()}
+            </Typography>
           </ColumnWrapper>
           <ColumnWrapper>
             <Typography variant="subtitle2">

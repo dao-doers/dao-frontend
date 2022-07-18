@@ -126,20 +126,24 @@ const Voting: FC<VotingProps> = ({ proposalIndex, votingPeriodStarts, votingPeri
         </Box>
       )}
 
-      {isLoggedIn && !voteSuccessMessageVisibility && currentUserVoted === false && userShares > 0 && (
-        <Box display="flex" justifyContent="space-between">
-          <Box width="48%">
-            <DAOButton variant="agreeVariant" onClick={() => handleVote(VOTE_YES)}>
-              Yes
-            </DAOButton>
+      {isLoggedIn &&
+        !voteSuccessMessageVisibility &&
+        currentUserVoted === false &&
+        typeof userShares === 'number' &&
+        userShares > 0 && (
+          <Box display="flex" justifyContent="space-between">
+            <Box width="48%">
+              <DAOButton variant="agreeVariant" onClick={() => handleVote(VOTE_YES)}>
+                Yes
+              </DAOButton>
+            </Box>
+            <Box width="48%">
+              <DAOButton variant="disagreeVariant" onClick={() => handleVote(VOTE_NO)}>
+                No
+              </DAOButton>
+            </Box>
           </Box>
-          <Box width="48%">
-            <DAOButton variant="disagreeVariant" onClick={() => handleVote(VOTE_NO)}>
-              No
-            </DAOButton>
-          </Box>
-        </Box>
-      )}
+        )}
 
       {isLoggedIn && !voteSuccessMessageVisibility && currentUserVoted === true && (
         <DAOTile variant="errorBox">

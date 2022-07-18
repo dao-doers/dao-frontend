@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
 
 import styled from '@emotion/styled';
@@ -27,6 +27,7 @@ import {
   clearSorted,
 } from 'redux/slices/proposals';
 import { setOpen } from 'redux/slices/modaldCkbMint';
+import { selectIsLoggedIn } from 'redux/slices/user';
 
 interface SideNavProps {
   setDrawerOpen?: (arg0: false) => void;
@@ -60,6 +61,8 @@ const SideNav: FC<SideNavProps> = ({ setDrawerOpen }) => {
   const dispatch = useDispatch();
   const router = useRouter();
   const isMobile = useIsMobile('lg');
+
+  const isLoggedIn = useSelector(selectIsLoggedIn);
 
   const handledCKBModal = () => {
     dispatch(setOpen(true));
@@ -164,11 +167,13 @@ const SideNav: FC<SideNavProps> = ({ setDrawerOpen }) => {
         </DAOButton>
       </Box>
 
-      {/* <Box mx="auto" my={1} sx={{ width: { xs: '60%', md: '100%' } }}>
-        <DAOButton variant="gradientOutline" onClick={handledCKBModal}>
-          <Typography>Get dCKB</Typography>
-        </DAOButton>
-      </Box> */}
+      {isLoggedIn && (
+        <Box mx="auto" my={1} sx={{ width: { xs: '60%', md: '100%' } }}>
+          <DAOButton variant="gradientOutline" onClick={handledCKBModal}>
+            <Typography>Withdraw unlocked dCKB</Typography>
+          </DAOButton>
+        </Box>
+      )}
 
       <Box mx="auto" my={1} sx={{ width: { xs: '60%', md: '100%' } }}>
         <ThemeModeSwitch />

@@ -9,20 +9,21 @@ import { setChainId } from 'redux/slices/main';
 
 export const loadWeb3 = async () => {
   if (window.ethereum) {
-    store.dispatch(setChainId((window as any).ethereum.networkVersion));
+    const ethereum = window.ethereum as any;
+    const chainId = await ethereum.request({ method: 'eth_chainId' });
+    store.dispatch(setChainId(chainId));
 
-    (window as any).ethereum.on('chainChanged', () => {
-      console.log('chainChanged');
-      store.dispatch(setChainId((window as any).ethereum.networkVersion));
+    ethereum.on('chainChanged', (_chainId: string) => {
+      store.dispatch(setChainId(_chainId));
     });
-    (window as any).ethereum.on('accountsChanged', () => {
-      console.log('accountChanged');
+
+    ethereum.on('accountsChanged', () => {
       store.dispatch(clearUser());
       sessionStorage.removeItem('dao-user-address');
     });
 
     // TODO: get that data from env
-    if ((window as any).ethereum.networkVersion !== '0x116ea') {
+    if (chainId !== '0x116ea') {
       const data = [
         {
           chainId: '0x116ea',

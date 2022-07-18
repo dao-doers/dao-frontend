@@ -140,7 +140,7 @@ const BlockchainStatusContent: FC = () => {
                 )}
               </StatusChip>
             </MenuItem>
-            {userShares > 0 && (
+            {typeof userShares === 'number' && userShares > 0 && (
               <MenuItem onClick={handleClose}>
                 <StatusChip title="DAO member shares:">
                   <Typography variant="body1-bold">{userShares}</Typography>
@@ -149,7 +149,7 @@ const BlockchainStatusContent: FC = () => {
             )}
 
             <MenuItem onClick={handleClose}>
-              <StatusChip title="DAO member dCKB:">
+              <StatusChip title="User unlocked dCKB:">
                 {isChecked ? (
                   <Typography variant="body1-bold">
                     {dckbBalanceInDao ? shannonsToDisplayValue(dckbBalanceInDao) : ''}

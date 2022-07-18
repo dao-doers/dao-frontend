@@ -4,18 +4,24 @@ import { BigNumber } from 'ethers';
 
 type TLayer1Balance = { ckbBalance: BigNumber; dckbBalance: BigNumber };
 
+interface Member {
+  didRagequite: boolean;
+  memberAddress: string;
+  shares: string;
+}
+
 interface UserSlice {
   address: string;
   cktLayer1Address: string;
   cktLayer2Address: string;
   isLoggedIn: boolean;
-  userShares: number;
   sessionMaintained: boolean;
   isWalletsModalOpen: boolean;
 
-  godwokenCkbBalance?: BigNumber;
+  allMembers?: Member[];
   dckbBalance?: BigNumber;
   dckbBalanceInDao?: BigNumber;
+  godwokenCkbBalance?: BigNumber;
   layer1Balance?: TLayer1Balance;
 }
 
@@ -60,6 +66,7 @@ export const getUsersList = createAsyncThunk('user/getUsersList', async (userTok
 
 const initialState: UserSlice = {
   address: '',
+  allMembers: undefined,
   cktLayer1Address: '',
   cktLayer2Address: '',
   isLoggedIn: false,
@@ -67,7 +74,6 @@ const initialState: UserSlice = {
   dckbBalanceInDao: undefined,
   godwokenCkbBalance: undefined,
   layer1Balance: undefined,
-  userShares: 0,
   sessionMaintained: false,
   isWalletsModalOpen: false,
 };
@@ -100,9 +106,6 @@ const userSlice = createSlice({
     setLayer1Balance: (state, action: { payload: TLayer1Balance }) => {
       state.layer1Balance = action.payload;
     },
-    setUserShares: (state, action) => {
-      state.userShares = Number(action.payload);
-    },
     setSessionMaintained: (state, action) => {
       state.sessionMaintained = action.payload;
     },
@@ -112,21 +115,15 @@ const userSlice = createSlice({
     clearUser: () => initialState,
   },
   extraReducers: builder => {
-    // Get list of users
     builder.addCase(getUsersList.fulfilled, (state, action) => {
-      const user = action.payload.data.members.filter((a: any) => {
-        return a.memberAddress === state.address;
-      });
-
-      if (user[0]) {
-        state.userShares = Number(user[0].shares);
-      }
+      state.allMembers = action.payload.data.members;
     });
     builder.addCase(getUsersList.pending, (state, action) => {});
     builder.addCase(getUsersList.rejected, (state, action) => {});
   },
 });
 
+export const selectAllMembers = (state: StateProps) => state.user.allMembers;
 export const selectUserAddress = (state: StateProps) => state.user.address;
 export const selectCktLayer1Address = (state: StateProps) => state.user.cktLayer1Address;
 export const selectCktLayer2Address = (state: StateProps) => state.user.cktLayer2Address;
@@ -135,7 +132,21 @@ export const selectDckbBalance = (state: StateProps) => state.user.dckbBalance;
 export const selectDckbBalanceInDao = (state: StateProps) => state.user.dckbBalanceInDao;
 export const selectGodwokenCkbBalance = (state: StateProps) => state.user.godwokenCkbBalance;
 export const selectLayer1Balance = (state: StateProps) => state.user.layer1Balance;
-export const selectUserShares = (state: StateProps) => state.user.userShares;
+export const selectUserShares = (state: StateProps) => {
+  if (!state.user.address) {
+    return undefined;
+  }
+
+  if (state.user.allMembers) {
+    const currentUserAsMember = state.user.allMembers.find(a => a.memberAddress === state.user.address);
+
+    if (currentUserAsMember) {
+      return Number(currentUserAsMember.shares);
+    }
+  }
+
+  return 0;
+};
 export const selectessionMaintained = (state: StateProps) => state.user.sessionMaintained;
 export const selectWalletsModalOpen = (state: StateProps) => state.user.isWalletsModalOpen;
 
@@ -148,7 +159,6 @@ export const {
   setDckbBalanceInDao,
   setCkbBalance,
   setLayer1Balance,
-  setUserShares,
   setSessionMaintained,
   setWalletsModalOpen,
   clearUser,
