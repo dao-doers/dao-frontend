@@ -6,6 +6,7 @@ type TLayer1Balance = { ckbBalance: BigNumber; dckbBalance: BigNumber };
 
 interface Member {
   didRagequite: boolean;
+  exists: boolean;
   memberAddress: string;
   shares: string;
 }

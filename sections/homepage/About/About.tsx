@@ -109,7 +109,7 @@ const About: FC = () => {
         </Title>
         <ColumnsWrapper>
           <ColumnWrapper>
-            <Typography variant="subtitle2">Members: {members?.length}</Typography>
+            <Typography variant="subtitle2">Members: {members?.filter(m => m.exists).length}</Typography>
           </ColumnWrapper>
           <ColumnWrapper>
             <Typography variant="subtitle2">
