@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/rules-of-hooks */
 import { FC, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
@@ -9,7 +8,7 @@ import ConnectWalletButton from 'components/ConnectWalletButton/ConnectWalletBut
 import DAOButton from 'components/DAOButton/DAOButton';
 import DAOTile from 'components/DAOTile/DAOTile';
 
-import useHandleSponsorProposal from 'hooks/useHandleSponsorProposal';
+import sendSponsorProposalTx from 'hooks/useHandleSponsorProposal';
 
 import PROCESSING_STATUSES from 'enums/processingStatuses';
 
@@ -20,12 +19,16 @@ import { selectUserAddress, selectIsLoggedIn, selectUserShares } from 'redux/sli
 import { setOpen, setStatus, setMessage } from 'redux/slices/modalTransaction';
 import { selectProcessingReward, selectProposalDeposit } from 'redux/slices/dao';
 import { shannonsToDisplayValue } from 'utils/units';
+import { Proposal } from 'types/types';
+import { DCKBToken, MolochV2 } from 'utils/contracts';
+import MolochV2JSON from 'lib/MolochV2.json';
+import { ethers } from 'ethers';
 
 interface CollectingFundsProps {
-  proposalId: string;
+  proposal: Proposal;
 }
 
-const CollectingFunds: FC<CollectingFundsProps> = ({ proposalId }) => {
+const CollectingFunds: FC<CollectingFundsProps> = ({ proposal }) => {
   const dispatch = useDispatch();
 
   const provider = useSelector(selectProvider);
@@ -37,6 +40,13 @@ const CollectingFunds: FC<CollectingFundsProps> = ({ proposalId }) => {
   const proposalDeposit = useSelector(selectProposalDeposit);
 
   const [sponsorProposalStatus, setSponsorProposalStatus] = useState(PROCESSING_STATUSES.IDLE);
+  const showSponsorProposalButton =
+    isLoggedIn &&
+    sponsorProposalStatus !== PROCESSING_STATUSES.SUCCESS &&
+    typeof userShares === 'number' &&
+    userShares > 0;
+  const showCancelProposalButton =
+    isLoggedIn && userAddress === proposal.proposer && !proposal.cancelled && !proposal.sponsored;
 
   const handleSponsorProposal = async () => {
     try {
@@ -47,7 +57,7 @@ const CollectingFunds: FC<CollectingFundsProps> = ({ proposalId }) => {
       dispatch(setStatus(PROCESSING_STATUSES.PROCESSING));
       dispatch(setOpen(true));
 
-      const receipt = await useHandleSponsorProposal(provider, proposalId, userAddress, chainId, proposalDeposit);
+      const receipt = await sendSponsorProposalTx(provider, proposal.proposalId, userAddress, chainId, proposalDeposit);
       if (receipt.blockNumber) {
         dispatch(setStatus(PROCESSING_STATUSES.SUCCESS));
         dispatch(
@@ -66,6 +76,35 @@ const CollectingFunds: FC<CollectingFundsProps> = ({ proposalId }) => {
         dispatch(setMessage(getMetamaskMessageError(error)));
       }
       setSponsorProposalStatus(PROCESSING_STATUSES.ERROR);
+    }
+  };
+
+  const cancelProposal = async () => {
+    try {
+      dispatch(setStatus(PROCESSING_STATUSES.PROCESSING));
+      dispatch(setOpen(true));
+
+      const signer = provider.getSigner();
+      const dao = await MolochV2(signer, chainId);
+      const tx = await (dao as ethers.Contract).cancelProposal(proposal.proposalId);
+      const receipt = await tx.wait();
+
+      if (receipt.blockNumber) {
+        dispatch(setStatus(PROCESSING_STATUSES.SUCCESS));
+        dispatch(
+          setMessage(
+            `Your request has been processed by blockchain network and will be displayed with the block number ${
+              receipt.blockNumber + 1
+            }`,
+          ),
+        );
+      }
+    } catch (error: any) {
+      console.log(error);
+      dispatch(setStatus(PROCESSING_STATUSES.ERROR));
+      if (error.code) {
+        dispatch(setMessage(getMetamaskMessageError(error)));
+      }
     }
   };
 
@@ -95,16 +134,20 @@ const CollectingFunds: FC<CollectingFundsProps> = ({ proposalId }) => {
           <ConnectWalletButton />
         </Box>
       )}
-      {isLoggedIn &&
-        sponsorProposalStatus !== PROCESSING_STATUSES.SUCCESS &&
-        typeof userShares === 'number' &&
-        userShares > 0 && (
-          <Box maxWidth="200px" mx="auto" mt={2}>
-            <DAOButton variant="gradientOutline" onClick={handleSponsorProposal}>
-              Sponsor Proposal
-            </DAOButton>
-          </Box>
-        )}
+      {showSponsorProposalButton && (
+        <Box maxWidth="200px" mx="auto" mt={2}>
+          <DAOButton variant="gradientOutline" onClick={handleSponsorProposal}>
+            Sponsor Proposal
+          </DAOButton>
+        </Box>
+      )}
+      {showCancelProposalButton && (
+        <Box maxWidth="200px" mx="auto" mt={2}>
+          <DAOButton variant="gradientOutline" onClick={cancelProposal}>
+            Cancel Proposal
+          </DAOButton>
+        </Box>
+      )}
     </Box>
   );
 };

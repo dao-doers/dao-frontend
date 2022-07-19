@@ -20,9 +20,10 @@ import { selectProvider, selectChainId } from 'redux/slices/main';
 import { selectUserAddress, selectIsLoggedIn, selectUserShares } from 'redux/slices/user';
 import { setOpen, setStatus, setMessage } from 'redux/slices/modalTransaction';
 import { MolochV2 } from 'utils/contracts';
+import { Proposal } from 'types/types';
 
 interface VotingProps {
-  proposalIndex: string;
+  proposalIndex: Proposal['proposalIndex'];
   votingPeriodStarts: string;
   votingPeriodEnds: string;
 }

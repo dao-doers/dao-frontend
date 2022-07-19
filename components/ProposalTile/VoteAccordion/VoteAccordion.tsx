@@ -11,6 +11,7 @@ import Typography from '@mui/material/Typography';
 
 import PROPOSAL_STATUS from 'enums/proposalStatus';
 
+import { Proposal } from 'types/types';
 import CollectingFunds from './CollectingFunds/CollectingFunds';
 import Voting from './Voting/Voting';
 import GracePeriod from './GracePeriod/GracePeriod';
@@ -54,34 +55,41 @@ const StyledExpandMoreIcon = styled(ExpandMoreIcon)`
   color: ${({ theme }) => theme.palette.text.primary};
 `;
 
-const VoteAccordion: FC<any> = ({ proposal }) => {
+const VoteAccordion: FC<{ proposal: Proposal }> = ({ proposal }) => {
   return (
     <StyledAccordion>
-      <StyledAccordionSummary expandIcon={<StyledExpandMoreIcon />} aria-controls="vote-accordion" id="panel1a-header">
-        <Box display="flex" justifyContent="space-between" alignItems="center" width="100%">
-          <Typography variant="subtitle2-bold">Vote Section</Typography>
-          {proposal.proposalStatus === PROPOSAL_STATUS.COLLECTING_FUNDS && (
-            <GradientTypography>Collecting Funds</GradientTypography>
-          )}
-          {proposal.proposalStatus === PROPOSAL_STATUS.VOTING && <GradientTypography>Voting</GradientTypography>}
-          {proposal.proposalStatus === PROPOSAL_STATUS.GRACE_PERIOD && (
-            <GradientTypography>Grace Period</GradientTypography>
-          )}
-          {proposal.proposalStatus === PROPOSAL_STATUS.PROCEEDING && (
-            <GradientTypography>Proceeding</GradientTypography>
-          )}
-          {proposal.proposalStatus === PROPOSAL_STATUS.FINISHED && (
-            <Box display="flex">
-              {proposal.didPass === false && <TypographyRedBold mr={1.5}>Rejected</TypographyRedBold>}
-              {proposal.didPass === true && <TypographyGreenBold mr={1.5}>Approved</TypographyGreenBold>}
-            </Box>
-          )}
-        </Box>
-      </StyledAccordionSummary>
+      {proposal.cancelled && <Box>Cancelled</Box>}
+      {!proposal.cancelled && (
+        <StyledAccordionSummary
+          expandIcon={<StyledExpandMoreIcon />}
+          aria-controls="vote-accordion"
+          id="panel1a-header"
+        >
+          <Box display="flex" justifyContent="space-between" alignItems="center" width="100%">
+            <Typography variant="subtitle2-bold">Vote Section</Typography>
+            {proposal.proposalStatus === PROPOSAL_STATUS.COLLECTING_FUNDS && (
+              <GradientTypography>Collecting Funds</GradientTypography>
+            )}
+            {proposal.proposalStatus === PROPOSAL_STATUS.VOTING && <GradientTypography>Voting</GradientTypography>}
+            {proposal.proposalStatus === PROPOSAL_STATUS.GRACE_PERIOD && (
+              <GradientTypography>Grace Period</GradientTypography>
+            )}
+            {proposal.proposalStatus === PROPOSAL_STATUS.PROCEEDING && (
+              <GradientTypography>Proceeding</GradientTypography>
+            )}
+            {proposal.proposalStatus === PROPOSAL_STATUS.FINISHED && (
+              <Box display="flex">
+                {proposal.didPass === false && <TypographyRedBold mr={1.5}>Rejected</TypographyRedBold>}
+                {proposal.didPass === true && <TypographyGreenBold mr={1.5}>Approved</TypographyGreenBold>}
+              </Box>
+            )}
+          </Box>
+        </StyledAccordionSummary>
+      )}
 
       <AccordionDetails>
-        {proposal.proposalStatus === PROPOSAL_STATUS.COLLECTING_FUNDS && (
-          <CollectingFunds proposalId={proposal.proposalId} />
+        {proposal.proposalStatus === PROPOSAL_STATUS.COLLECTING_FUNDS && !proposal.cancelled && (
+          <CollectingFunds proposal={proposal} />
         )}
 
         {proposal.proposalStatus === PROPOSAL_STATUS.VOTING && (

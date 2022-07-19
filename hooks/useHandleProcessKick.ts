@@ -1,8 +1,9 @@
 import { ethers } from 'ethers';
+import { Proposal } from 'types/types';
 
 import { MolochV2 } from 'utils/contracts';
 
-const useHandleProcessKick = async (provider: any, proposalIndex: string, chainId: any) => {
+const useHandleProcessKick = async (provider: any, proposalIndex: Proposal['proposalIndex'], chainId: any) => {
   const signer = provider.getSigner();
   const dao = await MolochV2(signer, chainId);
 

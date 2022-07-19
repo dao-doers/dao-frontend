@@ -4,6 +4,7 @@ import { gql } from '@apollo/client';
 
 import FETCH_STATUSES from 'enums/fetchStatuses';
 import PROPOSAL_STATUS from 'enums/proposalStatus';
+import { Proposal } from 'types/types';
 
 const currentTime = new Date().getTime() / 1000;
 
@@ -11,7 +12,7 @@ type FetchingStatusProps = FETCH_STATUSES;
 
 interface ProposalProps {
   fetchStatus: FetchingStatusProps;
-  proposalsArray: any;
+  proposalsArray: Proposal[];
   sendProposalStatus: FetchingStatusProps;
   sponsorProposalStatus: FetchingStatusProps;
   sortedProposalsArray: any;

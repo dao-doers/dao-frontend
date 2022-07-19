@@ -1,4 +1,5 @@
 import { BigNumber, ethers, ContractReceipt } from 'ethers';
+import { Proposal } from 'types/types';
 
 import { MolochV2 } from 'utils/contracts';
 
@@ -6,7 +7,7 @@ export const HANDLE_VOTE_ERRORS = ['Voting period has not started. Please wait.'
 
 const submitProposalVote = async (
   provider: ethers.providers.JsonRpcProvider,
-  proposalId: string,
+  proposalId: Proposal['proposalIndex'],
   voteValue: number,
   chainId: string,
 ): Promise<ContractReceipt> => {

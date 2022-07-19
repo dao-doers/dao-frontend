@@ -4,7 +4,7 @@ import { DCKBToken, MolochV2 } from 'utils/contracts';
 
 import MolochV2JSON from 'lib/MolochV2.json';
 
-const useHandleSponsorProposal = async (
+const sendSponsorProposalTx = async (
   provider: any,
   proposalId: string,
   userAddress: string,
@@ -28,4 +28,4 @@ const useHandleSponsorProposal = async (
   return receipt;
 };
 
-export default useHandleSponsorProposal;
+export default sendSponsorProposalTx;

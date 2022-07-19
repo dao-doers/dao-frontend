@@ -15,6 +15,7 @@ import Link from 'components/Link/Link';
 import { formatSeconds } from 'utils/formatDate';
 import { APP_ROUTES } from 'utils/routes';
 
+import { Proposal } from 'types/types';
 import DetailsAccordion from './DetailsAccordion/DetailsAccordion';
 import VoteAccordion from './VoteAccordion/VoteAccordion';
 
@@ -56,7 +57,7 @@ const TypographyDescription = styled(Typography)`
   overflow: hidden;
 `;
 
-const ProposalTile: FC<any> = ({ proposal, mbProps }) => {
+const ProposalTile: FC<{ proposal: Proposal; mbProps?: any; id?: string }> = ({ proposal, mbProps }) => {
   const router = useRouter();
 
   const [nullObject, setNullObject] = useState(true);

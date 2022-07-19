@@ -20,12 +20,13 @@ import { getMetamaskMessageError } from 'utils/blockchain';
 import { selectProvider, selectChainId } from 'redux/slices/main';
 import { selectIsLoggedIn } from 'redux/slices/user';
 import { setOpen, setStatus, setMessage } from 'redux/slices/modalTransaction';
+import { Proposal } from 'types/types';
 
 interface ProceedingProps {
   votingPeriodEnds: string;
   gracePeriodEnds: string;
   guildkick: boolean;
-  proposalIndex: string;
+  proposalIndex: Proposal['proposalIndex'];
 }
 
 const Proceeding: FC<ProceedingProps> = ({ votingPeriodEnds, gracePeriodEnds, guildkick, proposalIndex }) => {

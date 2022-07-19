@@ -17,6 +17,7 @@ import DAOTile from 'components/DAOTile/DAOTile';
 
 import formatAddress from 'utils/formatAddress';
 import { shannonsToDisplayValue } from 'utils/units';
+import { Proposal } from 'types/types';
 
 const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
@@ -67,7 +68,7 @@ const GradientTypography = styled(Typography)`
   -webkit-text-fill-color: transparent;
 `;
 
-const DetailsAccordion: FC<any> = ({ proposal }) => {
+const DetailsAccordion: FC<{ proposal: Proposal }> = ({ proposal }) => {
   const [copiedSponsoredAddress, setCopiedSponsoredAddress] = useState(false);
   const [copiedApplicantAddress, setCopiedApplicantAddress] = useState(false);
   const [copiedProposerAddress, setCopiedProposerAddress] = useState(false);

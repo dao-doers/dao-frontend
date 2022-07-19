@@ -13,6 +13,7 @@ import ProposalTile from 'components/ProposalTile/ProposalTile';
 
 import { selectProposalsArray } from 'redux/slices/proposals';
 import { selectVotesArray } from 'redux/slices/votes';
+import { Proposal } from 'types/types';
 
 const client = new ApolloClient({
   uri: process.env.INDEXER_URL,
@@ -23,13 +24,13 @@ const Swap: FC<NextPage> = () => {
   const proposalsArray = useSelector(selectProposalsArray);
   const votesArray = useSelector(selectVotesArray);
 
-  const [chosenProposal, setChosenProposal] = useState({});
+  const [chosenProposal, setChosenProposal] = useState<Proposal | undefined>();
 
   const router = useRouter();
 
   useEffect(() => {
     if (proposalsArray.length > 0) {
-      setChosenProposal(proposalsArray.find((a: any) => router.query.id === a.id));
+      setChosenProposal(proposalsArray.find(a => router.query.id === a.id));
     }
   }, [proposalsArray]);
 
@@ -38,7 +39,7 @@ const Swap: FC<NextPage> = () => {
       <Layout>
         <Box display="flex" justifyContent="space-between" width="100%" sx={{ mt: { xs: 2, md: 10 } }}>
           <Box sx={{ width: { xs: '100%', md: '63%' } }}>
-            {Object.keys(chosenProposal).length > 0 && <ProposalTile proposal={chosenProposal} />}
+            {chosenProposal && <ProposalTile proposal={chosenProposal} />}
           </Box>
           <Box width="35%" sx={{ display: { xs: 'none', md: 'block' } }}>
             {votesArray.map((vote: any, id: any) => {
