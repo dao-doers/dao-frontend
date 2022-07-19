@@ -77,9 +77,7 @@ const About: FC = () => {
         <ColumnsWrapper>
           <ColumnWrapper>
             <StyledAddReactionIcon />
-            <Typography variant="subtitle2">
-              Every person can create proposal request to join our guild which will allow you to take part in votings.
-            </Typography>
+            <Typography variant="subtitle2">Anyone can create a proposal to join DAO.</Typography>
 
             {isMobile && (
               <Box mx="auto" mb={1} mt={3} sx={{ width: { xs: '250px', sm: 'auto' } }}>
@@ -94,7 +92,7 @@ const About: FC = () => {
           <ColumnWrapper>
             <StyledAddCircleOutlineIcon />
             <Typography variant="subtitle2">
-              Every guild member can create his own proposal on which the community will vote.
+              Proposal has to be sponsored by one of DAO members with voting shares and then pass the vote.
             </Typography>
           </ColumnWrapper>
           <ColumnWrapper>

@@ -85,11 +85,7 @@ const Voting: FC<VotingProps> = ({ proposalIndex, votingPeriodStarts, votingPeri
       if (receipt.blockNumber) {
         setVoteSuccessMessageVisibility(true);
         dispatch(setStatus(PROCESSING_STATUSES.SUCCESS));
-        dispatch(
-          setMessage(
-            `Your request has been processed by blockchain network and will be displayed when the next block is mined. Transaction hash: ${receipt.transactionHash}`,
-          ),
-        );
+        dispatch(setMessage(`Your transaction has been sent. Transaction hash: ${receipt.transactionHash}`));
         getMemberProposalVote();
       }
     } catch (error: any) {
