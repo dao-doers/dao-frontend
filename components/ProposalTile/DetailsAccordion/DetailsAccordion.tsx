@@ -18,6 +18,7 @@ import DAOTile from 'components/DAOTile/DAOTile';
 import formatAddress from 'utils/formatAddress';
 import { shannonsToDisplayValue } from 'utils/units';
 import { Proposal } from 'types/types';
+import { ethers } from 'ethers';
 
 const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
@@ -72,6 +73,7 @@ const DetailsAccordion: FC<{ proposal: Proposal }> = ({ proposal }) => {
   const [copiedSponsoredAddress, setCopiedSponsoredAddress] = useState(false);
   const [copiedApplicantAddress, setCopiedApplicantAddress] = useState(false);
   const [copiedProposerAddress, setCopiedProposerAddress] = useState(false);
+  const [copiedTributeTokenAddress, setCopiedTributeTokenAddress] = useState(false);
 
   const handleCopySponsoredAddress = () => {
     setCopiedSponsoredAddress(true);
@@ -94,6 +96,13 @@ const DetailsAccordion: FC<{ proposal: Proposal }> = ({ proposal }) => {
     }, 2000);
   };
 
+  const handleCopyTributeTokenAddress = () => {
+    setCopiedTributeTokenAddress(true);
+    setTimeout(() => {
+      setCopiedTributeTokenAddress(false);
+    }, 2000);
+  };
+
   return (
     <StyledAccordion>
       <StyledAccordionSummary
@@ -103,13 +112,18 @@ const DetailsAccordion: FC<{ proposal: Proposal }> = ({ proposal }) => {
       >
         <Box display="flex" justifyContent="space-between" alignItems="center" width="100%">
           <Typography variant="subtitle2-bold">Poll Details</Typography>
-          {proposal.guildkick === false && Number(proposal.paymentRequested) === 0 && (
-            <GradientTypography>Member Request</GradientTypography>
-          )}
+          {proposal.guildkick === false &&
+            Number(proposal.paymentRequested) === 0 &&
+            proposal.applicant !== ethers.constants.AddressZero && (
+              <GradientTypography>Member Request</GradientTypography>
+            )}
           {proposal.guildkick === false && Number(proposal.paymentRequested) > 0 && (
             <GradientTypography>Funding Request</GradientTypography>
           )}
           {proposal.guildkick === true && <GradientTypography>Guild Kick</GradientTypography>}
+          {proposal.guildkick === false && proposal.applicant === ethers.constants.AddressZero && (
+            <GradientTypography>Whitelist Token</GradientTypography>
+          )}
         </Box>
       </StyledAccordionSummary>
 
@@ -227,6 +241,22 @@ const DetailsAccordion: FC<{ proposal: Proposal }> = ({ proposal }) => {
             </Box>
           )}
 
+          <Box sx={{ width: { xs: '48%', xl: '30%' } }} mb={2} mx="1%">
+            <DAOTile variant="gradientOutline" width="100%" height="100px">
+              <Box>
+                <Typography variant="body2" align="center" gutterBottom>
+                  Tribute ERC20
+                </Typography>
+                <CopyToClipboard text={proposal.tributeToken} onCopy={handleCopyTributeTokenAddress}>
+                  <Box display="flex" justifyContent="center">
+                    <TypographyCursor align="center">{formatAddress(proposal.tributeToken, 5, 5)}</TypographyCursor>
+                    <StyledCopyIcon />
+                  </Box>
+                </CopyToClipboard>
+              </Box>
+            </DAOTile>
+          </Box>
+
           {Number(proposal.paymentRequested) > 0 && (
             <Box sx={{ width: { xs: '48%', xl: '30%' } }} mb={2} mx="1%">
               <DAOTile variant="gradientOutline" width="100%" height="100px">
@@ -242,7 +272,11 @@ const DetailsAccordion: FC<{ proposal: Proposal }> = ({ proposal }) => {
             </Box>
           )}
 
-          <Snackbar open={copiedSponsoredAddress || copiedApplicantAddress || copiedProposerAddress}>
+          <Snackbar
+            open={
+              copiedSponsoredAddress || copiedApplicantAddress || copiedProposerAddress || copiedTributeTokenAddress
+            }
+          >
             <Alert severity="success" sx={{ width: '100%' }}>
               Address copied!
             </Alert>

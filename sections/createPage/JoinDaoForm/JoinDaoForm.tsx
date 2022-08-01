@@ -13,7 +13,7 @@ import TooltipIcon from 'components/TooltipIcon';
 
 import PROCESSING_STATUSES from 'enums/processingStatuses';
 
-import useHandleCreateProposal from 'hooks/useHandleCreateProposal';
+import invokeHandleCreateProposal from 'hooks/invokeHandleCreateProposal';
 import useIsMobile from 'hooks/useIsMobile';
 
 import newProposalSchema from 'validators/newProposalSchema';
@@ -60,7 +60,7 @@ const JoinDaoForm: FC = () => {
         dispatch(setStatus(PROCESSING_STATUSES.ERROR));
         dispatch(setMessage('You have not enough dCKB'));
       } else {
-        const receipt = await useHandleCreateProposal(
+        const receipt = await invokeHandleCreateProposal(
           provider,
           proposalCreator,
           applicantAddress,

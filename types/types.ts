@@ -18,6 +18,7 @@ export interface Proposal {
   sponsor: string;
   sponsored: boolean;
   sharesRequested: number;
+  tributeToken: string;
   tributeOffered: BigNumber;
   tributeTokenSymbol: string;
   yesVotes: number;

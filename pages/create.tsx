@@ -14,6 +14,7 @@ import JoinDaoForm from 'sections/createPage/JoinDaoForm/JoinDaoForm';
 import CREATE_PROPOSAL_TYPE from 'enums/createProposalType';
 
 import { selectProposalType } from 'redux/slices/main';
+import WhitelistTokenForm from 'sections/createPage/WhitelistTokenForm';
 
 const CreatePage: FC<NextPage> = () => {
   const proposalType = useSelector(selectProposalType);
@@ -42,6 +43,7 @@ const CreatePage: FC<NextPage> = () => {
         </Box>
         <Box sx={{ width: { xs: '100%', md: '50%', lg: '55%' } }}>
           {proposalType === CREATE_PROPOSAL_TYPE.NORMAL && <JoinDaoForm />}
+          {proposalType === CREATE_PROPOSAL_TYPE.WHITELIST_TOKEN && <WhitelistTokenForm />}
           {proposalType === CREATE_PROPOSAL_TYPE.KICK && <GuildKickForm />}
         </Box>
       </Box>

@@ -5,7 +5,7 @@ import { DCKBToken, MolochV2 } from 'utils/contracts';
 import DCKBTokenJSON from 'lib/DCKBToken.json';
 import MolochV2JSON from 'lib/MolochV2.json';
 
-const useHandleCreateProposal = async (
+const invokeHandleCreateProposal = async (
   provider: providers.JsonRpcProvider,
   proposalCreator: string,
   applicantAddress: string,
@@ -47,4 +47,4 @@ const useHandleCreateProposal = async (
   return receipt;
 };
 
-export default useHandleCreateProposal;
+export default invokeHandleCreateProposal;

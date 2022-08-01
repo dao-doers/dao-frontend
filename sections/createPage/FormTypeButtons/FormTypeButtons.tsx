@@ -37,6 +37,23 @@ const FormTypeButtons: FC<any> = () => {
       </DAOTile>
 
       <Box my={2}>
+        <DAOTile variant={proposalType === CREATE_PROPOSAL_TYPE.WHITELIST_TOKEN ? 'gradientOutline' : null}>
+          <Box
+            width="100%"
+            height="100%"
+            p={3}
+            sx={{ cursor: 'pointer' }}
+            onClick={() => handleSetProposalType(CREATE_PROPOSAL_TYPE.WHITELIST_TOKEN)}
+          >
+            <Typography variant="h6-bold" align="center" paragraph>
+              Whitelist token proposal
+            </Typography>
+            <Typography align="center">Create whitelist token proposal</Typography>
+          </Box>
+        </DAOTile>
+      </Box>
+
+      <Box my={2}>
         <DAOTile variant={proposalType === CREATE_PROPOSAL_TYPE.KICK ? 'gradientOutline' : null}>
           <Box
             width="100%"
