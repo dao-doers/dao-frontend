@@ -5,10 +5,11 @@ import { BigNumber } from 'ethers';
 type TLayer1Balance = { ckbBalance: BigNumber; dckbBalance: BigNumber };
 
 interface Member {
-  didRagequite: boolean;
+  didRagequit: boolean;
   exists: boolean;
   memberAddress: string;
   shares: string;
+  kicked: boolean;
 }
 
 interface UserSlice {

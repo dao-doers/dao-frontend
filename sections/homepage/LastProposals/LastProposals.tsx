@@ -68,7 +68,7 @@ const LastProposals: FC = () => {
           {!isMobile && (
             <StyledBox>
               <Box display="flex" justifyContent="space-between" width="100%">
-                {proposalsArray.slice(0, 2).map((proposal: any) => {
+                {proposalsArray.slice(0, 2).map(proposal => {
                   return (
                     <Box width="50%" key={`key-${proposal.proposalId}`}>
                       <ProposalTile
@@ -81,7 +81,7 @@ const LastProposals: FC = () => {
                 })}
               </Box>
               <Box display="flex" justifyContent="space-between" width="100%">
-                {proposalsArray.slice(2, 4).map((proposal: any) => {
+                {proposalsArray.slice(2, 4).map(proposal => {
                   return (
                     <Box width="50%" key={`key-${proposal.proposalId}`}>
                       <ProposalTile
@@ -98,7 +98,7 @@ const LastProposals: FC = () => {
 
           {isMobile && (
             <StyledSwiper modules={[Pagination]} pagination={{ type: 'progressbar' }} {...params}>
-              {proposalsArray.slice(0, 3).map((proposal: any) => {
+              {proposalsArray.slice(0, 3).map(proposal => {
                 return (
                   <SwiperSlide>
                     <ProposalTile

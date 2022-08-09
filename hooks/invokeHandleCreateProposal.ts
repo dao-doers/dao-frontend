@@ -40,7 +40,7 @@ const invokeHandleCreateProposal = async (
     tokenAddress,
     paymentRequestedBigNumber,
     tokenAddress,
-    `{"title": "${details.title}", "description": "${details.description}", "link": "${details.link}"}`,
+    JSON.stringify(details),
   );
 
   const receipt = await tx.wait();

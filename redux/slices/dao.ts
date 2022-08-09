@@ -12,6 +12,7 @@ interface DaoProps {
   guildTributeTokenBalance?: BigNumber;
   processingReward?: BigNumber;
   proposalDeposit?: BigNumber;
+  totalLoot?: BigNumber;
   totalShares?: BigNumber;
 }
 
@@ -26,6 +27,7 @@ export const getTotalShares = createAsyncThunk('dao/getTotalShares', async (user
         moloches {
           processingReward
           proposalDeposit
+          totalLoot
           totalShares
           tokenBalances {
             token {
@@ -45,11 +47,7 @@ const daoSlice = createSlice({
   initialState: {
     fetchStatus: FETCH_STATUSES.IDLE,
   } as DaoProps,
-  reducers: {
-    setTotalShares: (state, action: { payload: BigNumber }) => {
-      state.totalShares = action.payload;
-    },
-  },
+  reducers: {},
   extraReducers: builder => {
     // Get list of all votes
     builder.addCase(getTotalShares.fulfilled, (state, action) => {
@@ -58,6 +56,7 @@ const daoSlice = createSlice({
       );
       state.processingReward = BigNumber.from(action.payload.data.moloches?.[0]?.processingReward);
       state.proposalDeposit = BigNumber.from(action.payload.data.moloches?.[0]?.proposalDeposit);
+      state.totalLoot = BigNumber.from(action.payload.data.moloches?.[0]?.totalLoot);
       state.totalShares = BigNumber.from(action.payload.data.moloches?.[0]?.totalShares);
       state.fetchStatus = FETCH_STATUSES.SUCCESS;
     });
@@ -74,7 +73,6 @@ export const selectGuildTributeTokenBalance = (state: StateProps) => state.dao.g
 export const selectProcessingReward = (state: StateProps) => state.dao.processingReward;
 export const selectProposalDeposit = (state: StateProps) => state.dao.proposalDeposit;
 export const selectTotalShares = (state: StateProps) => state.dao.totalShares;
-
-export const { setTotalShares } = daoSlice.actions;
+export const selectTotalLoot = (state: StateProps) => state.dao.totalLoot;
 
 export default daoSlice.reducer;

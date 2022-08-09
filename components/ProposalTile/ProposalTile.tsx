@@ -60,38 +60,24 @@ const TypographyDescription = styled(Typography)`
 const ProposalTile: FC<{ proposal: Proposal; mbProps?: any; id?: string }> = ({ proposal, mbProps }) => {
   const router = useRouter();
 
-  const [nullObject, setNullObject] = useState(true);
   const [formattedTitle, setFormattedTitle] = useState('');
-  const [formattedDescr, setFormattedDescr] = useState('');
-  const [formattedWebsite, setFormattedWebsite] = useState('');
-
-  const isJSON = (str: string) => {
-    try {
-      JSON.parse(str);
-    } catch (e) {
-      return false;
-    }
-    return true;
-  };
-
-  const formatDetails = (textObject: string) => {
-    if (!isJSON(textObject)) {
-      setNullObject(true);
-    } else {
-      setFormattedTitle(JSON.parse(textObject).title);
-      setFormattedDescr(JSON.parse(textObject).description);
-      setFormattedWebsite(JSON.parse(textObject).link);
-      setNullObject(false);
-    }
-  };
+  const [formattedDescription, setFormattedDescription] = useState('');
 
   useEffect(() => {
-    formatDetails(proposal.details);
-  }, []);
+    let text = proposal.details;
 
-  if (nullObject) {
-    return null;
-  }
+    if (text.includes('\n')) {
+      text = text.replace(/\n/g, '\\n');
+    }
+
+    try {
+      const parsedJSON = JSON.parse(text);
+      setFormattedTitle(parsedJSON.title);
+      setFormattedDescription(parsedJSON.description);
+    } catch (error) {
+      setFormattedDescription(`Can't parse proposal details. Please read it in block explorer.`);
+    }
+  }, [proposal?.details]);
 
   return (
     <Box mb={mbProps}>
@@ -111,11 +97,11 @@ const ProposalTile: FC<{ proposal: Proposal; mbProps?: any; id?: string }> = ({ 
 
           {router.pathname.includes('proposals') ? (
             <Typography variant="subtitle2" paragraph>
-              {formattedDescr}
+              {formattedDescription}
             </Typography>
           ) : (
             <TypographyDescription variant="subtitle2" paragraph>
-              {formattedDescr}
+              {formattedDescription}
             </TypographyDescription>
           )}
 

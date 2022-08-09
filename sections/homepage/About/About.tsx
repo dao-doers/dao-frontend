@@ -16,7 +16,7 @@ import { APP_ROUTES } from 'utils/routes';
 import useIsMobile from 'hooks/useIsMobile';
 import { useSelector } from 'react-redux';
 import { shannonsToDisplayValue } from 'utils/units';
-import { selectGuildTributeTokenBalance, selectTotalShares } from 'redux/slices/dao';
+import { selectGuildTributeTokenBalance, selectTotalLoot, selectTotalShares } from 'redux/slices/dao';
 import { selectAllMembers } from 'redux/slices/user';
 
 const ColumnsWrapper = styled(Box)`
@@ -65,6 +65,7 @@ const Title = styled(Typography)`
 const About: FC = () => {
   const isMobile = useIsMobile('lg');
   const guildTributeTokenBalance = useSelector(selectGuildTributeTokenBalance);
+  const daoTotalLoot = useSelector(selectTotalLoot);
   const daoTotalShares = useSelector(selectTotalShares);
   const members = useSelector(selectAllMembers);
 
@@ -109,20 +110,24 @@ const About: FC = () => {
         </Title>
         <ColumnsWrapper>
           <ColumnWrapper>
-            <Typography variant="subtitle2">Members: {members?.filter(m => m.exists).length}</Typography>
+            <Typography variant="subtitle2">
+              Members: {members?.filter(m => m.exists && !m.didRagequit && !m.kicked && m.shares !== '0').length}
+            </Typography>
           </ColumnWrapper>
           <ColumnWrapper>
             <Typography variant="subtitle2">
               Guild balance: {guildTributeTokenBalance ? shannonsToDisplayValue(guildTributeTokenBalance) : '-'} dCKB
               <br />
               Total shares: {daoTotalShares?.toString()}
+              <br />
+              Total loot: {daoTotalLoot?.toString()}
             </Typography>
           </ColumnWrapper>
           <ColumnWrapper>
             <Typography variant="subtitle2">
-              Share to dCKB ratio:{' '}
-              {guildTributeTokenBalance && daoTotalShares
-                ? shannonsToDisplayValue(guildTributeTokenBalance.div(daoTotalShares))
+              Share and loot to dCKB ratio:{' '}
+              {guildTributeTokenBalance && daoTotalShares && daoTotalLoot
+                ? shannonsToDisplayValue(guildTributeTokenBalance.div(daoTotalShares.add(daoTotalLoot)))
                 : '-'}{' '}
               dCKB
             </Typography>
