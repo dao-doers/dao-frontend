@@ -111,7 +111,8 @@ const About: FC = () => {
         <ColumnsWrapper>
           <ColumnWrapper>
             <Typography variant="subtitle2">
-              Members: {members?.filter(m => m.exists && !m.didRagequit && !m.kicked && m.shares !== '0').length}
+              Members with voting rights:{' '}
+              {members?.filter(m => m.exists && !m.didRagequit && !m.kicked && m.shares !== '0').length}
             </Typography>
           </ColumnWrapper>
           <ColumnWrapper>

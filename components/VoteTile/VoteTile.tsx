@@ -11,6 +11,7 @@ import Link from 'components/Link/Link';
 import formatAddress from 'utils/formatAddress';
 import { formatSeconds } from 'utils/formatDate';
 import { APP_ROUTES } from 'utils/routes';
+import getFormattedDetailsFromOnchainDetailsString from 'utils/format';
 
 const TypographyTitle = styled(Typography)`
   color: ${({ theme }) => theme.palette.colors.main7};
@@ -36,7 +37,7 @@ const TypographySmall = styled(Typography)`
 const VoteTile: FC<any> = ({ vote }) => {
   const formatTitle = (textObject: any): any => {
     if (textObject.includes('title', 2)) {
-      return JSON.parse(textObject).title;
+      return getFormattedDetailsFromOnchainDetailsString(textObject).title;
     }
 
     return undefined;

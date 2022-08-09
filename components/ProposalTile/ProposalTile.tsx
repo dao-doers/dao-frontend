@@ -16,6 +16,7 @@ import { formatSeconds } from 'utils/formatDate';
 import { APP_ROUTES } from 'utils/routes';
 
 import { Proposal } from 'types/types';
+import getFormattedDetailsFromOnchainDetailsString from 'utils/format';
 import DetailsAccordion from './DetailsAccordion/DetailsAccordion';
 import VoteAccordion from './VoteAccordion/VoteAccordion';
 
@@ -64,19 +65,9 @@ const ProposalTile: FC<{ proposal: Proposal; mbProps?: any; id?: string }> = ({ 
   const [formattedDescription, setFormattedDescription] = useState('');
 
   useEffect(() => {
-    let text = proposal.details;
-
-    if (text.includes('\n')) {
-      text = text.replace(/\n/g, '\\n');
-    }
-
-    try {
-      const parsedJSON = JSON.parse(text);
-      setFormattedTitle(parsedJSON.title);
-      setFormattedDescription(parsedJSON.description);
-    } catch (error) {
-      setFormattedDescription(`Can't parse proposal details. Please read it in block explorer.`);
-    }
+    const parsedDetails = getFormattedDetailsFromOnchainDetailsString(proposal.details);
+    setFormattedTitle(parsedDetails.title);
+    setFormattedDescription(parsedDetails.description);
   }, [proposal?.details]);
 
   return (
