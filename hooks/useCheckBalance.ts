@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { ethers } from 'ethers';
 
 import { selectProvider, selectChainId } from 'redux/slices/main';
-import { selectUserAddress, selectIsLoggedIn, setDckbBalance, setDckbBalanceInDao } from 'redux/slices/user';
+import { selectUserAddress, selectIsLoggedIn, setPckbBalance, setPckbBalanceInDao } from 'redux/slices/user';
 
 import { DCKBToken, MolochV2 } from 'utils/contracts';
 
@@ -27,15 +27,15 @@ const useCheckBalance = () => {
       const dao = await MolochV2(provider, chainId);
 
       if (dao && token && userAddress !== '') {
-        const userDckbBalanceInDao = await dao.userTokenBalances(userAddress, token.address);
+        const userPckbBalanceInDao = await dao.userTokenBalances(userAddress, token.address);
 
-        dispatch(setDckbBalanceInDao(userDckbBalanceInDao));
+        dispatch(setPckbBalanceInDao(userPckbBalanceInDao));
       }
 
       if (isLoggedIn && token) {
         const balance = await (token as ethers.Contract).balanceOf(userAddress);
         if (balance) {
-          dispatch(setDckbBalance(balance));
+          dispatch(setPckbBalance(balance));
         }
         setChecked(true);
       }

@@ -8,10 +8,10 @@ import Box from '@mui/material/Box';
 import Modal from 'components/Modal/Modal';
 
 import { selectOpen, setClose } from 'redux/slices/modaldCkbMint';
-import { selectDckbBalanceInDao, selectIsLoggedIn } from 'redux/slices/user';
+import { selectPckbBalanceInDao, selectIsLoggedIn } from 'redux/slices/user';
 
 import Typography from '@mui/material/Typography';
-import { ckbToShannons, shannonsToDisplayValue } from 'utils/units';
+import { tributeTokenToWei, tributeTokenToDisplayValue } from 'utils/units';
 import DAOButton from 'components/DAOButton/DAOButton';
 import DAOInput from 'components/DAOInput/DAOInput';
 import { Form, Formik } from 'formik';
@@ -37,7 +37,7 @@ const DCkbMintModal: FC = () => {
   const chainId = useSelector(selectChainId);
   const isModalOpen = useSelector(selectOpen);
   const isLoggedIn = useSelector(selectIsLoggedIn);
-  const dckbBalanceInDao = useSelector(selectDckbBalanceInDao);
+  const pckbBalanceInDao = useSelector(selectPckbBalanceInDao);
 
   const initialValues = {
     amount: 0,
@@ -59,7 +59,7 @@ const DCkbMintModal: FC = () => {
         return;
       }
 
-      const tx = await dao.withdrawBalance(token?.address, ckbToShannons(values.amount));
+      const tx = await dao.withdrawBalance(token?.address, tributeTokenToWei(values.amount));
       const receipt = await tx.wait();
 
       if (receipt.blockNumber) {
@@ -75,7 +75,7 @@ const DCkbMintModal: FC = () => {
   };
 
   return (
-    <Modal isOpen={isModalOpen} handleClose={handleModalOpen} title="Withdraw unlocked dCKB" divider>
+    <Modal isOpen={isModalOpen} handleClose={handleModalOpen} title="Withdraw unlocked pCKB" divider>
       <StyledBox>
         {!isLoggedIn && <LoginStep />}
         {isLoggedIn && (
@@ -88,10 +88,10 @@ const DCkbMintModal: FC = () => {
             {formik => (
               <Form>
                 <Box width="100%">
-                  User dCKB balance in DAO contract available to withdraw:
+                  User pCKB balance in DAO contract available to withdraw:
                   <br />
                   <Typography variant="body1-bold">
-                    {dckbBalanceInDao ? shannonsToDisplayValue(dckbBalanceInDao) : ''}
+                    {pckbBalanceInDao ? tributeTokenToDisplayValue(pckbBalanceInDao) : ''}
                   </Typography>
                   <Box width="100%" mb={2} mt={3}>
                     <DAOInput

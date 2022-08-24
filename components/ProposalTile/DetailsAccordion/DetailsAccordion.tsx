@@ -16,7 +16,7 @@ import Typography from '@mui/material/Typography';
 import DAOTile from 'components/DAOTile/DAOTile';
 
 import formatAddress from 'utils/formatAddress';
-import { shannonsToDisplayValue } from 'utils/units';
+import { tributeTokenToDisplayValue } from 'utils/units';
 import { Proposal } from 'types/types';
 import { ethers } from 'ethers';
 
@@ -234,7 +234,7 @@ const DetailsAccordion: FC<{ proposal: Proposal }> = ({ proposal }) => {
                     Tribute to DAO
                   </Typography>
                   <Typography variant="body1-bold">
-                    {shannonsToDisplayValue(proposal.tributeOffered)} {proposal.tributeTokenSymbol}
+                    {tributeTokenToDisplayValue(proposal.tributeOffered)} {proposal.tributeTokenSymbol}
                   </Typography>
                 </Box>
               </DAOTile>

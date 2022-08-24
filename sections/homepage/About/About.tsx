@@ -15,7 +15,7 @@ import { APP_ROUTES } from 'utils/routes';
 
 import useIsMobile from 'hooks/useIsMobile';
 import { useSelector } from 'react-redux';
-import { shannonsToDisplayValue } from 'utils/units';
+import { tributeTokenToDisplayValue } from 'utils/units';
 import { selectGuildTributeTokenBalance, selectTotalLoot, selectTotalShares } from 'redux/slices/dao';
 import { selectAllMembers } from 'redux/slices/user';
 
@@ -117,7 +117,8 @@ const About: FC = () => {
           </ColumnWrapper>
           <ColumnWrapper>
             <Typography variant="subtitle2">
-              Guild balance: {guildTributeTokenBalance ? shannonsToDisplayValue(guildTributeTokenBalance) : '-'} dCKB
+              Guild balance: {guildTributeTokenBalance ? tributeTokenToDisplayValue(guildTributeTokenBalance) : '-'}{' '}
+              pCKB
               <br />
               Total shares: {daoTotalShares?.toString()}
               <br />
@@ -126,11 +127,11 @@ const About: FC = () => {
           </ColumnWrapper>
           <ColumnWrapper>
             <Typography variant="subtitle2">
-              Share and loot to dCKB ratio:{' '}
+              Share and loot to pCKB ratio:{' '}
               {guildTributeTokenBalance && daoTotalShares && daoTotalLoot
-                ? shannonsToDisplayValue(guildTributeTokenBalance.div(daoTotalShares.add(daoTotalLoot)))
+                ? tributeTokenToDisplayValue(guildTributeTokenBalance.div(daoTotalShares.add(daoTotalLoot)))
                 : '-'}{' '}
-              dCKB
+              pCKB
             </Typography>
           </ColumnWrapper>
         </ColumnsWrapper>

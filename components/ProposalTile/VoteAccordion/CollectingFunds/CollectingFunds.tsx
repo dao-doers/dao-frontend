@@ -18,7 +18,7 @@ import { selectProvider, selectChainId } from 'redux/slices/main';
 import { selectUserAddress, selectIsLoggedIn, selectUserShares } from 'redux/slices/user';
 import { setOpen, setStatus, setMessage } from 'redux/slices/modalTransaction';
 import { selectProcessingReward, selectProposalDeposit } from 'redux/slices/dao';
-import { shannonsToDisplayValue } from 'utils/units';
+import { tributeTokenToDisplayValue } from 'utils/units';
 import { Proposal } from 'types/types';
 import { DCKBToken, MolochV2 } from 'utils/contracts';
 import MolochV2JSON from 'lib/MolochV2.json';
@@ -115,10 +115,10 @@ const CollectingFunds: FC<CollectingFundsProps> = ({ proposal }) => {
           <Typography align="center" p={1}>
             This proposal has not been sponsored yet. It can be sponsored only by DAO member.
             <br />
-            Amount required to sponsor: {proposalDeposit ? shannonsToDisplayValue(proposalDeposit) : ' - '} dCKB.
+            Amount required to sponsor: {proposalDeposit ? tributeTokenToDisplayValue(proposalDeposit) : ' - '} pCKB.
             <br />
             It will be returned to sponsor except processing reward (
-            {processingReward ? shannonsToDisplayValue(processingReward) : ' - '} dCKB).
+            {processingReward ? tributeTokenToDisplayValue(processingReward) : ' - '} pCKB).
           </Typography>
         </DAOTile>
       )}

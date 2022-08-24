@@ -21,7 +21,7 @@ import mintModalSchema from 'validators/mintModalSchema';
 
 import { selectUserAddress, selectLayer1Balance, setLayer1Balance, selectCktLayer2Address } from 'redux/slices/user';
 import { setMessage, setStatus } from 'redux/slices/modalTransaction';
-import { shannonsToDisplayValue } from 'utils/units';
+import { tributeTokenToDisplayValue } from 'utils/units';
 
 interface IBridgeComponent {
   onSubmitCompleteStep: (values: any) => void;
@@ -69,7 +69,7 @@ const BridgeComponent: FC<IBridgeComponent> = ({ onSubmitCompleteStep }) => {
 
       dispatch(setStatus(PROCESSING_STATUSES.SUCCESS));
       dispatch(
-        setMessage(`Transfered ${values.amount} dCKB to destination address ${formatAddress(cktLayer2Address)}`),
+        setMessage(`Transfered ${values.amount} pCKB to destination address ${formatAddress(cktLayer2Address)}`),
       );
     } catch (error: any) {
       dispatch(setStatus(PROCESSING_STATUSES.ERROR));
@@ -82,7 +82,7 @@ const BridgeComponent: FC<IBridgeComponent> = ({ onSubmitCompleteStep }) => {
       <Typography component="h6" variant="h6">
         Bridge
       </Typography>
-      <Typography mb={3}>Transfer dCKB from Layer 1 to Layer 2</Typography>
+      <Typography mb={3}>Transfer pCKB from Layer 1 to Layer 2</Typography>
 
       <Formik validationSchema={mintModalSchema} initialValues={initialValues} validateOnChange onSubmit={onSubmit}>
         {formik => (
@@ -96,14 +96,14 @@ const BridgeComponent: FC<IBridgeComponent> = ({ onSubmitCompleteStep }) => {
 
             <Box display="flex" justifyContent="space-between" alignItems="flex-start">
               <Typography variant="body1" mb={2}>
-                Current dCKB Layer 1 balance
+                Current pCKB Layer 1 balance
               </Typography>
 
               {!loaderBalance ? (
                 <Box display="flex" flexDirection="column" justifyContent="flex-end">
                   <Typography variant="body1-bold">
-                    {balanceSUDT?.dckbBalance
-                      ? `${shannonsToDisplayValue(balanceSUDT.dckbBalance)} dCKB`
+                    {balanceSUDT?.pckbBalance
+                      ? `${tributeTokenToDisplayValue(balanceSUDT.pckbBalance)} pCKB`
                       : 'no balance'}
                   </Typography>
                 </Box>
@@ -116,7 +116,7 @@ const BridgeComponent: FC<IBridgeComponent> = ({ onSubmitCompleteStep }) => {
 
             <Box display="flex" mb={1}>
               <DAOInput
-                label="Amount of dCKB to transfer"
+                label="Amount of pCKB to transfer"
                 inputProps={{
                   id: 'amount',
                   value: formik.values.amount,

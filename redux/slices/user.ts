@@ -2,7 +2,7 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { gql } from '@apollo/client';
 import { BigNumber } from 'ethers';
 
-type TLayer1Balance = { ckbBalance: BigNumber; dckbBalance: BigNumber };
+type TLayer1Balance = { ckbBalance: BigNumber; pckbBalance: BigNumber };
 
 interface Member {
   didRagequit: boolean;
@@ -21,8 +21,8 @@ interface UserSlice {
   isWalletsModalOpen: boolean;
 
   allMembers?: Member[];
-  dckbBalance?: BigNumber;
-  dckbBalanceInDao?: BigNumber;
+  pckbBalance?: BigNumber;
+  pckbBalanceInDao?: BigNumber;
   godwokenCkbBalance?: BigNumber;
   layer1Balance?: TLayer1Balance;
 }
@@ -72,8 +72,8 @@ const initialState: UserSlice = {
   cktLayer1Address: '',
   cktLayer2Address: '',
   isLoggedIn: false,
-  dckbBalance: undefined,
-  dckbBalanceInDao: undefined,
+  pckbBalance: undefined,
+  pckbBalanceInDao: undefined,
   godwokenCkbBalance: undefined,
   layer1Balance: undefined,
   sessionMaintained: false,
@@ -96,11 +96,11 @@ const userSlice = createSlice({
     setIsLoggedIn: (state, action) => {
       state.isLoggedIn = action.payload;
     },
-    setDckbBalance: (state, action: { payload: BigNumber }) => {
-      state.dckbBalance = action.payload;
+    setPckbBalance: (state, action: { payload: BigNumber }) => {
+      state.pckbBalance = action.payload;
     },
-    setDckbBalanceInDao: (state, action: { payload: BigNumber }) => {
-      state.dckbBalanceInDao = action.payload;
+    setPckbBalanceInDao: (state, action: { payload: BigNumber }) => {
+      state.pckbBalanceInDao = action.payload;
     },
     setCkbBalance: (state, action: { payload: BigNumber }) => {
       state.godwokenCkbBalance = action.payload;
@@ -130,8 +130,8 @@ export const selectUserAddress = (state: StateProps) => state.user.address;
 export const selectCktLayer1Address = (state: StateProps) => state.user.cktLayer1Address;
 export const selectCktLayer2Address = (state: StateProps) => state.user.cktLayer2Address;
 export const selectIsLoggedIn = (state: StateProps) => state.user.isLoggedIn;
-export const selectDckbBalance = (state: StateProps) => state.user.dckbBalance;
-export const selectDckbBalanceInDao = (state: StateProps) => state.user.dckbBalanceInDao;
+export const selectPckbBalance = (state: StateProps) => state.user.pckbBalance;
+export const selectPckbBalanceInDao = (state: StateProps) => state.user.pckbBalanceInDao;
 export const selectGodwokenCkbBalance = (state: StateProps) => state.user.godwokenCkbBalance;
 export const selectLayer1Balance = (state: StateProps) => state.user.layer1Balance;
 export const selectUserShares = (state: StateProps) => {
@@ -157,8 +157,8 @@ export const {
   setCktLayer1Address,
   setCktLayer2Address,
   setIsLoggedIn,
-  setDckbBalance,
-  setDckbBalanceInDao,
+  setPckbBalance,
+  setPckbBalanceInDao,
   setCkbBalance,
   setLayer1Balance,
   setSessionMaintained,

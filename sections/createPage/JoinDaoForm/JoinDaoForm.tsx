@@ -21,9 +21,9 @@ import newProposalSchema from 'validators/newProposalSchema';
 import { getMetamaskMessageError } from 'utils/blockchain';
 
 import { selectProvider, selectChainId } from 'redux/slices/main';
-import { selectUserAddress, selectIsLoggedIn, selectDckbBalance } from 'redux/slices/user';
+import { selectUserAddress, selectIsLoggedIn, selectPckbBalance } from 'redux/slices/user';
 import { setOpen, setStatus, setMessage } from 'redux/slices/modalTransaction';
-import { ckbToShannons } from 'utils/units';
+import { tributeTokenToWei } from 'utils/units';
 
 const initialValues = {
   title: '',
@@ -41,7 +41,7 @@ const JoinDaoForm: FC = () => {
   const chainId = useSelector(selectChainId);
   const userAddress = useSelector(selectUserAddress);
   const isLoggedIn = useSelector(selectIsLoggedIn);
-  const dckbBalance = useSelector(selectDckbBalance);
+  const pckbBalance = useSelector(selectPckbBalance);
 
   const isMobile = useIsMobile('md');
 
@@ -56,9 +56,9 @@ const JoinDaoForm: FC = () => {
       const { tributeOffered, sharesRequested, lootRequested } = values;
       const paymentRequested = 0;
 
-      if (dckbBalance?.lt(values.tributeOffered)) {
+      if (pckbBalance?.lt(values.tributeOffered)) {
         dispatch(setStatus(PROCESSING_STATUSES.ERROR));
-        dispatch(setMessage('You have not enough dCKB'));
+        dispatch(setMessage('You have not enough pCKB'));
       } else {
         const receipt = await invokeHandleCreateProposal(
           provider,
@@ -66,7 +66,7 @@ const JoinDaoForm: FC = () => {
           applicantAddress,
           sharesRequested,
           lootRequested,
-          ckbToShannons(tributeOffered),
+          tributeTokenToWei(tributeOffered),
           paymentRequested,
           {
             title: values.title,
@@ -163,7 +163,7 @@ const JoinDaoForm: FC = () => {
                 <Box width="100%" mb={2}>
                   <DAOInput
                     label="Tribute Offered"
-                    tootltip="The amount of dCKB you are committing to deposit to the DAO bank."
+                    tootltip="The amount of pCKB you are committing to deposit to the DAO bank."
                     inputProps={{
                       id: 'tributeOffered',
                       placeholder: 'e.g. 10',
@@ -181,7 +181,7 @@ const JoinDaoForm: FC = () => {
                 <Box width="100%" mb={2}>
                   <DAOInput
                     label="Shares Requested"
-                    tootltip="The amount of requested shares for your tribute. The current recommended convention is 1 dCKB : 1 voting share ratio."
+                    tootltip="The amount of requested shares for your tribute. The current recommended convention is 1 pCKB : 1 voting share ratio."
                     inputProps={{
                       id: 'sharesRequested',
                       placeholder: 'e.g. 10',
@@ -199,7 +199,7 @@ const JoinDaoForm: FC = () => {
                 <Box width="100%" mb={2}>
                   <DAOInput
                     label="Loot Requested"
-                    tootltip="Non-voting shares. The current recommended convention is 1 dCKB : 1 loot ratio."
+                    tootltip="Non-voting shares. The current recommended convention is 1 pCKB : 1 loot ratio."
                     inputProps={{
                       id: 'lootRequested',
                       placeholder: 'e.g. 10',
@@ -225,11 +225,11 @@ const JoinDaoForm: FC = () => {
                       // eslint-disable-next-line no-restricted-globals
                       isNaN(formik.values.tributeOffered) ? 0 : formik.values.tributeOffered,
                     )}{' '}
-                    dCKB
+                    pCKB
                   </Typography>
                   <TooltipIcon>
                     <Typography variant="body2">
-                      The amount of dCKB you are committing to deposit to the DAO bank.
+                      The amount of pCKB you are committing to deposit to the DAO bank.
                     </Typography>
                   </TooltipIcon>
                 </Box>

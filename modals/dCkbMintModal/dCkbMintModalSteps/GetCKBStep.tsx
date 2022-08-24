@@ -43,22 +43,6 @@ const GetCKBStep: FC<GetCKBStepProps> = ({ handlePreviousStep, completeStep }) =
       <StyledBox>
         <Box>
           <Typography component="h6" variant="h6">
-            Get Portal Wallet Layer 1 address
-          </Typography>
-          <Typography component="h6">
-            Go to NexisDAO and connect with metamask. Next, copy CKB address (ckt...xxx) from top left of swap box.
-          </Typography>
-        </Box>
-        <ButtonWrapper>
-          <DAOButton variant="gradientOutline" onClick={() => window.open(process.env.NEXIS_DAO, '_blank')}>
-            Nexis DAO
-          </DAOButton>
-        </ButtonWrapper>
-      </StyledBox>
-
-      <StyledBox>
-        <Box>
-          <Typography component="h6" variant="h6">
             Get CKB from Layer 1
           </Typography>
           <Typography component="h6">

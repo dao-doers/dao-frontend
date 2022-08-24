@@ -20,11 +20,6 @@ const Footer: FC = () => {
         </Link>
       </Box>
       <Box mx={2}>
-        <Link href="https://app.nexisdao.com/dckb" target="_blank" rel="noreferrer noopener">
-          <TypographyGrey>NEXISDAO DCKB APP</TypographyGrey>
-        </Link>
-      </Box>
-      <Box mx={2}>
         <Link href="https://github.com/dao-doers" target="_blank" rel="noreferrer noopener">
           <TypographyGrey>GITHUB</TypographyGrey>
         </Link>

@@ -12,7 +12,7 @@ export const useDCKBTokenHook = () => {
   const [loaderLayer2Address, setLoaderLayer2Address] = useState(false);
   const [loaderBalance, setLoaderBalance] = useState(false);
 
-  const dckbIssuerHash = '0xc43009f083e70ae3fee342d59b8df9eec24d669c1c3a3151706d305f5362c37e';
+  const pckbIssuerHash = '0xc43009f083e70ae3fee342d59b8df9eec24d669c1c3a3151706d305f5362c37e';
   const additionalCKB = (85 * 10 ** 8).toString(); // additional CKB capacity is required so resulting transaction output contains at least 400 CKB
 
   const dispatch = useDispatch();
@@ -33,7 +33,7 @@ export const useDCKBTokenHook = () => {
 
       await assetSender.init('testnet');
       await assetSender.connectWallet(); // you can also pass private key
-      await assetSender.sendSUDT(amount, toAddress, dckbIssuerHash, additionalCKB);
+      await assetSender.sendSUDT(amount, toAddress, pckbIssuerHash, additionalCKB);
     } catch (error: any) {
       setLoader(false);
       throw error;
@@ -48,9 +48,9 @@ export const useDCKBTokenHook = () => {
       await assetSender.init('testnet');
       await assetSender.connectWallet();
       const ckbBalance = BigNumber.from(await assetSender.getConnectedWalletCKBBalance());
-      const dckbBalance = BigNumber.from(await assetSender.getConnectedWalletSUDTBalance(dckbIssuerHash));
+      const pckbBalance = BigNumber.from(await assetSender.getConnectedWalletSUDTBalance(pckbIssuerHash));
 
-      return { ckbBalance, dckbBalance };
+      return { ckbBalance, pckbBalance };
     } catch (error) {
       setLoaderBalance(false);
       throw error;

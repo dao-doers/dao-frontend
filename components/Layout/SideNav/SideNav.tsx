@@ -64,7 +64,7 @@ const SideNav: FC<SideNavProps> = ({ setDrawerOpen }) => {
 
   const isLoggedIn = useSelector(selectIsLoggedIn);
 
-  const handledCKBModal = () => {
+  const handlepCKBModal = () => {
     dispatch(setOpen(true));
   };
 
@@ -169,8 +169,8 @@ const SideNav: FC<SideNavProps> = ({ setDrawerOpen }) => {
 
       {isLoggedIn && (
         <Box mx="auto" my={1} sx={{ width: { xs: '60%', md: '100%' } }}>
-          <DAOButton variant="gradientOutline" onClick={handledCKBModal}>
-            <Typography>Withdraw unlocked dCKB</Typography>
+          <DAOButton variant="gradientOutline" onClick={handlepCKBModal}>
+            <Typography>Withdraw unlocked pCKB</Typography>
           </DAOButton>
         </Box>
       )}

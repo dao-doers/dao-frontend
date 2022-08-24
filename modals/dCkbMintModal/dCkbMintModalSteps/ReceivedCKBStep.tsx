@@ -42,21 +42,6 @@ const ReceivedCKBStep: FC<ReceivedCKBStepProps> = ({ handlePreviousStep, complet
   return (
     <Box mt={5} mb={4}>
       <DividerLine />
-      <StyledBox>
-        <Box>
-          <Typography component="h6" variant="h6" paragraph>
-            Get Layer 1 dCKB
-          </Typography>
-          <Typography component="h6">
-            On NexisDAO Page press the Mint button and deposit as much Layer 1 CKB as you would like to.
-          </Typography>
-        </Box>
-        <ButtonWrapper>
-          <DAOButton variant="gradientOutline" onClick={() => window.open(process.env.NEXIS_DAO, '_blank')}>
-            Nexis DAO
-          </DAOButton>
-        </ButtonWrapper>
-      </StyledBox>
 
       <NavButtonsWrapper>
         <Box width="48%">

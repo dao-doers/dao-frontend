@@ -25,10 +25,10 @@ import {
   selectUserAddress,
   selectIsLoggedIn,
   selectUserShares,
-  selectDckbBalance,
-  selectDckbBalanceInDao,
+  selectPckbBalance,
+  selectPckbBalanceInDao,
 } from 'redux/slices/user';
-import { shannonsToDisplayValue } from 'utils/units';
+import { tributeTokenToDisplayValue } from 'utils/units';
 
 import IndexerStatus from './IndexerStatus/IndexerStatus';
 
@@ -72,8 +72,8 @@ const BlockchainStatusContent: FC = () => {
   const userAddress = useSelector(selectUserAddress);
   const isLoggedIn = useSelector(selectIsLoggedIn);
   const userShares = useSelector(selectUserShares);
-  const dckbBalance = useSelector(selectDckbBalance);
-  const dckbBalanceInDao = useSelector(selectDckbBalanceInDao);
+  const pckbBalance = useSelector(selectPckbBalance);
+  const pckbBalanceInDao = useSelector(selectPckbBalanceInDao);
 
   const { isChecked } = useCheckBalance();
 
@@ -127,9 +127,11 @@ const BlockchainStatusContent: FC = () => {
             }}
           >
             <MenuItem onClick={handleClose}>
-              <StatusChip title="Godwoken dCKB:">
+              <StatusChip title="Godwoken pCKB:">
                 {isChecked ? (
-                  <Typography variant="body1-bold">{dckbBalance ? shannonsToDisplayValue(dckbBalance) : ''}</Typography>
+                  <Typography variant="body1-bold">
+                    {pckbBalance ? tributeTokenToDisplayValue(pckbBalance) : ''}
+                  </Typography>
                 ) : (
                   <Box display="flex" alignItems="center">
                     <Box display="flex" alignItems="center" mr={1}>
@@ -149,10 +151,10 @@ const BlockchainStatusContent: FC = () => {
             )}
 
             <MenuItem onClick={handleClose}>
-              <StatusChip title="User unlocked dCKB:">
+              <StatusChip title="User unlocked pCKB:">
                 {isChecked ? (
                   <Typography variant="body1-bold">
-                    {dckbBalanceInDao ? shannonsToDisplayValue(dckbBalanceInDao) : ''}
+                    {pckbBalanceInDao ? tributeTokenToDisplayValue(pckbBalanceInDao) : ''}
                   </Typography>
                 ) : (
                   <Box display="flex" alignItems="center">

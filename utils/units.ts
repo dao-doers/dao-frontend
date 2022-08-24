@@ -1,12 +1,12 @@
 import { BigNumber, utils } from 'ethers';
 
-const CKB_LAYER_1_DECIMALS = 8;
-const CKB_LAYER_1_DECIMALS_MULTIPLIER = BigNumber.from(10).pow(CKB_LAYER_1_DECIMALS);
+const PCKB_DECIMALS = 18;
+const PCKB_DECIMALS_MULTIPLIER = BigNumber.from(10).pow(PCKB_DECIMALS);
 
-export function shannonsToDisplayValue(value: BigNumber) {
-  return utils.formatUnits(value, CKB_LAYER_1_DECIMALS);
+export function tributeTokenToDisplayValue(value: BigNumber) {
+  return utils.formatUnits(value, PCKB_DECIMALS);
 }
 
-export function ckbToShannons(value: number) {
-  return BigNumber.from(value).mul(CKB_LAYER_1_DECIMALS_MULTIPLIER);
+export function tributeTokenToWei(value: number) {
+  return BigNumber.from(value).mul(PCKB_DECIMALS_MULTIPLIER);
 }
