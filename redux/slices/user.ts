@@ -42,20 +42,32 @@ export const getUsersList = createAsyncThunk('user/getUsersList', async (userTok
         members(orderBy: $orderBy, orderDirection: $orderDirection) {
           id
           createdAt
-          moloch
+          moloch {
+            id
+          }
           molochAddress
           memberAddress
           delegateKey
           shares
           loot
           exists
-          highestIndexYesVote
+          highestIndexYesVote {
+            id
+          }
           tokenTribute
           didRagequit
-          votes
-          submissions
-          tokenBalances
-          rageQuits
+          votes {
+            id
+          }
+          submissions {
+            id
+          }
+          tokenBalances {
+            id
+          }
+          rageQuits {
+            id
+          }
           proposedToKick
           kicked
           jailed

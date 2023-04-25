@@ -43,6 +43,15 @@ const StyledBox = styled(Box)`
   display: flex;
 `;
 
+const ShutdownNotice = styled(Box)`
+  color: white;
+  padding: 20px;
+  font-size: 24px;
+  border: 2px solid white;
+  background: linear-gradient(145deg, #fe0291 0%, #05e8fc 100%);
+  font-weight: bold;
+`;
+
 const Layout: FC<LayoutProps> = ({ children }) => {
   const dispatch = useDispatch();
 
@@ -78,6 +87,9 @@ const Layout: FC<LayoutProps> = ({ children }) => {
 
   return (
     <>
+      <ShutdownNotice>
+        THE DAO MAINTAINERS ARE CLOSING THE WEBSITE IN MAY 2023. THANK YOU FOR UNDERSTANDING.
+      </ShutdownNotice>
       <Header />
       <StyledContainer>
         <StyledBox>

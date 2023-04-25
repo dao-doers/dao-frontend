@@ -4,7 +4,7 @@ const config = {
     tribute_sharesRatio: 1,
   },
   graph: {
-    moloch: 'https://indexer-mainnet.digipnyx.org/subgraphs/name/odyssy-automaton/daohaus',
+    moloch: 'https://graph-node-http-khalani.digipnyx.org/subgraphs/name/odyssy-automaton/daohaus',
   },
   // TODO: nervos and ethereum are currently unused, may be useful for bridge but if not, remove
   nervos: {
